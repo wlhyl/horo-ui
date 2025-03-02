@@ -1,0 +1,54 @@
+.table-container {
+  margin: 1rem; /* 给表格添加适当的边距 */
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* 添加水平滚动 */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  /* 使边框合并为单一边框 */
+}
+
+table,
+th,
+td {
+  border: 2px solid #dee2e6;
+  /* 设置边框样式 */
+  padding: 10px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+  /* 奇数行的背景颜色 */
+}
+
+.custom-segment {
+  --background: #f8f8f8;
+  --indicator-color: #3880ff;
+  --indicator-height: 4px;
+  --button-background: #ffffff;
+  --button-color: #3880ff;
+  --button-color-checked: #ffffff;
+  --button-background-checked: #3880ff;
+  --button-border-radius: 8px;
+  --button-padding: 8px 16px;
+  --button-margin: 4px;
+  --button-font-weight: bold;
+  --button-font-size: 2rem; /* 调大文字到最大 */
+}
+
+/* 响应式布局 */
+@media (max-width: 600px) {
+  table {
+    font-size: 0.8rem;
+  }
+
+  th,
+  td {
+    padding: 5px;
+  }
+}

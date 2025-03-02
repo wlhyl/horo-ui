@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [routerLink]='"/"+path.Home'>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large" [routerLink]='"/"+path.Home'>{{ title }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <!-- <ion-row class="user"> -->
+  <!-- <ion-label *ngIf="authService.isAuth" (click)="logoutModalOpen=true">已登录：{{ authService.user.name }}</ion-label> -->
+  <!-- <ion-label *ngIf="!authService.isAuth" (click)="login()">未登录</ion-label> -->
+  <ion-grid class="user">
+    <ng-container *ngIf="!authService.isAuth">
+      <ion-row>
+        <ion-input label="用户：" [(ngModel)]="user"></ion-input>
+      </ion-row>
+      <ion-row>
+        <ion-input type="password" label="密码：" [(ngModel)]="password">
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+      </ion-row>
+      <ion-row *ngIf="error" class="error">
+        {{ error }}
+      </ion-row>
+      <ion-button expand="full" fill="clear" (click)="login()">登录</ion-button>
+    </ng-container>
+    <!-- </ion-grid> -->
+
+    <ng-container *ngIf="authService.isAuth" class="user">
+      <ion-row><strong>已登录</strong></ion-row>
+      <ion-row><strong>用户：{{ user}}</strong></ion-row>
+
+      <ion-row *ngIf="error" class="error">
+        {{ error }}
+      </ion-row>
+      <ion-button expand="full" fill="clear" (click)="logout()">注销</ion-button>
+
+    </ng-container>
+  </ion-grid>
+</ion-content>

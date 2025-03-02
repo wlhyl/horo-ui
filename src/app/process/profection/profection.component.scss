@@ -1,0 +1,46 @@
+/* filepath: /Users/lzh/vscode/horo_workspace/ui/src/app/process/profection/profection.component.scss */
+.table-container {
+    margin: 1rem;
+    /* 给表格添加适当的边距 */
+}
+
+.center-title {
+    text-align: center;
+    /* 将标题居中显示 */
+}
+
+.profection-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.profection-table,
+.profection-table th,
+.profection-table td {
+    border: 2px solid #dee2e6;
+    padding: 10px;
+}
+
+.profection-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.planet-name {
+    text-align: center;
+    font-size: 1.2em;
+    color: #333;
+    padding: 0.5rem;
+}
+
+/* 响应式布局 */
+@media (max-width: 600px) {
+    .profection-table {
+        font-size: 0.8rem;
+        margin: 0.5rem;
+    }
+
+    .planet-name {
+        font-size: 1em;
+    }
+}

@@ -1,0 +1,70 @@
+ion-title {
+  text-align: center;
+}
+
+.horo-aspect-toggle {
+  display: flex;
+  justify-content: center;
+}
+
+ion-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+ion-button ion-icon {
+  margin-bottom: 4px;
+}
+
+ion-button ion-label {
+  margin-top: 4px;
+}
+
+ion-toggle::part(track),
+ion-toggle.toggle-checked::part(track) {
+  background: #ddd;
+}
+
+ion-toggle::part(handle) {
+  background-color: #FF7F50;
+}
+
+ion-toggle.toggle-checked::part(handle) {
+  background-color: white;
+}
+
+ion-button.icon-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+ion-button.icon-top ion-icon {
+  margin-bottom: 4px;
+}
+
+ion-button.icon-top ion-label {
+  margin-top: 4px;
+}
+
+ion-button .button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-button .button-content ion-icon {
+  margin-bottom: 4px;
+}
+
+ion-button .button-content ion-label {
+  margin-top: 4px;
+}

@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- 生成列表 -->
+  <ion-list>
+    <ion-item>
+
+      <ion-icon name="caret-forward-outline" slot="start"></ion-icon>
+      <ion-label>计算七政四余的八字时，忽略了时区，假定出生时间是东八区，非东八区时间出生的，八字不准。</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

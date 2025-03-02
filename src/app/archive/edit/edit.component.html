@@ -1,0 +1,124 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large" [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-item>
+      <ion-label style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">姓名</ion-label>
+      <ion-input [(ngModel)]="native.name" name="name" maxlength="4" required style="flex: 1; text-align: right;"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>性别</ion-label>
+      <ion-radio-group [(ngModel)]="native.gender" name="sex" style="display: flex; justify-content: space-around;">
+        <ion-item lines="none" style="flex: 1;">
+          <ion-label>男</ion-label>
+          <ion-radio slot="start" [value]="true"></ion-radio>
+        </ion-item>
+        <ion-item lines="none" style="flex: 1;">
+          <ion-label>女</ion-label>
+          <ion-radio slot="start" [value]="false"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item>
+
+    <ion-item (click)="showDateTimePicker = !showDateTimePicker">
+      <ion-label>日期和时间</ion-label>
+      <ion-text>{{ formattedDateTime }}</ion-text>
+    </ion-item>
+
+    <ion-item *ngIf="showDateTimePicker" style="display: flex; align-items: end;">
+      <ion-label position="floating" style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">选择日期和时间</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="dateTime" name="dateTime" required style="flex: 1; text-align: right;"></ion-datetime>
+    </ion-item>
+
+    <ion-item *ngIf="showDateTimePicker">
+      <ion-input type="number" label="秒" [(ngModel)]="native.birth_second" name="second" min="0" max="59" required (ionBlur)="validateSecond()" style="text-align: right;"></ion-input>
+    </ion-item>
+
+    <ion-item (click)="showTimeZonePicker = !showTimeZonePicker">
+      <ion-label>时区</ion-label>
+      <ion-text>{{ formattedTimeZone }}</ion-text>
+    </ion-item>
+
+    <ion-picker *ngIf="showTimeZonePicker" (ionChange)="onTimeZoneChange($event)">
+      <ion-picker-column [value]="native.time_zone_offset">
+        <ion-picker-column-option *ngFor="let option of timeZoneOptions" [value]="option.value">{{ option.text }}</ion-picker-column-option>
+      </ion-picker-column>
+    </ion-picker>
+
+    <ion-item>
+      <ion-label>夏令时</ion-label>
+      <ion-toggle [(ngModel)]="native.is_dst" name="st" slot="end"></ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-label style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">城市</ion-label>
+      <horo-map style="flex: 1; margin-right: 1rem;" [(localName)]="native.location.name" [(long)]="long" [(lat)]="lat"></horo-map>
+      <ion-input [(ngModel)]="native.location.name" name="geoName" required style="flex: 1; text-align: right;"></ion-input>
+    </ion-item>
+
+    <ion-item (click)="showLongitudeInput = !showLongitudeInput">
+      <ion-label>经度</ion-label>
+      <ion-text>{{ formattedLongitude }}</ion-text>
+    </ion-item>
+
+    <ion-picker *ngIf="showLongitudeInput">
+      <ion-picker-column (ionChange)="onLongitudeDirectionChange($event)" [value]="native.location.is_east">
+        <ion-picker-column-option *ngFor="let option of longitudeDirections" [value]="option.value">{{ option.text }}</ion-picker-column-option>
+      </ion-picker-column>
+      <ion-picker-column (ionChange)="onLongitudeDegreeChange($event)" [value]="native.location.longitude_degree">
+        <ion-picker-column-option *ngFor="let i of longitudeDegrees" [value]="i">{{ i }}°</ion-picker-column-option>
+      </ion-picker-column>
+      <ion-picker-column (ionChange)="onLongitudeMinuteChange($event)" [value]="native.location.longitude_minute">
+        <ion-picker-column-option *ngFor="let i of longitudeMinutes" [value]="i">{{ i }}′</ion-picker-column-option>
+      </ion-picker-column>
+      <ion-picker-column (ionChange)="onLongitudeSecondChange($event)" [value]="native.location.longitude_second">
+        <ion-picker-column-option *ngFor="let i of longitudeSeconds" [value]="i">{{ i }}″</ion-picker-column-option>
+      </ion-picker-column>
+    </ion-picker>
+
+    <ion-item (click)="showLatitudeInput = !showLatitudeInput">
+      <ion-label>纬度</ion-label>
+      <ion-text>{{ formattedLatitude }}</ion-text>
+    </ion-item>
+
+    <ion-picker *ngIf="showLatitudeInput">
+      <ion-picker-column (ionChange)="onLatitudeDirectionChange($event)" [value]="native.location.is_north">
+        <ion-picker-column-option *ngFor="let option of latitudeDirections" [value]="option.value">{{ option.text }}</ion-picker-column-option>
+      </ion-picker-column>
+      <ion-picker-column (ionChange)="onLatitudeDegreeChange($event)" [value]="native.location.latitude_degree">
+        <ion-picker-column-option *ngFor="let i of latitudeDegrees" [value]="i">{{ i }}°</ion-picker-column-option>
+      </ion-picker-column>
+      <ion-picker-column (ionChange)="onLatitudeMinuteChange($event)" [value]="native.location.latitude_minute">
+        <ion-picker-column-option *ngFor="let i of latitudeMinutes" [value]="i">{{ i }}′</ion-picker-column-option>
+      </ion-picker-column>
+      <ion-picker-column (ionChange)="onLatitudeSecondChange($event)" [value]="native.location.latitude_second">
+        <ion-picker-column-option *ngFor="let i of latitudeSeconds" [value]="i">{{ i }}″</ion-picker-column-option>
+      </ion-picker-column>
+    </ion-picker>
+
+    <ion-item>
+      <ion-textarea label="描述" labelPlacement="floating" rows="5" [(ngModel)]="native.description" name="describe"></ion-textarea>
+    </ion-item>
+
+    <ion-button expand="full" (click)="onSubmit()" [disabled]="isSaving">{{ isSaving ? '正在保存...' : '保存' }}</ion-button>
+</ion-content>
+
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+(didDismiss)="isAlertOpen=false"></ion-alert>

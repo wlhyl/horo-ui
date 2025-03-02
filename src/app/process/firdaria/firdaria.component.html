@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large" [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen=false"></ion-alert>
+  <ul>
+    <li>副限时间以主限所管年数7等分</li>
+  </ul>
+
+  <div class="table-container">
+    <h2 class="center-title">法达星限</h2>
+    <table class="firdaria-table ion-text-center">
+      <thead>
+        <tr>
+          <th>主限</th>
+          <th>副限</th>
+          <th>副限时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let firdaria of firdariaData;">
+          <tr *ngFor="let sub_period of firdaria.sub_period; let i=index;">
+            <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(firdaria.period)  + ';' "  [attr.rowspan]="firdaria.sub_period.length" *ngIf="i==0">
+              {{ config.planetFontString(firdaria.period) }}
+            </td>
+            
+            <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(sub_period.period)  + ';' ">
+              {{ config.planetFontString(sub_period.period) }}
+            </td>
+            <td>
+              {{sub_period.start_date.year}}-{{sub_period.start_date.month.toString().padStart(2, "0")}}-{{sub_period.start_date.day.toString().padStart(2, "0")}}
+              {{sub_period.start_date.hour.toString().padStart(2, "0")}}:{{sub_period.start_date.minute.toString().padStart(2, "0")}}:{{sub_period.start_date.second.toString().padStart(2, "0")}}
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ion-content>

@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [routerLink]="'/' + path.Home">{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="returnData">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>映点</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let item of returnData.antiscoins">
+                <ion-label>
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p0)}">
+                    {{ config.planetFontString(item.p0) }}
+                  </span>
+                  与
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
+                    {{ config.planetFontString(item.p1) }}
+                  </span>，
+                  <span *ngFor="let d of [degreeToDMSFn(item.d)]">
+                    {{ d.d }}度{{ d.m }}分{{ d.s }}秒
+                  </span>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>反映点</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item *ngFor="let item of returnData.contraantiscias">
+                <ion-label>
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p0)}">
+                    {{ config.planetFontString(item.p0) }}
+                  </span>
+                  与
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
+                    {{ config.planetFontString(item.p1) }}
+                  </span>，
+                  <span *ngFor="let d of [degreeToDMSFn(item.d)]">
+                    {{ d.d }}度{{ d.m }}分{{ d.s }}秒
+                  </span>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-content *ngIf="!returnData">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <p>没有可显示的数据。</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

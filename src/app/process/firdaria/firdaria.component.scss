@@ -1,0 +1,34 @@
+.table-container {
+  margin: 1rem;
+  /* 给表格添加适当的边距 */
+}
+
+.center-title {
+  text-align: center;
+  /* 将标题居中显示 */
+}
+
+.firdaria-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.firdaria-table,
+.firdaria-table th,
+.firdaria-table td {
+  border: 2px solid #dee2e6;
+  padding: 10px;
+}
+
+.firdaria-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+  /* 奇数行的背景颜色 */
+}
+
+.planet-name {
+  text-align: center;
+  font-size: 1.2em;
+  color: #333;
+  padding: 0.5rem;
+}

@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      星盘
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">星盘</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <div class="container">
+    <div class="box">
+      <div class="item" (click)="navigate(path.Native)">
+        <div class="icon">
+          <ion-icon name="star-outline"></ion-icon>
+        </div>
+        <ion-label>本命</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.Process)">
+        <div class="icon">
+          <ion-icon name="play-forward-outline"></ion-icon>
+        </div>
+        <ion-label>推运</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.Qizheng)">
+        <div class="icon">
+          <ion-icon name="star"></ion-icon>
+        </div>
+        <ion-label>七政</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.Power)">
+        <div class="icon">
+          <ion-icon name="bulb-outline"></ion-icon>
+        </div>
+        <ion-label>行星力量表</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.Archive)" *ngIf="authService.isAuth">
+        <div class="icon">
+          <ion-icon name="server-outline"></ion-icon>
+        </div>
+        <ion-label>档案库</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.Clean)">
+        <div class="icon">
+          <ion-icon name="trash-outline"></ion-icon>
+        </div>
+        <ion-label>清除缓存</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.User)">
+        <div class="icon">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <ion-label>用户</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.About)">
+        <div class="icon">
+          <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+        </div>
+        <ion-label>说明</ion-label>
+      </div>
+    </div>
+  </div>
+</ion-content>
