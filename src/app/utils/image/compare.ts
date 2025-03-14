@@ -1,11 +1,10 @@
 import { Horoconfig } from '../../services/config/horo-config.service';
-import { Canvas } from '../../type/alias/canvas';
 import {
   Aspect,
   HoroscopeComparison,
   Planet,
 } from '../../type/interface/response-data';
-import { fabric } from 'fabric';
+import * as  fabric  from 'fabric';
 import {
   cos,
   degNorm,
@@ -24,7 +23,7 @@ import {
  */
 export function drawAspect(
   aspects: Array<Aspect>,
-  aspectCanvas: Canvas,
+  aspectCanvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: { width: number; height: number }
 ): void {
@@ -166,7 +165,7 @@ export function drawAspect(
  */
 export function drawHorosco(
   horosco: HoroscopeComparison,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: { width: number; height: number }
 ) {
@@ -239,7 +238,7 @@ export function drawHorosco(
  */
 function drawHouse(
   cups: Array<number>,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: {
     cx: number; // 圆心坐标：x
@@ -362,7 +361,7 @@ function drawHouse(
  */
 function drawPlanetsCompare(
   planets: Array<Planet>,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   firstCupsLong: number,
   config: Horoconfig,
   options: { cx: number; cy: number; r: number }
@@ -510,7 +509,7 @@ function drawPlanetsCompare(
  */
 function drawPlanetsNative(
   planets: Array<Planet>,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   firstCupsLong: number,
   config: Horoconfig,
   options: { cx: number; cy: number; r: number }

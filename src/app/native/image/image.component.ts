@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { fabric } from 'fabric';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { ApiService } from 'src/app/services/api/api.service';
 import { lastValueFrom } from 'rxjs';
 import { Platform, AlertController } from '@ionic/angular';
-import { Canvas } from 'src/app/type/alias/canvas';
+import { StaticCanvas } from 'fabric'
 import { drawAspect, drawHorosco } from 'src/app/utils/image/horo';
 import { Title } from '@angular/platform-browser';
 import { degreeToDMS } from 'src/app/utils/horo-math';
@@ -45,7 +44,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   private canvasCache: { version: string; objects: Object[] } | undefined =
     undefined;
 
-  private canvas?: Canvas;
+  private canvas?: StaticCanvas;
 
   title = '本命星盘';
 
@@ -72,7 +71,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.canvas = new fabric.StaticCanvas('canvas');
+    this.canvas = new StaticCanvas('canvas');
     this.drawHoroscope();
   }
 
@@ -109,8 +108,6 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   private draw() {
     if (this.horoscoData === null) return;
 
-    this.canvas?.setWidth(0);
-    this.canvas?.setHeight(0);
     if (this.isAspect) {
       drawAspect(this.horoscoData.aspects, this.canvas!, this.config, {
         width: this.config.aspectImage.width,
@@ -126,7 +123,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // 绘制完成后根据屏幕大小缩放
-  private zoomImage(canvas: Canvas) {
+  private zoomImage(canvas: StaticCanvas) {
     this.platform.ready().then(() => {
       let canvasWidth = canvas.getWidth();
       if (!canvasWidth) return;

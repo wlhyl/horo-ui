@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 import { QizhengConfigService } from '../config/qizheng-config.service';
 
 @Injectable({

@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 
-import { fabric } from 'fabric';
+import * as fabric  from 'fabric';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
 import { QiZhengRequst } from 'src/app/type/interface/request-data';
 import { lastValueFrom } from 'rxjs';

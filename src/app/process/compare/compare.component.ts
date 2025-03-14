@@ -9,10 +9,9 @@ import {
   HoroscopeComparison,
   ReturnHoroscope,
 } from 'src/app/type/interface/response-data';
-import { Canvas } from 'src/app/type/alias/canvas';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { Platform } from '@ionic/angular';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 import {
   HoroscopeComparisonRequest,
   ReturnRequest,
@@ -48,7 +47,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   private canvasCache: { version: string; objects: Object[] } | undefined =
     undefined;
 
-  private canvas?: Canvas;
+  private canvas?: fabric.StaticCanvas;
 
   loading = false;
 

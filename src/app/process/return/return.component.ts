@@ -3,8 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
-import { Canvas } from 'src/app/type/alias/canvas';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 import { ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { ReturnRequest } from 'src/app/type/interface/request-data';
 import { lastValueFrom } from 'rxjs';
@@ -18,7 +17,7 @@ import { Title } from '@angular/platform-browser';
 import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math';
 import { Path } from 'src/app/type/enum/path';
-import { Path as subPath } from '../enum/path'
+import { Path as subPath } from '../enum/path';
 
 @Component({
   selector: 'app-return',
@@ -38,12 +37,13 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   returnHoroscopeData: ReturnHoroscope | null = null;
 
   private _isAspect = false; // 默认绘制星盘
-  private canvasCache: { version: string; objects: Object[] } | undefined = undefined;
+  private canvasCache: { version: string; objects: Object[] } | undefined =
+    undefined;
 
   loading = false;
   isDrawing = false; // 添加绘制状态标志
 
-  private canvas?: Canvas;
+  private canvas?: fabric.StaticCanvas;
 
   get isAspect(): boolean {
     return this._isAspect;
@@ -76,7 +76,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private platform: Platform,
     private route: ActivatedRoute,
-    private router: Router,  // 添加 router
+    private router: Router, // 添加 router
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig,
@@ -119,9 +119,9 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private async drawHoroscope(process_name: ProcessName) {
-    if (this.isDrawing || this.loading) return;  // 如果正在绘制或加载则返回
+    if (this.isDrawing || this.loading) return; // 如果正在绘制或加载则返回
 
-    this.isDrawing = true;  // 开始绘制
+    this.isDrawing = true; // 开始绘制
     this.loading = true;
     this.canvasCache = undefined;
 
@@ -134,7 +134,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       this.message = message;
       this.isAlertOpen = true;
     } finally {
-      this.isDrawing = false;  // 结束绘制
+      this.isDrawing = false; // 结束绘制
       this.loading = false;
     }
   }

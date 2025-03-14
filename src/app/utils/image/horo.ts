@@ -1,5 +1,5 @@
 import { Platform } from '@ionic/angular';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 
 import {
   sin,
@@ -15,7 +15,6 @@ import {
   Planet,
   ReturnHoroscope,
 } from '../../type/interface/response-data';
-import { Canvas } from '../../type/alias/canvas';
 import { Horoconfig } from '../../services/config/horo-config.service';
 
 /**
@@ -27,7 +26,7 @@ import { Horoconfig } from '../../services/config/horo-config.service';
  */
 export function drawAspect(
   aspects: Array<Aspect>,
-  aspectCanvas: Canvas,
+  aspectCanvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: { width: number; heigth: number }
 ): void {
@@ -182,7 +181,7 @@ export function drawAspect(
  */
 export function drawHorosco(
   horosco: Horoscope,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: { width: number; heigth: number }
 ) {
@@ -225,7 +224,7 @@ export function drawHorosco(
  */
 function drawHouse(
   cups: Array<number>,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: {
     cx: number; // 圆心坐标：x
@@ -348,7 +347,7 @@ function drawHouse(
  */
 function drawPlanets(
   planets: Array<Planet>,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   firstCupsLong: number,
   config: Horoconfig,
   options: { cx: number; cy: number; r: number }
@@ -490,7 +489,7 @@ function drawPlanets(
 // 在左上角绘制说明文字
 function drawNotes(
   horosco: Horoscope,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: { width: number; heigth: number }
 ) {
@@ -558,7 +557,7 @@ function drawNotes(
  */
 export function drawReturnHorosco(
   horosco: ReturnHoroscope,
-  canvas: Canvas,
+  canvas: fabric.StaticCanvas,
   config: Horoconfig,
   options: { width: number; heigth: number }
 ) {
@@ -591,7 +590,7 @@ export function drawReturnHorosco(
 }
 
 // 绘制完成后根据屏幕大小缩放
-export function zoomImage(canvas: Canvas, platform: Platform) {
+export function zoomImage(canvas: fabric.StaticCanvas, platform: Platform) {
   platform.ready().then(() => {
     let canvasWidth = canvas.getWidth();
     if (!canvasWidth) return;

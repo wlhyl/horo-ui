@@ -7,7 +7,7 @@ import {
   LunarCalendar,
   Planet,
 } from 'src/app/type/interface/response-qizheng';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { cos, degNorm, degreeToDMS, newtonIteration, sin } from '../horo-math';
 import { TipService } from 'src/app/services/qizheng/tip.service';
@@ -157,47 +157,64 @@ export function drawHoroscope(
   canvas.add(group);
 
   // 画农历
-  const nativeLunarCalendarText = `${formatLunarCalendar(horoscope.native_lunar_calendar)}
-八字：${horoscope.bazi[0][0]} ${horoscope.bazi[1][0]} ${horoscope.bazi[2][0]} ${horoscope.bazi[3][0]}
-            ${horoscope.bazi[0][1]} ${horoscope.bazi[1][1]} ${horoscope.bazi[2][1]} ${horoscope.bazi[3][1]}`;
+  const nativeLunarCalendarText = `${formatLunarCalendar(
+    horoscope.native_lunar_calendar
+  )}
+八字：${horoscope.bazi[0][0]} ${horoscope.bazi[1][0]} ${horoscope.bazi[2][0]} ${
+    horoscope.bazi[3][0]
+  }
+            ${horoscope.bazi[0][1]} ${horoscope.bazi[1][1]} ${
+    horoscope.bazi[2][1]
+  } ${horoscope.bazi[3][1]}`;
 
-  const nativeLunarCalendarTextCanvas = new fabric.Text(nativeLunarCalendarText, {
-    fontSize: (config.fontSize * 2) / 3,
-    selectable: false,
-  });
+  const nativeLunarCalendarTextCanvas = new fabric.Text(
+    nativeLunarCalendarText,
+    {
+      fontSize: (config.fontSize * 2) / 3,
+      selectable: false,
+    }
+  );
 
   nativeLunarCalendarTextCanvas.left = 0;
   nativeLunarCalendarTextCanvas.top = 0;
   canvas.add(nativeLunarCalendarTextCanvas);
 
-  const processLunarCalendarText = formatLunarCalendar(horoscope.process_lunar_calendar);
+  const processLunarCalendarText = formatLunarCalendar(
+    horoscope.process_lunar_calendar
+  );
 
-  const processLunarCalendarTextCanvas = new fabric.Text(processLunarCalendarText, {
-    fontSize: (config.fontSize * 2) / 3,
-    selectable: false,
-  });
+  const processLunarCalendarTextCanvas = new fabric.Text(
+    processLunarCalendarText,
+    {
+      fontSize: (config.fontSize * 2) / 3,
+      selectable: false,
+    }
+  );
 
-  processLunarCalendarTextCanvas.left = canvas.width! - processLunarCalendarTextCanvas.width!;
+  processLunarCalendarTextCanvas.left =
+    canvas.width! - processLunarCalendarTextCanvas.width!;
   processLunarCalendarTextCanvas.top = 0;
   canvas.add(processLunarCalendarTextCanvas);
 }
 
 // 添加日期格式化辅助函数
-function formatDate(date: { 
-  year: number, 
-  month: number, 
-  day: number,
-  hour: number,
-  minute: number,
-  second: number 
+function formatDate(date: {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
 }): string {
   const pad = (num: number) => num.toString().padStart(2, '0');
-  return `${date.year}-${pad(date.month)}-${pad(date.day)} ${pad(date.hour)}:${pad(date.minute)}:${pad(date.second)}`;
+  return `${date.year}-${pad(date.month)}-${pad(date.day)} ${pad(
+    date.hour
+  )}:${pad(date.minute)}:${pad(date.second)}`;
 }
 
 // 添加农历信息格式化辅助函数
 function formatLunarCalendar(lunar: LunarCalendar): string {
-  const { 
+  const {
     lunar_year_gan_zhi,
     lunar_month_gan_zhi,
     lunar_day_gan_zhi,
@@ -206,11 +223,15 @@ function formatLunarCalendar(lunar: LunarCalendar): string {
     solar_term_second,
     lunar_year,
     lunar_month,
-    lunar_day
+    lunar_day,
   } = lunar;
 
-  return `${lunar_year_gan_zhi[0]} ${lunar_month_gan_zhi[0]} ${lunar_day_gan_zhi[0]} ${time_gan_zhi[0]}
-${lunar_year_gan_zhi[1]} ${lunar_month_gan_zhi[1]} ${lunar_day_gan_zhi[1]} ${time_gan_zhi[1]}
+  return `${lunar_year_gan_zhi[0]} ${lunar_month_gan_zhi[0]} ${
+    lunar_day_gan_zhi[0]
+  } ${time_gan_zhi[0]}
+${lunar_year_gan_zhi[1]} ${lunar_month_gan_zhi[1]} ${lunar_day_gan_zhi[1]} ${
+    time_gan_zhi[1]
+  }
 ${solar_term_first.name}：${formatDate(solar_term_first)}
 ${solar_term_second.name}：${formatDate(solar_term_second)}
 农历：${lunar_year}年${lunar_month}${lunar_day}`;
@@ -286,7 +307,7 @@ function drawASCHouse(
   houseNumText.on('mousedown', (e) => {
     tip.showTip(noteText, canvas);
   });
-  group.addWithUpdate(houseNumText);
+  group.add(houseNumText);
   canvas.add(group);
 }
 

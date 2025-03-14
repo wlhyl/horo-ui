@@ -36,13 +36,13 @@ export class AuthService {
     // token 过期
     if (this._token !== "" && this._user.exp <= Date.now() / 1000) {
       this._token = "";
-      localStorage.removeItem("token");
+      localStorage.removeItem("horo_token");
       return "";
     }
 
 
     // 以下是 this._token===""
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("horo_token");
 
     if (token === null) return "";
 
@@ -53,7 +53,7 @@ export class AuthService {
       // 获取当前时间戳
       if (user.exp <= Date.now() / 1000) {
         // token 过期
-        localStorage.removeItem("token");
+        localStorage.removeItem("horo_token");
         return "";
       }
 
@@ -63,7 +63,7 @@ export class AuthService {
     } catch (error: any) {
       // 正常情况下是不会抛出错误
       console.log(`解析jwt错误：${error}`);
-      localStorage.removeItem("token");
+      localStorage.removeItem("horo_token");
       return "";
     }
   }
@@ -89,7 +89,7 @@ export class AuthService {
         map((v) => {
           console.log(v)
           this._token = "";
-          localStorage.setItem("token", v.token);
+          localStorage.setItem("horo_token", v.token);
           // return  v;
         })
       );
@@ -97,6 +97,6 @@ export class AuthService {
 
   public deleteToken() {
     this._token = "";
-    localStorage.removeItem("token");
+    localStorage.removeItem("horo_token");
   }
 }
