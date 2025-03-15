@@ -61,7 +61,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     this.canvasCache = this.canvas?.toJSON();
 
     if (tempCache) {
-      this.canvas?.loadFromJSON(tempCache, () => {});
+      this.canvas?.loadFromJSON(tempCache).then((canvas) => canvas.renderAll());
     } else {
       this.draw();
     }

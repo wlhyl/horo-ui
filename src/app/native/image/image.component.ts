@@ -5,7 +5,7 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import { ApiService } from 'src/app/services/api/api.service';
 import { lastValueFrom } from 'rxjs';
 import { Platform, AlertController } from '@ionic/angular';
-import { StaticCanvas } from 'fabric'
+import { StaticCanvas } from 'fabric';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/horo';
 import { Title } from '@angular/platform-browser';
 import { degreeToDMS } from 'src/app/utils/horo-math';
@@ -153,7 +153,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvasCache = this.canvas?.toJSON();
 
     if (tempCache) {
-      this.canvas?.loadFromJSON(tempCache, () => {});
+      this.canvas?.loadFromJSON(tempCache).then((canvas) => canvas.renderAll());
     } else {
       this.draw();
     }

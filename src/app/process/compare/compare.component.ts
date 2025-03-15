@@ -176,7 +176,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvasCache = this.canvas?.toJSON();
 
     if (tempCache) {
-      this.canvas?.loadFromJSON(tempCache, () => {});
+      this.canvas?.loadFromJSON(tempCache).then((canvas) => canvas.renderAll());
     } else {
       this.draw();
     }
