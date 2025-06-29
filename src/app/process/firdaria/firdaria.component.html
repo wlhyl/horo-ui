@@ -15,7 +15,7 @@
   </ion-header>
 
   <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-    (didDismiss)="isAlertOpen=false"></ion-alert>
+  (didDismiss)="isAlertOpen=false"></ion-alert>
   <ul>
     <li>副限时间以主限所管年数7等分</li>
   </ul>
@@ -31,21 +31,24 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let firdaria of firdariaData;">
-          <tr *ngFor="let sub_period of firdaria.sub_period; let i=index;">
-            <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(firdaria.period)  + ';' "  [attr.rowspan]="firdaria.sub_period.length" *ngIf="i==0">
-              {{ config.planetFontString(firdaria.period) }}
-            </td>
-            
-            <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(sub_period.period)  + ';' ">
-              {{ config.planetFontString(sub_period.period) }}
-            </td>
-            <td>
-              {{sub_period.start_date.year}}-{{sub_period.start_date.month.toString().padStart(2, "0")}}-{{sub_period.start_date.day.toString().padStart(2, "0")}}
-              {{sub_period.start_date.hour.toString().padStart(2, "0")}}:{{sub_period.start_date.minute.toString().padStart(2, "0")}}:{{sub_period.start_date.second.toString().padStart(2, "0")}}
-            </td>
-          </tr>
-        </ng-container>
+        @for (firdaria of firdariaData; track firdaria) {
+          @for (sub_period of firdaria.sub_period; track sub_period; let i = $index) {
+            <tr>
+              @if (i==0) {
+                <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(firdaria.period)  + ';' "  [attr.rowspan]="firdaria.sub_period.length">
+                  {{ config.planetFontString(firdaria.period) }}
+                </td>
+              }
+              <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(sub_period.period)  + ';' ">
+                {{ config.planetFontString(sub_period.period) }}
+              </td>
+              <td>
+                {{sub_period.start_date.year}}-{{sub_period.start_date.month.toString().padStart(2, "0")}}-{{sub_period.start_date.day.toString().padStart(2, "0")}}
+                {{sub_period.start_date.hour.toString().padStart(2, "0")}}:{{sub_period.start_date.minute.toString().padStart(2, "0")}}:{{sub_period.start_date.second.toString().padStart(2, "0")}}
+              </td>
+            </tr>
+          }
+        }
       </tbody>
     </table>
   </div>

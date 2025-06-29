@@ -23,69 +23,89 @@
     </ion-segment-button>
   </ion-segment>
 
-  <div class="table-container" *ngIf="selectedSegment === 'natal'">
-    <div class="table-responsive">
-      <table class="ion-text-center">
-        <thead>
-          <tr>
-            <th></th>
-            <th>庙</th>
-            <th>旺</th>
-            <th colspan="3">三分主星</th>
-            <th colspan="5">埃及界</th>
-            <th colspan="3">面</th>
-            <th>陷</th>
-            <th>落</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let zodiac of zodiacs ">
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.zodiacFontString(zodiac)}}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( rulershipFn(zodiac)) }}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ exaltationFn(zodiac)?config.planetFontString(exaltationFn(zodiac)!): null }}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}" *ngFor="let p of tripilicityFn(zodiac)">{{ config.planetFontString( p ) }}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}" *ngFor="let term of egyptianTermFn(zodiac)">
-              <span style="margin: 1rem;"> {{ config.planetFontString(term.p )}}</span> {{term.d}}
-            </td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}" *ngFor="let p of faceFn(zodiac); let i=index">{{ config.planetFontString( p ) }}{{(i+1)*10}}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString(detrimentFn(zodiac))}}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ fallFn(zodiac)?config.planetFontString(fallFn(zodiac)!): null }}</td>
-          </tr>
-        </tbody>
-      </table>
+  @if (selectedSegment === 'natal') {
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="ion-text-center">
+          <thead>
+            <tr>
+              <th></th>
+              <th>庙</th>
+              <th>旺</th>
+              <th colspan="3">三分主星</th>
+              <th colspan="5">埃及界</th>
+              <th colspan="3">面</th>
+              <th>陷</th>
+              <th>落</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (zodiac of zodiacs ; track zodiac) {
+              <tr>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.zodiacFontString(zodiac)}}</td>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( rulershipFn(zodiac)) }}</td>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ exaltationFn(zodiac)?config.planetFontString(exaltationFn(zodiac)!): null }}</td>
+                @for (p of tripilicityFn(zodiac); track p) {
+                  <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( p ) }}</td>
+                }
+                @for (term of egyptianTermFn(zodiac); track term) {
+                  <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">
+                    <span style="margin: 1rem;"> {{ config.planetFontString(term.p )}}</span> {{term.d}}
+                  </td>
+                }
+                @for (p of faceFn(zodiac); track p; let i = $index) {
+                  <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( p ) }}{{(i+1)*10}}</td>
+                }
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString(detrimentFn(zodiac))}}</td>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ fallFn(zodiac)?config.planetFontString(fallFn(zodiac)!): null }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  }
 
-  <div class="table-container" *ngIf="selectedSegment === 'horary'">
-    <div class="table-responsive">
-      <table class="ion-text-center">
-        <thead>
-          <tr>
-            <th></th>
-            <th>庙</th>
-            <th>旺</th>
-            <th colspan="2">三分主星</th>
-            <th colspan="5">托勒密界</th>
-            <th colspan="3">面</th>
-            <th>陷</th>
-            <th>落</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let zodiac of zodiacs ">
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.zodiacFontString(zodiac)}}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( rulershipFn(zodiac)) }}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ exaltationFn(zodiac)?config.planetFontString(exaltationFn(zodiac)!): null }}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}" *ngFor="let p of tripilicityOfLilyFn(zodiac)">{{ config.planetFontString( p ) }}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}" *ngFor="let term of ptolemyTermFn(zodiac)">
-              <span style="margin: 1rem;"> {{ config.planetFontString(term.p )}}</span> {{term.d}}
-            </td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}" *ngFor="let p of faceFn(zodiac); let i=index">{{ config.planetFontString( p ) }}{{(i+1)*10}}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString(detrimentFn(zodiac))}}</td>
-            <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ fallFn(zodiac)?config.planetFontString(fallFn(zodiac)!): null }}</td>
-          </tr>
-        </tbody>
-      </table>
+  @if (selectedSegment === 'horary') {
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="ion-text-center">
+          <thead>
+            <tr>
+              <th></th>
+              <th>庙</th>
+              <th>旺</th>
+              <th colspan="2">三分主星</th>
+              <th colspan="5">托勒密界</th>
+              <th colspan="3">面</th>
+              <th>陷</th>
+              <th>落</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (zodiac of zodiacs ; track zodiac) {
+              <tr>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.zodiacFontString(zodiac)}}</td>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( rulershipFn(zodiac)) }}</td>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ exaltationFn(zodiac)?config.planetFontString(exaltationFn(zodiac)!): null }}</td>
+                @for (p of tripilicityOfLilyFn(zodiac); track p) {
+                  <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( p ) }}</td>
+                }
+                @for (term of ptolemyTermFn(zodiac); track term) {
+                  <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">
+                    <span style="margin: 1rem;"> {{ config.planetFontString(term.p )}}</span> {{term.d}}
+                  </td>
+                }
+                @for (p of faceFn(zodiac); track p; let i = $index) {
+                  <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString( p ) }}{{(i+1)*10}}</td>
+                }
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ config.planetFontString(detrimentFn(zodiac))}}</td>
+                <td [ngStyle]="{'font-family': config.zodiacFontFamily()}">{{ fallFn(zodiac)?config.planetFontString(fallFn(zodiac)!): null }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
+  }
 </ion-content>

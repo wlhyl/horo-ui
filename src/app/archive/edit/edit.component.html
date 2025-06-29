@@ -42,25 +42,33 @@
       <ion-text>{{ formattedDateTime }}</ion-text>
     </ion-item>
 
-    <ion-item *ngIf="showDateTimePicker" style="display: flex; align-items: end;">
-      <ion-label position="floating" style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">选择日期和时间</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="dateTime" name="dateTime" required style="flex: 1; text-align: right;"></ion-datetime>
-    </ion-item>
+    @if (showDateTimePicker) {
+      <ion-item style="display: flex; align-items: end;">
+        <ion-label position="floating" style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">选择日期和时间</ion-label>
+        <ion-datetime displayFormat="YYYY-MM-DD HH:mm" pickerFormat="YYYY-MM-DD HH:mm" [(ngModel)]="dateTime" name="dateTime" required style="flex: 1; text-align: right;"></ion-datetime>
+      </ion-item>
+    }
 
-    <ion-item *ngIf="showDateTimePicker">
-      <ion-input type="number" label="秒" [(ngModel)]="native.birth_second" name="second" min="0" max="59" required (ionBlur)="validateSecond()" style="text-align: right;"></ion-input>
-    </ion-item>
+    @if (showDateTimePicker) {
+      <ion-item>
+        <ion-input type="number" label="秒" [(ngModel)]="native.birth_second" name="second" min="0" max="59" required (ionBlur)="validateSecond()" style="text-align: right;"></ion-input>
+      </ion-item>
+    }
 
     <ion-item (click)="showTimeZonePicker = !showTimeZonePicker">
       <ion-label>时区</ion-label>
       <ion-text>{{ formattedTimeZone }}</ion-text>
     </ion-item>
 
-    <ion-picker *ngIf="showTimeZonePicker" (ionChange)="onTimeZoneChange($event)">
-      <ion-picker-column [value]="native.time_zone_offset">
-        <ion-picker-column-option *ngFor="let option of timeZoneOptions" [value]="option.value">{{ option.text }}</ion-picker-column-option>
-      </ion-picker-column>
-    </ion-picker>
+    @if (showTimeZonePicker) {
+      <ion-picker (ionChange)="onTimeZoneChange($event)">
+        <ion-picker-column [value]="native.time_zone_offset">
+          @for (option of timeZoneOptions; track option) {
+            <ion-picker-column-option [value]="option.value">{{ option.text }}</ion-picker-column-option>
+          }
+        </ion-picker-column>
+      </ion-picker>
+    }
 
     <ion-item>
       <ion-label>夏令时</ion-label>
@@ -78,47 +86,67 @@
       <ion-text>{{ formattedLongitude }}</ion-text>
     </ion-item>
 
-    <ion-picker *ngIf="showLongitudeInput">
-      <ion-picker-column (ionChange)="onLongitudeDirectionChange($event)" [value]="native.location.is_east">
-        <ion-picker-column-option *ngFor="let option of longitudeDirections" [value]="option.value">{{ option.text }}</ion-picker-column-option>
-      </ion-picker-column>
-      <ion-picker-column (ionChange)="onLongitudeDegreeChange($event)" [value]="native.location.longitude_degree">
-        <ion-picker-column-option *ngFor="let i of longitudeDegrees" [value]="i">{{ i }}°</ion-picker-column-option>
-      </ion-picker-column>
-      <ion-picker-column (ionChange)="onLongitudeMinuteChange($event)" [value]="native.location.longitude_minute">
-        <ion-picker-column-option *ngFor="let i of longitudeMinutes" [value]="i">{{ i }}′</ion-picker-column-option>
-      </ion-picker-column>
-      <ion-picker-column (ionChange)="onLongitudeSecondChange($event)" [value]="native.location.longitude_second">
-        <ion-picker-column-option *ngFor="let i of longitudeSeconds" [value]="i">{{ i }}″</ion-picker-column-option>
-      </ion-picker-column>
-    </ion-picker>
+    @if (showLongitudeInput) {
+      <ion-picker>
+        <ion-picker-column (ionChange)="onLongitudeDirectionChange($event)" [value]="native.location.is_east">
+          @for (option of longitudeDirections; track option) {
+            <ion-picker-column-option [value]="option.value">{{ option.text }}</ion-picker-column-option>
+          }
+        </ion-picker-column>
+        <ion-picker-column (ionChange)="onLongitudeDegreeChange($event)" [value]="native.location.longitude_degree">
+          @for (i of longitudeDegrees; track i) {
+            <ion-picker-column-option [value]="i">{{ i }}°</ion-picker-column-option>
+          }
+        </ion-picker-column>
+        <ion-picker-column (ionChange)="onLongitudeMinuteChange($event)" [value]="native.location.longitude_minute">
+          @for (i of longitudeMinutes; track i) {
+            <ion-picker-column-option [value]="i">{{ i }}′</ion-picker-column-option>
+          }
+        </ion-picker-column>
+        <ion-picker-column (ionChange)="onLongitudeSecondChange($event)" [value]="native.location.longitude_second">
+          @for (i of longitudeSeconds; track i) {
+            <ion-picker-column-option [value]="i">{{ i }}″</ion-picker-column-option>
+          }
+        </ion-picker-column>
+      </ion-picker>
+    }
 
     <ion-item (click)="showLatitudeInput = !showLatitudeInput">
       <ion-label>纬度</ion-label>
       <ion-text>{{ formattedLatitude }}</ion-text>
     </ion-item>
 
-    <ion-picker *ngIf="showLatitudeInput">
-      <ion-picker-column (ionChange)="onLatitudeDirectionChange($event)" [value]="native.location.is_north">
-        <ion-picker-column-option *ngFor="let option of latitudeDirections" [value]="option.value">{{ option.text }}</ion-picker-column-option>
-      </ion-picker-column>
-      <ion-picker-column (ionChange)="onLatitudeDegreeChange($event)" [value]="native.location.latitude_degree">
-        <ion-picker-column-option *ngFor="let i of latitudeDegrees" [value]="i">{{ i }}°</ion-picker-column-option>
-      </ion-picker-column>
-      <ion-picker-column (ionChange)="onLatitudeMinuteChange($event)" [value]="native.location.latitude_minute">
-        <ion-picker-column-option *ngFor="let i of latitudeMinutes" [value]="i">{{ i }}′</ion-picker-column-option>
-      </ion-picker-column>
-      <ion-picker-column (ionChange)="onLatitudeSecondChange($event)" [value]="native.location.latitude_second">
-        <ion-picker-column-option *ngFor="let i of latitudeSeconds" [value]="i">{{ i }}″</ion-picker-column-option>
-      </ion-picker-column>
-    </ion-picker>
+    @if (showLatitudeInput) {
+      <ion-picker>
+        <ion-picker-column (ionChange)="onLatitudeDirectionChange($event)" [value]="native.location.is_north">
+          @for (option of latitudeDirections; track option) {
+            <ion-picker-column-option [value]="option.value">{{ option.text }}</ion-picker-column-option>
+          }
+        </ion-picker-column>
+        <ion-picker-column (ionChange)="onLatitudeDegreeChange($event)" [value]="native.location.latitude_degree">
+          @for (i of latitudeDegrees; track i) {
+            <ion-picker-column-option [value]="i">{{ i }}°</ion-picker-column-option>
+          }
+        </ion-picker-column>
+        <ion-picker-column (ionChange)="onLatitudeMinuteChange($event)" [value]="native.location.latitude_minute">
+          @for (i of latitudeMinutes; track i) {
+            <ion-picker-column-option [value]="i">{{ i }}′</ion-picker-column-option>
+          }
+        </ion-picker-column>
+        <ion-picker-column (ionChange)="onLatitudeSecondChange($event)" [value]="native.location.latitude_second">
+          @for (i of latitudeSeconds; track i) {
+            <ion-picker-column-option [value]="i">{{ i }}″</ion-picker-column-option>
+          }
+        </ion-picker-column>
+      </ion-picker>
+    }
 
     <ion-item>
       <ion-textarea label="描述" labelPlacement="floating" rows="5" [(ngModel)]="native.description" name="describe"></ion-textarea>
     </ion-item>
 
     <ion-button expand="full" (click)="onSubmit()" [disabled]="isSaving">{{ isSaving ? '正在保存...' : '保存' }}</ion-button>
-</ion-content>
+  </ion-content>
 
-<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-(didDismiss)="isAlertOpen=false"></ion-alert>
+  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen=false"></ion-alert>

@@ -15,7 +15,7 @@
   </ion-header>
 
   <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-    (didDismiss)="isAlertOpen=false"></ion-alert>
+  (didDismiss)="isAlertOpen=false"></ion-alert>
   <ul>
     <li>此处没有按2.5天一个宫位，而是将每月的天数12等分</li>
     <li>2.5天小限的时间已经扣除夏令时</li>
@@ -30,25 +30,29 @@
           <th>月小限</th>
           <th>日小限</th>
           <th colspan="2">2.5天小限</th>
-          
+
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let item of profection.date_per_house; let i=index;">
+        @for (item of profection.date_per_house; track item; let i = $index) {
           <tr>
-            <td class="planet-name" [attr.rowspan]="profection.date_per_house.length" *ngIf="i==0">第{{profection.year_house}}宫</td>
-            <td class="planet-name" [attr.rowspan]="profection.date_per_house.length" *ngIf="i==0">第{{profection.month_house}}宫</td>
-            <td class="planet-name" [attr.rowspan]="profection.date_per_house.length" *ngIf="i==0">第{{profection.day_house}}宫</td>
-            
-
+            @if (i==0) {
+              <td class="planet-name" [attr.rowspan]="profection.date_per_house.length">第{{profection.year_house}}宫</td>
+            }
+            @if (i==0) {
+              <td class="planet-name" [attr.rowspan]="profection.date_per_house.length">第{{profection.month_house}}宫</td>
+            }
+            @if (i==0) {
+              <td class="planet-name" [attr.rowspan]="profection.date_per_house.length">第{{profection.day_house}}宫</td>
+            }
             <td class="planet-name">第{{(profection.month_house + i - 1) % 12 + 1}}宫</td>
             <td class="planet-name">
-                {{item.year}}-{{item.month.toString().padStart(2, "0")}}-{{item.day.toString().padStart(2, "0")}}
-                {{item.hour.toString().padStart(2, "0")}}:{{item.minute.toString().padStart(2,
-                "0")}}:{{item.second.toString().padStart(2, "0")}}
+              {{item.year}}-{{item.month.toString().padStart(2, "0")}}-{{item.day.toString().padStart(2, "0")}}
+              {{item.hour.toString().padStart(2, "0")}}:{{item.minute.toString().padStart(2,
+              "0")}}:{{item.second.toString().padStart(2, "0")}}
             </td>
           </tr>
-        </ng-container>
+        }
       </tbody>
     </table>
   </div>

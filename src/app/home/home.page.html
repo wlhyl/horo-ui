@@ -40,12 +40,14 @@
         </div>
         <ion-label>行星力量表</ion-label>
       </div>
-      <div class="item" (click)="navigate(path.Archive)" *ngIf="authService.isAuth">
-        <div class="icon">
-          <ion-icon name="server-outline"></ion-icon>
+      @if (authService.isAuth) {
+        <div class="item" (click)="navigate(path.Archive)">
+          <div class="icon">
+            <ion-icon name="server-outline"></ion-icon>
+          </div>
+          <ion-label>档案库</ion-label>
         </div>
-        <ion-label>档案库</ion-label>
-      </div>
+      }
       <div class="item" (click)="navigate(path.Clean)">
         <div class="icon">
           <ion-icon name="trash-outline"></ion-icon>

@@ -11,8 +11,8 @@
       <ion-icon name="reload-outline"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
- 
-  
+
+
   <!-- <ion-searchbar></ion-searchbar> -->
 </ion-header>
 
@@ -31,69 +31,69 @@
 
 
 
-<ion-list [inset]="true">
-  <ion-item-sliding *ngFor="let native of natives.data">
-    <ion-item [button]="true">
-      <ion-avatar aria-hidden="true" slot="start">
-        <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-      </ion-avatar>
-      <ion-label>{{native.name}}</ion-label>
-    </ion-item>
-    <ion-item-options slot="end">
-      <ion-item-option color="primary" (click)="toHoro(native, path.Native)">
-        <ion-icon slot="icon-only" name="star-outline"></ion-icon>
-      </ion-item-option>
-      <ion-item-option color="primary" (click)="toHoro(native, path.Process)">
-        <ion-icon slot="icon-only" name="play-forward-outline"></ion-icon>
-      </ion-item-option>
+  <ion-list [inset]="true">
+    @for (native of natives.data; track native) {
+      <ion-item-sliding>
+        <ion-item [button]="true">
+          <ion-avatar aria-hidden="true" slot="start">
+            <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ion-avatar>
+          <ion-label>{{native.name}}</ion-label>
+        </ion-item>
+        <ion-item-options slot="end">
+          <ion-item-option color="primary" (click)="toHoro(native, path.Native)">
+            <ion-icon slot="icon-only" name="star-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="primary" (click)="toHoro(native, path.Process)">
+            <ion-icon slot="icon-only" name="play-forward-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="primary" (click)="toHoro(native, path.Qizheng)">
+            <ion-icon slot="icon-only" name="star"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="tertiary" (click)="edit(native)">
+            <ion-icon slot="icon-only" name="list-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" expandable="true" (click)="delete(native.id)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    }
 
-      <ion-item-option color="primary" (click)="toHoro(native, path.Qizheng)">
-        <ion-icon slot="icon-only" name="star"></ion-icon>
-      </ion-item-option>
-
-      <ion-item-option color="tertiary" (click)="edit(native)">
-        <ion-icon slot="icon-only" name="list-outline"></ion-icon>
-      </ion-item-option>
-      <ion-item-option color="danger" expandable="true" (click)="delete(native.id)">
-        <ion-icon slot="icon-only" name="trash"></ion-icon>
-      </ion-item-option>
-    </ion-item-options>
-  </ion-item-sliding>
 
 
-  
-</ion-list>
+  </ion-list>
 
-<ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
-  <ion-infinite-scroll-content></ion-infinite-scroll-content>
-</ion-infinite-scroll>
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
   <!-- <div>档案</div> -->
 
   <!-- <table>
-    <thead>
-      <th>ID</th>
-      <th>姓名</th>
-      <th>性别</th>
-      <th>时间</th>
-      <th>时区</th>
-      <th>夏令时</th>
-      <th>城市</th>
-      <th>创建时间</th>
-      <th>最后更新时间</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let native of natives.data">
-        <td>{{ native.id }}</td>
-        <td>{{ native.name }}</td>
-        <td>{{native.sex? '男': '女'}}</td>
-        <td>{{ native.year }}-{{ native.month}}-{{native.day}} {{native.hour}}:{{native.minute}}:{{native.second}}</td>
-        <td>{{ native.tz }}</td>
-        <td>{{ native.st }}</td>
-        <td>{{ native.geo.name }}</td>
-        <td>{{ native.create_date }}</td>
-        <td>{{ native.last_update_date }}</td>
-      </tr>
+  <thead>
+    <th>ID</th>
+    <th>姓名</th>
+    <th>性别</th>
+    <th>时间</th>
+    <th>时区</th>
+    <th>夏令时</th>
+    <th>城市</th>
+    <th>创建时间</th>
+    <th>最后更新时间</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let native of natives.data">
+      <td>{{ native.id }}</td>
+      <td>{{ native.name }}</td>
+      <td>{{native.sex? '男': '女'}}</td>
+      <td>{{ native.year }}-{{ native.month}}-{{native.day}} {{native.hour}}:{{native.minute}}:{{native.second}}</td>
+      <td>{{ native.tz }}</td>
+      <td>{{ native.st }}</td>
+      <td>{{ native.geo.name }}</td>
+      <td>{{ native.create_date }}</td>
+      <td>{{ native.last_update_date }}</td>
+    </tr>
   </table> -->
 
   <!--
@@ -108,7 +108,7 @@
       <ion-col size="0" size-md="2" class="hide-on-small"><strong>城市</strong></ion-col>
       <ion-col size="0" size-md="5" class="hide-on-small"><strong>创建时间</strong></ion-col>
     </ion-row>
-     <ion-row *ngFor="let native of natives.data; let i = index" [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
+    <ion-row *ngFor="let native of natives.data; let i = index" [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
       <ion-col size="6" size-md="1">{{ native.id }}</ion-col>
       <ion-col size="0" size-md="2" class="hide-on-small">{{ native.name }}</ion-col>
       <ion-col size="0" size-md="2" class="hide-on-small">{{ native.sex ? '男' : '女' }}</ion-col>
@@ -128,37 +128,37 @@
       </ion-col>
       <ion-col size="0" size-md="2" class="hide-on-small">{{ native.geo.name }}</ion-col>
       <ion-col size="0" size-md="5" class="hide-on-small">{{ native.create_date }}</ion-col>
-    </ion-row> 
+    </ion-row>
   </ion-grid>-->
 
 
 
   <!-- <ion-grid fixed>
-    <ion-row>
-      <ion-col size="6" size-md="1"><strong>ID</strong></ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small"><strong>姓名</strong></ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small"><strong>性别</strong></ion-col>
-      <ion-col size="18" size-md="4"><strong>时间</strong></ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small"><strong>时区</strong></ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small"><strong>夏令时</strong></ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small"><strong>城市</strong></ion-col>
-      <ion-col size="0" size-md="5" class="hide-on-small"><strong>创建时间</strong></ion-col>
-    </ion-row>
-    <ion-row *ngFor="let native of natives.data">
-      <ion-col size="6" size-md="1">{{ native.id }}</ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small">{{ native.name }}</ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small">{{ native.sex ? '男' : '女' }}</ion-col>
-      <ion-col size="18" size-md="4">{{ native.year }}-{{ native.month }}-{{ native.day }} {{ native.hour }}:{{ native.minute }}:{{ native.second }}</ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small" *ngIf="native.tz>0">{{ '东' + native.tz + '区' }}</ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small" *ngIf="native.tz<0">{{ '西' + -native.tz + '区' }}</ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small" *ngIf="native.tz==0">0时区</ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small">
-        <ion-checkbox [checked]="native.st" disabled="true"></ion-checkbox>
-      </ion-col>
-      <ion-col size="0" size-md="2" class="hide-on-small">{{ native.geo.name }}</ion-col>
-      <ion-col size="0" size-md="5" class="hide-on-small">{{ native.create_date }}</ion-col>
-    </ion-row>
-  </ion-grid> -->
+  <ion-row>
+    <ion-col size="6" size-md="1"><strong>ID</strong></ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small"><strong>姓名</strong></ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small"><strong>性别</strong></ion-col>
+    <ion-col size="18" size-md="4"><strong>时间</strong></ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small"><strong>时区</strong></ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small"><strong>夏令时</strong></ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small"><strong>城市</strong></ion-col>
+    <ion-col size="0" size-md="5" class="hide-on-small"><strong>创建时间</strong></ion-col>
+  </ion-row>
+  <ion-row *ngFor="let native of natives.data">
+    <ion-col size="6" size-md="1">{{ native.id }}</ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small">{{ native.name }}</ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small">{{ native.sex ? '男' : '女' }}</ion-col>
+    <ion-col size="18" size-md="4">{{ native.year }}-{{ native.month }}-{{ native.day }} {{ native.hour }}:{{ native.minute }}:{{ native.second }}</ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small" *ngIf="native.tz>0">{{ '东' + native.tz + '区' }}</ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small" *ngIf="native.tz<0">{{ '西' + -native.tz + '区' }}</ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small" *ngIf="native.tz==0">0时区</ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small">
+      <ion-checkbox [checked]="native.st" disabled="true"></ion-checkbox>
+    </ion-col>
+    <ion-col size="0" size-md="2" class="hide-on-small">{{ native.geo.name }}</ion-col>
+    <ion-col size="0" size-md="5" class="hide-on-small">{{ native.create_date }}</ion-col>
+  </ion-row>
+</ion-grid> -->
 
 </ion-content>
 
@@ -168,8 +168,8 @@
 
 
 
- <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-  (didDismiss)="isAlertOpen=false"></ion-alert>
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+(didDismiss)="isAlertOpen=false"></ion-alert>
 
 <!--
 <ion-modal [isOpen]="isDetailModalOpen" [backdropDismiss]="false">
@@ -199,7 +199,7 @@
         <ion-item>
           <ion-label>时间</ion-label>
           <ion-text>{{ selectedNative?.year }}-{{ selectedNative?.month }}-{{ selectedNative?.day }} {{
-            selectedNative?.hour }}:{{ selectedNative?.minute }}:{{ selectedNative?.second }}</ion-text>
+          selectedNative?.hour }}:{{ selectedNative?.minute }}:{{ selectedNative?.second }}</ion-text>
         </ion-item>
         <ion-item>
           <ion-label>时区</ion-label>
@@ -218,12 +218,12 @@
         <ion-item>
           <ion-label>经度</ion-label>
           <ion-text>{{ selectedNative?.geo?.east? '东经':'西经'}}{{ selectedNative?.geo?.long_d + '°' +
-            selectedNative?.geo?.long_m + "'" + selectedNative?.geo?.long_s + '"' }}</ion-text>
+          selectedNative?.geo?.long_m + "'" + selectedNative?.geo?.long_s + '"' }}</ion-text>
         </ion-item>
         <ion-item>
           <ion-label>纬度</ion-label>
           <ion-text>{{ selectedNative?.geo?.north? '北纬':'南纬'}}{{ selectedNative?.geo?.lat_d + '°' +
-            selectedNative?.geo?.lat_m + "'" + selectedNative?.geo?.lat_s + '"' }}</ion-text>
+          selectedNative?.geo?.lat_m + "'" + selectedNative?.geo?.lat_s + '"' }}</ion-text>
         </ion-item>
         <ion-item>
           <ion-label>创建时间</ion-label>
@@ -280,17 +280,17 @@
           <ion-col size="4">时间</ion-col>
           <ion-col size="20">
             <ion-input type="number" [(ngModel)]="editedNative.year"
-              style="width: 60px; display: inline-block;"></ion-input>-
+            style="width: 60px; display: inline-block;"></ion-input>-
             <ion-input type="number" [(ngModel)]="editedNative.month"
-              style="width: 40px; display: inline-block;"></ion-input>-
+            style="width: 40px; display: inline-block;"></ion-input>-
             <ion-input type="number" [(ngModel)]="editedNative.day"
-              style="width: 40px; display: inline-block;"></ion-input>
+            style="width: 40px; display: inline-block;"></ion-input>
             <ion-input type="number" [(ngModel)]="editedNative.hour"
-              style="width: 40px; display: inline-block;"></ion-input>:
+            style="width: 40px; display: inline-block;"></ion-input>:
             <ion-input type="number" [(ngModel)]="editedNative.minute"
-              style="width: 40px; display: inline-block;"></ion-input>:
+            style="width: 40px; display: inline-block;"></ion-input>:
             <ion-input type="number" [(ngModel)]="editedNative.second"
-              style="width: 40px; display: inline-block;"></ion-input>
+            style="width: 40px; display: inline-block;"></ion-input>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -319,11 +319,11 @@
               <ion-select-option [value]="false">西经</ion-select-option>
             </ion-select>
             <ion-input type="number" [(ngModel)]="editedNative.geo.long_d"
-              style="width: 40px; display: inline-block;"></ion-input>°
+            style="width: 40px; display: inline-block;"></ion-input>°
             <ion-input type="number" [(ngModel)]="editedNative.geo.long_m"
-              style="width: 40px; display: inline-block;"></ion-input>'
+            style="width: 40px; display: inline-block;"></ion-input>'
             <ion-input type="number" [(ngModel)]="editedNative.geo.long_s"
-              style="width: 40px; display: inline-block;"></ion-input>"
+            style="width: 40px; display: inline-block;"></ion-input>"
           </ion-col>
         </ion-row>
         <ion-row>
@@ -334,11 +334,11 @@
               <ion-select-option [value]="false">南纬</ion-select-option>
             </ion-select>
             <ion-input type="number" [(ngModel)]="editedNative.geo.lat_d"
-              style="width: 40px; display: inline-block;"></ion-input>°
+            style="width: 40px; display: inline-block;"></ion-input>°
             <ion-input type="number" [(ngModel)]="editedNative.geo.lat_m"
-              style="width: 40px; display: inline-block;"></ion-input>'
+            style="width: 40px; display: inline-block;"></ion-input>'
             <ion-input type="number" [(ngModel)]="editedNative.geo.lat_s"
-              style="width: 40px; display: inline-block;"></ion-input>"
+            style="width: 40px; display: inline-block;"></ion-input>"
           </ion-col>
         </ion-row>
         <ion-row>
