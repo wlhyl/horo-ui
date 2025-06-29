@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from "@angular/core";
+import { NgModule, inject, provideAppInitializer } from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {RouteReuseStrategy} from "@angular/router";
 
@@ -25,12 +25,10 @@ import {authInterceptor} from "./interceptor/auth/auth.interceptor";
     IonicModule.forRoot(),
     AppRoutingModule], providers: [
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (config: Horoconfig, api: ApiService) => () => appInit(config, api),
-      deps: [Horoconfig, ApiService],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+        const initializerFn = ((config: Horoconfig, api: ApiService) => () => appInit(config, api))(inject(Horoconfig), inject(ApiService));
+        return initializerFn();
+      }),
     provideHttpClient(withInterceptors([authInterceptor])),
   ]
 })

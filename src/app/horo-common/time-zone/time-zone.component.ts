@@ -7,9 +7,10 @@ import {
 } from '@ionic/angular';
 
 @Component({
-  selector: 'horo-time-zone',
-  templateUrl: './time-zone.component.html',
-  styleUrls: ['./time-zone.component.scss'],
+    selector: 'horo-time-zone',
+    templateUrl: './time-zone.component.html',
+    styleUrls: ['./time-zone.component.scss'],
+    standalone: false
 })
 export class TimeZoneComponent implements OnInit {
   @Input()

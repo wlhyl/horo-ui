@@ -6,9 +6,10 @@ import { Path as subPath } from './path';
 import { Path } from '../type/enum/path';
 
 @Component({
-  selector: 'app-qizheng',
-  templateUrl: './qizheng.page.html',
-  styleUrls: ['./qizheng.page.scss'],
+    selector: 'app-qizheng',
+    templateUrl: './qizheng.page.html',
+    styleUrls: ['./qizheng.page.scss'],
+    standalone: false
 })
 export class QizhengPage implements OnInit {
   path = Path;

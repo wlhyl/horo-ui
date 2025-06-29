@@ -13,9 +13,10 @@ import { LocationRecord } from 'src/app/type/interface/location-record';
 import { isLocationEqual } from 'src/app/utils/location-record';
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss'],
+    selector: 'app-edit',
+    templateUrl: './edit.component.html',
+    styleUrls: ['./edit.component.scss'],
+    standalone: false
 })
 export class EditComponent implements OnInit {
   title = '编辑';

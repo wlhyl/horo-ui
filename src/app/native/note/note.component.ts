@@ -10,9 +10,10 @@ import {
 import { degreeToDMS } from 'src/app/utils/horo-math';
 
 @Component({
-  selector: 'app-note',
-  templateUrl: './note.component.html',
-  styleUrls: ['./note.component.scss'],
+    selector: 'app-note',
+    templateUrl: './note.component.html',
+    styleUrls: ['./note.component.scss'],
+    standalone: false
 })
 export class NoteComponent implements OnInit {
   path = Path;

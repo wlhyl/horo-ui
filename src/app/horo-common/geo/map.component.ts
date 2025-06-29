@@ -4,9 +4,10 @@ declare let BMap :any
 declare let BMAP_STATUS_SUCCESS :any
 
 @Component({
-  selector: 'horo-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+    selector: 'horo-map',
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
+    standalone: false
 })
 export class MapComponent implements OnInit {
   isModalOpen = false

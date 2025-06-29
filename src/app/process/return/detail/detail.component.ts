@@ -7,9 +7,10 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { degreeToDMS } from 'src/app/utils/horo-math';
 
 @Component({
-  selector: 'app-detail',
-  templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss'],
+    selector: 'app-detail',
+    templateUrl: './detail.component.html',
+    styleUrls: ['./detail.component.scss'],
+    standalone: false
 })
 export class DetailComponent implements OnInit {
   path = Path;

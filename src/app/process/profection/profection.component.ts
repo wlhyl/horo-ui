@@ -7,9 +7,10 @@ import { Profection } from 'src/app/type/interface/response-data';
 import { Path } from 'src/app/type/enum/path';
 
 @Component({
-  selector: 'app-profection',
-  templateUrl: './profection.component.html',
-  styleUrls: ['./profection.component.scss'],
+    selector: 'app-profection',
+    templateUrl: './profection.component.html',
+    styleUrls: ['./profection.component.scss'],
+    standalone: false
 })
 export class ProfectionComponent implements OnInit {
   path = Path;

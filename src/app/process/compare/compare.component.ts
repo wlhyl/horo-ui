@@ -31,9 +31,10 @@ enum ComparisonType {
 }
 
 @Component({
-  selector: 'app-compare',
-  templateUrl: './compare.component.html',
-  styleUrls: ['./compare.component.scss'],
+    selector: 'app-compare',
+    templateUrl: './compare.component.html',
+    styleUrls: ['./compare.component.scss'],
+    standalone: false
 })
 export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;

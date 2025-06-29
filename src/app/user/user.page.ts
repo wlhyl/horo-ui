@@ -4,9 +4,10 @@ import { AuthService } from '../services/auth/auth.service';
 import { Path } from '../type/enum/path';
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.page.html',
-  styleUrls: ['./user.page.scss'],
+    selector: 'app-user',
+    templateUrl: './user.page.html',
+    styleUrls: ['./user.page.scss'],
+    standalone: false
 })
 export class UserPage implements OnInit {
   path = Path;

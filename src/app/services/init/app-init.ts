@@ -1,4 +1,4 @@
-import * as FontFaceObserver from 'fontfaceobserver';
+import FontFaceObserver from 'fontfaceobserver';
 import { Horoconfig } from '../config/horo-config.service';
 import { ApiService } from '../api/api.service';
 import { lastValueFrom } from 'rxjs';

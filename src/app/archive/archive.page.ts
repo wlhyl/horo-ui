@@ -11,9 +11,10 @@ import {Path} from "../type/enum/path";
 import {Path as SubPath} from "./enum";
 
 @Component({
-  selector: "app-archive",
-  templateUrl: "./archive.page.html",
-  styleUrls: ["./archive.page.scss"],
+    selector: "app-archive",
+    templateUrl: "./archive.page.html",
+    styleUrls: ["./archive.page.scss"],
+    standalone: false
 })
 export class ArchivePage implements OnInit, ViewWillEnter {
   title = "档案库";

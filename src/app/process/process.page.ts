@@ -7,9 +7,10 @@ import {Title} from '@angular/platform-browser';
 import {Path} from '../type/enum/path';
 
 @Component({
-  selector: 'app-process',
-  templateUrl: './process.page.html',
-  styleUrls: ['./process.page.scss'],
+    selector: 'app-process',
+    templateUrl: './process.page.html',
+    styleUrls: ['./process.page.scss'],
+    standalone: false
 })
 export class ProcessPage implements OnInit {
   readonly houses: Array<string> = this.config.houses;

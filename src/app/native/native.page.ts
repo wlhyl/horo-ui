@@ -6,9 +6,10 @@ import { Title } from '@angular/platform-browser';
 import { Path } from '../type/enum/path';
 
 @Component({
-  selector: 'app-native',
-  templateUrl: './native.page.html',
-  styleUrls: ['./native.page.scss'],
+    selector: 'app-native',
+    templateUrl: './native.page.html',
+    styleUrls: ['./native.page.scss'],
+    standalone: false
 })
 export class NativePage implements OnInit {
   readonly houses: Array<string> = this.config.houses;

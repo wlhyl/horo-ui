@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 
 @Component({
-  selector: 'horo-date-time',
-  templateUrl: './date-time.component.html',
-  styleUrls: ['./date-time.component.scss'],
+    selector: 'horo-date-time',
+    templateUrl: './date-time.component.html',
+    styleUrls: ['./date-time.component.scss'],
+    standalone: false
 })
 export class DateTimeComponent implements OnInit, OnChanges {
   @Input()

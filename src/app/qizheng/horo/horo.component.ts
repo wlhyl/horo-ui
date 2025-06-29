@@ -15,9 +15,10 @@ import { Platform } from '@ionic/angular';
 import { Path } from '../../type/enum/path';
 
 @Component({
-  selector: 'app-horo',
-  templateUrl: './horo.component.html',
-  styleUrls: ['./horo.component.scss'],
+    selector: 'app-horo',
+    templateUrl: './horo.component.html',
+    styleUrls: ['./horo.component.scss'],
+    standalone: false
 })
 export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;

@@ -20,9 +20,10 @@ import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 
 @Component({
-  selector: 'app-return',
-  templateUrl: './return.component.html',
-  styleUrls: ['./return.component.scss'],
+    selector: 'app-return',
+    templateUrl: './return.component.html',
+    styleUrls: ['./return.component.scss'],
+    standalone: false
 })
 export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   path = Path;

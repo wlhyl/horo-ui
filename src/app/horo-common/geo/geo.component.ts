@@ -3,9 +3,10 @@ import { degreeToDMS } from '../../utils/horo-math';
 import { EW, NS } from './enum';
 
 @Component({
-  selector: 'horo-geo',
-  templateUrl: './geo.component.html',
-  styleUrls: ['./geo.component.scss'],
+    selector: 'horo-geo',
+    templateUrl: './geo.component.html',
+    styleUrls: ['./geo.component.scss'],
+    standalone: false
 })
 export class GeoComponent implements OnInit {
   isModalOpen = false;

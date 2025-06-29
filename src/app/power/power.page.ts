@@ -16,9 +16,10 @@ import {
 import { Path } from '../type/enum/path';
 
 @Component({
-  selector: 'app-power',
-  templateUrl: './power.page.html',
-  styleUrls: ['./power.page.scss'],
+    selector: 'app-power',
+    templateUrl: './power.page.html',
+    styleUrls: ['./power.page.scss'],
+    standalone: false
 })
 export class PowerPage implements OnInit {
   path = Path;

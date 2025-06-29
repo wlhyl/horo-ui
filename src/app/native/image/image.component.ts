@@ -22,9 +22,10 @@ import { isLocationEqual } from 'src/app/utils/location-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 
 @Component({
-  selector: 'teanote-image',
-  templateUrl: 'image.component.html',
-  styleUrls: ['image.component.scss'],
+    selector: 'teanote-image',
+    templateUrl: 'image.component.html',
+    styleUrls: ['image.component.scss'],
+    standalone: false
 })
 export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;

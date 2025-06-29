@@ -8,9 +8,10 @@ import { FirdariaPeriod } from 'src/app/type/interface/response-data';
 import { Path } from 'src/app/type/enum/path';
 
 @Component({
-  selector: 'app-firdaria',
-  templateUrl: './firdaria.component.html',
-  styleUrls: ['./firdaria.component.scss'],
+    selector: 'app-firdaria',
+    templateUrl: './firdaria.component.html',
+    styleUrls: ['./firdaria.component.scss'],
+    standalone: false
 })
 export class FirdariaComponent implements OnInit {
   path = Path;
