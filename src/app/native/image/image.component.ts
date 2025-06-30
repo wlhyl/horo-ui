@@ -17,19 +17,21 @@ import {
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horoscope-record';
 import { Path as subPath } from '../enum';
-import { deepClone } from 'src/app/utils/deepclone'; // 导入 deepClone
 import { isLocationEqual } from 'src/app/utils/location-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { deepClone } from 'src/app/utils/deep-clone';
 
 @Component({
-    selector: 'teanote-image',
-    templateUrl: 'image.component.html',
-    styleUrls: ['image.component.scss'],
-    standalone: false
+  selector: 'teanote-image',
+  templateUrl: 'image.component.html',
+  styleUrls: ['image.component.scss'],
+  standalone: false,
 })
 export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;
-  horoData: HoroRequest = deepClone(this.storage.horoData); // 深度克隆horoData
+  private horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
+  currentHoroData: HoroRequest = deepClone(this.horoData);
 
   isAlertOpen = false;
   alertButtons = ['OK'];
@@ -61,9 +63,9 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     public config: Horoconfig,
     private storage: HoroStorageService,
     private titleService: Title,
-    private router: Router, // 注入 Router
-    private route: ActivatedRoute, // 注入 ActivatedRoute
-    private authService: AuthService, // 注入 AuthService
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
     private alertController: AlertController
   ) {}
 
@@ -73,7 +75,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.canvas = new StaticCanvas('canvas');
-    this.drawHoroscope();
+    this.drawHoroscope(this.currentHoroData);
   }
 
   ngOnDestroy(): void {
@@ -83,7 +85,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private async drawHoroscope() {
+  private async drawHoroscope(horoData: HoroRequest) {
     if (this.isDrawing || this.loading) return; // 如果正在绘制或加载则返回
 
     this.isDrawing = true; // 开始绘制
@@ -92,7 +94,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       this.horoscoData = await lastValueFrom(
-        this.api.getNativeHoroscope(this.horoData)
+        this.api.getNativeHoroscope(horoData)
       );
       this.isAlertOpen = false;
       this.draw();
@@ -169,12 +171,12 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     second: number;
   }) {
     let date = new Date(
-      this.horoData.date.year,
-      this.horoData.date.month - 1,
-      this.horoData.date.day,
-      this.horoData.date.hour,
-      this.horoData.date.minute,
-      this.horoData.date.second
+      this.currentHoroData.date.year,
+      this.currentHoroData.date.month - 1,
+      this.currentHoroData.date.day,
+      this.currentHoroData.date.hour,
+      this.currentHoroData.date.minute,
+      this.currentHoroData.date.second
     );
 
     date.setFullYear(date.getFullYear() + step.year);
@@ -184,14 +186,14 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     date.setMinutes(date.getMinutes() + step.minute);
     date.setSeconds(date.getSeconds() + step.second);
 
-    this.horoData.date.year = date.getFullYear();
-    this.horoData.date.month = date.getMonth() + 1;
-    this.horoData.date.day = date.getDate();
-    this.horoData.date.hour = date.getHours();
-    this.horoData.date.minute = date.getMinutes();
-    this.horoData.date.second = date.getSeconds();
+    this.currentHoroData.date.year = date.getFullYear();
+    this.currentHoroData.date.month = date.getMonth() + 1;
+    this.currentHoroData.date.day = date.getDate();
+    this.currentHoroData.date.hour = date.getHours();
+    this.currentHoroData.date.minute = date.getMinutes();
+    this.currentHoroData.date.second = date.getSeconds();
 
-    await this.drawHoroscope();
+    await this.drawHoroscope(this.currentHoroData);
   }
 
   async onArchive() {
@@ -258,7 +260,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       const native = await lastValueFrom(this.api.addNative(nativeRequest));
-      this.horoData.id = native.id;
+      this.storage.horoData = { ...this.horoData, id: native.id };
       this.isSaveOpen = true;
     } catch (error: any) {
       this.handleError('新增档案错误', error);
@@ -342,6 +344,8 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.api.updateNative(this.horoData.id, nativeRequest)
       );
       this.isSaveOpen = true;
+      // 重新赋值是不必要的，因为this.horoData已经是最新的
+      // this.horoData = this.horoData; // 保存到 localStorage
     } catch (error: any) {
       this.handleError('更新档案错误', error);
     }

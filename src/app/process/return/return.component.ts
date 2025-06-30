@@ -5,7 +5,11 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import * as fabric from 'fabric';
 import { ReturnHoroscope } from 'src/app/type/interface/response-data';
-import { ReturnRequest } from 'src/app/type/interface/request-data';
+import {
+  HoroRequest,
+  ProcessRequest,
+  ReturnRequest,
+} from 'src/app/type/interface/request-data';
 import { lastValueFrom } from 'rxjs';
 import {
   drawAspect,
@@ -18,12 +22,14 @@ import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { deepClone } from 'src/app/utils/deep-clone';
 
 @Component({
-    selector: 'app-return',
-    templateUrl: './return.component.html',
-    styleUrls: ['./return.component.scss'],
-    standalone: false
+  selector: 'app-return',
+  templateUrl: './return.component.html',
+  styleUrls: ['./return.component.scss'],
+  standalone: false,
 })
 export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   path = Path;
@@ -33,9 +39,11 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   alertButtons = ['OK'];
   message = '';
 
-  horoData = this.storage.horoData;
-  processData = this.storage.processData;
-  returnHoroscopeData: ReturnHoroscope | null = null;
+  horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
+  private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
+  currentProcessData: ProcessRequest = deepClone(this.processData);
+
+  returnHoroscopeData: ReturnHoroscope | null = null; // 存储返照盘数据的缓存
 
   private _isAspect = false; // 默认绘制星盘
   private canvasCache: { version: string; objects: Object[] } | undefined =
@@ -64,7 +72,11 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     if (tempCache) {
       this.canvas?.loadFromJSON(tempCache).then((canvas) => canvas.renderAll());
     } else {
-      this.draw();
+      if (this.returnHoroscopeData) {
+        this.draw(this.returnHoroscopeData);
+      } else {
+        this.drawHoroscope(this.process_name);
+      }
     }
   }
 
@@ -82,13 +94,11 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     private storage: HoroStorageService,
     public config: Horoconfig,
     private titleService: Title
-  ) {}
-
-  ngOnInit() {
+  ) {
     const process_name = this.route.snapshot.data['process_name'];
     if (process_name === null) {
-      this.message = '选择一种返照盘';
-      this.isAlertOpen = true;
+      alert('配置错误，没有正确配置返照盘类型');
+      console.error('配置错误，路由没有正确配置返照盘类型');
       return;
     }
 
@@ -98,11 +108,14 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
         this.process_name = process_name;
         break;
       default:
-        this.message = `无此种返照盘：${process_name}`;
-        this.isAlertOpen = true;
+        const message = `无此种返照盘：${process_name}`;
+        alert(message);
+        console.error(message);
         return;
     }
+  }
 
+  ngOnInit() {
     // 设置了this.path再设置title
     this.titleService.setTitle(this.title);
   }
@@ -129,7 +142,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       this.returnHoroscopeData = await this.getReturnData(process_name);
       this.isAlertOpen = false;
-      this.draw();
+      this.draw(this.returnHoroscopeData);
     } catch (error: any) {
       const message = error.message + ' ' + error.error.message;
       this.message = message;
@@ -155,7 +168,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       native_date: this.horoData.date,
       geo: this.processData.geo, // 注意这里的geo是返照盘的地理位置
       house: this.horoData.house,
-      process_date: this.processData.date,
+      process_date: this.currentProcessData.date, // 这里使用当前的processData.date
     };
 
     return await lastValueFrom(this.api.solarReturn(requestData));
@@ -186,25 +199,25 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       native_date,
       geo: this.processData.geo, // 注意这里的geo是返照盘的地理位置
       house: this.horoData.house,
-      process_date: this.processData.date,
+      process_date: this.currentProcessData.date, // 这里使用当前的processData.date
     };
 
     return await lastValueFrom(this.api.lunarReturn(requestData));
   }
 
   // 绘制星盘和相位
-  draw() {
-    if (this.returnHoroscopeData === null) return;
+  draw(returnHoroscopeData: ReturnHoroscope) {
+    // if (this.returnHoroscopeData === null) return;
 
-    this.canvas?.setWidth(0);
-    this.canvas?.setHeight(0);
+    // this.canvas?.setWidth(0);
+    // this.canvas?.setHeight(0);
     if (this.isAspect) {
-      drawAspect(this.returnHoroscopeData.aspects, this.canvas!, this.config, {
+      drawAspect(returnHoroscopeData.aspects, this.canvas!, this.config, {
         width: this.config.aspectImage.width,
         heigth: this.config.aspectImage.height,
       });
     } else {
-      drawReturnHorosco(this.returnHoroscopeData, this.canvas!, this.config, {
+      drawReturnHorosco(returnHoroscopeData, this.canvas!, this.config, {
         width: this.config.HoroscoImage.width,
         heigth: this.config.HoroscoImage.height,
       });
@@ -221,12 +234,12 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     second: number;
   }) {
     let date = new Date(
-      this.processData.date.year,
-      this.processData.date.month - 1,
-      this.processData.date.day,
-      this.processData.date.hour,
-      this.processData.date.minute,
-      this.processData.date.second
+      this.currentProcessData.date.year,
+      this.currentProcessData.date.month - 1,
+      this.currentProcessData.date.day,
+      this.currentProcessData.date.hour,
+      this.currentProcessData.date.minute,
+      this.currentProcessData.date.second
     );
 
     date.setFullYear(date.getFullYear() + step.year);
@@ -236,12 +249,12 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     date.setMinutes(date.getMinutes() + step.minute);
     date.setSeconds(date.getSeconds() + step.second);
 
-    this.processData.date.year = date.getFullYear();
-    this.processData.date.month = date.getMonth() + 1;
-    this.processData.date.day = date.getDate();
-    this.processData.date.hour = date.getHours();
-    this.processData.date.minute = date.getMinutes();
-    this.processData.date.second = date.getSeconds();
+    this.currentProcessData.date.year = date.getFullYear();
+    this.currentProcessData.date.month = date.getMonth() + 1;
+    this.currentProcessData.date.day = date.getDate();
+    this.currentProcessData.date.hour = date.getHours();
+    this.currentProcessData.date.minute = date.getMinutes();
+    this.currentProcessData.date.second = date.getSeconds();
 
     await this.drawHoroscope(this.process_name);
   }

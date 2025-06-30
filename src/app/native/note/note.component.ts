@@ -92,7 +92,7 @@ export class NoteComponent implements OnInit {
 
       this.api.addNative(nativeRequest).subscribe({
         next: (data) => {
-          this.horoData.id = data.id;
+          this.horoData = { ...this.horoData, id: data.id };
           this.initialDescribe = this.describe;
           this.message = '已新增记录';
           this.isAlertOpen = true;

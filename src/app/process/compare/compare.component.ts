@@ -13,7 +13,9 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { Platform } from '@ionic/angular';
 import * as fabric from 'fabric';
 import {
+  HoroRequest,
   HoroscopeComparisonRequest,
+  ProcessRequest,
   ReturnRequest,
 } from 'src/app/type/interface/request-data';
 import { lastValueFrom } from 'rxjs';
@@ -22,6 +24,8 @@ import { zoomImage } from 'src/app/utils/image/horo';
 import { degreeToDMS } from 'src/app/utils/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { deepClone } from 'src/app/utils/deep-clone';
 
 enum ComparisonType {
   SolarComparNative, // 日返照盘比本命盘
@@ -31,15 +35,17 @@ enum ComparisonType {
 }
 
 @Component({
-    selector: 'app-compare',
-    templateUrl: './compare.component.html',
-    styleUrls: ['./compare.component.scss'],
-    standalone: false
+  selector: 'app-compare',
+  templateUrl: './compare.component.html',
+  styleUrls: ['./compare.component.scss'],
+  standalone: false,
 })
 export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;
-  horoData = this.storage.horoData;
-  processData = this.storage.processData;
+  horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
+  private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
+  currentProcessData: ProcessRequest = deepClone(this.processData);
+
   horoscopeComparisonData: HoroscopeComparison | null = null;
   returnData: ReturnHoroscope | null = null;
 
@@ -74,14 +80,12 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig
-  ) {}
-
-  ngOnInit() {
+  ) {
     const process_name = this.route.snapshot.data['process_name'];
 
     if (process_name === null) {
-      this.message = '选择一种比较盘';
-      this.isAlertOpen = true;
+      alert('配置错误，没有正确配置比较盘类型');
+      console.error('配置错误，路由没有正确配置比较盘类型');
       return;
     }
 
@@ -94,11 +98,14 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
         this.process_name = process_name;
         break;
       default:
-        this.message = `无此种比较盘：${process_name}`;
-        this.isAlertOpen = true;
+        const message = `无此种比较盘：${process_name}`;
+        alert(message);
+        console.error(message);
         return;
     }
+  }
 
+  ngOnInit() {
     this.titleService.setTitle(this.title);
   }
 
@@ -127,7 +134,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
         process_name
       );
       this.isAlertOpen = false;
-      this.draw();
+      this.draw(this.horoscopeComparisonData);
     } catch (error: any) {
       const errorMessage = error.error?.message || error.message || '未知错误';
       this.message = `获取星盘数据失败: ${errorMessage}`;
@@ -139,21 +146,16 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // 绘制星盘和相位
-  private draw() {
-    if (this.horoscopeComparisonData === null) return;
+  private draw(horoscopeComparisonData: HoroscopeComparison) {
+    // if (this.horoscopeComparisonData === null) return;
 
     if (this.isAspect) {
-      drawAspect(
-        this.horoscopeComparisonData.aspects,
-        this.canvas!,
-        this.config,
-        {
-          width: this.config.aspectImage.width,
-          height: this.config.aspectImage.height,
-        }
-      );
+      drawAspect(horoscopeComparisonData.aspects, this.canvas!, this.config, {
+        width: this.config.aspectImage.width,
+        height: this.config.aspectImage.height,
+      });
     } else {
-      drawHorosco(this.horoscopeComparisonData, this.canvas!, this.config, {
+      drawHorosco(horoscopeComparisonData, this.canvas!, this.config, {
         width: this.config.HoroscoImage.width,
         height: this.config.HoroscoImage.height,
       });
@@ -179,7 +181,11 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     if (tempCache) {
       this.canvas?.loadFromJSON(tempCache).then((canvas) => canvas.renderAll());
     } else {
-      this.draw();
+      if (this.horoscopeComparisonData) {
+        this.draw(this.horoscopeComparisonData);
+      } else {
+        this.drawHoroscope(this.process_name);
+      }
     }
   }
 
@@ -192,12 +198,12 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     second: number;
   }) {
     let date = new Date(
-      this.processData.date.year,
-      this.processData.date.month - 1,
-      this.processData.date.day,
-      this.processData.date.hour,
-      this.processData.date.minute,
-      this.processData.date.second
+      this.currentProcessData.date.year,
+      this.currentProcessData.date.month - 1,
+      this.currentProcessData.date.day,
+      this.currentProcessData.date.hour,
+      this.currentProcessData.date.minute,
+      this.currentProcessData.date.second
     );
 
     date.setFullYear(date.getFullYear() + step.year);
@@ -207,12 +213,12 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     date.setMinutes(date.getMinutes() + step.minute);
     date.setSeconds(date.getSeconds() + step.second);
 
-    this.processData.date.year = date.getFullYear();
-    this.processData.date.month = date.getMonth() + 1;
-    this.processData.date.day = date.getDate();
-    this.processData.date.hour = date.getHours();
-    this.processData.date.minute = date.getMinutes();
-    this.processData.date.second = date.getSeconds();
+    this.currentProcessData.date.year = date.getFullYear();
+    this.currentProcessData.date.month = date.getMonth() + 1;
+    this.currentProcessData.date.day = date.getDate();
+    this.currentProcessData.date.hour = date.getHours();
+    this.currentProcessData.date.minute = date.getMinutes();
+    this.currentProcessData.date.second = date.getSeconds();
 
     await this.drawHoroscope(this.process_name);
   }
@@ -249,7 +255,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const requestData: HoroscopeComparisonRequest = {
       original_date: this.horoData.date,
-      comparison_date: this.processData.date,
+      comparison_date: this.currentProcessData.date, // 这里使用当前的processData.date
       original_geo: this.horoData.geo,
       comparison_geo: this.horoData.geo, // 注意这里的geo是原星盘的地理位置
       house: this.horoData.house,
@@ -304,7 +310,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   private async getSolarReturnData(): Promise<ReturnHoroscope> {
     const requestData: ReturnRequest = {
       native_date: this.horoData.date,
-      process_date: this.processData.date,
+      process_date: this.currentProcessData.date, // 这里使用当前的processData.date
       geo: this.processData.geo, // 注意：这里的geo是返照盘的地理位置
       house: this.horoData.house,
     };
@@ -335,7 +341,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let requestData: ReturnRequest = {
       native_date: native_date,
-      process_date: this.processData.date,
+      process_date: this.currentProcessData.date, // 这里使用当前的processData.date
       geo: this.processData.geo, // 注意：这里的geo是返照盘的地理位置
       house: this.horoData.house,
     };

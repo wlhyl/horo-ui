@@ -1,14 +1,24 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import { addIcons } from 'ionicons';
+import { timeOutline } from 'ionicons/icons';
 
 @Component({
-    selector: 'horo-date-time',
-    templateUrl: './date-time.component.html',
-    styleUrls: ['./date-time.component.scss'],
-    standalone: false
+  selector: 'horo-date-time',
+  templateUrl: './date-time.component.html',
+  styleUrls: ['./date-time.component.scss'],
+  standalone: false,
 })
 export class DateTimeComponent implements OnInit, OnChanges {
   @Input()
-  year = 0
+  year = 0;
 
   @Input()
   month = 1;
@@ -48,7 +58,11 @@ export class DateTimeComponent implements OnInit, OnChanges {
     // 获取本月最后一天: 等于，下一个月第0天
     // 本月: month-1
     // 下一个月: (month-1) + 1= month
-    let lastDay = new Date(this.currentValue.year, this.currentValue.month, 0).getDate();
+    let lastDay = new Date(
+      this.currentValue.year,
+      this.currentValue.month,
+      0
+    ).getDate();
     return [...Array(lastDay)].map((_, index) => index + 1);
   }
 
@@ -65,43 +79,43 @@ export class DateTimeComponent implements OnInit, OnChanges {
     hour: 0,
     minute: 0,
     second: 0,
-  }
+  };
 
-  isOpen = false
+  isOpen = false;
 
   constructor() {
+    addIcons({
+      timeOutline,
+    });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['year']) {
-      this.currentValue.year = changes['year'].currentValue
+      this.currentValue.year = changes['year'].currentValue;
     }
 
     if (changes['month']) {
-      this.currentValue.month = changes['month'].currentValue
+      this.currentValue.month = changes['month'].currentValue;
     }
 
     if (changes['day']) {
-      this.currentValue.day = changes['day'].currentValue
+      this.currentValue.day = changes['day'].currentValue;
     }
 
-
     if (changes['hour']) {
-      this.currentValue.hour = changes['hour'].currentValue
+      this.currentValue.hour = changes['hour'].currentValue;
     }
 
     if (changes['minute']) {
-      this.currentValue.minute = changes['minute'].currentValue
+      this.currentValue.minute = changes['minute'].currentValue;
     }
 
     if (changes['second']) {
-      this.currentValue.second = changes['second'].currentValue
+      this.currentValue.second = changes['second'].currentValue;
     }
   }
-
 
   onIonChangeYear(event: CustomEvent) {
     this.currentValue.year = event.detail.value;
@@ -128,27 +142,26 @@ export class DateTimeComponent implements OnInit, OnChanges {
   }
 
   onDidDismiss(event: CustomEvent) {
-    this.isOpen = false
+    this.isOpen = false;
 
     if (event.detail.data === null) {
-      this.currentValue.year = this.year
-      this.currentValue.month = this.month
-      this.currentValue.day = this.day
-      this.currentValue.hour = this.hour
-      this.currentValue.minute = this.minute
-      this.currentValue.second = this.second
+      this.currentValue.year = this.year;
+      this.currentValue.month = this.month;
+      this.currentValue.day = this.day;
+      this.currentValue.hour = this.hour;
+      this.currentValue.minute = this.minute;
+      this.currentValue.second = this.second;
     } else {
-      this.year = event.detail.data.year
-      this.month = event.detail.data.month
-      this.day = event.detail.data.day
-      this.hour = event.detail.data.hour
-      this.minute = event.detail.data.minute
-      this.second = event.detail.data.second
+      this.year = event.detail.data.year;
+      this.month = event.detail.data.month;
+      this.day = event.detail.data.day;
+      this.hour = event.detail.data.hour;
+      this.minute = event.detail.data.minute;
+      this.second = event.detail.data.second;
 
       this.emit();
     }
   }
-
 
   nowDate() {
     let t = new Date();

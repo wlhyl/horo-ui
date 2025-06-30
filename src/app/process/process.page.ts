@@ -5,6 +5,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Horoconfig} from '../services/config/horo-config.service';
 import {Title} from '@angular/platform-browser';
 import {Path} from '../type/enum/path';
+import { deepClone } from '../utils/deep-clone';
+import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 
 @Component({
     selector: 'app-process',
@@ -14,8 +16,8 @@ import {Path} from '../type/enum/path';
 })
 export class ProcessPage implements OnInit {
   readonly houses: Array<string> = this.config.houses;
-  horaData = this.storage.horoData;
-  processData = this.storage.processData;
+  horaData: HoroRequest = deepClone(this.storage.horoData);
+  processData: ProcessRequest = deepClone(this.storage.processData);
   title = '推运';
   path=Path;
 
@@ -45,7 +47,6 @@ export class ProcessPage implements OnInit {
 
   getProcess() {
     this.storage.horoData = this.horaData;
-    this.storage.horoData.save();
     this.storage.processData = this.processData;
     const path = ProcessName.path(this.processData.process_name);
     this.router.navigate([path], {
@@ -79,7 +80,7 @@ export class ProcessPage implements OnInit {
     if (event.detail.data === null) {
       this.currentProcess = this.processData.process_name
     } else {
-      this.processData.process_name = event.detail.data;
+      this.processData = { ...this.processData, process_name: event.detail.data };
     }
   }
 }

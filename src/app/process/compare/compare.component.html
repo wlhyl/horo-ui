@@ -20,10 +20,10 @@
 
 
   <div class="ion-text-center">
-    <h2>推运时间：{{ processData.date.year }}年{{ processData.date.month.toString().padStart(2, '0') }}月{{
-      processData.date.day.toString().padStart(2, '0') }}日 {{ processData.date.hour.toString().padStart(2, '0') }}:{{
-      processData.date.minute.toString().padStart(2, '0') }}:{{
-    processData.date.second.toString().padStart(2, '0') }}</h2>
+    <h2>推运时间：{{ currentProcessData.date.year }}年{{ currentProcessData.date.month.toString().padStart(2, '0') }}月{{
+      currentProcessData.date.day.toString().padStart(2, '0') }}日 {{ currentProcessData.date.hour.toString().padStart(2, '0') }}:{{
+      currentProcessData.date.minute.toString().padStart(2, '0') }}:{{
+    currentProcessData.date.second.toString().padStart(2, '0') }}</h2>
   </div>
 
   @if (returnData) {

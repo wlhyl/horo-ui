@@ -27,8 +27,7 @@ export function drawHoroscope(
   options: { width: number; height: number }
 ) {
   canvas.clear();
-  canvas.setWidth(options.width);
-  canvas.setHeight(options.height);
+  canvas.setDimensions({ width: options.width, height: options.height });
 
   // 圆心
   const cx = options.width / 2;
@@ -473,11 +472,13 @@ function drawPlanets(
   // p：行星在canvas的位置
   // 戌宫在-30.0度
   let p = planets.map((x) => degNorm(x.long - 30.0));
+  // 克隆一份p，用于调整间距
+  // let p0 = p.slice();
 
   // 以下调整行星间的输出间距，保证行星间到少相距w度
   let w = 12; // 字符间宽度，以角度表示
   for (let i = 0; i < p.length; i++) {
-    let n = 0;
+    let n = 0; // 从行星i开始有n-1个行星需要调整间距
     for (let j = 1; j < p.length; j++) {
       if (degNorm(p[(i + j) % p.length] - p[i]) >= w * j) {
         n = j;
@@ -485,8 +486,44 @@ function drawPlanets(
       }
     }
 
+    // n最小值是1，即行星i与行星i+1之间的间距至少已经是w度
+    // 计算行星i与行星i+n-1的中间位置
+    // (p[(i+n-1) % p.length] - p[i]) / 2 + p[i]
+    const mid0 = degNorm(degNorm(p[(i + n - 1) % p.length] - p[i]) / 2 + p[i]);
     for (let j = 1; j < n; j++) {
       p[(i + j) % p.length] = degNorm(p[i] + j * w);
+    }
+    // 计算调整后的行星i与行星i+n-1的中间位置
+    const mid1 = degNorm(degNorm(p[(i + n - 1) % p.length] - p[i]) / 2 + p[i]);
+    const d = degNorm(mid1 - mid0);
+    // 顺时针调整i-1开始的行星位置
+    // 需要调整m-1个
+    let m = 0;
+    for (let j = 1; j < p.length; j++) {
+      if (
+        // 当行星k-1与行星k的间距-d>=w时，不用调整
+        degNorm(degNorm(p[(i - j + p.length) % p.length] - p[i]) - d) >=
+        w * j
+      ) {
+        m = j;
+        break;
+      }
+    }
+
+    // 以下两个循环可以合并成一个
+    // 最后一个需要移动的行星是：i-(m-1)
+    // 第二个循环最后一个需要移动的行星是：i+(n-1)
+    // 从i-(m-1)共需要移动行星个数：i+(n-1)-(i-(m-1))+1=n+m-1
+    // for(j=(i-(m-1)+p.length) % p.length;j<n+m;j++)
+    for (let j = 1; j < m; j++) {
+      p[(i - j + p.length) % p.length] = degNorm(
+        p[(i - j + p.length) % p.length] - d
+      );
+    }
+
+    // 从行星i开始顺时针移动
+    for (let j = 0; j < n; j++) {
+      p[(i + j) % p.length] = degNorm(p[(i + j) % p.length] - d);
     }
   }
 

@@ -7,9 +7,8 @@ import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horoscope-record';
-import { deepClone } from 'src/app/utils/deepclone';
+import { deepClone } from 'src/app/utils/deep-clone';
 import { Path } from '../../type/enum/path';
-import { LocationRecord } from 'src/app/type/interface/location-record';
 import { isLocationEqual } from 'src/app/utils/location-record';
 
 @Component({

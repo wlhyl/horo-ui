@@ -4,18 +4,20 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Path as subPath } from './path';
 import { Path } from '../type/enum/path';
+import { deepClone } from '../utils/deep-clone';
+import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 
 @Component({
-    selector: 'app-qizheng',
-    templateUrl: './qizheng.page.html',
-    styleUrls: ['./qizheng.page.scss'],
-    standalone: false
+  selector: 'app-qizheng',
+  templateUrl: './qizheng.page.html',
+  styleUrls: ['./qizheng.page.scss'],
+  standalone: false,
 })
 export class QizhengPage implements OnInit {
   path = Path;
 
-  horoData = this.storage.horoData;
-  processData = this.storage.processData;
+  horoData: HoroRequest = deepClone(this.storage.horoData);
+  processData: ProcessRequest = deepClone(this.storage.processData);
 
   title = '七政四余';
 
