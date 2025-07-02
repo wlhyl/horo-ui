@@ -103,6 +103,10 @@ export interface Horoscope {
   //    @field:Schema(description = "本命纳间")
   //    val naYin = getNaYinData(nativeLunarCalendar.yearGanZhi)
 
+  native_transformed_stars: Array<StarTransformedStar>;
+  /// 流年变曜
+  process_transformed_stars: Array<StarTransformedStar>;
+
   //    @field:Schema(description = "本命变曜")
   //    val nativeVirtualStars =  getVirtualStars(nativeTime, geo, ephePath)
 
@@ -157,4 +161,18 @@ export interface SolarTerm {
   hour: number;
   minute: number;
   second: number;
+}
+
+// 十干变曜
+export interface StarTransformedStar {
+  // 行星
+  star: string;
+  // 变曜名
+  transformed_star: string;
+  // 变曜所管宫位
+  transformed_star_house: string;
+  // 变曜解释
+  transformed_star_describe: string;
+  // 十神
+  ten_gods: string;
 }

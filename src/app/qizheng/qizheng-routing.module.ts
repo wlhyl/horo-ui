@@ -5,6 +5,7 @@ import { Path } from './path';
 
 import { QizhengPage } from './qizheng.page';
 import { HoroComponent } from './horo/horo.component';
+import { QizhengHoroDetailComponent } from './horo/detail/detail.component'; // 导入新的组件
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: Path.Horo,
     component: HoroComponent,
+  },
+  {
+    path: Path.Horo + '/' + Path.HoroDetail, // 新增的详情路由
+    component: QizhengHoroDetailComponent,
   },
 ];
 

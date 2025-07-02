@@ -6,8 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Planned
 
-- 增加十干化曜功能
 - 推运计划增加次限、三限
+
+## [0.1.0] - 2025-07-02
+
+### Added
+
+- 增加十干化曜功能
 
 ### Changed
 

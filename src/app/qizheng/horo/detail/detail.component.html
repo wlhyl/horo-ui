@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>详情</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+@if (horoscopeData) {
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>本命化曜</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row class="table-header-row">
+                <ion-col size="2"><b>化曜</b></ion-col>
+                <ion-col size="1"><b>星</b></ion-col>
+                <ion-col size="2"><b>十神</b></ion-col>
+                <ion-col size="3"><b>宫位</b></ion-col>
+                <ion-col size="4"><b>描述</b></ion-col>
+              </ion-row>
+              @for (item of horoscopeData.native_transformed_stars; track item) {
+              <ion-row class="table-data-row">
+                <ion-col size="2">{{item.transformed_star}}</ion-col>
+                <ion-col size="1">{{ item.star}}</ion-col>
+                <ion-col size="2">{{item.ten_gods}}</ion-col>
+                <ion-col size="3">{{ item.transformed_star_house}}</ion-col>
+                <ion-col size="4">{{item.transformed_star_describe}}</ion-col>
+              </ion-row>
+              }
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>流年化曜</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row class="table-header-row">
+                <ion-col size="2"><b>化曜</b></ion-col>
+                <ion-col size="1"><b>星</b></ion-col>
+                <ion-col size="2"><b>十神</b></ion-col>
+                <ion-col size="3"><b>宫位</b></ion-col>
+                <ion-col size="4"><b>描述</b></ion-col>
+              </ion-row>
+              @for (item of horoscopeData.process_transformed_stars; track item) {
+              <ion-row class="table-data-row">
+                <ion-col size="2">{{item.transformed_star}}</ion-col>
+                <ion-col size="1">{{ item.star}}</ion-col>
+                <ion-col size="2">{{item.ten_gods}}</ion-col>
+                <ion-col size="3">{{ item.transformed_star_house}}</ion-col>
+                <ion-col size="4">{{item.transformed_star_describe}}</ion-col>
+              </ion-row>
+              }
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+}
+
+@if (!horoscopeData) {
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <p>没有可显示的数据。</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+}

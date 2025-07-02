@@ -6,6 +6,7 @@ import {
   House,
   LunarCalendar,
   Planet,
+  StarTransformedStar,
 } from 'src/app/type/interface/response-qizheng';
 import * as fabric from 'fabric';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
@@ -86,6 +87,7 @@ export function drawHoroscope(
   // 画本命行星
   drawPlanets(
     horoscope.native_planets,
+    horoscope.native_transformed_stars,
     canvas,
     tip,
     config,
@@ -108,6 +110,7 @@ export function drawHoroscope(
   // 画推运行星
   drawPlanets(
     horoscope.process_planets,
+    horoscope.process_transformed_stars,
     canvas,
     tip,
     config,
@@ -448,6 +451,7 @@ function drawHouse(
  */
 function drawPlanets(
   planets: Array<Planet>,
+  transformed_stars: Array<StarTransformedStar>,
   canvas: fabric.Canvas,
   tip: TipService,
   config: QizhengConfigService,
@@ -595,9 +599,14 @@ function drawPlanets(
 
     const xiuDMS = degreeToDMS(planets[i].xiu_degree);
 
+    // 化曜，十神
+    const transformed_star = transformed_stars.find(
+      (starTransformedStar) => starTransformedStar.star === planets[i].name
+    );
     let message = `${planets[i].name}
 ${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMSOnZoodiac.m}分${planetLongDMSOnZoodiac.s}秒
 ${planets[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒
+${transformed_star?.transformed_star}、${transformed_star?.ten_gods}、${transformed_star?.transformed_star_house}
 ${planets[i].speed_state}`;
 
     if (planets[i].speed < 0) message = `${message}、逆`;

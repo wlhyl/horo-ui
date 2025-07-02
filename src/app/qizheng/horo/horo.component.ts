@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
-
+import { Router, ActivatedRoute } from '@angular/router';
 import * as fabric from 'fabric';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
 import {
@@ -19,6 +19,7 @@ import { Platform } from '@ionic/angular';
 import { Path } from '../../type/enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { deepClone } from 'src/app/utils/deep-clone';
+import { Path as subPath } from '../path';
 
 @Component({
   selector: 'app-horo',
@@ -52,7 +53,9 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     private config: QizhengConfigService,
     private tip: TipService,
     private titleService: Title,
-    private platform: Platform
+    private platform: Platform,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -142,5 +145,14 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentProcessData.date.second = date.getSeconds();
 
     await this.drawHoroscope();
+  }
+
+  onDetail() {
+    if (this.horoscopeData) {
+      this.router.navigate([subPath.HoroDetail], {
+        relativeTo: this.route,
+        state: { data: this.horoscopeData },
+      });
+    }
   }
 }

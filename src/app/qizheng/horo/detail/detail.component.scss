@@ -1,0 +1,44 @@
+ion-grid {
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+ion-row {
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+ion-row:last-child {
+  border-bottom: none;
+}
+
+ion-col {
+  padding: 8px;
+  text-align: center;
+  border-right: 1px solid var(--ion-color-light);
+}
+
+ion-col:last-child {
+  border-right: none;
+}
+
+.table-header-row {
+  font-weight: bold;
+  background-color: var(--ion-color-light);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 2px solid var(--ion-color-medium); /* 强调标题栏 */
+}
+
+.table-data-row {
+  border-bottom: 1px solid var(--ion-color-light);
+}
+
+.table-data-row:nth-child(even) {
+  background-color: var(--ion-color-light-tint); /* 交替背景色 */
+}
+
+.table-data-row:last-child {
+  border-bottom: none;
+}
