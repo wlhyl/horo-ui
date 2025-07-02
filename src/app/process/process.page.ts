@@ -1,27 +1,26 @@
-import {Component, OnInit} from '@angular/core';
-import {HoroStorageService} from '../services/horostorage/horostorage.service';
-import {ProcessName} from './enum/process';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Horoconfig} from '../services/config/horo-config.service';
-import {Title} from '@angular/platform-browser';
-import {Path} from '../type/enum/path';
-import { deepClone } from '../utils/deep-clone';
+import { Component, OnInit } from '@angular/core';
+import { HoroStorageService } from '../services/horostorage/horostorage.service';
+import { ProcessName } from './enum/process';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Horoconfig } from '../services/config/horo-config.service';
+import { Title } from '@angular/platform-browser';
+import { Path } from '../type/enum/path';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 
 @Component({
-    selector: 'app-process',
-    templateUrl: './process.page.html',
-    styleUrls: ['./process.page.scss'],
-    standalone: false
+  selector: 'app-process',
+  templateUrl: './process.page.html',
+  styleUrls: ['./process.page.scss'],
+  standalone: false,
 })
 export class ProcessPage implements OnInit {
   readonly houses: Array<string> = this.config.houses;
-  horaData: HoroRequest = deepClone(this.storage.horoData);
-  processData: ProcessRequest = deepClone(this.storage.processData);
+  horaData: HoroRequest = structuredClone(this.storage.horoData);
+  processData: ProcessRequest = structuredClone(this.storage.processData);
   title = '推运';
-  path=Path;
+  path = Path;
 
-  currentProcess = this.processData.process_name
+  currentProcess = this.processData.process_name;
 
   get processName(): string {
     return ProcessName.name(this.currentProcess);
@@ -33,21 +32,19 @@ export class ProcessPage implements OnInit {
     private storage: HoroStorageService,
     private config: Horoconfig,
     private titleService: Title
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
   }
-
 
   get processNameEnum(): typeof ProcessName {
     return ProcessName;
   }
 
   getProcess() {
-    this.storage.horoData = this.horaData;
-    this.storage.processData = this.processData;
+    this.storage.horoData = structuredClone(this.horaData);
+    this.storage.processData = structuredClone(this.processData);
     const path = ProcessName.path(this.processData.process_name);
     this.router.navigate([path], {
       relativeTo: this.route,
@@ -71,16 +68,18 @@ export class ProcessPage implements OnInit {
     };
   });
 
-
   onIonChange(event: CustomEvent) {
     this.currentProcess = event.detail.value;
   }
 
   onDidDismiss(event: CustomEvent) {
     if (event.detail.data === null) {
-      this.currentProcess = this.processData.process_name
+      this.currentProcess = this.processData.process_name;
     } else {
-      this.processData = { ...this.processData, process_name: event.detail.data };
+      this.processData = {
+        ...this.processData,
+        process_name: event.detail.data,
+      };
     }
   }
 }

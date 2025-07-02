@@ -20,7 +20,12 @@ import { Path as subPath } from '../enum';
 import { isLocationEqual } from 'src/app/utils/location-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { deepClone } from 'src/app/utils/deep-clone';
+import {
+  informationCircleOutline,
+  createOutline,
+  archiveOutline,
+} from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'teanote-image',
@@ -31,7 +36,7 @@ import { deepClone } from 'src/app/utils/deep-clone';
 export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;
   private horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
-  currentHoroData: HoroRequest = deepClone(this.horoData);
+  currentHoroData: HoroRequest = structuredClone(this.horoData);
 
   isAlertOpen = false;
   alertButtons = ['OK'];
@@ -67,7 +72,9 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private alertController: AlertController
-  ) {}
+  ) {
+    addIcons({ informationCircleOutline, createOutline, archiveOutline });
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);

@@ -23,7 +23,6 @@ import { degreeToDMS } from 'src/app/utils/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { deepClone } from 'src/app/utils/deep-clone';
 
 @Component({
   selector: 'app-return',
@@ -41,7 +40,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
 
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
-  currentProcessData: ProcessRequest = deepClone(this.processData);
+  currentProcessData: ProcessRequest = structuredClone(this.processData);
 
   returnHoroscopeData: ReturnHoroscope | null = null; // 存储返照盘数据的缓存
 

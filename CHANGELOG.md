@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.1.1] - 2025-07-03
+
+### Fixed
+
+- 修复 auth 组件不因 horo-storage-ui 注销后仍然是登录状态的问题
+
 ## [0.1.0] - 2025-07-02
 
 ### Added

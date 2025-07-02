@@ -4,7 +4,6 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Path as subPath } from './path';
 import { Path } from '../type/enum/path';
-import { deepClone } from '../utils/deep-clone';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 
 @Component({
@@ -16,8 +15,8 @@ import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 export class QizhengPage implements OnInit {
   path = Path;
 
-  horoData: HoroRequest = deepClone(this.storage.horoData);
-  processData: ProcessRequest = deepClone(this.storage.processData);
+  horoData: HoroRequest = structuredClone(this.storage.horoData);
+  processData: ProcessRequest = structuredClone(this.storage.processData);
 
   title = '七政四余';
 
@@ -33,8 +32,8 @@ export class QizhengPage implements OnInit {
   }
 
   getProcess() {
-    this.storage.horoData = this.horoData;
-    this.storage.processData = this.processData;
+    this.storage.horoData = structuredClone(this.horoData);
+    this.storage.processData = structuredClone(this.processData);
     const path = subPath.Horo;
     this.router.navigate([path], {
       relativeTo: this.route,

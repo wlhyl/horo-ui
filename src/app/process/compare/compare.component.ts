@@ -25,7 +25,6 @@ import { degreeToDMS } from 'src/app/utils/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { deepClone } from 'src/app/utils/deep-clone';
 
 enum ComparisonType {
   SolarComparNative, // 日返照盘比本命盘
@@ -44,7 +43,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   path = Path;
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
-  currentProcessData: ProcessRequest = deepClone(this.processData);
+  currentProcessData: ProcessRequest = structuredClone(this.processData);
 
   horoscopeComparisonData: HoroscopeComparison | null = null;
   returnData: ReturnHoroscope | null = null;

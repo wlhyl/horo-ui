@@ -10,7 +10,7 @@ export async function appInit(config: Horoconfig, api: ApiService) {
     await customFont.load();
   } catch (error) {
     const message = `字体 “${font}” 加载失败! '${error}'`;
-    console.log(message);
+    console.error(message);
     throw error;
   }
 
@@ -18,7 +18,7 @@ export async function appInit(config: Horoconfig, api: ApiService) {
     config.houses = await lastValueFrom(api.getHouses());
   } catch (error) {
     const message = '从server获取宫位系统失败!';
-    console.log(message);
+    console.error(message);
     throw error;
   }
 }

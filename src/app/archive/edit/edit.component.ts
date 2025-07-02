@@ -7,7 +7,6 @@ import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horoscope-record';
-import { deepClone } from 'src/app/utils/deep-clone';
 import { Path } from '../../type/enum/path';
 import { isLocationEqual } from 'src/app/utils/location-record';
 
@@ -95,15 +94,15 @@ export class EditComponent implements OnInit {
       created_at: '',
       updated_at: '',
     };
-    this.oldNative = deepClone(this.native);
+    this.oldNative = structuredClone(this.native);
   }
 
   ngOnInit() {
-    const native = this.router.getCurrentNavigation()?.extras.state;
+    const native = this.router.getCurrentNavigation()?.extras.state as HoroscopeRecord;
 
     if (native) {
-      this.native = deepClone(native);
-      this.oldNative = deepClone(native);
+      this.native = structuredClone(native);
+      this.oldNative = structuredClone(native);
       this.title = '编辑';
     } else {
       this.title = '新增';
@@ -368,7 +367,7 @@ export class EditComponent implements OnInit {
 
     this.api.updateNative(this.native.id, requestData).subscribe({
       next: (res) => {
-        this.oldNative = deepClone(this.native);
+        this.oldNative = structuredClone(this.native);
         this.isSaving = false;
       },
       error: (err: any) => {

@@ -605,9 +605,11 @@ function drawPlanets(
     );
     let message = `${planets[i].name}
 ${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMSOnZoodiac.m}分${planetLongDMSOnZoodiac.s}秒
-${planets[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒
-${transformed_star?.transformed_star}、${transformed_star?.ten_gods}、${transformed_star?.transformed_star_house}
-${planets[i].speed_state}`;
+${planets[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
+    if (transformed_star) {
+      message = `${message}\n${transformed_star.transformed_star}、${transformed_star.ten_gods}、${transformed_star.transformed_star_house}`;
+    }
+    message = `${message}\n${planets[i].speed_state}`;
 
     if (planets[i].speed < 0) message = `${message}、逆`;
     else message = `${message}、顺`;

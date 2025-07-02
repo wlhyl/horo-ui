@@ -18,8 +18,9 @@ import { zoomImage } from 'src/app/utils/image/horo';
 import { Platform } from '@ionic/angular';
 import { Path } from '../../type/enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { deepClone } from 'src/app/utils/deep-clone';
 import { Path as subPath } from '../path';
+import { informationCircleOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-horo',
@@ -32,7 +33,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
 
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
-  currentProcessData: ProcessRequest = deepClone(this.processData);
+  currentProcessData: ProcessRequest = structuredClone(this.processData);
 
   horoscopeData: Horoscope | null = null;
 
@@ -56,7 +57,9 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     private platform: Platform,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    addIcons({ informationCircleOutline });
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
@@ -120,7 +123,6 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     minute: number;
     second: number;
   }) {
-    console.log(step);
     let date = new Date(
       this.currentProcessData.date.year,
       this.currentProcessData.date.month - 1,
