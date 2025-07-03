@@ -8,13 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
-## [0.1.1] - 2025-07-03
-
-### Fixed
-
-- 修复 auth 组件不因 horo-storage-ui 注销后仍然是登录状态的问题
-
-## [0.1.0] - 2025-07-02
+## [0.1.0] - 2025-07-03
 
 ### Added
 
@@ -30,4 +24,5 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - 重构 horostorage.service，以修复 image 组件保存 Note 时的错误
+- 修复 auth 组件不因 horo-storage-ui 注销后仍然是登录状态的问题
 - 修复 qizheng 天宫图中多颗行星相距太近指示线错乱
