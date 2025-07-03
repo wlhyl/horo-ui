@@ -25,10 +25,7 @@ import {authInterceptor} from "./interceptor/auth/auth.interceptor";
     IonicModule.forRoot(),
     AppRoutingModule], providers: [
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    provideAppInitializer(() => {
-        const initializerFn = ((config: Horoconfig, api: ApiService) => () => appInit(config, api))(inject(Horoconfig), inject(ApiService));
-        return initializerFn();
-      }),
+    provideAppInitializer(() => appInit(inject(Horoconfig), inject(ApiService))()),
     provideHttpClient(withInterceptors([authInterceptor])),
   ]
 })

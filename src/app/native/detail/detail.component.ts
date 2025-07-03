@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Router } from '@angular/router'; // 导入 Router
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
-import { degreeToDMS } from 'src/app/utils/horo-math';
+import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
 @Component({
     selector: 'app-detail',

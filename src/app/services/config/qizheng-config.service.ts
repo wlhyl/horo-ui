@@ -8,7 +8,7 @@ export class QizhengConfigService {
   readonly noteTextColor = '#FFFF99';
 
   // 初始宽、高，绘制完成后会根据屏幕大小缩放
-  readonly HoroscoImage = { width: 700, height: 700 }; // , fontSize: 20, col: 14, row: 14}
+  readonly HoroscoImage = { width: 700, height: 700 };
 
   constructor() {}
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { degreeToDMS } from '../../utils/horo-math';
+import { degreeToDMS } from '../../utils/horo-math/horo-math';
 import { EW, NS } from './enum';
 
 @Component({

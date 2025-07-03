@@ -1,4 +1,4 @@
-import { degNorm } from './horo-math';
+import { degNorm } from '../horo-math/horo-math';
 
 /**
  * 得到给定黄道经度的星座度数

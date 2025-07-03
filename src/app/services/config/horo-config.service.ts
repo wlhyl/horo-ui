@@ -8,21 +8,6 @@ import { Zodiac } from '../../type/enum/zodiac';
   providedIn: 'root',
 })
 export class Horoconfig {
-  // public readonly baseUrl :string = environment.base_url
-  // public readonly qizhengBaseUrl :string = environment.qizheng_base_url
-
-  // public readonly houseSystemUrl :string = this.baseUrl + '/api/horo/supporthouses'
-  // public readonly horoHoroscopeUrl :string = this.baseUrl + '/api/horo/horohscope'
-  // // public readonly horo_planets_url :string = this.baseUrl + '/horo/planets'
-  // // public readonly horo_asmc_url :string = this.base_url + '/horo/asmc'
-  // public readonly horoProfectionsUrl :string = this.baseUrl + '/horo/profections'
-  // public readonly horoFirdariaUrl :string = this.baseUrl + '/horo/firdaria'
-  // public readonly horoTransitUrl :string = this.baseUrl + '/horo/transit'
-  // public readonly horoSolarReturnUrl :string = this.baseUrl + '/horo/solarreturn'
-  // public readonly horoLunarReturnUrl :string = this.baseUrl + '/horo/lunarreturn'
-
-  // public readonly qizhengHorohscopeUrl :string = this.qizhengBaseUrl + '/qizheng/horohscope'
-
   /**
    * 西占行星列表
    */
@@ -53,8 +38,8 @@ export class Horoconfig {
   public readonly textFont = 'Verdana';
 
   /**
-   *
-   * @param planet 行星的id
+   * 行星的可输出字符串
+   * @param planet 行星的名称
    * @returns 返回行星的可输出字符串
    */
   public planetFontString(planet: PlanetName): string {
@@ -81,7 +66,7 @@ export class Horoconfig {
   }
 
   /**
-   *
+   * 相位的可输出字符串
    * @param aspect 相位值
    * @returns 相位的可输出字符串
    */
@@ -103,7 +88,7 @@ export class Horoconfig {
   }
 
   /**
-   *
+   * 行星的可输出字体
    * @param planet 行星的id
    * @returns  返回输星的输出字体
    */
@@ -120,7 +105,7 @@ export class Horoconfig {
   }
 
   /**
-   *
+   * 相位字体
    * @returns 相位字体
    */
   public aspectFontFamily(): string {
@@ -128,8 +113,8 @@ export class Horoconfig {
   }
 
   /**
-   *
-   * @param zodiac 12星座的id
+   * 星座的可输出字符串
+   * @param zodiac 12星座名
    * @returns 星座的可打印字符
    */
   public zodiacFontString(zodiac: Zodiac): string {
@@ -152,7 +137,7 @@ export class Horoconfig {
   }
 
   /**
-   *
+   * 星座的可打印字体
    * @returns 星座的可打印字体
    */
   public zodiacFontFamily(): string {
@@ -161,148 +146,14 @@ export class Horoconfig {
 
   // 初始宽、高，绘制完成后会根据屏幕大小缩放
   readonly aspectImage = { width: 700, height: 700 };
-  readonly HoroscoImage = { width: 700, height: 700 }; // , fontSize: 20, col: 14, row: 14}
+  readonly HoroscoImage = { width: 700, height: 700 };
 
-  // 支持的宫位系统，从server获取
+  // 支持的宫位系统，应用启动时会通过http获取
   public houses: Array<string> = [];
 
-  //   public readonly ruler = [
-  //     Planet.SE_MARS,
-  //     Planet.SE_VENUS,
-  //     Planet.SE_MERCURY,
-  //     Planet.SE_MOON,
-  //     Planet.SE_SUN,
-  //     Planet.SE_MERCURY,
-  //     Planet.SE_VENUS,
-  //     Planet.SE_MARS,
-  //     Planet.SE_JUPITER,
-  //     Planet.SE_SATURN,
-  //     Planet.SE_SATURN,
-  //     Planet.SE_JUPITER,
-  //   ]
-
-  //   public readonly exaltation  = [
-  //     Planet.SE_SUN,
-  //     Planet.SE_MOON,
-  //     -10000, // -10000，表示无
-  //     Planet.SE_JUPITER,
-  //     -10000,
-  //     Planet.SE_MERCURY,
-  //     Planet.SE_SATURN,
-  //     -10000,
-  //     -10000,
-  //     Planet.SE_MARS,
-  //     -10000,
-  //     Planet.SE_VENUS
-  //   ]
-
-  //   public readonly egypian_terms :any = [
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 6"],
-  //       [Planet.SE_VENUS,"6 - 12"],
-  //       [Planet.SE_MERCURY, "12 - 20"],
-  //       [Planet.SE_MARS,"20 - 25"],
-  //       [Planet.SE_SATURN, "25 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER,"0 - 8"],
-  //       [Planet.SE_VENUS, "8 - 14"],
-  //       [Planet.SE_MERCURY, "14 - 22"],
-  //       [Planet.SE_MARS, "22 - 27"],
-  //       [Planet.SE_SATURN, "27 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 6"],
-  //       [Planet.SE_VENUS, "6 - 12"],
-  //       [Planet.SE_MERCURY, "12 - 17"],
-  //       [Planet.SE_MARS, "17 - 24"],
-  //       [Planet.SE_SATURN, "24 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 7"],
-  //       [Planet.SE_VENUS, "7 - 13"],
-  //       [Planet.SE_MERCURY, "13 - 19"],
-  //       [Planet.SE_MARS, "19 - 26"],
-  //       [Planet.SE_SATURN, "26 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 6"],
-  //       [Planet.SE_VENUS, "6 - 11"],
-  //       [Planet.SE_MERCURY, "11 - 18"],
-  //       [Planet.SE_MARS, "18 - 24"],
-  //       [Planet.SE_SATURN, "24 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 7"],
-  //       [Planet.SE_VENUS, "7 - 17"],
-  //       [Planet.SE_MERCURY, "17 - 21"],
-  //       [Planet.SE_MARS, "21 - 28"],
-  //       [Planet.SE_SATURN, "28 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 6"],
-  //       [Planet.SE_VENUS, "6 - 14"],
-  //       [Planet.SE_MERCURY, "14 - 21"],
-  //       [Planet.SE_MARS, "21 - 28"],
-  //       [Planet.SE_SATURN, "28 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 7"],
-  //       [Planet.SE_VENUS, "7 - 11"],
-  //       [Planet.SE_MERCURY, "11 - 19"],
-  //       [Planet.SE_MARS, "19 - 24"],
-  //       [Planet.SE_SATURN, "24 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 12"],
-  //       [Planet.SE_VENUS, "12 - 17"],
-  //       [Planet.SE_MERCURY, "17 - 21"],
-  //       [Planet.SE_MARS, "21 - 26"],
-  //       [Planet.SE_SATURN, "26 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 7"],
-  //       [Planet.SE_VENUS, "7 - 14"],
-  //       [Planet.SE_MERCURY, "17 - 22"],
-  //       [Planet.SE_MARS, "22 - 26"],
-  //       [Planet.SE_SATURN, "26 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 7"],
-  //       [Planet.SE_VENUS, "7 - 13"],
-  //       [Planet.SE_MERCURY, "13 - 20"],
-  //       [Planet.SE_MARS, "20 - 25"],
-  //       [Planet.SE_SATURN, "25 - 30"],
-  //     ],
-  //     [
-  //       [Planet.SE_JUPITER, "0 - 12"],
-  //       [Planet.SE_VENUS, "12 - 16"],
-  //       [Planet.SE_MERCURY, "16 - 19"],
-  //       [Planet.SE_MARS, "19 - 28"],
-  //       [Planet.SE_SATURN, "28 - 30"],
-  //     ]
-  // ]
-  //   public readonly faces = [
-  //       [Planet.SE_MARS, Planet.SE_SUN, Planet.SE_VENUS],
-  //       [Planet.SE_MERCURY, Planet.SE_MOON, Planet.SE_SATURN],
-  //       [Planet.SE_JUPITER, Planet.SE_MARS, Planet.SE_SUN],
-  //       [Planet.SE_VENUS, Planet.SE_MERCURY, Planet.SE_MOON],
-  //       [Planet.SE_SATURN, Planet.SE_JUPITER, Planet.SE_MARS],
-  //       [Planet.SE_SUN, Planet.SE_VENUS, Planet.SE_MERCURY],
-  //       [Planet.SE_MOON, Planet.SE_SATURN, Planet.SE_JUPITER],
-  //       [Planet.SE_MARS, Planet.SE_SUN, Planet.SE_VENUS],
-  //       [Planet.SE_MERCURY, Planet.SE_MOON, Planet.SE_SATURN],
-  //       [Planet.SE_JUPITER, Planet.SE_MARS, Planet.SE_SUN],
-  //       [Planet.SE_VENUS, Planet.SE_MERCURY, Planet.SE_MOON],
-  //       [Planet.SE_SATURN, Planet.SE_JUPITER, Planet.SE_MARS],
-  //   ]
   public readonly httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
   constructor() {}
-
-  // getHouseSystemUrl() :string{
-  //   return this.house_system_url
-  // }
 }

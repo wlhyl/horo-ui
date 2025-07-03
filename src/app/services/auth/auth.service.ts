@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private readonly url = environment.admin_url;
   private _user: AuthUser | null = null;
+  private jwtDecodeFn = jwtDecode;
 
   public get user() {
     if (this._user) {
@@ -31,7 +32,7 @@ export class AuthService {
     }
 
     try {
-      const user = jwtDecode<AuthUser>(token);
+      const user = this.jwtDecodeFn<AuthUser>(token);
 
       if (user.exp * 1000 <= Date.now()) {
         localStorage.removeItem('token');
@@ -66,7 +67,7 @@ export class AuthService {
       .pipe(
         map((v) => {
           localStorage.setItem('token', v.token);
-          this._user = jwtDecode<AuthUser>(v.token); // 登录成功后立即更新_user
+          this._user = this.jwtDecodeFn<AuthUser>(v.token); // 登录成功后立即更新_user
         })
       );
   }

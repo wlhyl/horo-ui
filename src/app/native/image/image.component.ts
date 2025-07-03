@@ -8,7 +8,7 @@ import { Platform, AlertController } from '@ionic/angular';
 import { StaticCanvas } from 'fabric';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/horo';
 import { Title } from '@angular/platform-browser';
-import { degreeToDMS } from 'src/app/utils/horo-math';
+import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { AuthService } from 'src/app/services/auth/auth.service'; // 导入 AuthService
 import { Router, ActivatedRoute } from '@angular/router'; // 导入 Router 和 ActivatedRoute
@@ -17,7 +17,7 @@ import {
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horoscope-record';
 import { Path as subPath } from '../enum';
-import { isLocationEqual } from 'src/app/utils/location-record';
+import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import {
@@ -26,6 +26,7 @@ import {
   archiveOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { zoomImage } from 'src/app/utils/image/zoom-image';
 
 @Component({
   selector: 'teanote-image',
@@ -121,30 +122,15 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isAspect) {
       drawAspect(this.horoscoData.aspects, this.canvas!, this.config, {
         width: this.config.aspectImage.width,
-        heigth: this.config.aspectImage.height,
+        height: this.config.aspectImage.height,
       });
     } else {
       drawHorosco(this.horoscoData, this.canvas!, this.config, {
         width: this.config.HoroscoImage.width,
-        heigth: this.config.HoroscoImage.height,
+        height: this.config.HoroscoImage.height,
       });
     }
-    this.zoomImage(this.canvas!);
-  }
-
-  // 绘制完成后根据屏幕大小缩放
-  private zoomImage(canvas: StaticCanvas) {
-    this.platform.ready().then(() => {
-      let canvasWidth = canvas.getWidth();
-      if (!canvasWidth) return;
-      let width = this.platform.width();
-      let zoom = (width - 10) / canvasWidth;
-      if (zoom < 1) {
-        canvas.setWidth(width);
-        canvas.setHeight(width);
-        canvas.setZoom(zoom);
-      }
-    });
+    zoomImage(this.canvas!, this.platform);
   }
 
   get isAspect(): boolean {

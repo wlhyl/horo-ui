@@ -1,4 +1,4 @@
-import { LocationRecordRequest } from '../type/interface/location-record';
+import { LocationRecordRequest } from '../../type/interface/location-record';
 
 export function isLocationEqual(
   loc1: LocationRecordRequest,

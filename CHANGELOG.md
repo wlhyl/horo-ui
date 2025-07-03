@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+### Fixed
+
+- 修复 map.component、about.page 组件图标不显示
+- [待修复] 2016 年 8 月 31 日 23:54:29 七政四余行运行星指示线混乱问题
+- [待修复] 七政，1993 年 11 月 27 日 08:15:00 福州，本命，木、水重叠
+- [待修复] 如果 id!=0，新增记录后，再更新记录，会修改到之前的记录，似乎是新增记录后 id 没有更新导致的
+
+### Added
+
+- about.page 增加“七政四余顶度时间比例”
+
 ## [0.1.0] - 2025-07-03
 
 ### Added

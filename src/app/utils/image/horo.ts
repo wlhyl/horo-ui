@@ -1,4 +1,3 @@
-import { Platform } from '@ionic/angular';
 import * as fabric from 'fabric';
 
 import {
@@ -8,7 +7,7 @@ import {
   degreeToDMS,
   zodiacLong,
   newtonIteration,
-} from '../horo-math';
+} from '../horo-math/horo-math';
 import {
   Aspect,
   Horoscope,
@@ -16,356 +15,373 @@ import {
   ReturnHoroscope,
 } from '../../type/interface/response-data';
 import { Horoconfig } from '../../services/config/horo-config.service';
+import { PlanetName } from '../../type/enum/planet';
 
-/**
- *
- * @param aspects 相位
- * @param aspectCanvas 相位canvas
- * @param options 相位图的相关参数
- * 画相位
- */
-export function drawAspect(
-  aspects: Array<Aspect>,
-  aspectCanvas: fabric.StaticCanvas,
-  config: Horoconfig,
-  options: { width: number; heigth: number }
-): void {
-  aspectCanvas.clear();
-  aspectCanvas.setWidth(options.width);
-  aspectCanvas.setHeight(options.heigth);
+// #region Drawing Element Interfaces
+interface DrawingElement {
+  type: 'path' | 'text' | 'circle';
+}
 
-  const planets = config.horoPlanets;
+export interface PathObject extends DrawingElement {
+  type: 'path';
+  path: string;
+  stroke: string;
+  strokeDashArray?: number[];
+  selectable?: boolean;
+}
+
+export interface TextObject extends DrawingElement {
+  type: 'text';
+  text: string;
+  left: number;
+  top: number;
+  fontSize: number;
+  fontFamily: string;
+  selectable?: boolean;
+  textAlign?: 'left' | 'center';
+}
+
+export interface CircleObject extends DrawingElement {
+  type: 'circle';
+  left: number;
+  top: number;
+  radius: number;
+  fill: string;
+  stroke: string;
+  selectable?: boolean;
+}
+
+export type Drawable = PathObject | TextObject | CircleObject;
+// #endregion
+
+// #region Renderer
+export function renderElements(
+  canvas: fabric.StaticCanvas,
+  elements: readonly Drawable[],
+  options: Readonly<{ width: number; height: number }>
+) {
+  canvas.clear();
+  canvas.setDimensions({ width: options.width, height: options.height });
+
+  for (const element of elements) {
+    let fabricObject: fabric.Object | null = null;
+    switch (element.type) {
+      case 'path':
+        fabricObject = new fabric.Path(element.path, {
+          stroke: element.stroke,
+          strokeDashArray: element.strokeDashArray,
+          selectable: element.selectable ?? false,
+        });
+        break;
+      case 'text':
+        const text = new fabric.FabricText(element.text, {
+          fontSize: element.fontSize,
+          fontFamily: element.fontFamily,
+          selectable: element.selectable ?? false,
+        });
+        // 根据textAlign属性决定如何对齐
+        const textAlign = element.textAlign ?? 'center';
+        if (textAlign === 'center') {
+          // 将文本居中
+          text.left = element.left - text.width! / 2;
+        } else {
+          // 左对齐
+          text.left = element.left;
+        }
+        text.top = element.top - text.height! / 2;
+        fabricObject = text;
+        break;
+      case 'circle':
+        fabricObject = new fabric.Circle({
+          left: element.left,
+          top: element.top,
+          radius: element.radius,
+          fill: element.fill,
+          stroke: element.stroke,
+          selectable: element.selectable ?? false,
+        });
+        break;
+    }
+    if (fabricObject) {
+      canvas.add(fabricObject);
+    }
+  }
+}
+// #endregion
+
+// #region Aspect Chart Calculations
+export function calculateAspectGrid(
+  planets: readonly PlanetName[],
+  width: number,
+  height: number
+): PathObject[] {
+  const elements: PathObject[] = [];
   const col = planets.length + 1;
   const row = col;
-  const width = options.width;
-  const heigth = options.heigth;
 
-  // 画网格，共有13颗星，共14行，共14条横线
-  // 左侧坐标(width / 14, 0 + i*hegith / 14 )
-  // 右侧坐标(width / 14 *(i+1), 0 + i*heigth / 14)
+  // Horizontal lines
   for (let i = 1; i < col; i++) {
-    let x0 = width / row;
-    let y0 = (i * heigth) / col;
-
-    let x1 = (width / row) * (i + 1);
+    const x0 = width / row;
+    let y0 = (i * height) / col;
+    const x1 = (width / row) * (i + 1);
     let y1 = y0;
 
-    let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
+    elements.push({
+      type: 'path',
+      path: `M ${x0}, ${y0} L ${x1} ${y1}`,
       stroke: 'black',
     });
-    aspectCanvas.add(path);
-    if (i == col - 1) {
-      y0 += heigth / col;
+
+    if (i === col - 1) {
+      y0 += height / col;
       y1 = y0;
-      path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
+      elements.push({
+        type: 'path',
+        path: `M ${x0}, ${y0} L ${x1} ${y1}`,
         stroke: 'black',
       });
-      aspectCanvas.add(path);
     }
   }
 
-  // 画竖线
+  // Vertical lines
   for (let i = 1; i < row; i++) {
     let x0 = ((i + 1) * width) / row;
-    let y0 = (i * heigth) / row;
-
+    const y0 = (i * height) / row;
     let x1 = x0;
-    let y1 = heigth;
+    const y1 = height;
 
-    let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
+    elements.push({
+      type: 'path',
+      path: `M ${x0}, ${y0} L ${x1} ${y1}`,
       stroke: 'black',
     });
-    aspectCanvas.add(path);
 
-    if (i == 1) {
+    if (i === 1) {
       x0 = width / row;
       x1 = x0;
-      path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
+      elements.push({
+        type: 'path',
+        path: `M ${x0}, ${y0} L ${x1} ${y1}`,
         stroke: 'black',
       });
-      aspectCanvas.add(path);
     }
   }
+  return elements;
+}
 
-  // 画文字
+export function calculateAspectText(
+  aspects: readonly Aspect[],
+  planets: readonly PlanetName[],
+  config: Readonly<Horoconfig>,
+  width: number,
+  height: number
+): TextObject[] {
+  const elements: TextObject[] = [];
+  const col = planets.length + 1;
+  const row = col;
+
+  // Planet names
   for (let i = 0; i < planets.length; i++) {
-    let planet = planets[i];
-    let planetString = config.planetFontString(planet);
-    let planetFontFamily = config.planetFontFamily(planet);
+    const planet = planets[i];
+    const planetString = config.planetFontString(planet);
+    const planetFontFamily = config.planetFontFamily(planet);
     let fontSize = width / col;
-    if (planetString.length != 1) fontSize /= planetString.length;
+    if (planetString.length !== 1) fontSize /= planetString.length;
     else fontSize *= 0.8;
 
     // 画第一列
     // 第一个字符的中心坐标
     // cx=width / col / 2
-    // cy = heigth / row * 1.5
+    // cy = height / row * 1.5
     // 第n个字符的中心坐标
     // cx = width / col
-    // cy = heigth / row * 1.5 + i * (heigth / row)
+    // cy = height / row * 1.5 + i * (height / row)
     let cx = width / col / 2;
-    let cy = (heigth / row) * (i + 1.5);
-    let planetText = new fabric.Text(planetString, {
-      //绘制文本
+    let cy = (height / row) * (i + 1.5);
+    elements.push({
+      type: 'text',
+      text: planetString,
+      left: cx,
+      top: cy,
       fontSize: fontSize,
       fontFamily: planetFontFamily,
-      selectable: false,
     });
-    planetText.left = cx - planetText.width! / 2;
-    planetText.top = cy - planetText.height! / 2;
-    aspectCanvas.add(planetText);
 
     // 斜列
     // 第一个字符的中心坐标
     // cx=width / col * 1.5
-    // cy = heigth / row / * 1.5
+    // cy = height / row / * 1.5
     // 第n个字符的中心坐标
     // cx = width / col * 1.5 + i * width / col
-    // cy = heigth / row * .5 + i * (heigth / row)
+    // cy = height / row * .5 + i * (height / row)
     cx = (width / col) * (1.5 + i);
-    cy = (heigth / row) * (i + 0.5);
-    planetText = new fabric.Text(planetString, {
-      //绘制文本
+    cy = (height / row) * (i + 0.5);
+    elements.push({
+      type: 'text',
+      text: planetString,
+      left: cx,
+      top: cy,
       fontSize: fontSize,
       fontFamily: planetFontFamily,
-      selectable: false,
     });
-    planetText.left = cx - planetText.width! / 2;
-    planetText.top = cy - planetText.height! / 2;
-    aspectCanvas.add(planetText);
   }
-  // 画相位
-  for (let aspect of aspects) {
-    let fontSize = width / col;
-    let aspectFontFamily = config.aspectFontFamily();
+
+  // Aspect symbols and values
+  for (const aspect of aspects) {
+    const fontSize = width / col;
 
     // 第一格中心的坐标，即太阳与太阳相交的格子
     // x: width / col + width / col / 2
-    // y: heigth / row + heigth / row / 2
-    let cx = (width / col) * (1.5 + planets.indexOf(aspect.p0));
-    let cy = (heigth / row) * (1.5 + planets.indexOf(aspect.p1));
-    let aspectString = config.aspectFontString(aspect.aspect_value);
-    let aspectText = new fabric.Text(aspectString, {
+    // y: height / row + height / row / 2
+    const cx = (width / col) * (1.5 + planets.indexOf(aspect.p0));
+    const cy = (height / row) * (1.5 + planets.indexOf(aspect.p1));
+
+    // Aspect symbol
+    const aspectString = config.aspectFontString(aspect.aspect_value);
+    elements.push({
+      type: 'text',
+      text: aspectString,
+      left: cx,
+      top: cy,
       fontSize: fontSize,
-      fontFamily: aspectFontFamily,
+      fontFamily: config.aspectFontFamily(),
     });
-    aspectText.left = cx - aspectText.width! / 2;
-    aspectText.top = cy - aspectText.height! / 2;
-    aspectCanvas.add(aspectText);
 
-    // 画相位值
-    let aspectValue = degreeToDMS(aspect.d);
-    let aspectValueString = '';
-    if (aspect.apply) {
-      aspectValueString = `${aspectValue.d} A ${aspectValue.m}`;
-    } else {
-      aspectValueString = `${aspectValue.d} S ${aspectValue.m}`;
-    }
-
-    let aspectValueText = new fabric.Text(aspectValueString, {
+    // Aspect value
+    const aspectValue = degreeToDMS(aspect.d);
+    const aspectValueString = aspect.apply
+      ? `${aspectValue.d} A ${aspectValue.m}`
+      : `${aspectValue.d} S ${aspectValue.m}`;
+    elements.push({
+      type: 'text',
+      text: aspectValueString,
+      left: cx,
+      top: cy + ((width / col / 2.0) * 3) / 4.0,
       fontSize: fontSize * 0.2,
       fontFamily: config.textFont,
     });
-
-    aspectValueText.left = cx - aspectValueText.width! / 2;
-    aspectValueText.top = cy + width / col / 2 - aspectValueText.height!;
-    aspectCanvas.add(aspectValueText);
   }
+
+  return elements;
 }
+// #endregion
 
-/**
- * 绘制天宫图
- * @param horosco 天宫图数据
- * @param canvas 天宫图canvas
- * @param options 天宫图图的相关参数
- */
-export function drawHorosco(
-  horosco: Horoscope,
-  canvas: fabric.StaticCanvas,
+// #region Horoscope Chart Calculations
+export function calculateHouseElements(
+  cups: readonly number[],
   config: Horoconfig,
-  options: { width: number; heigth: number }
-) {
-  canvas.clear();
-  canvas.setWidth(options.width);
-  canvas.setHeight(options.heigth);
+  options: Readonly<{ cx: number; cy: number; r0: number; r1: number }>
+): Drawable[] {
+  const { cx, cy, r0, r1 } = options;
+  const elements: Drawable[] = [];
 
-  // 圆心
-  let cx = options.width / 2;
-  let cy = options.heigth / 2;
-  // 外圆半径
-  let r0 = options.width / 2;
-  // 内圆半径
-  let r1 = r0 - 50;
-
-  drawHouse(horosco.houses_cups, canvas, config, {
-    cx: cx,
-    cy: cy,
-    r0: r0,
-    r1: r1,
+  // Outer and inner circles
+  elements.push({
+    type: 'circle',
+    left: cx - r0,
+    top: cy - r0,
+    radius: r0,
+    fill: '',
+    stroke: 'black',
   });
-  // 画行星
-  drawPlanets(
-    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic],
-    canvas,
-    horosco.houses_cups[0],
-    config,
-    { cx: cx, cy: cy, r: r1 }
-  );
+  elements.push({
+    type: 'circle',
+    left: cx - r1,
+    top: cy - r1,
+    radius: r1,
+    fill: '',
+    stroke: 'black',
+  });
 
-  // 画一些注释文本
-  drawNotes(horosco, canvas, config, options);
-}
+  // 宫头在canvas中的角度
+  // 第一宫在cups[0],在180度
+  const cupsOfImage: number[] = cups.map((x) => x + 180 - cups[0]);
 
-/**
- * 绘制宫头
- * @param cups 宫头度数
- * @param canvas 天宫图canvas
- * @param options 天宫图的相关参数
- */
-function drawHouse(
-  cups: Array<number>,
-  canvas: fabric.StaticCanvas,
-  config: Horoconfig,
-  options: {
-    cx: number; // 圆心坐标：x
-    cy: number; // 圆心坐标：y
-    r0: number; // 外圆半径
-    r1: number; // 内圆半径
-  }
-) {
-  const cx = options.cx;
-  const cy = options.cy;
-
-  const r0 = options.r0;
-  const r1 = options.r1;
-
-  //最外层的圆
-  canvas.add(
-    new fabric.Circle({
-      left: 0,
-      top: 0,
-      radius: r0,
-      // selectable: false,
-      fill: '',
-      stroke: 'black', //不填充
-    })
-  );
-
-  //内层的圆
-  canvas.add(
-    new fabric.Circle({
-      left: cx - r1,
-      top: cy - r1,
-      radius: r1,
-      fill: '',
-      stroke: 'black', //不填充
-    })
-  );
-
-  // 画12宫的宫头
-  // 以180度起算，因为1宫头在180度方向
-  // 所有宫头加上 180 - cups[0].cups，即得图上输出位置
-  let cupsOfImage: Array<number> = cups.map((x) => x + 180 - cups[0]);
   for (let i = 0; i < cupsOfImage.length; i++) {
-    // 计算并画宫头
-    let x = cx + r1 * cos(cupsOfImage[i]);
-    let y = cy - r1 * sin(cupsOfImage[i]); // 因纵坐标向下为正，所以用减
-    let path = new fabric.Path(`M ${cx}, ${cy} L ${x} ${y}`, {
+    const cupAngle = cupsOfImage[i];
+    // Cusp lines
+    let x = cx + r1 * cos(cupAngle);
+    let y = cy - r1 * sin(cupAngle);
+    elements.push({
+      type: 'path',
+      path: `M ${cx}, ${cy} L ${x} ${y}`,
       stroke: 'black',
     });
-    canvas.add(path);
 
     // 计算并画宫位号，计算文字的圆心
     // d: 宫位宽度，>=0
-    let d = degNorm(cupsOfImage[(i + 1) % cupsOfImage.length] - cupsOfImage[i]);
-    x = cx + (r1 / 8) * cos(cupsOfImage[i] + d / 2);
-    y = cy - (r1 / 8) * sin(cupsOfImage[i] + d / 2);
-
-    let houseNumText = new fabric.Text(`${i + 1}`, {
+    const d = degNorm(cupsOfImage[(i + 1) % cupsOfImage.length] - cupAngle);
+    x = cx + (r1 / 8) * cos(cupAngle + d / 2);
+    y = cy - (r1 / 8) * sin(cupAngle + d / 2);
+    elements.push({
+      type: 'text',
+      text: `${i + 1}`,
+      left: x,
+      top: y,
       fontSize: 10,
       fontFamily: config.textFont,
     });
-    houseNumText.left = x - houseNumText.width! / 2;
-    houseNumText.top = y - houseNumText.height! / 2;
-    canvas.add(houseNumText);
 
-    // 画宫头星座
-    let cupsZoodiacLong = zodiacLong(cups[i]);
-    x = cx + (r1 + (r0 - r1) / 2) * cos(cupsOfImage[i]);
-    y = cy - (r1 + (r0 - r1) / 2) * sin(cupsOfImage[i]);
-    let zoodiacText = new fabric.Text(
-      `${config.zodiacFontString(cupsZoodiacLong.zodiac)}`,
-      {
-        fontSize: (r0 - r1) / 2,
-        fontFamily: config.zodiacFontFamily(),
-      }
-    );
-    zoodiacText.left = x - zoodiacText.width! / 2;
-    zoodiacText.top = y - zoodiacText.height! / 2;
-    canvas.add(zoodiacText);
+    // Zodiac signs on cusps
+    const cupsZodiacLong = zodiacLong(cups[i]);
+    x = cx + (r1 + (r0 - r1) / 2) * cos(cupAngle);
+    y = cy - (r1 + (r0 - r1) / 2) * sin(cupAngle);
+    elements.push({
+      type: 'text',
+      text: `${config.zodiacFontString(cupsZodiacLong.zodiac)}`,
+      left: x,
+      top: y,
+      fontSize: (r0 - r1) / 2,
+      fontFamily: config.zodiacFontFamily(),
+    });
 
-    // 画宫头星座度数
-    let cupsZoodiacLongDMS = degreeToDMS(cupsZoodiacLong.long);
-    if (i < 7) {
-      x = cx + (r1 + (r0 - r1) / 2) * cos(cupsOfImage[i] - 5);
-      y = cy - (r1 + (r0 - r1) / 2) * sin(cupsOfImage[i] - 5);
-    } else {
-      x = cx + (r1 + (r0 - r1) / 2) * cos(cupsOfImage[i] + 5);
-      y = cy - (r1 + (r0 - r1) / 2) * sin(cupsOfImage[i] + 5);
-    }
-    let zoodiacLongDText = new fabric.Text(`${cupsZoodiacLongDMS.d};`, {
+    // Cusp degrees and minutes
+    const cupsZodiacLongDMS = degreeToDMS(cupsZodiacLong.long);
+    const angleOffset = 5;
+    const textRadius = r1 + (r0 - r1) / 2;
+
+    const dAngle = i < 7 ? cupAngle - angleOffset : cupAngle + angleOffset;
+    x = cx + textRadius * cos(dAngle);
+    y = cy - textRadius * sin(dAngle);
+    elements.push({
+      type: 'text',
+      text: `${cupsZodiacLongDMS.d};`,
+      left: x,
+      top: y,
       fontSize: (r0 - r1) / 4,
       fontFamily: config.astrologyFont,
     });
-    zoodiacLongDText.left = x - zoodiacLongDText.width! / 2;
-    zoodiacLongDText.top = y - zoodiacLongDText.height! / 2;
-    canvas.add(zoodiacLongDText);
 
-    if (i < 7) {
-      x = cx + (r1 + (r0 - r1) / 2) * cos(cupsOfImage[i] + 5);
-      y = cy - (r1 + (r0 - r1) / 2) * sin(cupsOfImage[i] + 5);
-    } else {
-      x = cx + (r1 + (r0 - r1) / 2) * cos(cupsOfImage[i] - 5);
-      y = cy - (r1 + (r0 - r1) / 2) * sin(cupsOfImage[i] - 5);
-    }
-    let zoodiacLongMText = new fabric.Text(`${cupsZoodiacLongDMS.m}'`, {
+    const mAngle = i < 7 ? cupAngle + angleOffset : cupAngle - angleOffset;
+    x = cx + textRadius * cos(mAngle);
+    y = cy - textRadius * sin(mAngle);
+    elements.push({
+      type: 'text',
+      text: `${cupsZodiacLongDMS.m}'`,
+      left: x,
+      top: y,
       fontSize: (r0 - r1) / 4,
       fontFamily: config.astrologyFont,
     });
-    zoodiacLongMText.left = x - zoodiacLongMText.width! / 2;
-    zoodiacLongMText.top = y - zoodiacLongMText.height! / 2;
-    canvas.add(zoodiacLongMText);
   }
+  return elements;
 }
 
-/**
- * 绘制行星
- * @param planets 行星数组，包含了四轴
- * @param canvas canvas
- * @param firstCupsLong 第一宫头度数
- * @param options (cx, cy)：画布中心坐标，r: 行星字符位置不能超过的半径
- */
-function drawPlanets(
-  planets: Array<Planet>,
-  canvas: fabric.StaticCanvas,
+export function calculatePlanetElements(
+  planets: readonly Planet[],
   firstCupsLong: number,
   config: Horoconfig,
-  options: { cx: number; cy: number; r: number }
-) {
-  let cx = options.cx;
-  let cy = options.cy;
+  options: Readonly<{ cx: number; cy: number; r: number }>
+): (TextObject | PathObject)[] {
+  const { cx, cy, r } = options;
+  const elements: (TextObject | PathObject)[] = [];
 
-  let r = options.r;
-  // 依long从小到大对行星进行排序，方便后面计算绘制位置
-  planets.sort((a: Planet, b: Planet) => {
-    return degNorm(a.long) - degNorm(b.long);
-  });
+  const sortedPlanets = planets.toSorted((a, b) => degNorm(a.long) - degNorm(b.long));
 
-  // p：行星在canvas的位置
-  let p = planets.map((x) => degNorm(x.long + 180 - firstCupsLong));
+  const p = sortedPlanets.map((x) => degNorm(x.long + 180 - firstCupsLong));
+  const w = 6; // Minimum angle between planets
 
-  // 以下调整行星间的输出间距，保证行星间到少相距w度
-  let w = 6; // 字符间宽度，以角度表示
+  // Adjust planet positions to avoid overlap
   for (let i = 0; i < p.length; i++) {
     let n = 0;
     for (let j = 1; j < p.length; j++) {
@@ -374,22 +390,22 @@ function drawPlanets(
         break;
       }
     }
-
     for (let j = 1; j < n; j++) {
       p[(i + j) % p.length] = degNorm(p[i] + j * w);
     }
   }
 
   for (let i = 0; i < p.length; i++) {
-    // 文字中心位置
-    let x = cx + ((r * 8) / 9.0) * cos(p[i]);
-    let y = cy - ((r * 8) / 9.0) * sin(p[i]);
+    const angle = p[i];
+    const originalAngle = sortedPlanets[i].long + 180 - firstCupsLong;
 
     // 先画行星指示线，以保证行星名字的图层能在指示线之上
-    let x0 = x;
-    let y0 = y;
-    const x1 = cx + r * cos(planets[i].long + 180 - firstCupsLong);
-    const y1 = cy - r * sin(planets[i].long + 180 - firstCupsLong);
+    // 文字中心位置
+    const x_text = cx + ((r * 8) / 9.0) * cos(angle);
+    const y_text = cy - ((r * 8) / 9.0) * sin(angle);
+    const x_circle = cx + r * cos(originalAngle);
+    const y_circle = cy - r * sin(originalAngle);
+
     // (x0, y0), (x1, y1)组成的直线方程是：
     // x-x0=(x1-x0)t
     // y-y0=(y1-y0)t
@@ -398,208 +414,269 @@ function drawPlanets(
     // ((x1-x0)t+x0-cx)^2+((y1-y0)t+y0-cy)^2=(r*8.4/9.0)^2
     // 在t=0处作牛顿迭代，求出t>0的值
     const f = (t: number) =>
-      ((x1 - x0) * t + x0 - cx) ** 2 +
-      ((y1 - y0) * t + y0 - cy) ** 2 -
+      ((x_circle - x_text) * t + x_text - cx) ** 2 +
+      ((y_circle - y_text) * t + y_text - cy) ** 2 -
       ((r * 8.4) / 9.0) ** 2;
+
+    let x0 = x_text,
+      y0 = y_text;
     try {
       const t = newtonIteration(0, f);
-      x0 = x0 + (x1 - x0) * t;
-      y0 = y0 + (y1 - y0) * t;
+      x0 = x_text + (x_circle - x_text) * t;
+      y0 = y_text + (y_circle - y_text) * t;
     } catch (error) {
       console.log(error);
     }
 
-    let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
-      selectable: false,
+    elements.push({
+      type: 'path',
+      path: `M ${x0}, ${y0} L ${x_circle} ${y_circle}`,
       stroke: 'black',
       strokeDashArray: [3, 2], // strokeDashArray[a,b] =》 每隔a个像素空b个像素
     });
-    canvas.add(path);
 
-    // 绘制行星名
-    let planetString = config.planetFontString(planets[i].name);
-    let fontSize = 30;
-    if (planetString.length > 1) fontSize = 15;
-    let planetText = new fabric.Text(planetString, {
+    // Planet symbol
+    const planetString = config.planetFontString(sortedPlanets[i].name);
+    let fontSize = planetString.length > 1 ? 15 : 30;
+    elements.push({
+      type: 'text',
+      text: planetString,
+      left: x_text,
+      top: y_text,
       fontSize: fontSize,
-      fontFamily: config.planetFontFamily(planets[i].name),
+      fontFamily: config.planetFontFamily(sortedPlanets[i].name),
     });
-    planetText.left = x - planetText.width! / 2;
-    planetText.top = y - planetText.height! / 2;
-    canvas.add(planetText);
 
-    // 画行行星度数
-    let planetLongOnZoodiac = zodiacLong(planets[i].long);
-    let planetLongDMSOnZoodiac = degreeToDMS(planetLongOnZoodiac.long);
-
+    // Planet position (degrees, sign, minutes)
+    const planetLongOnZodiac = zodiacLong(sortedPlanets[i].long);
+    const planetLongDMS = degreeToDMS(planetLongOnZodiac.long);
     fontSize = 15;
-    // 度
-    x = cx + ((r * 7) / 9.0) * cos(p[i]);
-    y = cy - ((r * 7) / 9.0) * sin(p[i]);
-    let planetLongDText = new fabric.Text(`${planetLongDMSOnZoodiac.d};`, {
+
+    // Degrees
+    let x = cx + ((r * 7) / 9.0) * cos(angle);
+    let y = cy - ((r * 7) / 9.0) * sin(angle);
+    elements.push({
+      type: 'text',
+      text: `${planetLongDMS.d};`,
+      left: x,
+      top: y,
       fontSize: fontSize,
       fontFamily: config.astrologyFont,
     });
-    planetLongDText.left = x - planetLongDText.width! / 2;
-    planetLongDText.top = y - planetLongDText.height! / 2;
-    canvas.add(planetLongDText);
 
-    // 星座
-    x = cx + ((r * 6.5) / 9.0) * cos(p[i]);
-    y = cy - ((r * 6.5) / 9.0) * sin(p[i]);
-
-    if (planetString.length > 1) fontSize = 15;
-    let zoodiaText = new fabric.Text(
-      `${config.zodiacFontString(planetLongOnZoodiac.zodiac)}`,
-      {
-        fontSize: fontSize,
-        fontFamily: config.astrologyFont,
-      }
-    );
-    zoodiaText.left = x - zoodiaText.width! / 2;
-    zoodiaText.top = y - zoodiaText.height! / 2;
-    canvas.add(zoodiaText);
-
-    // 分
-    x = cx + ((r * 6) / 9.0) * cos(p[i]);
-    y = cy - ((r * 6) / 9.0) * sin(p[i]);
-    let planetLongMText = new fabric.Text(`${planetLongDMSOnZoodiac.m}'`, {
+    // Zodiac Sign
+    x = cx + ((r * 6.5) / 9.0) * cos(angle);
+    y = cy - ((r * 6.5) / 9.0) * sin(angle);
+    elements.push({
+      type: 'text',
+      text: `${config.zodiacFontString(planetLongOnZodiac.zodiac)}`,
+      left: x,
+      top: y,
       fontSize: fontSize,
       fontFamily: config.astrologyFont,
     });
-    planetLongMText.left = x - planetLongMText.width! / 2;
-    planetLongMText.top = y - planetLongMText.height! / 2;
-    canvas.add(planetLongMText);
 
-    // 逆
-    if (planets[i].speed < 0) {
-      x = cx + ((r * 5.5) / 9.0) * cos(p[i]);
-      y = cy - ((r * 5.5) / 9.0) * sin(p[i]);
-      let planetRetrogradeText = new fabric.Text('>', {
+    // Minutes
+    x = cx + ((r * 6) / 9.0) * cos(angle);
+    y = cy - ((r * 6) / 9.0) * sin(angle);
+    elements.push({
+      type: 'text',
+      text: `${planetLongDMS.m}'`,
+      left: x,
+      top: y,
+      fontSize: fontSize,
+      fontFamily: config.astrologyFont,
+    });
+
+    // Retrograde
+    if (sortedPlanets[i].speed < 0) {
+      x = cx + ((r * 5.5) / 9.0) * cos(angle);
+      y = cy - ((r * 5.5) / 9.0) * sin(angle);
+      elements.push({
+        type: 'text',
+        text: '>',
+        left: x,
+        top: y,
         fontSize: fontSize,
         fontFamily: config.astrologyFont,
       });
-      planetRetrogradeText.left = x - planetRetrogradeText.width! / 2;
-      planetRetrogradeText.top = y - planetRetrogradeText.height! / 2;
-      canvas.add(planetRetrogradeText);
     }
   }
+  return elements;
 }
 
 // 在左上角绘制说明文字
-function drawNotes(
-  horosco: Horoscope,
-  canvas: fabric.StaticCanvas,
-  config: Horoconfig,
-  options: { width: number; heigth: number }
-) {
+export function calculateNotesElements(
+  horosco: Readonly<Horoscope>,
+  config: Readonly<Horoconfig>
+): TextObject[] {
+  const elements: TextObject[] = [];
   const fontSize = 20;
+  const lineHeight = fontSize * 1.2;
+  let currentY = fontSize;
 
-  // 宫位名
-  let noteText = new fabric.Text(horosco.house_name, {
-    fontSize: fontSize,
-    fontFamily: config.textFont,
-    top: 0,
-    left: 0,
-  });
-  canvas.add(noteText);
-
-  noteText = new fabric.Text(horosco.is_diurnal ? '白天盘' : '夜间盘', {
-    fontSize: fontSize,
-    fontFamily: config.textFont,
-    top: noteText.height,
-    left: 0,
-  });
-  canvas.add(noteText);
-
-  noteText = new fabric.Text('日主星:', {
-    fontSize: fontSize,
-    fontFamily: config.textFont,
-    top: noteText.top! + noteText.height!,
-    left: 0,
-  });
-  canvas.add(noteText);
-  noteText = new fabric.Text(
-    `${config.planetFontString(horosco.planetary_day)}`,
-    {
+  const addNote = (text: string, font: string) => {
+    elements.push({
+      type: 'text',
+      text: text,
+      left: 0,
+      textAlign: 'left',
+      top: currentY,
       fontSize: fontSize,
-      fontFamily: config.planetFontFamily(horosco.planetary_day),
-      top: noteText.top,
-      left: noteText.width,
-    }
-  );
-  canvas.add(noteText);
+      fontFamily: font,
+    });
+    currentY += lineHeight;
+  };
 
-  noteText = new fabric.Text('时主星:', {
+  addNote(horosco.house_name, config.textFont);
+  addNote(horosco.is_diurnal ? '白天盘' : '夜间盘', config.textFont);
+
+  // "日主星: [SYMBOL]"
+  elements.push({
+    type: 'text',
+    text: '日主星:',
+    left: 0,
+    textAlign: 'left',
+    top: currentY,
     fontSize: fontSize,
     fontFamily: config.textFont,
-    top: noteText.top! + noteText.height!,
-    left: 0,
   });
-  canvas.add(noteText);
-  noteText = new fabric.Text(
-    `${config.planetFontString(horosco.planetary_hours)}`,
-    {
-      fontSize: fontSize,
-      fontFamily: config.planetFontFamily(horosco.planetary_hours),
-      top: noteText.top,
-      left: noteText.width,
-    }
+  elements.push({
+    type: 'text',
+    text: config.planetFontString(horosco.planetary_day),
+    left: 80, // Hardcoded offset
+    textAlign: 'left',
+    top: currentY,
+    fontSize: fontSize,
+    fontFamily: config.planetFontFamily(horosco.planetary_day),
+  });
+  currentY += lineHeight;
+
+  // "时主星: [SYMBOL]"
+  elements.push({
+    type: 'text',
+    text: '时主星:',
+    left: 0,
+    textAlign: 'left',
+    top: currentY,
+    fontSize: fontSize,
+    fontFamily: config.textFont,
+  });
+  elements.push({
+    type: 'text',
+    text: config.planetFontString(horosco.planetary_hours),
+    left: 80, // Hardcoded offset
+    textAlign: 'left',
+    top: currentY,
+    fontSize: fontSize,
+    fontFamily: config.planetFontFamily(horosco.planetary_hours),
+  });
+  currentY += lineHeight;
+
+  return elements;
+}
+// #endregion
+
+// #region Public Drawing Functions
+/**
+ * Draws an aspect grid.
+ * @param aspects Aspect data.
+ * @param aspectCanvas The canvas to draw on.
+ * @param config Drawing configuration.
+ * @param options Canvas dimensions.
+ */
+export function drawAspect(
+  aspects: readonly Aspect[],
+  aspectCanvas: fabric.StaticCanvas,
+  config: Readonly<Horoconfig>,
+  options: Readonly<{ width: number; height: number }>
+): void {
+  const planets = config.horoPlanets;
+  const gridElements = calculateAspectGrid(
+    planets,
+    options.width,
+    options.height
   );
-  canvas.add(noteText);
+  const textElements = calculateAspectText(
+    aspects,
+    planets,
+    config,
+    options.width,
+    options.height
+  );
+  renderElements(aspectCanvas, [...gridElements, ...textElements], options);
 }
 
 /**
- * 绘制返照盘天宫图
- * @param horosco 天宫图数据
- * @param canvas 天宫图canvas
- * @param options 天宫图图的相关参数
+ * Draws a horoscope chart.
+ * @param horosco Horoscope data.
+ * @param canvas The canvas to draw on.
+ * @param config Drawing configuration.
+ * @param options Canvas dimensions.
  */
-export function drawReturnHorosco(
-  horosco: ReturnHoroscope,
+export function drawHorosco(
+  horosco: Readonly<Horoscope>,
   canvas: fabric.StaticCanvas,
-  config: Horoconfig,
-  options: { width: number; heigth: number }
+  config: Readonly<Horoconfig>,
+  options: Readonly<{ width: number; height: number }>
 ) {
-  canvas.clear();
-  canvas.setWidth(options.width);
-  canvas.setHeight(options.heigth);
+  const cx = options.width / 2;
+  const cy = options.height / 2;
+  const r0 = options.width / 2;
+  const r1 = r0 - 50;
 
-  // 圆心
-  let cx = options.width / 2;
-  let cy = options.heigth / 2;
-  // 外圆半径
-  let r0 = options.width / 2;
-  // 内圆半径
-  let r1 = r0 - 50;
-
-  drawHouse(horosco.houses_cups, canvas, config, {
-    cx: cx,
-    cy: cy,
-    r0: r0,
-    r1: r1,
+  const houseElements = calculateHouseElements(horosco.houses_cups, config, {
+    cx,
+    cy,
+    r0,
+    r1,
   });
-  // 画行星
-  drawPlanets(
+  const planetElements = calculatePlanetElements(
     [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic],
-    canvas,
     horosco.houses_cups[0],
     config,
-    { cx: cx, cy: cy, r: r1 }
+    { cx, cy, r: r1 }
+  );
+  const noteElements = calculateNotesElements(horosco, config);
+
+  renderElements(
+    canvas,
+    [...houseElements, ...planetElements, ...noteElements],
+    options
   );
 }
 
-// 绘制完成后根据屏幕大小缩放
-export function zoomImage(canvas: fabric.StaticCanvas, platform: Platform) {
-  platform.ready().then(() => {
-    let canvasWidth = canvas.getWidth();
-    if (!canvasWidth) return;
-    let width = platform.width();
-    let zoom = (width - 10) / canvasWidth;
-    if (zoom < 1) {
-      canvas.setWidth(width);
-      canvas.setHeight(width);
-      canvas.setZoom(zoom);
-    }
+/**
+ * Draws a return horoscope chart.
+ * @param horosco Return horoscope data.
+ * @param canvas The canvas to draw on.
+ * @param config Drawing configuration.
+ * @param options Canvas dimensions.
+ */
+export function drawReturnHorosco(
+  horosco: Readonly<ReturnHoroscope>,
+  canvas: fabric.StaticCanvas,
+  config: Readonly<Horoconfig>,
+  options: Readonly<{ width: number; height: number }>
+) {
+  const cx = options.width / 2;
+  const cy = options.height / 2;
+  const r0 = options.width / 2;
+  const r1 = r0 - 50;
+
+  const houseElements = calculateHouseElements(horosco.houses_cups, config, {
+    cx,
+    cy,
+    r0,
+    r1,
   });
+  const planetElements = calculatePlanetElements(
+    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic],
+    horosco.houses_cups[0],
+    config,
+    { cx, cy, r: r1 }
+  );
+
+  renderElements(canvas, [...houseElements, ...planetElements], options);
 }
+// #endregion

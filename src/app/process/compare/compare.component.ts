@@ -20,11 +20,11 @@ import {
 } from 'src/app/type/interface/request-data';
 import { lastValueFrom } from 'rxjs';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/compare';
-import { zoomImage } from 'src/app/utils/image/horo';
-import { degreeToDMS } from 'src/app/utils/horo-math';
+import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { zoomImage } from 'src/app/utils/image/zoom-image';
 
 enum ComparisonType {
   SolarComparNative, // 日返照盘比本命盘

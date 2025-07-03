@@ -11,18 +11,15 @@ import {
   ReturnRequest,
 } from 'src/app/type/interface/request-data';
 import { lastValueFrom } from 'rxjs';
-import {
-  drawAspect,
-  drawReturnHorosco,
-  zoomImage,
-} from 'src/app/utils/image/horo';
+import { drawAspect, drawReturnHorosco } from 'src/app/utils/image/horo';
 import { Platform } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { ProcessName } from 'src/app/process/enum/process';
-import { degreeToDMS } from 'src/app/utils/horo-math';
+import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { zoomImage } from 'src/app/utils/image/zoom-image';
 
 @Component({
   selector: 'app-return',
@@ -206,19 +203,15 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // 绘制星盘和相位
   draw(returnHoroscopeData: ReturnHoroscope) {
-    // if (this.returnHoroscopeData === null) return;
-
-    // this.canvas?.setWidth(0);
-    // this.canvas?.setHeight(0);
     if (this.isAspect) {
       drawAspect(returnHoroscopeData.aspects, this.canvas!, this.config, {
         width: this.config.aspectImage.width,
-        heigth: this.config.aspectImage.height,
+        height: this.config.aspectImage.height,
       });
     } else {
       drawReturnHorosco(returnHoroscopeData, this.canvas!, this.config, {
         width: this.config.HoroscoImage.width,
-        heigth: this.config.HoroscoImage.height,
+        height: this.config.HoroscoImage.height,
       });
     }
     zoomImage(this.canvas!, this.platform);

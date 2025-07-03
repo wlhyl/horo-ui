@@ -10,16 +10,17 @@ export class TipService {
 
   constructor(private config: QizhengConfigService) {}
 
-  newTip(
-    message: string,
-    object: fabric.Object,
-    canvas: fabric.Canvas
-  ): fabric.Object {
-    const noteText = new fabric.Text(message, {
+  newTip(message: string, object: fabric.Object, canvas: fabric.Canvas) {
+    const noteText = new fabric.FabricText(message, {
       fontSize: this.config.fontSize,
-      // fontFamily: config.textFont,
       selectable: false,
       backgroundColor: this.config.noteTextColor,
+    });
+
+    object.on('mousedown', (e) => {
+      if (this.object) canvas.remove(this.object);
+      this.object = noteText;
+      canvas.add(noteText);
     });
 
     noteText.on('mousedown', (e) => {
@@ -28,7 +29,9 @@ export class TipService {
     });
 
     // 计算tip的left,top
+    // text与object垂直对齐
     let top = object.top! + object.height! / 2 - noteText.height! / 2;
+    // 默认text在object的右边
     let left = object.left! + object.width!;
 
     const right = left + noteText.width!;
@@ -37,27 +40,15 @@ export class TipService {
     }
 
     if (top < 0) {
-      top = object.top!;
+      top = 0;
     }
 
     const botton = top + noteText.height!;
     if (botton > canvas.height!) {
-      top = object.top! + object.height! - noteText.height!;
+      top = canvas.height! - noteText.height!;
     }
 
     noteText.top = top;
     noteText.left = left;
-
-    // if (this.object) canvas.remove(this.object);
-
-    // this.object = noteText;
-
-    return noteText;
-  }
-
-  showTip(object: fabric.Object, canvas: fabric.Canvas) {
-    if (this.object) canvas.remove(this.object);
-    this.object = object;
-    canvas.add(object);
   }
 }

@@ -5,7 +5,7 @@ import {
   HoroRequest,
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
-import { deepFreeze } from 'src/app/utils/deep-freeze';
+import { deepFreeze } from 'src/app/utils/deep-freeze/deep-freeze';
 
 @Injectable({
   providedIn: 'root',

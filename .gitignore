@@ -69,3 +69,6 @@ testem.log
 Thumbs.db
 
 package-lock.json
+
+*-plan.md
+*.bak

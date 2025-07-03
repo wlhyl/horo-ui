@@ -5,7 +5,7 @@ describe('PowerPage', () => {
   let component: PowerPage;
   let fixture: ComponentFixture<PowerPage>;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     fixture = TestBed.createComponent(PowerPage);
     component = fixture.componentInstance;
     fixture.detectChanges();

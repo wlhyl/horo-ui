@@ -10,9 +10,9 @@ import {
 } from 'src/app/type/interface/response-qizheng';
 import * as fabric from 'fabric';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
-import { cos, degNorm, degreeToDMS, newtonIteration, sin } from '../horo-math';
+import { cos, degNorm, degreeToDMS, newtonIteration, sin } from '../horo-math/horo-math';
 import { TipService } from 'src/app/services/qizheng/tip.service';
-import { zodiacLong } from '../qizheng-math';
+import { zodiacLong } from '../qizheng-math/qizheng-math';
 
 /**
  * 绘制天宫图
@@ -169,7 +169,7 @@ export function drawHoroscope(
     horoscope.bazi[2][1]
   } ${horoscope.bazi[3][1]}`;
 
-  const nativeLunarCalendarTextCanvas = new fabric.Text(
+  const nativeLunarCalendarTextCanvas = new fabric.FabricText(
     nativeLunarCalendarText,
     {
       fontSize: (config.fontSize * 2) / 3,
@@ -185,7 +185,7 @@ export function drawHoroscope(
     horoscope.process_lunar_calendar
   );
 
-  const processLunarCalendarTextCanvas = new fabric.Text(
+  const processLunarCalendarTextCanvas = new fabric.FabricText(
     processLunarCalendarText,
     {
       fontSize: (config.fontSize * 2) / 3,
@@ -290,7 +290,7 @@ function drawASCHouse(
     ascLongDMS.s
   }秒`;
 
-  const houseNumText = new fabric.Text(
+  const houseNumText = new fabric.FabricText(
     `${asc_house.xiu}${Math.floor(asc_house.xiu_degree)}度`,
     {
       fontSize: config.fontSize,
@@ -304,11 +304,8 @@ function drawASCHouse(
 
   // 以下一行不能放到 mousedown的回调函数中，因为houseNumText添加到组后会
   // 重新计算坐标，此坐标不再是相对于整个画布
-  const noteText = tip.newTip(message, houseNumText, canvas);
+  tip.newTip(message, houseNumText, canvas);
 
-  houseNumText.on('mousedown', (e) => {
-    tip.showTip(noteText, canvas);
-  });
   group.add(houseNumText);
   canvas.add(group);
 }
@@ -367,7 +364,7 @@ function drawZodiac(
     const x = cx + ((r0 + r1) / 2) * cos(30 * index + 15);
     const y = cx - ((r0 + r1) / 2) * sin(30 * index + 15);
 
-    let houseNumText = new fabric.Text(`${houseName}`, {
+    let houseNumText = new fabric.FabricText(`${houseName}`, {
       fontSize: config.fontSize,
       selectable: true,
       // fontFamily: config.textFont,
@@ -422,10 +419,10 @@ function drawHouse(
     const y = cx - ((r0 + r1) / 2) * sin(house.long + 15 - 30);
 
     const xiuDMS = degreeToDMS(house.xiu_degree);
-    // const noteText = new fabric.Text(
+
     const message = `${house.xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
 
-    const houseNumText = new fabric.Text(`${house.name}`, {
+    const houseNumText = new fabric.FabricText(`${house.name}`, {
       fontSize: config.fontSize,
       selectable: true,
       // fontFamily: config.textFont,
@@ -433,11 +430,8 @@ function drawHouse(
     houseNumText.left = x - houseNumText.width! / 2;
     houseNumText.top = y - houseNumText.height! / 2;
 
-    const noteText = tip.newTip(message, houseNumText, canvas);
+    tip.newTip(message, houseNumText, canvas);
 
-    houseNumText.on('mousedown', (e) => {
-      tip.showTip(noteText, canvas);
-    });
     canvas.add(houseNumText);
   });
 }
@@ -585,7 +579,7 @@ function drawPlanets(
     if (planets[i].speed < 0) color = '#dc3545';
     if (planets[i].is_stationary) color = '#ffc107';
 
-    const planetText = new fabric.Text(planets[i].name, {
+    const planetText = new fabric.FabricText(planets[i].name, {
       fontSize: fontSize,
       selectable: true,
       stroke: color,
@@ -616,11 +610,7 @@ ${planets[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
 
     if (planets[i].is_stationary) message = `${message}、留`;
 
-    const noteText = tip.newTip(message, planetText, canvas);
-
-    planetText.on('mousedown', (e) => {
-      tip.showTip(noteText, canvas);
-    });
+    tip.newTip(message, planetText, canvas);
 
     canvas.add(planetText);
   }
@@ -681,7 +671,7 @@ function drawDistanceStar(
     const x = cx + ((r0 + r1) / 2) * cos(long - 30);
     const y = cy - ((r0 + r1) / 2) * sin(long - 30);
 
-    const planetText = new fabric.Text(distance_star.lunar_mansions, {
+    const planetText = new fabric.FabricText(distance_star.lunar_mansions, {
       fontSize: config.fontSize,
       selectable: true,
       // stroke: 'black',
@@ -702,11 +692,7 @@ function drawDistanceStar(
 ${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMSOnZoodiac.m}分${planetLongDMSOnZoodiac.s}秒
 宿宽：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
 
-    const noteText = tip.newTip(message, planetText, canvas);
-
-    planetText.on('mousedown', (e) => {
-      tip.showTip(noteText, canvas);
-    });
+    tip.newTip(message, planetText, canvas);
 
     canvas.add(planetText);
   });
@@ -774,7 +760,7 @@ function drawDongWei(
     const x = cx + ((r0 + r1) / 2) * cos(long - 30);
     const y = cy - ((r0 + r1) / 2) * sin(long - 30);
 
-    const planetText = new fabric.Text(`${i + 1}`, {
+    const planetText = new fabric.FabricText(`${i + 1}`, {
       fontSize: config.fontSize / 2,
       selectable: true,
       // stroke: 'black',
@@ -811,11 +797,7 @@ function drawDongWei(
   let message = `${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMSOnZoodiac.m}分${planetLongDMSOnZoodiac.s}秒
 ${dong_wei.xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
 
-  const noteText = tip.newTip(message, path, canvas);
-
-  path.on('mousedown', (e) => {
-    tip.showTip(noteText, canvas);
-  });
+  tip.newTip(message, path, canvas);
 
   canvas.add(path);
 }

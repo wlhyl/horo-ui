@@ -14,13 +14,13 @@ import { lastValueFrom } from 'rxjs';
 import { drawHoroscope } from 'src/app/utils/image/qizheng';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { TipService } from 'src/app/services/qizheng/tip.service';
-import { zoomImage } from 'src/app/utils/image/horo';
 import { Platform } from '@ionic/angular';
 import { Path } from '../../type/enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { Path as subPath } from '../path';
 import { informationCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { zoomImage } from 'src/app/utils/image/zoom-image';
 
 @Component({
   selector: 'app-horo',

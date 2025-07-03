@@ -1,4 +1,4 @@
-import { Zodiac } from '../type/enum/zodiac';
+import { Zodiac } from '../../type/enum/zodiac';
 
 /**
  *
@@ -48,19 +48,15 @@ export function degreeToDMS(degree: number): {
   m: number;
   s: number;
 } {
-  let l = Math.abs(degree);
-  let d = Math.floor(l);
-  let m = (l - d) * 60;
-  let s = (m - Math.floor(m)) * 60;
-  s = Math.floor(s);
-  m = Math.floor(m);
+  const l = Math.abs(degree);
+  const d = Math.floor(l);
+  // 不使用 (l - d) * 60
+  // 如：l=1.2，使用此种方法,l-d=11.999999999
+  // 丢失精度
+  const m = Math.floor(l * 60 - d * 60);
+  const s = Math.floor(l * 3600 - d * 3600 - m * 60);
 
-  if (degree < 0) {
-    d = -d;
-    m = -m;
-    s = -s;
-  }
-  return { d: d, m: m, s: s };
+  return degree >= 0 ? { d, m, s } : { d: -d, m: -m, s: -s };
 }
 
 /**

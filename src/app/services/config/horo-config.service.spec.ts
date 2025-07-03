@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Horoconfig} from './horo-config.service';
-import { Planet } from '../../type/enum/planet'
-import { Zodiac } from '../../type/enum/zodiac'
+import { Horoconfig } from './horo-config.service';
+import { PlanetName } from '../../type/enum/planet';
+import { Zodiac } from '../../type/enum/zodiac';
 
 describe('HoroconfigService', () => {
   let service: Horoconfig;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({providers: [Horoconfig]});
+    TestBed.configureTestingModule({ providers: [Horoconfig] });
     service = TestBed.inject(Horoconfig);
   });
 
@@ -16,131 +16,141 @@ describe('HoroconfigService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('api urls is defined', () =>{
-    let urls = [
-      service.baseUrl, service.qizhengBaseUrl, service.houseSystemUrl, service.horoHoroscopeUrl,
-      service.horoProfectionsUrl, service.horoFirdariaUrl, service.horoTransitUrl, service.horoSolarReturnUrl,
-      service.horoLunarReturnUrl, service.qizhengHorohscopeUrl
-    ]
-    for(let url of urls){
-      expect(url).toBeDefined()
-    }
-  })
-
   it('西占行星列表', () => {
     let horoPlanets = [
-      Planet.SE_SUN,
-      Planet.SE_MOON,
-      Planet.SE_MERCURY,
-      Planet.SE_VENUS,
-      Planet.SE_MARS,
-      Planet.SE_JUPITER,
-      Planet.SE_SATURN,
-      Planet.HORO_NORTH_NODE,
-      Planet.HORO_SOUTH_NODE,    
-      Planet.HORO_ASC,
-      Planet.HORO_MC,
-      Planet.HORO_DSC,
-      Planet.HORO_IC,
-    ]
-    expect(service.horoPlanets).toEqual(horoPlanets)
-  })
+      PlanetName.Sun,
+      PlanetName.Moon,
+      PlanetName.Mercury,
+      PlanetName.Venus,
+      PlanetName.Mars,
+      PlanetName.Jupiter,
+      PlanetName.Saturn,
+      PlanetName.NorthNode,
+      PlanetName.SouthNode,
+      PlanetName.ASC,
+      PlanetName.MC,
+      PlanetName.DSC,
+      PlanetName.IC,
+    ];
+    expect(service.horoPlanets).toEqual(horoPlanets);
+  });
 
   it('占星字体', () => {
-    expect(service.astrologyFont).toBeDefined()
-  })
+    expect(service.astrologyFont).toBeDefined();
+  });
 
   it('普通文本字体', () => {
-    expect(service.textFont).toBeDefined()
-  })
+    expect(service.textFont).toBeDefined();
+  });
 
-  it('行星字体符号', () =>{
+  it('行星字体符号', () => {
     let planetStrings = [
-      {planet :Planet.SE_SUN, string: 'Q'},
-      {planet :Planet.SE_MOON, string: 'W'},
-      {planet: Planet.SE_MERCURY, string: 'E'},
-      {planet: Planet.SE_VENUS,string: 'R'},
-      {planet: Planet.SE_MARS, string: 'T'},
-      {planet: Planet.SE_JUPITER, string: 'Y'},
-      {planet: Planet.SE_SATURN, string: 'U'},
-      {planet: Planet.SE_TRUE_NODE, string: '{'},
-      {planet: -Planet.SE_TRUE_NODE, string: '}' },
-      {planet: Planet.SE_MEAN_NODE, string: '{' },
-      {planet: -Planet.SE_MEAN_NODE, string: '}' },
-      {planet: Planet.HORO_ASC, string: 'ASC' },
-      {planet: Planet.HORO_MC,string: 'MC'},
-      {planet: Planet.HORO_DSC, string: 'DSC'},
-      {planet: Planet.HORO_IC, string: 'IC'}
-    ]
-    for(let planetString of planetStrings){
-      expect(service.planetFontString(planetString.planet)).toEqual(planetString.string)
+      { planet: PlanetName.Sun, string: 'Q' },
+      { planet: PlanetName.Moon, string: 'W' },
+      { planet: PlanetName.Mercury, string: 'E' },
+      { planet: PlanetName.Venus, string: 'R' },
+      { planet: PlanetName.Mars, string: 'T' },
+      { planet: PlanetName.Jupiter, string: 'Y' },
+      { planet: PlanetName.Saturn, string: 'U' },
+      { planet: PlanetName.NorthNode, string: '{' },
+      { planet: PlanetName.SouthNode, string: '}' },
+      // {planet: PlanetName.SE_MEAN_NODE, string: '{' },
+      // {planet: -Planet.SE_MEAN_NODE, string: '}' },
+      { planet: PlanetName.ASC, string: 'ASC' },
+      { planet: PlanetName.MC, string: 'MC' },
+      { planet: PlanetName.DSC, string: 'DSC' },
+      { planet: PlanetName.IC, string: 'IC' },
+    ];
+    for (let planetString of planetStrings) {
+      expect(service.planetFontString(planetString.planet)).toEqual(
+        planetString.string
+      );
     }
-  })
+  });
 
   it('相位字体字符', () => {
     let aspects = [
-      {aspect: 0, string: "q"},
-      {aspect: 60, string: 't'},
-      {aspect: 90, string: 'r'},
-      {aspect: 120, string: 'e'},
-      {aspect: 180, string: 'w'},
-    ]
-    for(let aspect of aspects){
-      expect(service.aspectFontString(aspect.aspect)).toEqual(aspect.string)
+      { aspect: 0, string: 'q' },
+      { aspect: 60, string: 't' },
+      { aspect: 90, string: 'r' },
+      { aspect: 120, string: 'e' },
+      { aspect: 180, string: 'w' },
+    ];
+    for (let aspect of aspects) {
+      expect(service.aspectFontString(aspect.aspect)).toEqual(aspect.string);
     }
-  })
+  });
 
   it('行星字体', () => {
-    let angularHouseCups = [Planet.HORO_ASC, Planet.HORO_MC, Planet.HORO_DSC, Planet.HORO_IC]
-    for(let cups of angularHouseCups){
-      expect(service.planetFontFamily(cups)).toEqual(service.textFont)
+    let angularHouseCups = [
+      PlanetName.ASC,
+      PlanetName.MC,
+      PlanetName.DSC,
+      PlanetName.IC,
+    ];
+    for (let cups of angularHouseCups) {
+      expect(service.planetFontFamily(cups)).toEqual(service.textFont);
     }
 
     let planets = [
-      Planet.SE_SUN,
-      Planet.SE_MOON,
-      Planet.SE_MERCURY,
-      Planet.SE_VENUS,
-      Planet.SE_MARS,
-      Planet.SE_JUPITER,
-      Planet.SE_SATURN,
-      Planet.HORO_NORTH_NODE,
-      Planet.HORO_SOUTH_NODE,
-    ]
+      PlanetName.Sun,
+      PlanetName.Moon,
+      PlanetName.Mercury,
+      PlanetName.Venus,
+      PlanetName.Mars,
+      PlanetName.Jupiter,
+      PlanetName.Saturn,
+      PlanetName.NorthNode,
+      PlanetName.SouthNode,
+    ];
 
-    for(let planet of planets){
-      expect(service.planetFontFamily(planet)).toEqual(service.astrologyFont)
+    for (let planet of planets) {
+      expect(service.planetFontFamily(planet)).toEqual(service.astrologyFont);
     }
-  })
+  });
 
   it('相位字体', () => {
-    expect(service.aspectFontFamily()).toEqual(service.astrologyFont)
-  })
+    expect(service.aspectFontFamily()).toEqual(service.astrologyFont);
+  });
 
   it('星座字体字符', () => {
     let zodiacStrings = [
-      {zodiac: Zodiac.Aries, string: "a"},
-      {zodiac: Zodiac.Taurus, string: "s"},
-      {zodiac: Zodiac.Gemini, string: "d"},
-      {zodiac: Zodiac.Cancer, string: "f"},
-      {zodiac: Zodiac.Leo, string: "g"},
-      {zodiac: Zodiac.Virgo, string: "h"},
-      {zodiac: Zodiac.Libra, string: "j"},
-      {zodiac: Zodiac.Scorpio, string: "k"},
-      {zodiac: Zodiac.Sagittarius, string: "l"},
-      {zodiac: Zodiac.Capricorn, string: "z"},
-      {zodiac: Zodiac.Aquarius, string: "x"},
-      {zodiac: Zodiac.Pisces, string: "c"}
-    ]
-    for(let zodiacString of zodiacStrings){
-      expect(service.zodiacFontString(zodiacString.zodiac)).toEqual(zodiacString.string)
+      { zodiac: Zodiac.Aries, string: 'a' },
+      { zodiac: Zodiac.Taurus, string: 's' },
+      { zodiac: Zodiac.Gemini, string: 'd' },
+      { zodiac: Zodiac.Cancer, string: 'f' },
+      { zodiac: Zodiac.Leo, string: 'g' },
+      { zodiac: Zodiac.Virgo, string: 'h' },
+      { zodiac: Zodiac.Libra, string: 'j' },
+      { zodiac: Zodiac.Scorpio, string: 'k' },
+      { zodiac: Zodiac.Sagittarius, string: 'l' },
+      { zodiac: Zodiac.Capricorn, string: 'z' },
+      { zodiac: Zodiac.Aquarius, string: 'x' },
+      { zodiac: Zodiac.Pisces, string: 'c' },
+    ];
+    for (let zodiacString of zodiacStrings) {
+      expect(service.zodiacFontString(zodiacString.zodiac)).toEqual(
+        zodiacString.string
+      );
     }
-  })
+  });
 
   it('星座字体', () => {
-    expect(service.zodiacFontFamily()).toEqual(service.astrologyFont)
-  })
-})
+    expect(service.zodiacFontFamily()).toEqual(service.astrologyFont);
+  });
 
+  it('aspectImage 配置', () => {
+    expect(service.aspectImage.width).toBe(700);
+    expect(service.aspectImage.height).toBe(700);
+  });
 
+  it('HoroscoImage 配置', () => {
+    expect(service.HoroscoImage.width).toBe(700);
+    expect(service.HoroscoImage.height).toBe(700);
+  });
 
+  it('houses应初始化为空数组', () => {
+    expect(service.houses).toBeInstanceOf(Array);
+    expect(service.houses).toEqual([]);
+  });
+});

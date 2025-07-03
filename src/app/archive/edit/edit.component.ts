@@ -8,7 +8,7 @@ import {
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horoscope-record';
 import { Path } from '../../type/enum/path';
-import { isLocationEqual } from 'src/app/utils/location-record';
+import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 
 @Component({
     selector: 'app-edit',

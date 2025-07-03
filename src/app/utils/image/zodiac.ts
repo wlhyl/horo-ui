@@ -1,6 +1,11 @@
 import { PlanetName } from 'src/app/type/enum/planet';
 import { Zodiac } from 'src/app/type/enum/zodiac';
 
+/**
+ * 获取星座的守护星
+ * @param z 星座
+ * @returns 守护星
+ */
 export function rulership(z: Zodiac): PlanetName {
   switch (z) {
     case Zodiac.Aries:
@@ -30,6 +35,11 @@ export function rulership(z: Zodiac): PlanetName {
   }
 }
 
+/**
+ * 获取星座的擢升星(可能为null)
+ * @param z 星座
+ * @returns 擢升星或null
+ */
 export function exaltation(z: Zodiac): PlanetName | null {
   switch (z) {
     case Zodiac.Aries:
@@ -59,6 +69,11 @@ export function exaltation(z: Zodiac): PlanetName | null {
   }
 }
 
+/**
+ * 获取星座的三分性主星列表
+ * @param z 星座
+ * @returns 三分性主星数组
+ */
 export function tripilicity(z: Zodiac): Array<PlanetName> {
   switch (z) {
     case Zodiac.Aries:
@@ -81,6 +96,11 @@ export function tripilicity(z: Zodiac): Array<PlanetName> {
 }
 
 
+/**
+ * 获取星座的Lily三分性主星列表
+ * @param z 星座
+ * @returns Lily三分性主星数组
+ */
 export function tripilicityOfLily(z: Zodiac): Array<PlanetName> {
   switch (z) {
     case Zodiac.Aries:
@@ -102,6 +122,11 @@ export function tripilicityOfLily(z: Zodiac): Array<PlanetName> {
   }
 }
 
+/**
+ * 获取星座的面主星列表
+ * @param z 星座
+ * @returns 面主星数组
+ */
 export function face(z: Zodiac): Array<PlanetName> {
   switch (z) {
     case Zodiac.Aries:
@@ -131,6 +156,11 @@ export function face(z: Zodiac): Array<PlanetName> {
   }
 }
 
+/**
+ * 获取星座的失势星
+ * @param z 星座
+ * @returns 失势星
+ */
 export function detriment(z: Zodiac): PlanetName {
   switch (z) {
     case Zodiac.Aries:
@@ -160,6 +190,11 @@ export function detriment(z: Zodiac): PlanetName {
   }
 }
 
+/**
+ * 获取星座的陷落星(可能为null)
+ * @param z 星座
+ * @returns 陷落星或null
+ */
 export function fall(z: Zodiac): PlanetName|null {
   switch (z) {
     case Zodiac.Aries:
@@ -189,6 +224,11 @@ export function fall(z: Zodiac): PlanetName|null {
   }
 }
 
+/**
+ * 获取星座的托勒密界
+ * @param z 星座
+ * @returns 托勒密界数组(包含行星和度数)
+ */
 export function ptolemyTerm(z: Zodiac) {
   switch (z) {
     case Zodiac.Aries:
@@ -221,6 +261,11 @@ export function ptolemyTerm(z: Zodiac) {
 
 
 // 埃及界
+/**
+ * 获取星座的埃及界
+ * @param z 星座
+ * @returns 埃及界数组(包含行星和度数)
+ */
 export function egyptianTerm(z: Zodiac) {
   switch (z) {
     case Zodiac.Aries:

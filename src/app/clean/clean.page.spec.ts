@@ -5,7 +5,7 @@ describe('CleanPage', () => {
   let component: CleanPage;
   let fixture: ComponentFixture<CleanPage>;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     fixture = TestBed.createComponent(CleanPage);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -7,7 +7,7 @@ import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horoscope-record';
-import { degreeToDMS } from 'src/app/utils/horo-math';
+import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
 @Component({
     selector: 'app-note',
