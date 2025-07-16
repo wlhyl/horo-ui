@@ -10,9 +10,16 @@ import {
 } from 'src/app/type/interface/response-qizheng';
 import * as fabric from 'fabric';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
-import { cos, degNorm, degreeToDMS, newtonIteration, sin } from '../horo-math/horo-math';
+import {
+  cos,
+  degNorm,
+  degreeToDMS,
+  newtonIteration,
+  sin,
+} from '../horo-math/horo-math';
 import { TipService } from 'src/app/services/qizheng/tip.service';
 import { zodiacLong } from '../qizheng-math/qizheng-math';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 
 /**
  * 绘制天宫图
@@ -46,7 +53,7 @@ export function drawHoroscope(
         radius: r1,
         fill: '',
         stroke: 'black', //不填充
-        selectable: true,
+        selectable: false,
       })
     );
   }
@@ -60,7 +67,7 @@ export function drawHoroscope(
       radius: dongWeiR,
       fill: '',
       stroke: 'black', //不填充
-      selectable: true,
+      selectable: false,
     })
   );
 
@@ -131,33 +138,6 @@ export function drawHoroscope(
     r1: (r * 6.0) / 9.0,
   });
 
-  const group = new fabric.Group(canvas.getObjects(), {
-    selectable: false, // 设置为true可以被选中
-    subTargetCheck: true, // 设置为true才能响应鼠标事件
-
-    // perPixelTargetFind: true,
-  });
-
-  // https://blog.csdn.net/beauty_600/article/details/129621372
-  // selectable: false，下面代码可以注释掉
-  // group.setControlsVisibility({
-  //   ml: false, // 左中
-  //   mt: false,
-  //   mr: false,
-  //   mb: false,
-  //   mtr: false, // 旋转
-  //   // bl;: false, 左下
-  //   // bl:false // 右下
-  //   // tl: false // 左上
-  //   // tr: false // 右上
-  // });
-
-  // group.hasRotatingPoint=false
-
-  // canvas.getObjects().forEach(o=>canvas.remove(o))
-  canvas.clear();
-  canvas.add(group);
-
   // 画农历
   const nativeLunarCalendarText = `${formatLunarCalendar(
     horoscope.native_lunar_calendar
@@ -197,6 +177,8 @@ export function drawHoroscope(
     canvas.width! - processLunarCalendarTextCanvas.width!;
   processLunarCalendarTextCanvas.top = 0;
   canvas.add(processLunarCalendarTextCanvas);
+
+  canvas.forEachObject((obj) => (obj.selectable = false));
 }
 
 // 添加日期格式化辅助函数
@@ -246,26 +228,20 @@ ${solar_term_second.name}：${formatDate(solar_term_second)}
  * @param options 天宫图的相关参数
  */
 function drawASCHouse(
-  asc_house: ASCHouse,
+  asc_house: DeepReadonly<ASCHouse>,
   canvas: fabric.Canvas,
-  config: QizhengConfigService,
+  config: DeepReadonly<QizhengConfigService>,
   tip: TipService,
-  options: {
+  options: Readonly<{
     cx: number; // 圆心坐标：x
     cy: number; // 圆心坐标：y
     r: number; // 标注圆半径
-  }
+  }>
 ) {
   const cx = options.cx;
   const cy = options.cy;
 
   const r = options.r;
-
-  const group = new fabric.Group(undefined, {
-    selectable: true,
-    subTargetCheck: true,
-    // perPixelTargetFind: true,
-  });
 
   const houseNames = [
     '戌',
@@ -294,8 +270,7 @@ function drawASCHouse(
     `${asc_house.xiu}${Math.floor(asc_house.xiu_degree)}度`,
     {
       fontSize: config.fontSize,
-      // fontFamily: config.textFont,
-      selectable: true,
+      selectable: false,
     }
   );
 
@@ -306,8 +281,7 @@ function drawASCHouse(
   // 重新计算坐标，此坐标不再是相对于整个画布
   tip.newTip(message, houseNumText, canvas);
 
-  group.add(houseNumText);
-  canvas.add(group);
+  canvas.add(houseNumText);
 }
 
 /**
@@ -317,13 +291,13 @@ function drawASCHouse(
  */
 function drawZodiac(
   canvas: fabric.Canvas,
-  config: QizhengConfigService,
-  options: {
+  config: DeepReadonly<QizhengConfigService>,
+  options: Readonly<{
     cx: number; // 圆心坐标：x
     cy: number; // 圆心坐标：y
     r0: number; // 外圆半径
     r1: number; // 内圆半径
-  }
+  }>
 ) {
   const cx = options.cx;
   const cy = options.cy;
@@ -355,7 +329,7 @@ function drawZodiac(
     const y1 = cx - r0 * sin(30 * index);
     let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
       stroke: 'black',
-      selectable: true,
+      selectable: false,
     });
     canvas.add(path);
 
@@ -366,8 +340,7 @@ function drawZodiac(
 
     let houseNumText = new fabric.FabricText(`${houseName}`, {
       fontSize: config.fontSize,
-      selectable: true,
-      // fontFamily: config.textFont,
+      selectable: false,
     });
     houseNumText.left = x - houseNumText.width! / 2;
     houseNumText.top = y - houseNumText.height! / 2;
@@ -382,16 +355,16 @@ function drawZodiac(
  * @param options 天宫图的相关参数
  */
 function drawHouse(
-  houses: Array<House>,
+  houses: ReadonlyArray<House>,
   canvas: fabric.Canvas,
-  config: QizhengConfigService,
+  config: DeepReadonly<QizhengConfigService>,
   tip: TipService,
-  options: {
+  options: Readonly<{
     cx: number; // 圆心坐标：x
     cy: number; // 圆心坐标：y
     r0: number; // 外圆半径
     r1: number; // 内圆半径
-  }
+  }>
 ) {
   const cx = options.cx;
   const cy = options.cy;
@@ -444,17 +417,17 @@ function drawHouse(
  * @param options (cx, cy)：画布中心坐标，r: 行星字符位置不能超过的半径
  */
 function drawPlanets(
-  planets: Array<Planet>,
-  transformed_stars: Array<StarTransformedStar>,
+  planets: ReadonlyArray<Planet>,
+  transformed_stars: ReadonlyArray<StarTransformedStar>,
   canvas: fabric.Canvas,
   tip: TipService,
-  config: QizhengConfigService,
-  options: {
+  config: DeepReadonly<QizhengConfigService>,
+  options: Readonly<{
     cx: number; // 圆心坐标：x
     cy: number; // 圆心坐标：y
     r0: number; // 外圆半径
     r1: number; // 内圆半径
-  },
+  }>,
   is_native: boolean
 ) {
   const cx = options.cx;
@@ -463,18 +436,18 @@ function drawPlanets(
   const r0 = options.r0;
   const r1 = options.r1;
   // 依long从小到大对行星进行排序，方便后面计算绘制位置
-  planets.sort((a: Planet, b: Planet) => {
-    return degNorm(a.long) - degNorm(b.long);
-  });
+  const planetsSorted = planets.toSorted(
+    (a: Planet, b: Planet) => degNorm(a.long) - degNorm(b.long)
+  );
 
   // p：行星在canvas的位置
   // 戌宫在-30.0度
-  let p = planets.map((x) => degNorm(x.long - 30.0));
+  let p = planetsSorted.map((x) => degNorm(x.long - 30.0));
   // 克隆一份p，用于调整间距
   // let p0 = p.slice();
 
   // 以下调整行星间的输出间距，保证行星间到少相距w度
-  let w = 12; // 字符间宽度，以角度表示
+  let w = is_native ? 12 : 7; // 字符间宽度，以角度表示
   for (let i = 0; i < p.length; i++) {
     let n = 0; // 从行星i开始有n-1个行星需要调整间距
     for (let j = 1; j < p.length; j++) {
@@ -484,25 +457,39 @@ function drawPlanets(
       }
     }
 
-    // n最小值是1，即行星i与行星i+1之间的间距至少已经是w度
+    // 当n===1时，不用调整，因为此行星i与行星i+1之间的间距已经至少是w度
+    if (n === 1) {
+      continue;
+    }
+
+    // n最小值是2，即行星i与行星i+1之间的间距至小于w度
     // 计算行星i与行星i+n-1的中间位置
     // (p[(i+n-1) % p.length] - p[i]) / 2 + p[i]
     const mid0 = degNorm(degNorm(p[(i + n - 1) % p.length] - p[i]) / 2 + p[i]);
+    // 增加行星i+1...行星i+n-1的间距
     for (let j = 1; j < n; j++) {
       p[(i + j) % p.length] = degNorm(p[i] + j * w);
     }
     // 计算调整后的行星i与行星i+n-1的中间位置
     const mid1 = degNorm(degNorm(p[(i + n - 1) % p.length] - p[i]) / 2 + p[i]);
+    // 计算需要顺时针移动的距离
     const d = degNorm(mid1 - mid0);
     // 顺时针调整i-1开始的行星位置
     // 需要调整m-1个
     let m = 0;
     for (let j = 1; j < p.length; j++) {
-      if (
-        // 当行星k-1与行星k的间距-d>=w时，不用调整
-        degNorm(degNorm(p[(i - j + p.length) % p.length] - p[i]) - d) >=
-        w * j
-      ) {
+      const diff = degNorm(
+        // 注意：这里必需用p(i-j+1) - p(i-j),这样作减法才是逆时针的间距
+        p[(i - j + 1 + p.length) % p.length] - p[(i - j + p.length) % p.length]
+      );
+
+      // 如果diff<=d，必需移动d度
+      if (diff <= d) {
+        continue;
+      }
+
+      if (diff - d >= w) {
+        //   // 当行星k-1与行星k的间距-d>=w时，不用调整
         m = j;
         break;
       }
@@ -536,8 +523,8 @@ function drawPlanets(
     // const tipR = is_native ? r0 : r1;
     let x0 = x;
     let y0 = y;
-    const x1 = cx + (is_native ? r0 : r1) * cos(planets[i].long - 30);
-    const y1 = cy - (is_native ? r0 : r1) * sin(planets[i].long - 30);
+    const x1 = cx + (is_native ? r0 : r1) * cos(planetsSorted[i].long - 30);
+    const y1 = cy - (is_native ? r0 : r1) * sin(planetsSorted[i].long - 30);
     // (x0, y0), (x1, y1)组成的直线方程是：
     // x-x0=(x1-x0)t
     // y-y0=(y1-y0)t
@@ -576,10 +563,10 @@ function drawPlanets(
     const fontSize = config.fontSize;
 
     let color = '#28a745';
-    if (planets[i].speed < 0) color = '#dc3545';
-    if (planets[i].is_stationary) color = '#ffc107';
+    if (planetsSorted[i].speed < 0) color = '#dc3545';
+    if (planetsSorted[i].is_stationary) color = '#ffc107';
 
-    const planetText = new fabric.FabricText(planets[i].name, {
+    const planetText = new fabric.FabricText(planetsSorted[i].name, {
       fontSize: fontSize,
       selectable: true,
       stroke: color,
@@ -588,27 +575,28 @@ function drawPlanets(
     planetText.left = x - planetText.width! / 2;
     planetText.top = y - planetText.height! / 2;
 
-    const planetLongOnZoodiac = zodiacLong(planets[i].long);
+    const planetLongOnZoodiac = zodiacLong(planetsSorted[i].long);
     const planetLongDMSOnZoodiac = degreeToDMS(planetLongOnZoodiac.long);
 
-    const xiuDMS = degreeToDMS(planets[i].xiu_degree);
+    const xiuDMS = degreeToDMS(planetsSorted[i].xiu_degree);
 
     // 化曜，十神
     const transformed_star = transformed_stars.find(
-      (starTransformedStar) => starTransformedStar.star === planets[i].name
+      (starTransformedStar) =>
+        starTransformedStar.star === planetsSorted[i].name
     );
-    let message = `${planets[i].name}
+    let message = `${planetsSorted[i].name}
 ${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMSOnZoodiac.m}分${planetLongDMSOnZoodiac.s}秒
-${planets[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
+${planetsSorted[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
     if (transformed_star) {
       message = `${message}\n${transformed_star.transformed_star}、${transformed_star.ten_gods}、${transformed_star.transformed_star_house}`;
     }
-    message = `${message}\n${planets[i].speed_state}`;
+    message = `${message}\n${planetsSorted[i].speed_state}`;
 
-    if (planets[i].speed < 0) message = `${message}、逆`;
+    if (planetsSorted[i].speed < 0) message = `${message}、逆`;
     else message = `${message}、顺`;
 
-    if (planets[i].is_stationary) message = `${message}、留`;
+    if (planetsSorted[i].is_stationary) message = `${message}、留`;
 
     tip.newTip(message, planetText, canvas);
 
@@ -625,16 +613,16 @@ ${planets[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
  * @param options
  */
 function drawDistanceStar(
-  distanceStarLongs: Array<DistanceStarLong>,
+  distanceStarLongs: ReadonlyArray<DistanceStarLong>,
   canvas: fabric.Canvas,
   tip: TipService,
-  config: QizhengConfigService,
-  options: {
+  config: DeepReadonly<QizhengConfigService>,
+  options: Readonly<{
     cx: number; // 圆心坐标：x
     cy: number; // 圆心坐标：y
     r0: number; // 外圆半径
     r1: number; // 内圆半径
-  }
+  }>
 ) {
   const cx = options.cx;
   const cy = options.cy;
@@ -696,35 +684,19 @@ ${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMS
 
     canvas.add(planetText);
   });
-
-  // // 画宫位分隔线
-  // for (let i = 0; i < 12; i++) {
-  //   // 画宫位分隔线
-  //   const x0 = cx + r1 * cos(30 * i);
-  //   const y0 = cx - r1 * sin(30 * i);
-
-  //   const x1 = cx + r0 * cos(30 * i);
-  //   const y1 = cx - r0 * sin(30 * i);
-  //   let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
-  //     stroke: 'black',
-  //     selectable: false,
-  //     strokeDashArray: [3, 2], // strokeDashArray[a,b] =》 每隔a个像素空b个像素
-  //   });
-  //   canvas.add(path);
-  // }
 }
 
 function drawDongWei(
-  dong_wei: DongWei,
+  dong_wei: DeepReadonly<DongWei>,
   canvas: fabric.Canvas,
   tip: TipService,
-  config: QizhengConfigService,
-  options: {
+  config: DeepReadonly<QizhengConfigService>,
+  options: Readonly<{
     cx: number; // 圆心坐标：x
     cy: number; // 圆心坐标：y
     r0: number; // 外圆半径
     r1: number; // 内圆半径
-  }
+  }>
 ) {
   const cx = options.cx;
   const cy = options.cy;
@@ -741,7 +713,7 @@ function drawDongWei(
     const y1 = cy - r1 * sin(dong_wei.long_of_per_year[i] - 30);
 
     let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
-      selectable: true,
+      selectable: false,
       stroke: 'black',
       // strokeDashArray: [3, 2], // strokeDashArray[a,b] =》 每隔a个像素空b个像素
     });
@@ -762,7 +734,7 @@ function drawDongWei(
 
     const planetText = new fabric.FabricText(`${i + 1}`, {
       fontSize: config.fontSize / 2,
-      selectable: true,
+      selectable: false,
       // stroke: 'black',
       // fontFamily: config.planetFontFamily(planets[i].name),
     });
@@ -781,7 +753,7 @@ function drawDongWei(
   const y1 = cy - r1 * sin(dong_wei.long - 30);
 
   let path = new fabric.Path(`M ${x0}, ${y0} L ${x1} ${y1}`, {
-    selectable: true,
+    selectable: false,
     stroke: 'blue',
     strokeWidth: 5,
     // strokeDashArray: [3, 2], // strokeDashArray[a,b] =》 每隔a个像素空b个像素
