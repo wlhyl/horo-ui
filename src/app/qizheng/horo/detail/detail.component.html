@@ -25,8 +25,8 @@
                 <ion-col size="3"><b>宫位</b></ion-col>
                 <ion-col size="4"><b>描述</b></ion-col>
               </ion-row>
-              @for (item of horoscopeData.native_transformed_stars; track item) {
-              <ion-row class="table-data-row">
+              @for (item of horoscopeData.native_transformed_stars; track item; let i = $index) {
+              <ion-row class="table-data-row" [attr.data-testid]="'native-star-row-' + i">
                 <ion-col size="2">{{item.transformed_star}}</ion-col>
                 <ion-col size="1">{{ item.star}}</ion-col>
                 <ion-col size="2">{{item.ten_gods}}</ion-col>
@@ -54,8 +54,8 @@
                 <ion-col size="3"><b>宫位</b></ion-col>
                 <ion-col size="4"><b>描述</b></ion-col>
               </ion-row>
-              @for (item of horoscopeData.process_transformed_stars; track item) {
-              <ion-row class="table-data-row">
+              @for (item of horoscopeData.process_transformed_stars; track item; let i = $index) {
+              <ion-row class="table-data-row" [attr.data-testid]="'process-star-row-' + i">
                 <ion-col size="2">{{item.transformed_star}}</ion-col>
                 <ion-col size="1">{{ item.star}}</ion-col>
                 <ion-col size="2">{{item.ten_gods}}</ion-col>
