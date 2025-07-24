@@ -33,9 +33,8 @@ export class UserPage implements OnInit {
         this.error = '';
       },
       error: (err) => {
-        err.error.error
-          ? (this.error = err.error.error)
-          : (this.error = '登录失败');
+        console.error('登录失败', err);
+        this.error = err?.error?.error || '登录失败';
       },
     });
   }
