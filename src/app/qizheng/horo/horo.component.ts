@@ -10,7 +10,7 @@ import {
   ProcessRequest,
   QiZhengRequst,
 } from 'src/app/type/interface/request-data';
-import { lastValueFrom } from 'rxjs';
+import { catchError, EMPTY, finalize, lastValueFrom, tap } from 'rxjs';
 import { drawHoroscope } from 'src/app/utils/image/qizheng';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { TipService } from 'src/app/services/qizheng/tip.service';
@@ -66,7 +66,8 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.canvas = new fabric.Canvas('canvas');
+    // 为兼容单元测试，使用这样的冗余函数
+    this.canvas = this.createCanvas();
     this.drawHoroscope();
   }
 
@@ -77,11 +78,17 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private async drawHoroscope() {
+  // 为了方便单元测试，使用这样的冗余函数
+  private createCanvas(): fabric.Canvas {
+    return new fabric.Canvas('canvas');
+  }
+
+  private drawHoroscope() {
     if (this.isDrawing || this.loading) return; // 如果正在绘制或加载则返回
 
     this.isDrawing = true; // 开始绘制
     this.loading = true;
+    this.isAlertOpen = false; // 确保在开始请求时关闭错误提示
 
     const requestData: QiZhengRequst = {
       native_date: this.horoData.date,
@@ -89,18 +96,23 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
       process_date: this.currentProcessData.date, // 使用当前的推运日期
     };
 
-    try {
-      this.horoscopeData = await lastValueFrom(this.api.qizheng(requestData));
-      this.isAlertOpen = false;
-      this.draw();
-    } catch (error: any) {
-      const message = error.message + ' ' + error.error.message;
-      this.message = message;
-      this.isAlertOpen = true;
-    } finally {
-      this.isDrawing = false; // 结束绘制
-      this.loading = false;
-    }
+    this.api.qizheng(requestData).subscribe({
+      next: (data) => {
+        this.horoscopeData = data;
+        this.isAlertOpen = false;
+        this.draw();
+      },
+      error: (err) => {
+        this.horoscopeData = null;
+        this.message =
+          (err.message ?? '未知错误') + ' ' + (err.error?.message ?? '');
+        this.isAlertOpen = true;
+      },
+      complete: () => {
+        this.isDrawing = false;
+        this.loading = false;
+      },
+    });
   }
 
   // 绘制星盘
@@ -115,7 +127,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     zoomImage(this.canvas!, this.platform);
   }
 
-  async changeStep(step: {
+  changeStep(step: {
     year: number;
     month: number;
     day: number;
@@ -146,7 +158,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentProcessData.date.minute = date.getMinutes();
     this.currentProcessData.date.second = date.getSeconds();
 
-    await this.drawHoroscope();
+    this.drawHoroscope();
   }
 
   onDetail() {

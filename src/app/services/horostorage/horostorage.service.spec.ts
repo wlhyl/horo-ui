@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HoroStorageService } from './horostorage.service';
 import { ProcessName } from 'src/app/process/enum/process';
 import {
