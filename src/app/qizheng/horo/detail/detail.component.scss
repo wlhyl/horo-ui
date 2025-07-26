@@ -33,6 +33,7 @@ ion-col:last-child {
 
 .table-data-row {
   border-bottom: 1px solid var(--ion-color-light);
+  color: #000000; // 在浅色背景下使用黑色字体
 }
 
 .table-data-row:nth-child(even) {
@@ -41,4 +42,22 @@ ion-col:last-child {
 
 .table-data-row:last-child {
   border-bottom: none;
+}
+
+// 为深色模式设置字体颜色
+@media (prefers-color-scheme: dark) {
+  .table-data-row {
+    color: #ffffff; // 在深色背景下使用白色字体
+  }
+}
+
+// 增强文字显示效果
+ion-card-content {
+  color: var(--ion-text-color, #000000);
+  font-weight: 500; // 稍微加粗字体
+}
+
+ion-card-title {
+  color: var(--ion-text-color, #000000);
+  font-weight: 600;
 }

@@ -10,7 +10,6 @@ import {
   ProcessRequest,
   QiZhengRequst,
 } from 'src/app/type/interface/request-data';
-import { catchError, EMPTY, finalize, lastValueFrom, tap } from 'rxjs';
 import { drawHoroscope } from 'src/app/utils/image/qizheng';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { TipService } from 'src/app/services/qizheng/tip.service';
