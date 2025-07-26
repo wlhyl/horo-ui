@@ -19,13 +19,14 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { ProcessName } from 'src/app/process/enum/process';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
-import { mock } from 'node:test';
+
 import {
   HouseName,
   LunarMansionsName,
   PlanetName,
   PlanetSpeedState,
 } from 'src/app/type/enum/qizheng';
+import { fakeAsync, flush, tick } from '@angular/core/testing';
 
 describe('HoroComponent', () => {
   let component: HoroComponent;
@@ -281,7 +282,7 @@ describe('HoroComponent', () => {
       expect(drawSpy).toHaveBeenCalled();
     });
 
-    it('should dispose canvas on ngOnDestroy', () => {
+    it('should dispose canvas and complete subscriptions on ngOnDestroy', () => {
       // 确保canvas已创建
       mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
       component.ngAfterViewInit();
@@ -359,10 +360,13 @@ describe('HoroComponent', () => {
     });
   });
 
-  describe('changeStep', () => {
-    it('should update currentProcessData date and redraw horoscope', () => {
+  describe('applyStepChange', () => {
+    beforeEach(() => {
       mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
-      const drawSpy = spyOn(
+    });
+
+    it('should update currentProcessData date correctly', () => {
+      const drawHoroscopeSpy = spyOn(
         component as any,
         'drawHoroscope'
       ).and.callThrough();
@@ -379,7 +383,7 @@ describe('HoroComponent', () => {
       };
 
       const step = { year: 1, month: 1, day: 1, hour: 1, minute: 1, second: 1 };
-      component.changeStep(step);
+      (component as any).applyStepChange(step);
 
       // 注意月的索引从0开始，所第二个参数1是2月
       const expectedDate = new Date(2024, 1, 2, 1, 1, 1);
@@ -401,7 +405,7 @@ describe('HoroComponent', () => {
       expect(component.currentProcessData.date.second).toBe(
         expectedDate.getSeconds()
       );
-      expect(drawSpy).toHaveBeenCalled();
+      expect(drawHoroscopeSpy).toHaveBeenCalled();
     });
 
     it('should not change horoData and processData', () => {
@@ -413,16 +417,50 @@ describe('HoroComponent', () => {
         JSON.stringify((component as any).processData)
       );
 
-      // 为drawHoroscope方法模拟API调用
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
-
       const step = { year: 1, month: 1, day: 1, hour: 1, minute: 1, second: 1 };
-      component.changeStep(step);
+      (component as any).applyStepChange(step);
 
       // 验证 horoData 和 processData 没有被修改
       expect((component as any).horoData).toEqual(originalHoroData);
       expect((component as any).processData).toEqual(originalProcessData);
     });
+  });
+
+  describe('changeStep with debounce', () => {
+    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(() => {
+      // 确保由 detectChanges 触发的 ngAfterViewInit 中的 API 调用不会失败
+      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+
+      // 在 ngOnInit 触发前设置 spy，确保订阅捕获的是 spy
+      const applyStepChangeSpy = spyOn(
+        component as any,
+        'applyStepChange'
+      ).and.callThrough();
+
+      // 触发 ngOnInit 以设置订阅, 同时会触发 ngAfterViewInit
+      fixture.detectChanges();
+
+      // 重置 spy，因为 detectChanges 可能会通过 applyStepChange 间接触发 drawHoroscope
+      applyStepChangeSpy.calls.reset();
+
+      const step = { year: 0, month: 0, day: 1, hour: 0, minute: 0, second: 0 };
+
+      // 快速连续调用
+      component.changeStep(step);
+      component.changeStep(step);
+      component.changeStep(step);
+
+      // 验证在防抖时间内没有被调用
+      tick(299); // 在防抖时间到达前
+      expect(applyStepChangeSpy).not.toHaveBeenCalled();
+
+      // 等待防抖时间结束
+      tick(1); // 到达 300ms
+      expect(applyStepChangeSpy).toHaveBeenCalledTimes(1);
+
+      // 清理所有待处理的 timers
+      flush();
+    }));
   });
 
   describe('onDetail', () => {

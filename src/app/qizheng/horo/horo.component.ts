@@ -20,6 +20,7 @@ import { Path as subPath } from '../path';
 import { informationCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-horo',
@@ -39,6 +40,15 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   title = '七政四余';
 
   private canvas?: fabric.Canvas;
+  private destroy$ = new Subject<void>();
+  private changeStepSubject = new Subject<{
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  }>();
 
   loading = false;
   isDrawing = false; // 添加绘制状态标志
@@ -62,6 +72,14 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
+    
+    // 使用防抖优化频繁的日期变更操作
+    this.changeStepSubject.pipe(
+      debounceTime(300),
+      takeUntil(this.destroy$)
+    ).subscribe(step => {
+      this.applyStepChange(step);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -71,6 +89,9 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    
     if (this.canvas) {
       this.canvas.dispose();
       this.canvas = undefined;
@@ -116,17 +137,29 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 绘制星盘
   private draw() {
-    if (this.horoscopeData === null) return;
+    if (this.horoscopeData === null || !this.canvas) return;
 
-    drawHoroscope(this.horoscopeData, this.canvas!, this.config, this.tip, {
+    drawHoroscope(this.horoscopeData, this.canvas, this.config, this.tip, {
       width: this.config.HoroscoImage.width,
       height: this.config.HoroscoImage.height,
     });
 
-    zoomImage(this.canvas!, this.platform);
+    zoomImage(this.canvas, this.platform);
   }
 
   changeStep(step: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  }) {
+    // 使用Subject和防抖来优化频繁操作
+    this.changeStepSubject.next(step);
+  }
+
+  private applyStepChange(step: {
     year: number;
     month: number;
     day: number;
