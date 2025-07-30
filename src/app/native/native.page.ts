@@ -5,6 +5,7 @@ import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { Path } from '../type/enum/path';
 import { HoroRequest } from '../type/interface/request-data';
+import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-native',
@@ -12,9 +13,29 @@ import { HoroRequest } from '../type/interface/request-data';
   styleUrls: ['./native.page.scss'],
   standalone: false,
 })
-export class NativePage implements OnInit {
+export class NativePage implements OnInit, ViewWillEnter {
   readonly houses: ReadonlyArray<string> = this.config.houses;
-  horoData: HoroRequest = structuredClone(this.storage.horoData);
+  horoData: HoroRequest = {
+    id: 0,
+    name: '',
+    sex: true,
+    date: {
+      year: 2000,
+      month: 1,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0,
+      tz: 8,
+      st: false,
+    },
+    geo_name: '',
+    geo: {
+      long: 0,
+      lat: 0,
+    },
+    house: '',
+  };
 
   path = Path;
   title = '本命星盘';
@@ -29,6 +50,10 @@ export class NativePage implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
+  }
+
+  ionViewWillEnter(): void {
+    this.horoData = structuredClone(this.storage.horoData);
   }
 
   getHoro() {

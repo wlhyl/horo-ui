@@ -45,10 +45,10 @@
   <ion-toolbar>
     <ion-grid fixed>
       <ion-row>
-        <ion-col size="6" size-sm="9">
+        <ion-col size="7" size-sm="9">
           <horo-date-time-change (chagedStep)="changeStep($event)"></horo-date-time-change>
         </ion-col>
-        <ion-col size="6" size-sm="3" class="ion-text-right">
+        <ion-col size="5" size-sm="3" class="ion-text-right">
           <ion-buttons>
             @if (isAuth) {
               <ion-button fill="clear" (click)="onArchive()" class="icon-top">

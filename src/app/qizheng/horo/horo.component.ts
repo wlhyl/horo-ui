@@ -20,7 +20,7 @@ import { Path as subPath } from '../path';
 import { informationCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-horo',
@@ -72,14 +72,13 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
-    
+
     // 使用防抖优化频繁的日期变更操作
-    this.changeStepSubject.pipe(
-      debounceTime(300),
-      takeUntil(this.destroy$)
-    ).subscribe(step => {
-      this.applyStepChange(step);
-    });
+    this.changeStepSubject
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe((step) => {
+        this.applyStepChange(step);
+      });
   }
 
   ngAfterViewInit(): void {
@@ -91,7 +90,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    
+
     if (this.canvas) {
       this.canvas.dispose();
       this.canvas = undefined;
@@ -116,23 +115,27 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
       process_date: this.currentProcessData.date, // 使用当前的推运日期
     };
 
-    this.api.qizheng(requestData).subscribe({
-      next: (data) => {
-        this.horoscopeData = data;
-        this.isAlertOpen = false;
-        this.draw();
-      },
-      error: (err) => {
-        this.horoscopeData = null;
-        this.message =
-          (err.message ?? '未知错误') + ' ' + (err.error?.message ?? '');
-        this.isAlertOpen = true;
-      },
-      complete: () => {
-        this.isDrawing = false;
-        this.loading = false;
-      },
-    });
+    this.api
+      .qizheng(requestData)
+      .pipe(
+        finalize(() => {
+          this.isDrawing = false;
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.horoscopeData = data;
+          this.isAlertOpen = false;
+          this.draw();
+        },
+        error: (err) => {
+          this.horoscopeData = null;
+          this.message =
+            (err.message ?? '未知错误') + ' ' + (err.error?.message ?? '');
+          this.isAlertOpen = true;
+        },
+      });
   }
 
   // 绘制星盘

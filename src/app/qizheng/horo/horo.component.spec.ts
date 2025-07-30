@@ -305,6 +305,7 @@ describe('HoroComponent', () => {
       // 我们需要手动触发它以进行测试
       component.ngAfterViewInit();
       ((component as any).draw as jasmine.Spy).calls.reset();
+      mockApiService.qizheng.calls.reset();
     });
 
     it('should call api.qizheng and draw on success', () => {
@@ -319,8 +320,11 @@ describe('HoroComponent', () => {
 
       expect(mockApiService.qizheng).toHaveBeenCalled();
       expect(component.horoscopeData).toEqual(mockHoroscopeData as any);
-      expect(drawSpy).toHaveBeenCalled();
+
       expect(component.isAlertOpen).toBe(false);
+      expect(component.isDrawing).toBe(false);
+      expect(component.loading).toBe(false);
+      expect(drawSpy).toHaveBeenCalled();
     });
 
     it('should handle API error and show alert', () => {
@@ -341,12 +345,12 @@ describe('HoroComponent', () => {
       expect(component.horoscopeData).toBeNull();
       expect(drawSpy).not.toHaveBeenCalled();
       expect(component.isAlertOpen).toBe(true);
+      expect(component.isDrawing).toBe(false);
+      expect(component.loading).toBe(false);
       expect(component.message).toContain('API Error');
     });
 
     it('should not draw if already drawing or loading', () => {
-      mockApiService.qizheng.calls.reset();
-
       // 设置初始状态
       component.isDrawing = true;
       component.loading = false;
@@ -428,14 +432,14 @@ describe('HoroComponent', () => {
 
   describe('changeStep with debounce', () => {
     it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(() => {
-      // 确保由 detectChanges 触发的 ngAfterViewInit 中的 API 调用不会失败
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+      // 确保由 detectChanges 触发的 ngAfterViewInit 中的 drawHoroscope 不调用实际的方法
+      spyOn(component as any, 'drawHoroscope').and.stub();
 
       // 在 ngOnInit 触发前设置 spy，确保订阅捕获的是 spy
       const applyStepChangeSpy = spyOn(
         component as any,
         'applyStepChange'
-      ).and.callThrough();
+      ).and.stub();
 
       // 触发 ngOnInit 以设置订阅, 同时会触发 ngAfterViewInit
       fixture.detectChanges();

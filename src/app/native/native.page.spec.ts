@@ -113,18 +113,47 @@ describe('NativePage', () => {
     expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('本命星盘');
   });
 
-  it('should initialize horoData from storage service', () => {
-    expect(component.horoData).toEqual(mockHoroData);
+  it('should get new value from this.storage.horoData when entering the component', () => {
+    // Arrange: 定义一个新的数据对象，服务将提供该对象。
+    const updatedHoroData: HoroRequest = {
+      id: 1,
+      name: 'updated name',
+      sex: false,
+      date: {
+        year: 2022,
+        month: 2,
+        day: 2,
+        hour: 2,
+        minute: 2,
+        second: 2,
+        tz: 0,
+        st: true,
+      },
+      geo_name: 'updated city',
+      geo: {
+        long: 1,
+        lat: 1,
+      },
+      house: 'Placidus',
+    };
 
-    // 检查 getter 是否被正确调用
+    // 配置 spy 以返回新数据。
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )?.get;
+    )!.get as jasmine.Spy;
+    horoDataGetterSpy.and.returnValue(updatedHoroData);
 
-    expect(horoDataGetterSpy).toBeDefined();
+    // Act: 调用触发数据获取的生命周期钩子。
+    component.ionViewWillEnter();
+
+    // Assert: 验证组件的数据已被更新。
     expect(horoDataGetterSpy).toHaveBeenCalled();
+    expect(component.horoData).toEqual(updatedHoroData);
+    // 验证已进行深拷贝 (structuredClone)。
+    expect(component.horoData).not.toBe(updatedHoroData);
   });
+
 
   it('should get horo and navigate', () => {
     // 由于属性已经在 createSpyObj 中定义，我们直接检查调用情况
