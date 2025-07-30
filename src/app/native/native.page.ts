@@ -13,7 +13,7 @@ import { HoroRequest } from '../type/interface/request-data';
   standalone: false,
 })
 export class NativePage implements OnInit {
-  readonly houses: Array<string> = this.config.houses;
+  readonly houses: ReadonlyArray<string> = this.config.houses;
   horoData: HoroRequest = structuredClone(this.storage.horoData);
 
   path = Path;
