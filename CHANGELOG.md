@@ -19,6 +19,10 @@ All notable changes to this project will be documented in this file.
 
 - about.page 增加"七政四余顶度时间比例"
 
+### Changed
+
+- horo-common/geo/map.component.ts 组件改为从 api 根据地名查询经纬度
+
 ## [0.1.0] - 2025-07-03
 
 ### Added

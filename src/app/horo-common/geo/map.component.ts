@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { navigateOutline } from 'ionicons/icons';
-
-declare let BMap: any;
-declare let BMAP_STATUS_SUCCESS: any;
+import { finalize } from 'rxjs';
+import { ApiService } from 'src/app/services/api/api.service';
+import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
 
 @Component({
   selector: 'horo-map',
@@ -17,9 +17,9 @@ export class MapComponent implements OnInit {
   @Input()
   localName: string = '';
   @Input()
-  long: number = 116;
+  long: number = 0;
   @Input()
-  lat: number = 28;
+  lat: number = 0;
 
   @Output()
   localNameChange = new EventEmitter<string>();
@@ -29,25 +29,26 @@ export class MapComponent implements OnInit {
   latChange = new EventEmitter<number>();
 
   query = {
-    // geo_name: "",
-    // geo_long: 360, //360，表明没有查询到值
-    // geo_lat: 360,
     errorMessage: '',
     error: false,
+    loading: false,
   };
 
-  private map: any;
+  locations: LongLatResponse[] = [];
+  selectedLocation: LongLatResponse | null = null;
 
-  constructor() {
+  constructor(private api: ApiService) {
     addIcons({ navigateOutline });
   }
 
   ngOnInit() {}
 
   ok(): void {
-    this.localNameChange.emit(this.localName);
-    this.longChange.emit(this.long);
-    this.latChange.emit(this.lat);
+    if (this.selectedLocation) {
+      this.localNameChange.emit(this.selectedLocation.name);
+      this.longChange.emit(Number(this.selectedLocation.longitude));
+      this.latChange.emit(Number(this.selectedLocation.latitude));
+    }
     this.isModalOpen = false;
   }
   cancel(): void {
@@ -55,65 +56,39 @@ export class MapComponent implements OnInit {
   }
   open(): void {
     this.isModalOpen = true;
-  }
-  shown(): void {
-    this.query = {
-      errorMessage: '',
-      error: false,
-    };
-    // 创建地图实例
-    this.map = new BMap.Map('container', {
-      coordsType: 5, // coordsType指定输入输出的坐标类型，3为gcj02坐标，5为bd0ll坐标，默认为5。
-      // 指定完成后API将以指定的坐标类型处理您传入的坐标
-    });
-
-    // 创建点坐标
-    const point = new BMap.Point(this.long, this.lat);
-    this.map.centerAndZoom(point, 15);
-    this.map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-    this.map.enableContinuousZoom();
-    this.map.addControl(new BMap.NavigationControl());
-    this.map.addControl(new BMap.OverviewMapControl());
-
-    let geoc = new BMap.Geocoder();
-    this.map.addEventListener('click', (e: any) => {
-      let pt = e.point;
-      this.query.error = false;
-      this.long = pt.lng;
-      this.lat = pt.lat;
-      // 添加标
-      geoc.getLocation(pt, (rs: any) => {
-        // this.map.centerAndZoom(pt, 15)
-        this.map.clearOverlays();
-        let marker = new BMap.Marker(pt); // 创建标注
-        this.map.addOverlay(marker);
-        marker.openInfoWindow(new BMap.InfoWindow(rs.address));
-        this.localName = rs.address;
-      });
-    });
+    this.locations = [];
+    this.selectedLocation = null;
+    this.query.errorMessage = '';
   }
 
   queryGeo() {
-    let local_search: any;
-    let options = {
-      renderOptions: { map: this.map },
-      onSearchComplete: (results: any) => {
-        if (local_search.getStatus() != BMAP_STATUS_SUCCESS) {
+    if (!this.localName) {
+      return;
+    }
+    this.query.loading = true;
+    this.query.error = false;
+    this.locations = [];
+    this.selectedLocation = null;
+
+    this.api
+      .getLongLat(this.localName)
+      .pipe(
+        finalize(() => {
+          this.query.loading = false;
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          this.locations = res;
+          if (res.length === 0) {
+            this.query.error = true;
+            this.query.errorMessage = '未查询到任何结果';
+          }
+        },
+        error: (error) => {
           this.query.error = true;
-          this.query.errorMessage = '查询错误';
-          return;
-        }
-        if (results.getCurrentNumPois() != 1) {
-          this.query.error = true;
-          this.query.errorMessage = '请缩小查询范围';
-          return;
-        }
-        this.query.error = false;
-        this.long = results.getPoi(0).point.lng;
-        this.lat = results.getPoi(0).point.lat;
-      },
-    };
-    local_search = new BMap.LocalSearch(this.map, options);
-    local_search.search(this.localName);
+          this.query.errorMessage = error.error?.error || '未知错误';
+        },
+      });
   }
 }

@@ -1,6 +1,6 @@
-import {HttpClient} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   HoroRequest,
   ProfectionRequest,
@@ -8,29 +8,33 @@ import {
   HoroscopeComparisonRequest,
   FirdariaRequest,
   QiZhengRequst,
-} from "src/app/type/interface/request-data";
+} from 'src/app/type/interface/request-data';
 import {
   FirdariaPeriod,
   Horoscope,
   HoroscopeComparison,
   Profection,
   ReturnHoroscope,
-} from "src/app/type/interface/response-data";
-import {Horoscope as QiZhengHoroscope} from "src/app/type/interface/response-qizheng";
-import {environment} from "src/environments/environment";
-import {UpdateUserRequest} from "../../type/interface/user";
-import {PageResponser} from "../../type/interface/page";
-import {HoroscopeRecord, HoroscopeRecordRequest, UpdateHoroscopeRecordRequest} from "../../type/interface/horoscope-record";
+} from 'src/app/type/interface/response-data';
+import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
+import { environment } from 'src/environments/environment';
+import { UpdateUserRequest } from '../../type/interface/user';
+import { PageResponser } from '../../type/interface/page';
+import {
+  HoroscopeRecord,
+  HoroscopeRecordRequest,
+  UpdateHoroscopeRecordRequest,
+} from '../../type/interface/horo-admin/horoscope-record';
+import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ApiService {
   private readonly url = `${environment.base_url}/api`;
   private readonly admin_url = environment.admin_url;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    *
@@ -61,15 +65,23 @@ export class ApiService {
    * @returns 获取法达
    */
   public firdaria(data: FirdariaRequest): Observable<Array<FirdariaPeriod>> {
-    return this.http.post<Array<FirdariaPeriod>>(`${this.url}/process/firdaria`, data);
+    return this.http.post<Array<FirdariaPeriod>>(
+      `${this.url}/process/firdaria`,
+      data
+    );
   }
 
   /**
    *
    * @returns 获取比较盘
    */
-  public compare(data: HoroscopeComparisonRequest): Observable<HoroscopeComparison> {
-    return this.http.post<HoroscopeComparison>(`${this.url}/process/compare`, data);
+  public compare(
+    data: HoroscopeComparisonRequest
+  ): Observable<HoroscopeComparison> {
+    return this.http.post<HoroscopeComparison>(
+      `${this.url}/process/compare`,
+      data
+    );
   }
 
   /**
@@ -77,7 +89,10 @@ export class ApiService {
    * @returns 获取太阳返照盘
    */
   public solarReturn(data: ReturnRequest): Observable<ReturnHoroscope> {
-    return this.http.post<ReturnHoroscope>(`${this.url}/process/return/solar`, data);
+    return this.http.post<ReturnHoroscope>(
+      `${this.url}/process/return/solar`,
+      data
+    );
   }
 
   /**
@@ -85,7 +100,10 @@ export class ApiService {
    * @returns 获取月亮返照盘
    */
   public lunarReturn(data: ReturnRequest): Observable<ReturnHoroscope> {
-    return this.http.post<ReturnHoroscope>(`${this.url}/process/return/lunar`, data);
+    return this.http.post<ReturnHoroscope>(
+      `${this.url}/process/return/lunar`,
+      data
+    );
   }
 
   /**
@@ -96,16 +114,19 @@ export class ApiService {
     return this.http.post<QiZhengHoroscope>(`${this.url}/qizheng/horo`, data);
   }
 
-
   // 更新新user
   updateUser(user: UpdateUserRequest): Observable<void> {
     return this.http.put<void>(`${this.admin_url}/user`, user);
   }
 
-
   // 获取HoroscopeRecord
-  getNatives(page: number, size: number): Observable<PageResponser<Array<HoroscopeRecord>>> {
-    return this.http.get<PageResponser<Array<HoroscopeRecord>>>(`${this.admin_url}/horoscopes?page=${page}&size=${size}`);
+  getNatives(
+    page: number,
+    size: number
+  ): Observable<PageResponser<Array<HoroscopeRecord>>> {
+    return this.http.get<PageResponser<Array<HoroscopeRecord>>>(
+      `${this.admin_url}/horoscopes?page=${page}&size=${size}`
+    );
   }
 
   // 根据id获取HoroscopeRecord
@@ -113,20 +134,34 @@ export class ApiService {
     return this.http.get<HoroscopeRecord>(`${this.admin_url}/horoscopes/${id}`);
   }
 
-
   // 新增HoroscopeRecord
   addNative(native: HoroscopeRecordRequest): Observable<HoroscopeRecord> {
-    return this.http.post<HoroscopeRecord>(`${this.admin_url}/horoscopes`, native);
+    return this.http.post<HoroscopeRecord>(
+      `${this.admin_url}/horoscopes`,
+      native
+    );
   }
 
   // 更新HoroscopeRecord
-  updateNative(id: number, native: UpdateHoroscopeRecordRequest): Observable<void> {
+  updateNative(
+    id: number,
+    native: UpdateHoroscopeRecordRequest
+  ): Observable<void> {
     return this.http.put<void>(`${this.admin_url}/horoscopes/${id}`, native);
   }
-
 
   // 删除HoroscopeRecord
   deleteNative(id: number): Observable<void> {
     return this.http.delete<void>(`${this.admin_url}/horoscopes/${id}`);
+  }
+
+  /**
+   * 查询经纬度
+   * @param name 地名
+   */
+  getLongLat(name: string): Observable<Array<LongLatResponse>> {
+    return this.http.get<Array<LongLatResponse>>(
+      `${this.admin_url}/location_search?q=${name}`
+    );
   }
 }

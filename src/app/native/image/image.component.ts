@@ -15,7 +15,7 @@ import { Router, ActivatedRoute } from '@angular/router'; // 导入 Router 和 A
 import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
-} from 'src/app/type/interface/horoscope-record';
+} from 'src/app/type/interface/horo-admin/horoscope-record';
 import { Path as subPath } from '../enum';
 import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';

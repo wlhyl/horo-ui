@@ -1,5 +1,5 @@
 import { isLocationEqual } from './location-record';
-import { LocationRecordRequest } from '../../type/interface/location-record';
+import { LocationRecordRequest } from '../../type/interface/horo-admin/location-record';
 
 describe('isLocationEqual', () => {
   const baseLocation: LocationRecordRequest = {

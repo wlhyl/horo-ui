@@ -6,7 +6,7 @@ import { Path } from 'src/app/type/enum/path';
 import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
-} from 'src/app/type/interface/horoscope-record';
+} from 'src/app/type/interface/horo-admin/horoscope-record';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
 @Component({

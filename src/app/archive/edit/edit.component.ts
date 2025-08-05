@@ -6,7 +6,7 @@ import {
   HoroscopeRecord,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
-} from 'src/app/type/interface/horoscope-record';
+} from 'src/app/type/interface/horo-admin/horoscope-record';
 import { Path } from '../../type/enum/path';
 import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 

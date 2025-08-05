@@ -11,6 +11,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.includes('login')) return next(req);
 
   const authService = inject(AuthService);
+
+  if (!authService.isAuth) return next(req);
+
   const request = req.clone({ setHeaders: { token: authService.token } });
   return next(request);
 };

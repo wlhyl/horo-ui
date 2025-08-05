@@ -3,7 +3,7 @@ import {Title} from "@angular/platform-browser";
 import {InfiniteScrollCustomEvent, ViewWillEnter} from "@ionic/angular";
 import {ApiService} from "../services/api/api.service";
 import {PageResponser} from "../type/interface/page";
-import {HoroscopeRecord} from "../type/interface/horoscope-record";
+import {HoroscopeRecord} from "../type/interface/horo-admin/horoscope-record";
 import {ActivatedRoute, Router} from "@angular/router";
 import {HoroStorageService} from "../services/horostorage/horostorage.service";
 import {HoroRequest} from "../type/interface/request-data";

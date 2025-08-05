@@ -1,7 +1,6 @@
 <ion-icon name="navigate-outline" (click)="open()"></ion-icon>
 
-<ion-modal [isOpen]="isModalOpen" animated="true" [showBackdrop]="true" [backdropDismiss]="false"
-  (didPresent)="shown()">
+<ion-modal [isOpen]="isModalOpen" animated="true" [showBackdrop]="true" [backdropDismiss]="false">
   <ng-template>
     <ion-header [translucent]="true">
       <ion-toolbar>
@@ -13,19 +12,36 @@
 
     <ion-content>
       <ion-item>
-        <ion-input type="search" placeholder="输入需要查询的位置" [(ngModel)]="localName"></ion-input>
-        <ion-button (click)="queryGeo()">查询</ion-button>
+        <ion-input type="search" placeholder="输入需要查询的位置" [(ngModel)]="localName" (keyup.enter)="queryGeo()"></ion-input>
+        <ion-button (click)="queryGeo()" [disabled]="query.loading">
+          @if (query.loading) {
+          <ion-spinner name="dots"></ion-spinner>
+          } @else {
+          查询
+          }
+        </ion-button>
       </ion-item>
 
       @if (query.error) {
-        <ion-label style="color: red;"> {{ query.errorMessage }} </ion-label>
+      <ion-label style="color: red;"> {{ query.errorMessage }} </ion-label>
       }
-      <div id="container" style="height: 100%;"></div>
+
+      @if (locations.length > 0) {
+      <ion-list>
+        <ion-radio-group [(ngModel)]="selectedLocation">
+          @for (loc of locations; track loc) {
+          <ion-item>
+            <ion-radio [value]="loc">{{ loc.name }}</ion-radio>
+          </ion-item>
+          }
+        </ion-radio-group>
+      </ion-list>
+      }
     </ion-content>
 
     <ion-footer class="ion-text-right">
       <ion-button (click)="cancel()">取消</ion-button>
-      <ion-button (click)="ok()">确定</ion-button>
+      <ion-button (click)="ok()" [disabled]="!selectedLocation">确定</ion-button>
     </ion-footer>
 
   </ng-template>
