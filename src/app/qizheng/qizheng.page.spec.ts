@@ -22,6 +22,8 @@ import { MapComponent } from '../horo-common/geo/map.component';
 import { GeoComponent } from '../horo-common/geo/geo.component';
 import { DateTimeComponent } from '../horo-common/date-time/date-time.component';
 import { Path } from '../type/enum/path';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('QizhengPage', () => {
   let component: QizhengPage;
@@ -102,6 +104,8 @@ describe('QizhengPage', () => {
         RouterModule.forRoot([]),
       ],
       providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },
         { provide: Title, useValue: titleServiceSpy },
         { provide: Router, useValue: routerSpy },

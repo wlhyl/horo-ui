@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Title } from '@angular/platform-browser';
 import {
   ActivatedRoute,
@@ -90,6 +92,8 @@ describe('NativePage', () => {
         RouterModule.forRoot([]),
       ],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },
         { provide: Title, useValue: titleServiceSpy },
         { provide: Router, useValue: routerSpy },

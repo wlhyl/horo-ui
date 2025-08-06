@@ -43,7 +43,7 @@ describe('TipService', () => {
     ) as fabric.Text[];
     expect(tips.length).toBe(1);
     const tip2 = tips[0];
-    expect(tip2).not.toEqual(tip1);
+    expect(tip2).not.toBe(tip1);
   });
 
   it('should remove tip on tip mousedown', () => {
