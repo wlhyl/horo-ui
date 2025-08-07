@@ -132,7 +132,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
         error: (err) => {
           this.horoscopeData = null;
           this.message =
-            (err.message ?? '未知错误') + ' ' + (err.error?.message ?? '');
+            (err.message ?? '未知错误') + ' ' + (err.error?.error??  '未知错误详情');
           this.isAlertOpen = true;
         },
       });

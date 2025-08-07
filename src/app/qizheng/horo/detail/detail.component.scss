@@ -31,6 +31,21 @@ ion-col:last-child {
   border-bottom: 2px solid var(--ion-color-medium); /* 强调标题栏 */
 }
 
+.clickable-header {
+  cursor: pointer;
+  user-select: none;
+  
+  ion-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  ion-icon {
+    font-size: 1.2em;
+  }
+}
+
 .table-data-row {
   border-bottom: 1px solid var(--ion-color-light);
   color: #000000; // 在浅色背景下使用黑色字体

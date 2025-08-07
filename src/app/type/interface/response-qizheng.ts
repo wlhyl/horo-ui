@@ -57,6 +57,13 @@ export interface House {
   xiu_degree: number;
 }
 
+export interface LunarMansionsDongWeiTime {
+  // 宿名
+  lunar_mansions: LunarMansionsName;
+  // 洞微大限时间
+  time: HoroDateTime;
+}
+
 export interface DongWei {
   // 洞微大限每一年的黄道经度，从0岁起至洞微大限总年数，洞微大限总年数略去小数部分，起算点为每年的公历生日
   long_of_per_year: Array<number>;
@@ -68,8 +75,9 @@ export interface DongWei {
   xiu: LunarMansionsName;
   // 当前推运时间的洞微大限道经度的入宿度数
   xiu_degree: number;
+  // 每个二十八宿距星的洞微大限时间
+  lunar_mansions_dong_wei_time: Array<LunarMansionsDongWeiTime | null>;
 }
-
 export interface Horoscope {
   // 出生时间
   native_date: HoroDateTime;

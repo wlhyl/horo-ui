@@ -13,58 +13,99 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-card-header>
-            <ion-card-title>本命化曜</ion-card-title>
+          <ion-card-header (click)="isNativeTransformedStarsCollapsed = !isNativeTransformedStarsCollapsed" class="clickable-header">
+            <ion-card-title>
+              本命化曜
+              <ion-icon [name]="isNativeTransformedStarsCollapsed ? 'chevron-down' : 'chevron-up'"></ion-icon>
+            </ion-card-title>
           </ion-card-header>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row class="table-header-row">
-                <ion-col size="2"><b>化曜</b></ion-col>
-                <ion-col size="1"><b>星</b></ion-col>
-                <ion-col size="2"><b>十神</b></ion-col>
-                <ion-col size="3"><b>宫位</b></ion-col>
-                <ion-col size="4"><b>描述</b></ion-col>
-              </ion-row>
-              @for (item of horoscopeData.native_transformed_stars; track item; let i = $index) {
-              <ion-row class="table-data-row" [attr.data-testid]="'native-star-row-' + i">
-                <ion-col size="2">{{item.transformed_star}}</ion-col>
-                <ion-col size="1">{{ item.star}}</ion-col>
-                <ion-col size="2">{{item.ten_gods}}</ion-col>
-                <ion-col size="3">{{ item.transformed_star_house}}</ion-col>
-                <ion-col size="4">{{item.transformed_star_describe}}</ion-col>
-              </ion-row>
-              }
-            </ion-grid>
-          </ion-card-content>
+          @if (!isNativeTransformedStarsCollapsed) {
+            <ion-card-content>
+              <ion-grid>
+                <ion-row class="table-header-row">
+                  <ion-col size="2"><b>化曜</b></ion-col>
+                  <ion-col size="1"><b>星</b></ion-col>
+                  <ion-col size="2"><b>十神</b></ion-col>
+                  <ion-col size="3"><b>宫位</b></ion-col>
+                  <ion-col size="4"><b>描述</b></ion-col>
+                </ion-row>
+                @for (item of horoscopeData.native_transformed_stars; track item; let i = $index) {
+                <ion-row class="table-data-row" [attr.data-testid]="'native-star-row-' + i">
+                  <ion-col size="2">{{item.transformed_star}}</ion-col>
+                  <ion-col size="1">{{ item.star}}</ion-col>
+                  <ion-col size="2">{{item.ten_gods}}</ion-col>
+                  <ion-col size="3">{{ item.transformed_star_house}}</ion-col>
+                  <ion-col size="4">{{item.transformed_star_describe}}</ion-col>
+                </ion-row>
+                }
+              </ion-grid>
+            </ion-card-content>
+          }
         </ion-card>
       </ion-col>
     </ion-row>
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-card-header>
-            <ion-card-title>流年化曜</ion-card-title>
+          <ion-card-header (click)="isProcessTransformedStarsCollapsed = !isProcessTransformedStarsCollapsed" class="clickable-header">
+            <ion-card-title>
+              流年化曜
+              <ion-icon [name]="isProcessTransformedStarsCollapsed ? 'chevron-down' : 'chevron-up'"></ion-icon>
+            </ion-card-title>
           </ion-card-header>
-          <ion-card-content>
-            <ion-grid>
-              <ion-row class="table-header-row">
-                <ion-col size="2"><b>化曜</b></ion-col>
-                <ion-col size="1"><b>星</b></ion-col>
-                <ion-col size="2"><b>十神</b></ion-col>
-                <ion-col size="3"><b>宫位</b></ion-col>
-                <ion-col size="4"><b>描述</b></ion-col>
-              </ion-row>
-              @for (item of horoscopeData.process_transformed_stars; track item; let i = $index) {
-              <ion-row class="table-data-row" [attr.data-testid]="'process-star-row-' + i">
-                <ion-col size="2">{{item.transformed_star}}</ion-col>
-                <ion-col size="1">{{ item.star}}</ion-col>
-                <ion-col size="2">{{item.ten_gods}}</ion-col>
-                <ion-col size="3">{{ item.transformed_star_house}}</ion-col>
-                <ion-col size="4">{{item.transformed_star_describe}}</ion-col>
-              </ion-row>
-              }
-            </ion-grid>
-          </ion-card-content>
+          @if (!isProcessTransformedStarsCollapsed) {
+            <ion-card-content>
+              <ion-grid>
+                <ion-row class="table-header-row">
+                  <ion-col size="2"><b>化曜</b></ion-col>
+                  <ion-col size="1"><b>星</b></ion-col>
+                  <ion-col size="2"><b>十神</b></ion-col>
+                  <ion-col size="3"><b>宫位</b></ion-col>
+                  <ion-col size="4"><b>描述</b></ion-col>
+                </ion-row>
+                @for (item of horoscopeData.process_transformed_stars; track item; let i = $index) {
+                <ion-row class="table-data-row" [attr.data-testid]="'process-star-row-' + i">
+                  <ion-col size="2">{{item.transformed_star}}</ion-col>
+                  <ion-col size="1">{{ item.star}}</ion-col>
+                  <ion-col size="2">{{item.ten_gods}}</ion-col>
+                  <ion-col size="3">{{ item.transformed_star_house}}</ion-col>
+                  <ion-col size="4">{{item.transformed_star_describe}}</ion-col>
+                </ion-row>
+                }
+              </ion-grid>
+            </ion-card-content>
+          }
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <!-- 添加 lunar_mansions_dong_wei_time 表格 -->
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header (click)="isLunarMansionsCollapsed = !isLunarMansionsCollapsed" class="clickable-header">
+            <ion-card-title>
+              二十八宿洞微大限时间
+              <ion-icon [name]="isLunarMansionsCollapsed ? 'chevron-down' : 'chevron-up'"></ion-icon>
+            </ion-card-title>
+          </ion-card-header>
+          @if (!isLunarMansionsCollapsed) {
+            <ion-card-content>
+              <ion-grid>
+                <ion-row class="table-header-row">
+                  <ion-col size="6"><b>宿名</b></ion-col>
+                  <ion-col size="6"><b>时间</b></ion-col>
+                </ion-row>
+                @for (item of horoscopeData.dong_wei.lunar_mansions_dong_wei_time; track item; let i = $index) {
+                  @if (item) {
+                    <ion-row class="table-data-row" [attr.data-testid]="'lunar-mansions-row-' + i">
+                      <ion-col size="6">{{ item.lunar_mansions }}</ion-col>
+                      <ion-col size="6">{{ item.time.year }}年{{ item.time.month }}月{{ item.time.day }}日 {{ item.time.hour }}:{{ item.time.minute }}:{{ item.time.second }}</ion-col>
+                    </ion-row>
+                  }
+                }
+              </ion-grid>
+            </ion-card-content>
+          }
         </ion-card>
       </ion-col>
     </ion-row>
