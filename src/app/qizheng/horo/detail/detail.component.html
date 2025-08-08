@@ -109,6 +109,204 @@
         </ion-card>
       </ion-col>
     </ion-row>
+    
+    <!-- 添加星辰贵格信息 -->
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>星辰贵格</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (planetsGoodConfigs && planetsGoodConfigs.length > 0) {
+              <ion-list>
+                @for (config of planetsGoodConfigs; track config; let i = $index) {
+                  <ion-item>
+                    <ion-label>{{ i + 1 }}. {{ config }}</ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+            } @else {
+              <p>无星辰贵格信息</p>
+            }
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+    <!-- 添加星辰贱格信息 -->
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>星辰贱格</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (planetsBadConfigs && planetsBadConfigs.length > 0) {
+              <ion-list>
+                @for (config of planetsBadConfigs; track config; let i = $index) {
+                  <ion-item>
+                    <ion-label>{{ i + 1 }}. {{ config }}</ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+            } @else {
+              <p>无星辰贱格信息</p>
+            }
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+    <!-- 添加神煞信息 -->
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>本命神煞</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <tr>
+                <td>
+                  <div>@for (item of nativeShenShas[5]; track item) {<div>{{item}}</div>}</div>
+                  <div>巳</div>
+                </td>
+                <td>
+                  <div>@for (item of nativeShenShas[6]; track item) {<div>{{item}}</div>}</div>
+                  <div>午</div>
+                </td>
+                <td>
+                  <div>@for (item of nativeShenShas[7]; track item) {<div>{{item}}</div>}</div>
+                  <div>未</div>
+                </td>
+                <td>
+                  <div>@for (item of nativeShenShas[8]; track item) {<div>{{item}}</div>}</div>
+                  <div>申</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>@for (item of nativeShenShas[4]; track item) {<div>{{item}}</div>}</div>
+                  <div>辰</div>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <div>@for (item of nativeShenShas[9]; track item) {<div>{{item}}</div>}</div>
+                  <div>酉</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>@for (item of nativeShenShas[3]; track item) {<div>{{item}}</div>}</div>
+                  <div>卯</div>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <div>@for (item of nativeShenShas[10]; track item) {<div>{{item}}</div>}</div>
+                  <div>戌</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>@for (item of nativeShenShas[2]; track item) {<div>{{item}}</div>}</div>
+                  <div>寅</div>
+                </td>
+                <td>
+                  <div>@for (item of nativeShenShas[1]; track item) {<div>{{item}}</div>}</div>
+                  <div>丑</div>
+                </td>
+                <td>
+                  <div>@for (item of nativeShenShas[0]; track item) {<div>{{item}}</div>}</div>
+                  <div>子</div>
+                </td>
+                <td>
+                  <div>@for (item of nativeShenShas[11]; track item) {<div>{{item}}</div>}</div>
+                  <div>亥</div>
+                </td>
+              </tr>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    
+    <!-- 添加流年神煞信息 -->
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>流年神煞</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <table>
+              <tr>
+                <td>
+                  <div>@for (item of processShenShas[5]; track item) {<div>{{item}}</div>}</div>
+                  <div>巳</div>
+                </td>
+                <td>
+                  <div>@for (item of processShenShas[6]; track item) {<div>{{item}}</div>}</div>
+                  <div>午</div>
+                </td>
+                <td>
+                  <div>@for (item of processShenShas[7]; track item) {<div>{{item}}</div>}</div>
+                  <div>未</div>
+                </td>
+                <td>
+                  <div>@for (item of processShenShas[8]; track item) {<div>{{item}}</div>}</div>
+                  <div>申</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>@for (item of processShenShas[4]; track item) {<div>{{item}}</div>}</div>
+                  <div>辰</div>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <div>@for (item of processShenShas[9]; track item) {<div>{{item}}</div>}</div>
+                  <div>酉</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>@for (item of processShenShas[3]; track item) {<div>{{item}}</div>}</div>
+                  <div>卯</div>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <div>@for (item of processShenShas[10]; track item) {<div>{{item}}</div>}</div>
+                  <div>戌</div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div>@for (item of processShenShas[2]; track item) {<div>{{item}}</div>}</div>
+                  <div>寅</div>
+                </td>
+                <td>
+                  <div>@for (item of processShenShas[1]; track item) {<div>{{item}}</div>}</div>
+                  <div>丑</div>
+                </td>
+                <td>
+                  <div>@for (item of processShenShas[0]; track item) {<div>{{item}}</div>}</div>
+                  <div>子</div>
+                </td>
+                <td>
+                  <div>@for (item of processShenShas[11]; track item) {<div>{{item}}</div>}</div>
+                  <div>亥</div>
+                </td>
+              </tr>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
 }

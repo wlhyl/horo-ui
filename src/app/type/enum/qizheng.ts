@@ -74,3 +74,12 @@ export enum HouseName {
   福 = '福',
   相 = '相',
 }
+
+export enum PowerName {
+  垣 = '垣',
+  殿 = '殿',
+  庙 = '庙',
+  旺 = '旺',
+  喜 = '喜',
+  乐 = '乐',
+}

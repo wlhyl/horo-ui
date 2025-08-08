@@ -14,6 +14,7 @@ import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 })
 export class QizhengPage implements OnInit {
   path = Path;
+  subPath = subPath;
 
   horoData: HoroRequest = structuredClone(this.storage.horoData);
   processData: ProcessRequest = structuredClone(this.storage.processData);

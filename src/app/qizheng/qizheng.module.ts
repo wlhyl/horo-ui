@@ -11,6 +11,7 @@ import { QizhengPageRoutingModule } from './qizheng-routing.module';
 import { QizhengPage } from './qizheng.page';
 import { HoroComponent } from './horo/horo.component';
 import { QizhengHoroDetailComponent } from './horo/detail/detail.component';
+import { KnowledgeComponent } from './knowledge/knowledge.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,11 @@ import { QizhengHoroDetailComponent } from './horo/detail/detail.component';
     QizhengPageRoutingModule,
     HoroCommonModule,
   ],
-  declarations: [QizhengPage, HoroComponent, QizhengHoroDetailComponent],
+  declarations: [
+    QizhengPage,
+    HoroComponent,
+    QizhengHoroDetailComponent,
+    KnowledgeComponent,
+  ],
 })
 export class QizhengPageModule {}

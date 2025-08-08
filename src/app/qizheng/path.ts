@@ -5,4 +5,5 @@ export enum Path {
   Input = '',
   Horo = 'horo',
   HoroDetail = 'detail',
+  Knowledge = 'knowledge',
 }

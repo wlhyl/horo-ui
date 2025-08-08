@@ -127,6 +127,7 @@ const mockHoroscopeData: Horoscope = {
     long: 0,
     xiu: LunarMansionsName.角,
     xiu_degree: 0,
+    lunar_mansions_dong_wei_time: [],
   },
   native_transformed_stars: [
     {
@@ -197,32 +198,30 @@ describe('QizhengHoroDetailComponent', () => {
     const processTransformedStar =
       mockHoroscopeData.process_transformed_stars[0];
     const row = compiled.querySelector('[data-testid="process-star-row-0"]');
-    expect(row?.textContent).toContain(
-      processTransformedStar.transformed_star
-    );
+    expect(row?.textContent).toContain(processTransformedStar.transformed_star);
   });
 });
 
-  describe('when router state is missing', () => {
-    let component: QizhengHoroDetailComponent;
-    let fixture: ComponentFixture<QizhengHoroDetailComponent>;
+describe('when router state is missing', () => {
+  let component: QizhengHoroDetailComponent;
+  let fixture: ComponentFixture<QizhengHoroDetailComponent>;
 
-    beforeEach(async () => {
-      // 重新配置 TestBed，使用一个不返回 state 的 MockRouter
-      await TestBed.overrideProvider(Router, {
-        useValue: {
-          getCurrentNavigation: () => ({
-            extras: {}, // No state here
-          }),
-        },
-      }).compileComponents();
+  beforeEach(async () => {
+    // 重新配置 TestBed，使用一个不返回 state 的 MockRouter
+    await TestBed.overrideProvider(Router, {
+      useValue: {
+        getCurrentNavigation: () => ({
+          extras: {}, // No state here
+        }),
+      },
+    }).compileComponents();
 
-      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
-    });
-
-    it('should have null horoscopeData', () => {
-      expect(component.horoscopeData).toBeNull();
-    });
+    fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
+
+  it('should have null horoscopeData', () => {
+    expect(component.horoscopeData).toBeNull();
+  });
+});

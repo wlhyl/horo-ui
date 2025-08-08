@@ -20,6 +20,7 @@ import {
 import { TipService } from 'src/app/services/qizheng/tip.service';
 import { zodiacLong } from '../qizheng-math/qizheng-math';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { planetPower } from '../qizheng-planet-power/qizheng-planet-power';
 
 /**
  * 绘制天宫图
@@ -585,9 +586,17 @@ function drawPlanets(
       (starTransformedStar) =>
         starTransformedStar.star === planetsSorted[i].name
     );
-    let message = `${planetsSorted[i].name}
+
+    let message = `${planetsSorted[i].name}：`;
+
+    const powerString = planetPower(planetsSorted[i]).join('、');
+
+    if (powerString) message = `${message}${powerString}`;
+
+    message = `${message}
 ${planetLongOnZoodiac.zodiac}宫：${planetLongDMSOnZoodiac.d}度${planetLongDMSOnZoodiac.m}分${planetLongDMSOnZoodiac.s}秒
 ${planetsSorted[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
+
     if (transformed_star) {
       message = `${message}\n${transformed_star.transformed_star}、${transformed_star.ten_gods}、${transformed_star.transformed_star_house}`;
     }

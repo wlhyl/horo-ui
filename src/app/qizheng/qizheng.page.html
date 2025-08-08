@@ -4,6 +4,11 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/', path.Qizheng, subPath.Knowledge]">
+        <ion-icon name="book-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -45,8 +50,8 @@
       </ion-col>
       <ion-col size="7">
         <horo-date-time [(year)]="horoData.date.year" [(month)]="horoData.date.month" [(day)]="horoData.date.day"
-          [(hour)]="horoData.date.hour" [(minute)]="horoData.date.minute"
-          [(second)]="horoData.date.second" id="horo-birth-date"></horo-date-time>
+          [(hour)]="horoData.date.hour" [(minute)]="horoData.date.minute" [(second)]="horoData.date.second"
+          id="horo-birth-date"></horo-date-time>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -89,8 +94,8 @@
     </ion-col>
     <ion-col size="7">
       <horo-date-time [(year)]="processData.date.year" [(month)]="processData.date.month" [(day)]="processData.date.day"
-        [(hour)]="processData.date.hour" [(minute)]="processData.date.minute"
-        [(second)]="processData.date.second" id="process-date"></horo-date-time>
+        [(hour)]="processData.date.hour" [(minute)]="processData.date.minute" [(second)]="processData.date.second"
+        id="process-date"></horo-date-time>
     </ion-col>
   </ion-row>
 
@@ -113,5 +118,5 @@
   </ion-row>
 
   <ion-button (click)="getProcess()" expand="block" fill="clear" id="submit-button">提交</ion-button>
-  
+
 </ion-content>

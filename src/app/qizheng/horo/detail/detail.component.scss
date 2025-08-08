@@ -76,3 +76,22 @@ ion-card-title {
   color: var(--ion-text-color, #000000);
   font-weight: 600;
 }
+
+// 添加神煞表格样式
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  td {
+    border: 1px solid var(--ion-color-medium);
+    padding: 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+
+    div {
+      min-height: 1.5rem;
+    }
+  }
+}

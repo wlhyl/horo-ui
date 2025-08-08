@@ -185,6 +185,7 @@ describe('HoroComponent', () => {
       long: 30,
       xiu: LunarMansionsName.角,
       xiu_degree: 2,
+      lunar_mansions_dong_wei_time: [],
     },
     native_transformed_stars: [
       {
