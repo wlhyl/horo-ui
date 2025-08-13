@@ -2,12 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Title } from '@angular/platform-browser';
-import {
-  ActivatedRoute,
-  Router,
-  RouterModule,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule, UrlTree } from '@angular/router';
 import { of } from 'rxjs';
 import { NativePage } from './native.page';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
@@ -73,7 +68,11 @@ describe('NativePage', () => {
     });
 
     titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree', 'serializeUrl']);
+    routerSpy = jasmine.createSpyObj('Router', [
+      'navigate',
+      'createUrlTree',
+      'serializeUrl',
+    ]);
     configServiceSpy = jasmine.createSpyObj('Horoconfig', [''], {
       houses: mockHouses,
     });
@@ -158,7 +157,6 @@ describe('NativePage', () => {
     expect(component.horoData).not.toBe(updatedHoroData);
   });
 
-
   it('should get horo and navigate', () => {
     // 由于属性已经在 createSpyObj 中定义，我们直接检查调用情况
     const originalHoroData = component.horoData;
@@ -193,16 +191,16 @@ describe('NativePage', () => {
   it('should not affect original storage.horoData when modifying horoData property', () => {
     // 保存原始对象引用
     const originalHoroData = component.horoData;
-    
+
     // 修改组件的horoData属性
     component.horoData.name = 'modified name';
     component.horoData.sex = false;
     component.horoData.date.year = 1990;
-    
+
     // 验证storage中的horoData未被修改
     expect(horoStorageServiceSpy.horoData).toEqual(mockHoroData);
     expect(horoStorageServiceSpy.horoData).not.toBe(component.horoData);
-    
+
     // 验证是不同的对象实例
     expect(originalHoroData).toBe(component.horoData);
   });
@@ -210,19 +208,16 @@ describe('NativePage', () => {
   it('should store different objects in storage when calling getHoro', () => {
     // 修改组件数据
     component.horoData.name = 'test name';
-    
-    // 调用getHoro方法前检查
-    const originalHoroData = component.horoData;
-    
+
     // 调用getHoro方法
     component.getHoro();
-    
+
     // 检查setter是否被正确调用
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
     )?.set as jasmine.Spy;
-    
+
     // 验证storage.horoData与component.horoData是不同的对象
     const storedHoroData = horoDataSetterSpy.calls.mostRecent().args[0];
     expect(storedHoroData).toEqual(component.horoData);
