@@ -18,7 +18,15 @@ import {
   ProcessRequest,
   ReturnRequest,
 } from 'src/app/type/interface/request-data';
-import { lastValueFrom } from 'rxjs';
+import {
+  finalize,
+  map,
+  switchMap,
+  Observable,
+  Subject,
+  debounceTime,
+  takeUntil,
+} from 'rxjs';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/compare';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { Path } from 'src/app/type/enum/path';
@@ -65,6 +73,17 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isDrawing = false;
 
+  // 添加 Subject 和 destroy$ 用于防抖和取消订阅
+  private destroy$ = new Subject<void>();
+  private changeStepSubject = new Subject<{
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  }>();
+
   get title(): string {
     return ProcessName.name(this.process_name);
   }
@@ -106,10 +125,18 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
+
+    // 使用防抖优化频繁的日期变更操作
+    this.changeStepSubject
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe((step) => {
+        this.applyStepChange(step);
+      });
   }
 
   ngAfterViewInit(): void {
-    this.canvas = new fabric.StaticCanvas('canvas');
+    // 为兼容单元测试，使用这样的冗余函数
+    this.canvas = this.createCanvas();
     this.drawHoroscope(this.process_name);
   }
 
@@ -119,35 +146,48 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       this.canvas = undefined;
     }
     this.canvasCache = undefined;
+
+    // 取消订阅防止内存泄漏
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  private async drawHoroscope(process_name: ProcessName) {
+  // 为了方便单元测试，使用这样的冗余函数
+  private createCanvas(): fabric.StaticCanvas {
+    return (this.canvas = new fabric.StaticCanvas('canvas'));
+  }
+
+  private drawHoroscope(process_name: ProcessName) {
     if (this.isDrawing || this.loading) return;
 
     this.isDrawing = true;
     this.loading = true;
     this.canvasCache = undefined;
 
-    try {
-      this.horoscopeComparisonData = await this.getHoroscopeComparisonData(
-        process_name
-      );
-      this.isAlertOpen = false;
-      this.draw(this.horoscopeComparisonData);
-    } catch (error: any) {
-      const errorMessage = error.error?.message || error.message || '未知错误';
-      this.message = `获取星盘数据失败: ${errorMessage}`;
-      this.isAlertOpen = true;
-    } finally {
-      this.isDrawing = false;
-      this.loading = false;
-    }
+    this.getHoroscopeComparisonData(process_name)
+      .pipe(
+        finalize(() => {
+          this.isDrawing = false;
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (data: HoroscopeComparison) => {
+          this.horoscopeComparisonData = data;
+          this.isAlertOpen = false;
+          this.draw(this.horoscopeComparisonData!);
+        },
+        error: (error: any) => {
+          const errorMessage =
+            error.error?.message || error.message || '未知错误';
+          this.message = `获取星盘数据失败: ${errorMessage}`;
+          this.isAlertOpen = true;
+        },
+      });
   }
 
   // 绘制星盘和相位
   private draw(horoscopeComparisonData: HoroscopeComparison) {
-    // if (this.horoscopeComparisonData === null) return;
-
     if (this.isAspect) {
       drawAspect(horoscopeComparisonData.aspects, this.canvas!, this.config, {
         width: this.config.aspectImage.width,
@@ -167,6 +207,10 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   set isAspect(value: boolean) {
+    if (this.isAspect === value) {
+      return;
+    }
+
     // 如果正在绘制，则阻止切换
     if (this.isDrawing || this.loading) {
       return;
@@ -183,12 +227,26 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.horoscopeComparisonData) {
         this.draw(this.horoscopeComparisonData);
       } else {
-        this.drawHoroscope(this.process_name);
+        // 根据程序的逻辑，此种情况不应当发生，如果发生了，意味着程序逻辑有误
+        this.message = '应用异常，比较盘数据丢失!';
+        this.isAlertOpen = true;
       }
     }
   }
 
-  async changeStep(step: {
+  changeStep(step: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  }) {
+    // 使用Subject和防抖来优化频繁操作
+    this.changeStepSubject.next(step);
+  }
+
+  private applyStepChange(step: {
     year: number;
     month: number;
     day: number;
@@ -219,7 +277,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentProcessData.date.minute = date.getMinutes();
     this.currentProcessData.date.second = date.getSeconds();
 
-    await this.drawHoroscope(this.process_name);
+    this.drawHoroscope(this.process_name);
   }
 
   /**
@@ -229,11 +287,11 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
    * 它使用switch语句来根据不同的推运名称返回不同的数据
    *
    * @param process_name - 指定的推运名称，用于决定获取哪种类型的比较盘数据
-   * @returns 返回一个Promise，解析为HoroscopeComparison类型的对象
+   * @returns 返回一个Observable，发出HoroscopeComparison类型的对象
    */
-  private async getHoroscopeComparisonData(
+  private getHoroscopeComparisonData(
     process_name: ProcessName
-  ): Promise<HoroscopeComparison> {
+  ): Observable<HoroscopeComparison> {
     switch (process_name) {
       case ProcessName.Transit:
         return this.getTransitData();
@@ -249,7 +307,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private async getTransitData(): Promise<HoroscopeComparison> {
+  private getTransitData(): Observable<HoroscopeComparison> {
     this.returnData = null;
 
     const requestData: HoroscopeComparisonRequest = {
@@ -260,53 +318,58 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       house: this.horoData.house,
     };
 
-    return await lastValueFrom(this.api.compare(requestData));
+    return this.api.compare(requestData);
   }
 
   // 1. 本命比返照，process_date应该是本命盘的时间，而不是推运时间
   // 2. 日返盘与本命盘的经纬度不同，后端计算时比较盘的经纬度使用的是被比较盘的经纬度
   // 日返盘与本命盘的计算，应该分别计算两个盘，然后将两个盘的数据进行比较
   // 以上问题已经修复
-  private async getReturnComparData(
+  private getReturnComparData(
     comparisonType: ComparisonType
-  ): Promise<HoroscopeComparison> {
+  ): Observable<HoroscopeComparison> {
     // 获取返照数据
     const isSolar =
       comparisonType === ComparisonType.SolarComparNative ||
       comparisonType === ComparisonType.NativeComparSolar;
 
-    const returnHoroData = await (isSolar
-      ? this.getSolarReturnData()
-      : this.getLunarReturnData());
-    this.returnData = returnHoroData;
+    return (
+      isSolar ? this.getSolarReturnData() : this.getLunarReturnData()
+    ).pipe(
+      switchMap((returnHoroData) => {
+        this.returnData = returnHoroData;
 
-    // 构建请求数据
-    const returnDate = {
-      ...returnHoroData.return_date,
-      st: false,
-    };
+        // 构建请求数据
+        const returnDate = {
+          ...returnHoroData.return_date,
+          st: false,
+        };
 
-    const isReturnComparNative =
-      comparisonType === ComparisonType.SolarComparNative ||
-      comparisonType === ComparisonType.LunarComparNative;
+        const isReturnComparNative =
+          comparisonType === ComparisonType.SolarComparNative ||
+          comparisonType === ComparisonType.LunarComparNative;
 
-    const requestData: HoroscopeComparisonRequest = {
-      original_date: isReturnComparNative ? this.horoData.date : returnDate,
-      comparison_date: isReturnComparNative ? returnDate : this.horoData.date,
-      original_geo: isReturnComparNative
-        ? this.horoData.geo
-        : this.processData.geo,
-      comparison_geo: isReturnComparNative
-        ? this.processData.geo
-        : this.horoData.geo,
-      house: this.horoData.house,
-    };
+        const requestData: HoroscopeComparisonRequest = {
+          original_date: isReturnComparNative ? this.horoData.date : returnDate,
+          comparison_date: isReturnComparNative
+            ? returnDate
+            : this.horoData.date,
+          original_geo: isReturnComparNative
+            ? this.horoData.geo
+            : this.processData.geo,
+          comparison_geo: isReturnComparNative
+            ? this.processData.geo
+            : this.horoData.geo,
+          house: this.horoData.house,
+        };
 
-    return await lastValueFrom(this.api.compare(requestData));
+        return this.api.compare(requestData);
+      })
+    );
   }
 
   // 计算太阳返照盘
-  private async getSolarReturnData(): Promise<ReturnHoroscope> {
+  private getSolarReturnData(): Observable<ReturnHoroscope> {
     const requestData: ReturnRequest = {
       native_date: this.horoData.date,
       process_date: this.currentProcessData.date, // 这里使用当前的processData.date
@@ -314,28 +377,40 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       house: this.horoData.house,
     };
 
-    return await lastValueFrom(this.api.solarReturn(requestData));
+    return this.api.solarReturn(requestData);
   }
 
   // 计算月亮返照盘
-  private async getLunarReturnData(): Promise<ReturnHoroscope> {
+  private getLunarReturnData(): Observable<ReturnHoroscope> {
     let native_date = this.horoData.date;
 
     // 使用日返月亮位置
     if (this.processData.isSolarReturn) {
       // 计算日返
-      const solarReturnData = await this.getSolarReturnData();
+      return this.getSolarReturnData().pipe(
+        map((solarReturnData) => {
+          native_date = {
+            year: solarReturnData.return_date.year,
+            month: solarReturnData.return_date.month,
+            day: solarReturnData.return_date.day,
+            hour: solarReturnData.return_date.hour,
+            minute: solarReturnData.return_date.minute,
+            second: solarReturnData.return_date.second,
+            tz: solarReturnData.return_date.tz,
+            st: false,
+          };
 
-      native_date = {
-        year: solarReturnData.return_date.year,
-        month: solarReturnData.return_date.month,
-        day: solarReturnData.return_date.day,
-        hour: solarReturnData.return_date.hour,
-        minute: solarReturnData.return_date.minute,
-        second: solarReturnData.return_date.second,
-        tz: solarReturnData.return_date.tz,
-        st: false,
-      };
+          let requestData: ReturnRequest = {
+            native_date: native_date,
+            process_date: this.currentProcessData.date, // 这里使用当前的processData.date
+            geo: this.processData.geo, // 注意：这里的geo是返照盘的地理位置
+            house: this.horoData.house,
+          };
+
+          return this.api.lunarReturn(requestData);
+        }),
+        switchMap((requestObservable) => requestObservable)
+      );
     }
 
     let requestData: ReturnRequest = {
@@ -345,7 +420,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       house: this.horoData.house,
     };
 
-    return await lastValueFrom(this.api.lunarReturn(requestData));
+    return this.api.lunarReturn(requestData);
   }
 
   onDetail() {
@@ -368,7 +443,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       case ProcessName.NativecomparLunar:
         return ComparisonType.NativeComparLunar;
       default:
-        this.message = `无法识别的比较类型：${process_name}`;
+        this.message = `无法识别的比较盘类型：${process_name}`;
         this.isAlertOpen = true;
         throw new Error(this.message);
     }

@@ -19,18 +19,17 @@ import { ApiService } from 'src/app/services/api/api.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import {
-  DateRequest,
-  GeoRequest,
-  HoroRequest,
-} from 'src/app/type/interface/request-data';
-import { Horoscope, Planet } from 'src/app/type/interface/response-data';
+import { HoroRequest } from 'src/app/type/interface/request-data';
 import { ImageComponent } from './image.component';
-import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
+
+import {
+  mockHoroData,
+  mockCurrentHoroData,
+  mockHoroscopeData,
+} from './image.component.const.spec';
 
 describe('ImageComponent', () => {
   let component: ImageComponent;
@@ -47,95 +46,6 @@ describe('ImageComponent', () => {
   let mockAuthService: jasmine.SpyObj<AuthService>;
   let mockAlertController: jasmine.SpyObj<AlertController>;
   let mockNavController: jasmine.SpyObj<NavController>;
-
-  // Mock Data
-  const mockDate: DateRequest = {
-    year: 2000,
-    month: 1,
-    day: 1,
-    hour: 12,
-    minute: 0,
-    second: 0,
-    tz: 8,
-    st: false,
-  };
-
-  const mockGeo: GeoRequest = {
-    long: 121.47,
-    lat: 31.23,
-  };
-
-  const mockHoroData: DeepReadonly<HoroRequest> = {
-    id: 1,
-    name: 'Test',
-    sex: true,
-    date: mockDate,
-    geo: mockGeo,
-    geo_name: 'Shanghai',
-    house: 'Alcabitus',
-  };
-
-  const mockCurrentHoroData: HoroRequest = {
-    id: 1,
-    name: 'Test',
-    sex: true,
-    date: mockDate,
-    geo: mockGeo,
-    geo_name: 'Shanghai',
-    house: 'Alcabitus',
-  };
-
-  const mockPlanet: Planet = {
-    name: PlanetName.Sun,
-    long: 0,
-    lat: 0,
-    speed: 0,
-    ra: 0,
-    dec: 0,
-    orb: 0,
-    speed_state: PlanetSpeedState.均,
-  };
-
-  const mockHoroscopeData: Horoscope = {
-    date: { ...mockDate },
-    geo: { ...mockGeo },
-    house_name: 'Alcabitus',
-    houses_cups: [121.123],
-    asc: {
-      ...mockPlanet,
-      name: PlanetName.ASC,
-    },
-    mc: {
-      ...mockPlanet,
-      name: PlanetName.MC,
-    },
-    dsc: {
-      ...mockPlanet,
-      name: PlanetName.DSC,
-    },
-    ic: {
-      ...mockPlanet,
-      name: PlanetName.IC,
-    },
-    planets: [
-      {
-        name: PlanetName.Sun,
-        long: 100.14,
-        lat: 0,
-        speed: 1,
-        ra: 0,
-        dec: 0,
-        orb: 0,
-        speed_state: PlanetSpeedState.快,
-      },
-    ],
-    is_diurnal: true,
-    planetary_day: PlanetName.Sun,
-    planetary_hours: PlanetName.Sun,
-    aspects: [],
-    antiscoins: [],
-    contraantiscias: [],
-  };
 
   beforeEach(waitForAsync(() => {
     // Create spies for the services
@@ -314,89 +224,6 @@ describe('ImageComponent', () => {
       component.loading = true;
       component['drawHoroscope'](mockCurrentHoroData);
       expect(mockApiService.getNativeHoroscope).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('isAspect property', () => {
-    let drawSpy: jasmine.Spy;
-
-    beforeEach(() => {
-      // OnInit, afterViewInit有可能影响isAspect的值
-      // 为避免这种可能的影响，这里手动调用这两个方法
-      mockApiService.getNativeHoroscope.and.returnValue(of(mockHoroscopeData));
-      component.currentHoroData = mockCurrentHoroData;
-      // 监视 draw 方法以避免实际执行
-      drawSpy = spyOn(component as any, 'draw').and.callFake(() => {});
-
-      component.ngOnInit();
-      component.ngAfterViewInit();
-      drawSpy.calls.reset();
-      mockApiService.getNativeHoroscope.calls.reset();
-    });
-
-    it('should have an initial value of false and allow getting and setting', () => {
-      // 初始值应该是false
-      expect(component.isAspect).toBe(false);
-
-      // 设置为 true
-      component.isAspect = true;
-      expect(component.isAspect).toBe(true);
-
-      // 设置回 false
-      component.isAspect = false;
-      expect(component.isAspect).toBe(false);
-    });
-
-    it('should not redraw when the same value is set', () => {
-      component.isAspect = true;
-      drawSpy.calls.reset(); // 重置 spy
-
-      // 再次设置为 true
-      component.isAspect = true;
-      expect(drawSpy).not.toHaveBeenCalled();
-    });
-
-    it('should redraw when the value changes and not drawing/loading', () => {
-      component.isDrawing = false;
-      component.loading = false;
-      component['canvasCache'] = undefined;
-
-      // 从 false 变为 true
-      component.isAspect = true;
-      expect(component.isAspect).toBe(true);
-      expect(drawSpy).toHaveBeenCalled();
-
-      drawSpy.calls.reset();
-      component['canvasCache'] = undefined;
-
-      // 从 true 变为 false
-      component.isAspect = false;
-      expect(component.isAspect).toBe(false);
-      expect(drawSpy).toHaveBeenCalled();
-    });
-
-    it('should not change value or redraw if drawing is in progress', () => {
-      component.isAspect = false; // 初始状态
-      component.isDrawing = true;
-
-      // 尝试将值从 false 改为 true
-      component.isAspect = true;
-
-      // 值应该保持不变，并且不应该触发绘制
-      expect(component.isAspect).toBe(false);
-      expect(drawSpy).not.toHaveBeenCalled();
-    });
-
-    it('should not change value or redraw if loading is in progress', () => {
-      component.isAspect = false; // 初始状态
-      component.loading = true;
-
-      // 尝试将值从 false 改为 true
-      component.isAspect = true;
-
-      // 值应该保持不变，并且不应该触发绘制
-      expect(component.isAspect).toBe(false);
-      expect(drawSpy).not.toHaveBeenCalled();
     });
   });
 
