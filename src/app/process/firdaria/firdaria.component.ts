@@ -8,10 +8,10 @@ import { FirdariaPeriod } from 'src/app/type/interface/response-data';
 import { Path } from 'src/app/type/enum/path';
 
 @Component({
-    selector: 'app-firdaria',
-    templateUrl: './firdaria.component.html',
-    styleUrls: ['./firdaria.component.scss'],
-    standalone: false
+  selector: 'app-firdaria',
+  templateUrl: './firdaria.component.html',
+  styleUrls: ['./firdaria.component.scss'],
+  standalone: false,
 })
 export class FirdariaComponent implements OnInit {
   path = Path;
@@ -38,7 +38,7 @@ export class FirdariaComponent implements OnInit {
 
     const requestData: FirdariaRequest = {
       native_date: this.horoData.date,
-      geo: this.horoData.geo,
+      geo: this.horoData.geo, // 用于确实是白天盘或夜间盘
     };
 
     this.api.firdaria(requestData).subscribe({
