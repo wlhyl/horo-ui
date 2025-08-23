@@ -61,9 +61,7 @@ describe('DetailComponent', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    const routerSpyObj = jasmine.createSpyObj('Router', [
-      'getCurrentNavigation',
-    ]);
+    const routerSpyObj = jasmine.createSpyObj('Router', ['currentNavigation']);
     const titleServiceSpyObj = jasmine.createSpyObj('Title', ['setTitle']);
     const horoConfigSpyObj = jasmine.createSpyObj('Horoconfig', ['']);
     const navControllerSpy = jasmine.createSpyObj('NavController', ['']);
@@ -84,7 +82,7 @@ describe('DetailComponent', () => {
   }));
 
   it('should create the component and set the title', () => {
-    routerSpy.getCurrentNavigation.and.returnValue(null);
+    routerSpy.currentNavigation.and.returnValue(null);
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     expect(component).toBeTruthy();
@@ -92,7 +90,7 @@ describe('DetailComponent', () => {
   });
 
   it('should set horoscopeData from router state', () => {
-    routerSpy.getCurrentNavigation.and.returnValue({
+    routerSpy.currentNavigation.and.returnValue({
       extras: {
         state: {
           data: mockHoroscopeData,
@@ -108,7 +106,7 @@ describe('DetailComponent', () => {
   });
 
   it('should have null horoscopeData if router state is missing', () => {
-    routerSpy.getCurrentNavigation.and.returnValue({
+    routerSpy.currentNavigation.and.returnValue({
       extras: {},
     } as any);
 
@@ -120,7 +118,7 @@ describe('DetailComponent', () => {
   });
 
   it('should have null horoscopeData if navigation is null', () => {
-    routerSpy.getCurrentNavigation.and.returnValue(null);
+    routerSpy.currentNavigation.and.returnValue(null);
 
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;

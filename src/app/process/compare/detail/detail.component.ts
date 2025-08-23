@@ -7,10 +7,10 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
 @Component({
-    selector: 'app-detail',
-    templateUrl: './detail.component.html',
-    styleUrls: ['./detail.component.scss'],
-    standalone: false
+  selector: 'app-detail',
+  templateUrl: './detail.component.html',
+  styleUrls: ['./detail.component.scss'],
+  standalone: false,
 })
 export class DetailComponent implements OnInit {
   path = Path;
@@ -26,7 +26,7 @@ export class DetailComponent implements OnInit {
     public config: Horoconfig
   ) {
     this.titleService.setTitle(this.title);
-    const navigation = this.router.getCurrentNavigation();
+    const navigation = this.router.currentNavigation();
     if (navigation?.extras.state) {
       this.compareData = navigation.extras.state['data'] as HoroscopeComparison;
     }
