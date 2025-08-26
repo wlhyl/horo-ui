@@ -10,7 +10,8 @@ import {
   ProcessRequest,
   ReturnRequest,
 } from 'src/app/type/interface/request-data';
-import { lastValueFrom } from 'rxjs';
+import { Subject, Observable, of, Subscription } from 'rxjs';
+import { debounceTime, switchMap, finalize, map } from 'rxjs/operators';
 import { drawAspect, drawReturnHorosco } from 'src/app/utils/image/horo';
 import { Platform } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
@@ -49,13 +50,18 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   isDrawing = false; // 添加绘制状态标志
 
   private canvas?: fabric.StaticCanvas;
+  private changeStepSubject = new Subject<void>();
 
   get isAspect(): boolean {
     return this._isAspect;
   }
 
   set isAspect(value: boolean) {
-    // 如果正在绘制或加载，则阻止切换
+    if (this._isAspect === value) {
+      return;
+    }
+
+    // 如果正在绘制，则阻止切换
     if (this.isDrawing || this.loading) {
       return;
     }
@@ -71,7 +77,9 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.returnHoroscopeData) {
         this.draw(this.returnHoroscopeData);
       } else {
-        this.drawHoroscope(this.process_name);
+        // 根据程序的逻辑，此种情况不应当发生，如果发生了，意味着程序逻辑有误
+        this.message = '应用异常，返照盘数据丢失!';
+        this.isAlertOpen = true;
       }
     }
   }
@@ -92,7 +100,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     private titleService: Title
   ) {
     const process_name = this.route.snapshot.data['process_name'];
-    if (process_name === null) {
+    if (!process_name) {
       alert('配置错误，没有正确配置返照盘类型');
       console.error('配置错误，路由没有正确配置返照盘类型');
       return;
@@ -109,6 +117,10 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(message);
         return;
     }
+
+    this.changeStepSubject.pipe(debounceTime(500)).subscribe(() => {
+      this.drawHoroscope(this.process_name);
+    });
   }
 
   ngOnInit() {
@@ -117,7 +129,8 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.canvas = new fabric.StaticCanvas('canvas');
+    // 为兼容单元测试，使用这样的冗余函数
+    this.canvas = this.createCanvas();
     this.drawHoroscope(this.process_name);
   }
 
@@ -126,40 +139,48 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       this.canvas.dispose();
       this.canvas = undefined;
     }
+    this.changeStepSubject.unsubscribe();
   }
 
-  private async drawHoroscope(process_name: ProcessName) {
+  private drawHoroscope(process_name: ProcessName) {
     if (this.isDrawing || this.loading) return; // 如果正在绘制或加载则返回
 
     this.isDrawing = true; // 开始绘制
     this.loading = true;
     this.canvasCache = undefined;
 
-    try {
-      this.returnHoroscopeData = await this.getReturnData(process_name);
-      this.isAlertOpen = false;
-      this.draw(this.returnHoroscopeData);
-    } catch (error: any) {
-      const message = error.message + ' ' + error.error.message;
-      this.message = message;
-      this.isAlertOpen = true;
-    } finally {
-      this.isDrawing = false; // 结束绘制
-      this.loading = false;
-    }
+    this.getReturnData(process_name)
+      .pipe(
+        finalize(() => {
+          this.isDrawing = false; // 结束绘制
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.returnHoroscopeData = data;
+          this.isAlertOpen = false;
+          this.draw(this.returnHoroscopeData);
+        },
+        error: (error: any) => {
+          const message = error.message + ' ' + (error.error?.message || '');
+          this.message = message;
+          this.isAlertOpen = true;
+        },
+      });
   }
 
   // 获取取返照盘
-  private async getReturnData(
+  private getReturnData(
     process_name: ProcessName
-  ): Promise<ReturnHoroscope> {
-    return process_name == ProcessName.SolarReturn
-      ? await this.getSolarReturnData()
-      : await this.getLunarReturnData();
+  ): Observable<ReturnHoroscope> {
+    return process_name === ProcessName.SolarReturn
+      ? this.getSolarReturnData()
+      : this.getLunarReturnData();
   }
 
   // 计算日返
-  private async getSolarReturnData(): Promise<ReturnHoroscope> {
+  private getSolarReturnData(): Observable<ReturnHoroscope> {
     const requestData: ReturnRequest = {
       native_date: this.horoData.date,
       geo: this.processData.geo, // 注意这里的geo是返照盘的地理位置
@@ -167,38 +188,37 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       process_date: this.currentProcessData.date, // 这里使用当前的processData.date
     };
 
-    return await lastValueFrom(this.api.solarReturn(requestData));
+    return this.api.solarReturn(requestData);
   }
 
   // 计算月返
-  private async getLunarReturnData(): Promise<ReturnHoroscope> {
-    let native_date = this.horoData.date;
+  private getLunarReturnData(): Observable<ReturnHoroscope> {
+    const getNativeDate$ = this.currentProcessData.isSolarReturn
+      ? this.getSolarReturnData().pipe(
+          map((solarReturnData) => ({
+            year: solarReturnData.return_date.year,
+            month: solarReturnData.return_date.month,
+            day: solarReturnData.return_date.day,
+            hour: solarReturnData.return_date.hour,
+            minute: solarReturnData.return_date.minute,
+            second: solarReturnData.return_date.second,
+            tz: solarReturnData.return_date.tz,
+            st: false,
+          }))
+        )
+      : of(this.horoData.date);
 
-    // 使用日返月亮位置
-    if (this.processData.isSolarReturn) {
-      // 计算日返
-      const solarReturnData = await this.getSolarReturnData();
-
-      native_date = {
-        year: solarReturnData.return_date.year,
-        month: solarReturnData.return_date.month,
-        day: solarReturnData.return_date.day,
-        hour: solarReturnData.return_date.hour,
-        minute: solarReturnData.return_date.minute,
-        second: solarReturnData.return_date.second,
-        tz: solarReturnData.return_date.tz,
-        st: false,
-      };
-    }
-
-    const requestData: ReturnRequest = {
-      native_date,
-      geo: this.processData.geo, // 注意这里的geo是返照盘的地理位置
-      house: this.horoData.house,
-      process_date: this.currentProcessData.date, // 这里使用当前的processData.date
-    };
-
-    return await lastValueFrom(this.api.lunarReturn(requestData));
+    return getNativeDate$.pipe(
+      switchMap((native_date) => {
+        const requestData: ReturnRequest = {
+          native_date,
+          geo: this.processData.geo, // 注意这里的geo是返照盘的地理位置
+          house: this.horoData.house,
+          process_date: this.currentProcessData.date, // 这里使用当前的processData.date
+        };
+        return this.api.lunarReturn(requestData);
+      })
+    );
   }
 
   // 绘制星盘和相位
@@ -217,7 +237,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     zoomImage(this.canvas!, this.platform);
   }
 
-  async changeStep(step: {
+  changeStep(step: {
     year: number;
     month: number;
     day: number;
@@ -248,7 +268,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentProcessData.date.minute = date.getMinutes();
     this.currentProcessData.date.second = date.getSeconds();
 
-    await this.drawHoroscope(this.process_name);
+    this.changeStepSubject.next();
   }
 
   onDetail() {
@@ -258,5 +278,10 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
         state: { data: this.returnHoroscopeData },
       });
     }
+  }
+
+  // 为了方便单元测试，使用这样的冗余函数
+  private createCanvas(): fabric.StaticCanvas {
+    return (this.canvas = new fabric.StaticCanvas('canvas'));
   }
 }
