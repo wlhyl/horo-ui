@@ -53,7 +53,7 @@ export class QizhengHoroDetailComponent implements OnInit {
   ) {
     addIcons({ chevronDown, chevronUp });
     // 从路由的 state 获取 horoscopeData 的值
-    const navigation = this.router.getCurrentNavigation();
+    const navigation = this.router.currentNavigation();
     if (navigation?.extras.state) {
       this.horoscopeData = navigation.extras.state['data'] as Horoscope;
     }

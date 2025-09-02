@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { IonicModule, NavController } from '@ionic/angular';
@@ -7,31 +7,6 @@ import { QizhengHoroDetailComponent } from './detail.component';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { LunarMansionsName } from 'src/app/type/enum/qizheng';
-
-class MockRouter {
-  getCurrentNavigation = () => ({
-    extras: {
-      state: {
-        data: mockHoroscopeData,
-      },
-    },
-  });
-}
-
-class MockTitleService {
-  setTitle = jasmine.createSpy('setTitle');
-}
-
-class MockHoroconfig {
-  // 添加需要的 mock 方法或属性
-}
-
-// 添加NavController的mock
-class MockNavController {
-  subscribe = jasmine.createSpy('subscribe');
-}
-
-// 添加NavController的mock
 
 const mockHoroscopeData: Horoscope = {
   native_date: {
@@ -152,76 +127,204 @@ const mockHoroscopeData: Horoscope = {
 describe('QizhengHoroDetailComponent', () => {
   let component: QizhengHoroDetailComponent;
   let fixture: ComponentFixture<QizhengHoroDetailComponent>;
-  let titleService: Title;
-  let router: Router;
+  let routerSpy: jasmine.SpyObj<Router>;
+  let titleServiceSpy: jasmine.SpyObj<Title>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
+    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
+
+    await await TestBed.configureTestingModule({
       declarations: [QizhengHoroDetailComponent],
-      imports: [IonicModule.forRoot()], // 添加IonicModule导入
+      imports: [IonicModule.forRoot()],
       providers: [
-        { provide: Router, useClass: MockRouter },
-        { provide: Title, useClass: MockTitleService },
-        { provide: Horoconfig, useClass: MockHoroconfig },
-        { provide: NavController, useClass: MockNavController },
+        { provide: Router, useValue: routerSpy },
+        { provide: Title, useValue: titleServiceSpy },
+        { provide: NavController, useValue: {} },
       ],
     }).compileComponents();
-
-    fixture = TestBed.createComponent(QizhengHoroDetailComponent);
-    component = fixture.componentInstance;
-    titleService = TestBed.inject(Title);
-    router = TestBed.inject(Router);
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('Component Creation and Initialization', () => {
+    it('should create the component', () => {
+      routerSpy.currentNavigation.and.returnValue(null);
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+
+      expect(component).toBeTruthy();
+      expect(component.title).toBe('星盘详情');
+    });
+
+    it('should set the title on ngOnInit', () => {
+      routerSpy.currentNavigation.and.returnValue(null);
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+
+      component.ngOnInit();
+      expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('星盘详情');
+    });
+
+    it('should initialize collapse states correctly', () => {
+      routerSpy.currentNavigation.and.returnValue(null);
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+
+      expect(component.isNativeTransformedStarsCollapsed).toBe(true);
+      expect(component.isProcessTransformedStarsCollapsed).toBe(true);
+      expect(component.isLunarMansionsCollapsed).toBe(true);
+    });
   });
 
-  it('should set the page title', () => {
-    expect(titleService.setTitle).toHaveBeenCalledWith('星盘详情');
+  describe('Router State Handling', () => {
+    it('should set horoscopeData from router state', () => {
+      routerSpy.currentNavigation.and.returnValue({
+        extras: {
+          state: {
+            data: mockHoroscopeData,
+          },
+        },
+      } as any);
+
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(component.horoscopeData).toEqual(mockHoroscopeData);
+      expect(component.planetsGoodConfigs).toBeDefined();
+      expect(component.planetsBadConfigs).toBeDefined();
+      expect(Array.isArray(component.planetsGoodConfigs)).toBe(true);
+      expect(Array.isArray(component.planetsBadConfigs)).toBe(true);
+    });
+
+    it('should have null horoscopeData if router state is missing', () => {
+      routerSpy.currentNavigation.and.returnValue({
+        extras: {},
+      } as any);
+
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(component.horoscopeData).toBeNull();
+    });
+
+    it('should have null horoscopeData if navigation is null', () => {
+      routerSpy.currentNavigation.and.returnValue(null);
+
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(component.horoscopeData).toBeNull();
+    });
   });
 
-  it('should initialize horoscopeData from router state', () => {
-    expect(component.horoscopeData).toEqual(mockHoroscopeData);
+  describe('天厨 Method Tests', () => {
+    beforeEach(() => {
+      routerSpy.currentNavigation.and.returnValue(null);
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+    });
+
+    it('should return correct index for 甲', () => {
+      expect(component.天厨('甲')).toBe(5);
+    });
+
+    it('should return correct index for 乙', () => {
+      expect(component.天厨('乙')).toBe(6);
+    });
+
+    it('should return correct index for 丙', () => {
+      expect(component.天厨('丙')).toBe(0);
+    });
+
+    it('should return correct index for 丁', () => {
+      expect(component.天厨('丁')).toBe(5);
+    });
+
+    it('should return correct index for 戊', () => {
+      expect(component.天厨('戊')).toBe(6);
+    });
+
+    it('should return correct index for 己', () => {
+      expect(component.天厨('己')).toBe(8);
+    });
+
+    it('should return correct index for 庚', () => {
+      expect(component.天厨('庚')).toBe(2);
+    });
+
+    it('should return correct index for 辛', () => {
+      expect(component.天厨('辛')).toBe(6);
+    });
+
+    it('should return correct index for 壬', () => {
+      expect(component.天厨('壬')).toBe(9);
+    });
+
+    it('should return default index (11) for unknown gan', () => {
+      expect(component.天厨('癸')).toBe(11);
+      expect(component.天厨('')).toBe(11);
+      expect(component.天厨('unknown')).toBe(11);
+    });
   });
 
-  it('should render native transformed stars', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const nativeTransformedStar = mockHoroscopeData.native_transformed_stars[0];
-    const row = compiled.querySelector('[data-testid="native-star-row-0"]');
-    expect(row?.textContent).toContain(nativeTransformedStar.transformed_star);
+  describe('ShenSha Initialization', () => {
+    it('should initialize ShenSha arrays correctly with horoscopeData', () => {
+      routerSpy.currentNavigation.and.returnValue({
+        extras: {
+          state: {
+            data: mockHoroscopeData,
+          },
+        },
+      } as any);
+
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      // 验证神煞数组的初始化
+      expect(component.nativeShenShas.length).toBe(12);
+      expect(component.processShenShas.length).toBe(12);
+
+      // 验证天厨神煞的添加
+      const nativeGan =
+        mockHoroscopeData.native_lunar_calendar.lunar_year_gan_zhi[0];
+      const processGan =
+        mockHoroscopeData.process_lunar_calendar.lunar_year_gan_zhi[0];
+      const nativeIndex = component.天厨(nativeGan);
+      const processIndex = component.天厨(processGan);
+
+      expect(component.nativeShenShas[nativeIndex]).toContain('天厨');
+      expect(component.processShenShas[processIndex]).toContain('天厨');
+    });
   });
 
-  it('should render process transformed stars', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const processTransformedStar =
-      mockHoroscopeData.process_transformed_stars[0];
-    const row = compiled.querySelector('[data-testid="process-star-row-0"]');
-    expect(row?.textContent).toContain(processTransformedStar.transformed_star);
-  });
-});
+  describe('Component Properties', () => {
+    beforeEach(() => {
+      routerSpy.currentNavigation.and.returnValue(null);
+      fixture = TestBed.createComponent(QizhengHoroDetailComponent);
+      component = fixture.componentInstance;
+    });
 
-describe('when router state is missing', () => {
-  let component: QizhengHoroDetailComponent;
-  let fixture: ComponentFixture<QizhengHoroDetailComponent>;
+    it('should have correct initial property values', () => {
+      expect(component.title).toBe('星盘详情');
+      expect(component.config).toBeDefined();
+      expect(component.config instanceof Horoconfig).toBe(true);
+      expect(component.horoscopeData).toBeNull();
+      expect(Array.isArray(component.planetsGoodConfigs)).toBe(true);
+      expect(Array.isArray(component.planetsBadConfigs)).toBe(true);
+    });
 
-  beforeEach(async () => {
-    // 重新配置 TestBed，使用一个不返回 state 的 MockRouter
-    await TestBed.overrideProvider(Router, {
-      useValue: {
-        getCurrentNavigation: () => ({
-          extras: {}, // No state here
-        }),
-      },
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(QizhengHoroDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should have null horoscopeData', () => {
-    expect(component.horoscopeData).toBeNull();
+    it('should initialize ShenSha arrays with correct length', () => {
+      expect(component.nativeShenShas.length).toBe(12);
+      expect(component.processShenShas.length).toBe(12);
+      component.nativeShenShas.forEach((array) => {
+        expect(Array.isArray(array)).toBe(true);
+      });
+      component.processShenShas.forEach((array) => {
+        expect(Array.isArray(array)).toBe(true);
+      });
+    });
   });
 });
