@@ -1,11 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
-import {
-  ActivatedRoute,
-  Router,
-  convertToParamMap,
-  RouterModule,
-} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { QizhengPage } from './qizheng.page';
@@ -23,7 +18,10 @@ import { GeoComponent } from '../horo-common/geo/geo.component';
 import { DateTimeComponent } from '../horo-common/date-time/date-time.component';
 import { Path } from '../type/enum/path';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('QizhengPage', () => {
   let component: QizhengPage;
@@ -31,7 +29,7 @@ describe('QizhengPage', () => {
   let horoStorageServiceSpy: jasmine.SpyObj<HoroStorageService>;
   let titleServiceSpy: jasmine.SpyObj<Title>;
   let routerSpy: jasmine.SpyObj<Router>;
-  let navControllerSpy: jasmine.SpyObj<NavController>;
+  let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
 
   const mockHoroData: HoroRequest = {
     id: 0,
@@ -75,27 +73,28 @@ describe('QizhengPage', () => {
     isSolarReturn: false,
   };
 
-  const activatedRouteStub = {
-    snapshot: {
-      paramMap: convertToParamMap({ id: '1' }),
-      queryParamMap: convertToParamMap({}),
-    },
-    paramMap: of(convertToParamMap({ id: '1' })),
-    queryParams: of({}),
-    url: of([]),
-  };
+  mockActivatedRoute = jasmine.createSpyObj('ActivatedRoute', [], {
+    snapshot: { dat: 'test' },
+  });
 
-  beforeEach(() => {
-    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [''], {
+  beforeEach(async () => {
+    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
       processData: mockProcessData,
     });
 
     titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
-    navControllerSpy = jasmine.createSpyObj('NavController', ['goBack']);
+    routerSpy = jasmine.createSpyObj(
+      'Router',
+      ['navigate', 'createUrlTree', 'serializeUrl'],
+      // 以下属性是为了模拟 RouterLink
+      {
+        routerState: { root: mockActivatedRoute },
+        events: of(),
+      }
+    );
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [QizhengPage],
       imports: [
         IonicModule.forRoot(),
@@ -109,14 +108,13 @@ describe('QizhengPage', () => {
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },
         { provide: Title, useValue: titleServiceSpy },
         { provide: Router, useValue: routerSpy },
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
-        { provide: NavController, useValue: navControllerSpy },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: NavController, useValue: {} },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(QizhengPage);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -170,7 +168,7 @@ describe('QizhengPage', () => {
     expect(processDataSetterSpy).toHaveBeenCalledWith(originalProcessData);
 
     expect(routerSpy.navigate).toHaveBeenCalledWith([subPath.Horo], {
-      relativeTo: TestBed.inject(ActivatedRoute),
+      relativeTo: mockActivatedRoute,
     });
   });
 
@@ -185,16 +183,16 @@ describe('QizhengPage', () => {
   it('should not affect original storage.horoData when modifying horoData property', () => {
     // 保存原始对象引用
     const originalHoroData = component.horoData;
-    
+
     // 修改组件的horoData属性
     component.horoData.name = 'modified name';
     component.horoData.sex = false;
     component.horoData.date.year = 1990;
-    
+
     // 验证storage中的horoData未被修改
     expect(horoStorageServiceSpy.horoData).toEqual(mockHoroData);
     expect(horoStorageServiceSpy.horoData).not.toBe(component.horoData);
-    
+
     // 验证是相同的对象实例
     expect(originalHoroData).toBe(component.horoData);
   });
@@ -202,16 +200,16 @@ describe('QizhengPage', () => {
   it('should not affect original storage.processData when modifying processData property', () => {
     // 保存原始对象引用
     const originalProcessData = component.processData;
-    
+
     // 修改组件的processData属性
     component.processData.process_name = ProcessName.Firdaria;
     component.processData.date.year = 2000;
     component.processData.isSolarReturn = true;
-    
+
     // 验证storage中的processData未被修改
     expect(horoStorageServiceSpy.processData).toEqual(mockProcessData);
     expect(horoStorageServiceSpy.processData).not.toBe(component.processData);
-    
+
     // 验证是不同的对象实例
     expect(originalProcessData).toBe(component.processData);
   });
@@ -220,14 +218,10 @@ describe('QizhengPage', () => {
     // 修改组件数据
     component.horoData.name = 'test name';
     component.processData.process_name = ProcessName.Firdaria;
-    
-    // 调用getProcess方法前检查
-    const originalHoroData = component.horoData;
-    const originalProcessData = component.processData;
-    
+
     // 调用getProcess方法
     component.getProcess();
-    
+
     // 检查setter是否被正确调用
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
@@ -237,12 +231,12 @@ describe('QizhengPage', () => {
       horoStorageServiceSpy,
       'processData'
     )?.set as jasmine.Spy;
-    
+
     // 验证storage.horoData与component.horoData是不同的对象
     const storedHoroData = horoDataSetterSpy.calls.mostRecent().args[0];
     expect(storedHoroData).toEqual(component.horoData);
     expect(storedHoroData).not.toBe(component.horoData);
-    
+
     // 验证storage.processData与component.processData是不同的对象
     const storedProcessData = processDataSetterSpy.calls.mostRecent().args[0];
     expect(storedProcessData).toEqual(component.processData);
@@ -277,6 +271,8 @@ describe('QizhengPage', () => {
       geoComponent = fixture.debugElement.query(By.css('horo-geo'));
       birthDateTime = fixture.debugElement.query(By.css('#horo-birth-date'));
       processDateTime = fixture.debugElement.query(By.css('#process-date'));
+
+      fixture.detectChanges();
     });
 
     it('should update name when input changes', () => {
