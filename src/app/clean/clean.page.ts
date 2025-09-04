@@ -4,10 +4,10 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { Path } from '../type/enum/path';
 
 @Component({
-    selector: 'app-clean',
-    templateUrl: './clean.page.html',
-    styleUrls: ['./clean.page.scss'],
-    standalone: false
+  selector: 'app-clean',
+  templateUrl: './clean.page.html',
+  styleUrls: ['./clean.page.scss'],
+  standalone: false,
 })
 export class CleanPage implements OnInit {
   path = Path;
