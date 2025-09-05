@@ -91,6 +91,11 @@ export class DateTimeComponent implements OnInit, OnChanges {
 
   ngOnInit() {}
 
+  // year 、month、day、hour、minute、second 不可以直接绑定到选择的值上
+  // 因为这些值值改变后，页面上的日期也会改变
+  // 当year、month、day、hour、minute、second变化时，更新currentValue
+  // 情况1. 用户向组件传递值
+  // 情况2. 用户点击图标按钮
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['year']) {
       this.currentValue.year = changes['year'].currentValue;
@@ -142,16 +147,11 @@ export class DateTimeComponent implements OnInit, OnChanges {
   }
 
   onDidDismiss(event: CustomEvent) {
+    // 点击确认时：event的值是 currentValue
+    // 占击取消时；event的值是 null
     this.isOpen = false;
 
-    if (event.detail.data === null) {
-      this.currentValue.year = this.year;
-      this.currentValue.month = this.month;
-      this.currentValue.day = this.day;
-      this.currentValue.hour = this.hour;
-      this.currentValue.minute = this.minute;
-      this.currentValue.second = this.second;
-    } else {
+    if (event.detail.data) {
       this.year = event.detail.data.year;
       this.month = event.detail.data.month;
       this.day = event.detail.data.day;
@@ -160,6 +160,13 @@ export class DateTimeComponent implements OnInit, OnChanges {
       this.second = event.detail.data.second;
 
       this.emit();
+    } else {
+      this.currentValue.year = this.year;
+      this.currentValue.month = this.month;
+      this.currentValue.day = this.day;
+      this.currentValue.hour = this.hour;
+      this.currentValue.minute = this.minute;
+      this.currentValue.second = this.second;
     }
   }
 
