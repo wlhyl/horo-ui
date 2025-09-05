@@ -21,7 +21,7 @@ export class DateTimeChangeComponent implements OnInit {
   };
 
   @Output()
-  private chagedStep = new EventEmitter<{
+  private changedStep = new EventEmitter<{
     year: number;
     month: number;
     day: number;
@@ -124,6 +124,6 @@ export class DateTimeChangeComponent implements OnInit {
         };
     }
 
-    this.chagedStep.emit(this.step);
+    this.changedStep.emit(this.step);
   }
 }
