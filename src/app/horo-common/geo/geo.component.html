@@ -1,3 +1,6 @@
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen=false"></ion-alert>
+
 <ion-label (click)="open()">{{ geoLocalName }}</ion-label>
 
 <ion-modal [isOpen]="isModalOpen" animated="true" [showBackdrop]="true" [backdropDismiss]="false">

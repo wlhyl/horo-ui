@@ -3,10 +3,10 @@ import { degreeToDMS } from '../../utils/horo-math/horo-math';
 import { EW, NS } from './enum';
 
 @Component({
-    selector: 'horo-geo',
-    templateUrl: './geo.component.html',
-    styleUrls: ['./geo.component.scss'],
-    standalone: false
+  selector: 'horo-geo',
+  templateUrl: './geo.component.html',
+  styleUrls: ['./geo.component.scss'],
+  standalone: false,
 })
 export class GeoComponent implements OnInit {
   isModalOpen = false;
@@ -36,7 +36,7 @@ export class GeoComponent implements OnInit {
 
   get geoLong(): number {
     const long = this.geoLongD + this.geoLongM / 60.0 + this.geoLongS / 3600.0;
-    return this.geoEW == EW.E ? long : -long;
+    return this.geoEW === EW.E ? long : -long;
   }
 
   geoLongD = 0;
@@ -55,7 +55,7 @@ export class GeoComponent implements OnInit {
   }
   get geoLat(): number {
     const lat = this.geoLatD + this.geoLatM / 60.0 + this.geoLatS / 3600.0;
-    return this.geoNS == NS.N ? lat : -lat;
+    return this.geoNS === NS.N ? lat : -lat;
   }
 
   geoLatD = 0;
@@ -63,11 +63,25 @@ export class GeoComponent implements OnInit {
   geoLatS = 0;
   geoNS = NS.N;
 
+  isAlertOpen = false;
+  alertButtons = ['OK'];
+  message = '';
   constructor() {}
 
   ngOnInit() {}
 
   ok(): void {
+    if (Math.abs(this.geoLong) > 180) {
+      this.message = '经度超出范围';
+      this.isAlertOpen = true;
+      return;
+    }
+    if (Math.abs(this.geoLat) > 90) {
+      this.message = '纬度超出范围';
+      this.isAlertOpen = true;
+      return;
+    }
+
     this.geoLocalNameChange.emit(this.geoLocalName);
     this.geoLongChange.emit(this.geoLong);
     this.geoLatChange.emit(this.geoLat);
