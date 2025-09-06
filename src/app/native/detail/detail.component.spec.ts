@@ -61,24 +61,20 @@ describe('DetailComponent', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    const routerSpyObj = jasmine.createSpyObj('Router', ['currentNavigation']);
-    const titleServiceSpyObj = jasmine.createSpyObj('Title', ['setTitle']);
-    const horoConfigSpyObj = jasmine.createSpyObj('Horoconfig', ['']);
+    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
+    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
+    horoConfigSpy = jasmine.createSpyObj('Horoconfig', ['']);
     const navControllerSpy = jasmine.createSpyObj('NavController', ['']);
 
     TestBed.configureTestingModule({
       imports: [TestDetailModule, IonicModule.forRoot()],
       providers: [
-        { provide: Router, useValue: routerSpyObj },
-        { provide: Title, useValue: titleServiceSpyObj },
-        { provide: Horoconfig, useValue: horoConfigSpyObj },
+        { provide: Router, useValue: routerSpy },
+        { provide: Title, useValue: titleServiceSpy },
+        { provide: Horoconfig, useValue: horoConfigSpy },
         { provide: NavController, useValue: navControllerSpy },
       ],
     }).compileComponents();
-
-    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
-    titleServiceSpy = TestBed.inject(Title) as jasmine.SpyObj<Title>;
-    horoConfigSpy = TestBed.inject(Horoconfig) as jasmine.SpyObj<Horoconfig>;
   }));
 
   it('should create the component and set the title', () => {

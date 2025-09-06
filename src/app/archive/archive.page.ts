@@ -1,35 +1,43 @@
-import {Component, OnInit} from "@angular/core";
-import {Title} from "@angular/platform-browser";
-import {InfiniteScrollCustomEvent, ViewWillEnter} from "@ionic/angular";
-import {ApiService} from "../services/api/api.service";
-import {PageResponser} from "../type/interface/page";
-import {HoroscopeRecord} from "../type/interface/horo-admin/horoscope-record";
-import {ActivatedRoute, Router} from "@angular/router";
-import {HoroStorageService} from "../services/horostorage/horostorage.service";
-import {HoroRequest} from "../type/interface/request-data";
-import {Path} from "../type/enum/path";
-import {Path as SubPath} from "./enum";
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import {
+  InfiniteScrollCustomEvent,
+  IonContent,
+  ViewWillEnter,
+} from '@ionic/angular';
+import { finalize, take } from 'rxjs/operators';
+import { ApiService } from '../services/api/api.service';
+import { PageResponser } from '../type/interface/page';
+import { HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HoroStorageService } from '../services/horostorage/horostorage.service';
+import { HoroRequest } from '../type/interface/request-data';
+import { Path } from '../type/enum/path';
+import { Path as SubPath } from './enum';
 
 @Component({
-    selector: "app-archive",
-    templateUrl: "./archive.page.html",
-    styleUrls: ["./archive.page.scss"],
-    standalone: false
+  selector: 'app-archive',
+  templateUrl: './archive.page.html',
+  styleUrls: ['./archive.page.scss'],
+  standalone: false,
 })
 export class ArchivePage implements OnInit, ViewWillEnter {
-  title = "档案库";
+  @ViewChild(IonContent) content!: IonContent;
+
+  title = '档案库';
 
   path = Path;
 
   isAlertOpen = false;
-  alertButtons = ["OK"];
-  message = "";
+  alertButtons = ['OK'];
+  message = '';
 
   private page = 0;
   private size = 10;
+  private loading = false;
   natives: PageResponser<Array<HoroscopeRecord>> = {
     data: [],
-    total: 0,
+    total: 0, // 总页数
   };
 
   constructor(
@@ -37,53 +45,97 @@ export class ArchivePage implements OnInit, ViewWillEnter {
     private route: ActivatedRoute,
     private titleService: Title,
     private api: ApiService,
-    private storage: HoroStorageService
-  ) {
-  }
+    private storage: HoroStorageService,
+    private ngZone: NgZone
+  ) {}
 
   ionViewWillEnter(): void {
-    this.getNatives();
+    this.page = 0; // 重置页码
+    this.natives.data = [];
+    this.natives.total = 0;
+    this.getNatives(undefined, true);
   }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
-    // this.getNatives();
   }
 
-  getNatives(event?: InfiniteScrollCustomEvent) {
-    this.api.getNatives(0, this.size * (this.page + 1)).subscribe({
-      next: (res) => {
-        // 将res.data添加到this.natives.data中
-        // this.natives.data = this.natives.data.concat(res.data);
+  getNatives(event?: InfiniteScrollCustomEvent, initialLoad: boolean = false) {
+    // 设置loading状态
+    this.loading = true;
 
-        // this.natives.total = res.total;
-        // this.natives.data.push(...res.data);
-        this.natives = res;
-        if (event) {
-          event.target.complete();
-        }
-      },
-      error: (error) => {
-        const msg = error.error.error;
-        let message = "获取档案数据失败！";
-        if (msg) message += msg;
-        this.message = message;
-        this.isAlertOpen = true;
-        // this.message = error.error + ' ' + error.error.message;
-        if (event) {
-          event.target.complete();
-        }
-      },
-    });
-    // .add(() => {
-    //   if (event) {
-    //     event.target.complete();
-    //   }
-    // });
+    this.api
+      .getNatives(this.page, this.size)
+      .pipe(
+        finalize(() => {
+          // 无论请求成功还是失败，都会执行这里的代码
+          this.loading = false;
+
+          if (event) {
+            event.target.complete();
+          }
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          // 如果是分页加载，需要将新数据追加到现有数据中
+          if (this.page === 0) {
+            this.natives = res;
+          } else {
+            this.natives.data.push(...res.data);
+            this.natives.total = res.total;
+          }
+
+          // 如果是初始加载，检查是否需要继续加载更多数据
+          if (initialLoad && this.page < this.natives.total - 1) {
+            // 检查当前数据是否足够填满页面
+            this.ngZone.onStable.pipe(take(1)).subscribe(() => {
+              if (this.content) {
+                this.content
+                  .getScrollElement()
+                  .then((scrollElement) => {
+                    // 检查是否有滚动条
+                    if (
+                      scrollElement.scrollHeight <= scrollElement.clientHeight
+                    ) {
+                      // 没有滚动条，说明数据不够填满页面
+                      this.page++;
+                      this.getNatives(undefined, true);
+                    }
+                  })
+                  .catch((error) => {
+                    // 处理 getScrollElement 错误
+                    console.error('Failed to get scroll element:', error);
+                    this.message = '获取页面滚动信息失败！';
+                    if (error && error.message) {
+                      this.message += ' ' + error.message;
+                    }
+                    this.isAlertOpen = true;
+                  });
+              }
+            });
+          }
+        },
+        error: (error) => {
+          const msg = error.error.error;
+          let message = '获取档案数据失败！';
+          if (msg) message += msg;
+          this.message = message;
+          this.isAlertOpen = true;
+          // this.message = error.error + ' ' + error.error.message;
+        },
+      });
   }
 
   onIonInfinite(event: InfiniteScrollCustomEvent) {
-    if (this.natives.total == 1) {
+    // 如果正在加载数据，则不处理滚动事件
+    if (this.loading) {
+      event.target.complete();
+      return;
+    }
+
+    // 检查是否还有更多页面可以加载
+    if (this.page >= this.natives.total - 1) {
       event.target.complete();
       return;
     }
@@ -105,7 +157,7 @@ export class ArchivePage implements OnInit, ViewWillEnter {
       },
       error: (error) => {
         const msg = error.error.error;
-        let message = "删除档案失败！";
+        let message = '删除档案失败！';
         if (msg) message += msg;
         this.message = message;
         this.isAlertOpen = true;
@@ -114,45 +166,21 @@ export class ArchivePage implements OnInit, ViewWillEnter {
   }
 
   edit(native: HoroscopeRecord) {
-    this.router.navigate(["edit"], {
+    this.router.navigate(['edit'], {
       relativeTo: this.route,
       state: native,
     });
   }
 
   toHoro(native: HoroscopeRecord, path: string) {
-    // date: DateRequest;
-    //   geo_name: string;
-    //   geo: GeoRequest;
-    //   house: string;
-    //   describe: string;
-    //   sex: boolean;
-    // this.storage.horoData.date.year = native.year;
-    // this.storage.horoData.date.month = native.month;
-    // this.storage.horoData.date.day = native.day;
-    // this.storage.horoData.date.hour = native.hour;
-    // this.storage.horoData.date.minute = native.minute;
-    // this.storage.horoData.date.second = native.second;
-    // this.storage.horoData.date.tz = native.tz;
-    // this.storage.horoData.date.st = native.st;
-    // this.storage.horoData.geo_name = native.geo.name;
-    // this.storage.horoData.geo.long =
-    //   native.geo.long_d + native.geo.long_m / 60 + native.geo.long_s / 3600;
-    // this.storage.horoData.geo.lat =
-    //   native.geo.lat_d + native.geo.lat_m / 60 + native.geo.lat_s / 3600;
-    // if (!native.geo.east)
-    //   this.storage.horoData.geo.long = -this.storage.horoData.geo.long;
-    // if (!native.geo.north)
-    //   this.storage.horoData.geo.lat = -this.storage.horoData.geo.lat;
-    // this.storage.horoData.describe = native.describe ? native.describe : '';
-    // this.storage.horoData.sex = native.sex;
-
-    // console.log(native)
-    // console.log(this.storage.horoData.date.year);
     let long =
-      native.location.longitude_degree + native.location.longitude_minute / 60 + native.location.longitude_second / 3600;
+      native.location.longitude_degree +
+      native.location.longitude_minute / 60 +
+      native.location.longitude_second / 3600;
     let lat =
-      native.location.latitude_degree + native.location.latitude_minute / 60 + native.location.latitude_second / 3600;
+      native.location.latitude_degree +
+      native.location.latitude_minute / 60 +
+      native.location.latitude_second / 3600;
     if (!native.location.is_east) long = -long;
     if (!native.location.is_north) lat = -lat;
 
@@ -174,7 +202,7 @@ export class ArchivePage implements OnInit, ViewWillEnter {
         lat,
       },
       house: this.storage.horoData.house,
-      name: native.name ? native.name : "",
+      name: native.name ? native.name : '',
       sex: native.gender,
     };
 
