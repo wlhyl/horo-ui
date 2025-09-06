@@ -148,7 +148,7 @@ export class DateTimeComponent implements OnInit, OnChanges {
 
   onDidDismiss(event: CustomEvent) {
     // 点击确认时：event的值是 currentValue
-    // 占击取消时；event的值是 null
+    // 点击取消时；event的值是 null
     this.isOpen = false;
 
     if (event.detail.data) {

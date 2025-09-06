@@ -1,73 +1,59 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
-  PickerColumn,
-  PickerColumnOption,
-  PickerController,
-  PickerOptions,
-} from '@ionic/angular';
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
-    selector: 'horo-time-zone',
-    templateUrl: './time-zone.component.html',
-    styleUrls: ['./time-zone.component.scss'],
-    standalone: false
+  selector: 'horo-time-zone',
+  templateUrl: './time-zone.component.html',
+  styleUrls: ['./time-zone.component.scss'],
+  standalone: false,
 })
-export class TimeZoneComponent implements OnInit {
+export class TimeZoneComponent implements OnChanges {
   @Input()
   zone = 8;
 
   @Output()
   zoneChange = new EventEmitter<number>();
 
-  get zoneString(): string | undefined {
-    return this.zones.find((v) => v.value == this.zone)?.text;
-  }
-  private zones: Array<PickerColumnOption> = [...Array(25)].map((_, i) => {
-    let value = i - 12;
-    let s = '';
-    if (value < 0) s = `西${-value}区`;
-    else if (value == 0) s = '0时区';
-    else s = `东${value}区`;
-    return { text: s, value: i - 12 };
-  });
+  currentValue = 0;
 
-  constructor(private pickerController: PickerController) {}
+  isOpen = false;
 
-  ngOnInit() {}
+  readonly zones: ReadonlyArray<number> = Array.from(
+    { length: 25 },
+    (_, i) => i - 12
+  );
 
-  async openPicker() {
-    const columns: PickerColumn[] = [
-      {
-        name: 'zone',
-        options: this.zones,
-        selectedIndex: this.zones.findIndex((v) => v.value == this.zone),
-      },
-    ];
-
-    const pickerOptions: PickerOptions = {
-      columns,
-      buttons: [
-        {
-          text: '取消',
-          role: 'cancel',
-        },
-        {
-          text: '确定',
-          handler: (value) => {
-            this.zone = value.zone.value;
-
-            this.emit();
-          },
-        },
-      ],
-    };
-
-    const picker = await this.pickerController.create(pickerOptions);
-
-    await picker.present();
+  zoneString(v: number): string {
+    return v === 0 ? '0时区' : v < 0 ? `西${-v}区` : `东${v}区`;
   }
 
-  private emit(): void {
-    this.zoneChange.emit(this.zone);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['zone']) {
+      this.currentValue = changes['zone'].currentValue;
+    }
+  }
+
+  onIonChange(event: CustomEvent): void {
+    this.currentValue = event.detail.value;
+  }
+
+  onDidDismiss(event: CustomEvent): void {
+    // 点击确认时：event的值是 currentValue
+    // 点击取消时：event的值是 null
+
+    if (event.detail.data) {
+      this.zone = event.detail.data;
+      this.zoneChange.emit(this.zone);
+    } else {
+      this.currentValue = this.zone;
+    }
+
+    this.isOpen = false;
   }
 }

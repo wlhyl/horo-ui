@@ -1,1 +1,21 @@
-<ion-label id="open-picker" (click)="openPicker()">{{ zoneString }}</ion-label>
+<ion-label (click)="isOpen=true">{{ zoneString(zone) }}</ion-label>
+
+<ion-modal #modal [isOpen]="isOpen" (didDismiss)="onDidDismiss($event)">
+    <ng-template>
+        <ion-toolbar>
+            <ion-buttons slot="start">
+                <ion-button (click)="modal.dismiss(null, 'cancel')">取消</ion-button>
+            </ion-buttons>
+            <ion-buttons slot="end">
+                <ion-button (click)="modal.dismiss(currentValue, 'confirm')">确定</ion-button>
+            </ion-buttons>
+        </ion-toolbar>
+        <ion-picker>
+            <ion-picker-column [value]="currentValue" (ionChange)="onIonChange($event)">
+                @for (v of zones; track v) {
+                <ion-picker-column-option [value]="v">{{ zoneString(v) }}</ion-picker-column-option>
+                }
+            </ion-picker-column>
+        </ion-picker>
+    </ng-template>
+</ion-modal>
