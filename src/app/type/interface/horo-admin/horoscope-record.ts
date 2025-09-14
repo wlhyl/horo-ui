@@ -1,5 +1,8 @@
-import {LocationRecord, LocationRecordRequest} from "./location-record";
+import { LocationRecord, LocationRecordRequest } from './location-record';
 
+/**
+ * 后台对应的结构体是：Horoscope
+ */
 export interface HoroscopeRecord {
   id: number;
   name: string;
@@ -21,6 +24,9 @@ export interface HoroscopeRecord {
   updated_at: string | null;
 }
 
+/**
+ * 后台对应的结构体是：HoroscopeRequest
+ */
 export interface HoroscopeRecordRequest {
   // 姓名
   name: string;
@@ -49,6 +55,9 @@ export interface HoroscopeRecordRequest {
   description: string;
 }
 
+/**
+ * 后台对应的结构体是：UpdateHoroscopeRequest
+ */
 export interface UpdateHoroscopeRecordRequest {
   // 姓名，长度1-30个字符
   name: string | null;

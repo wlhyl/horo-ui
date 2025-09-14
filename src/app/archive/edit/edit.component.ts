@@ -11,13 +11,12 @@ import { Path } from '../../type/enum/path';
 import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 
 @Component({
-    selector: 'app-edit',
-    templateUrl: './edit.component.html',
-    styleUrls: ['./edit.component.scss'],
-    standalone: false
+  selector: 'app-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.scss'],
+  standalone: false,
 })
 export class EditComponent implements OnInit {
-  title = '编辑';
   path = Path;
 
   isAlertOpen = false;
@@ -53,10 +52,10 @@ export class EditComponent implements OnInit {
     { text: '北纬', value: true },
     { text: '南纬', value: false },
   ];
-  longitudeDegrees = Array.from({ length: 181 }, (_, i) => i);
+  longitudeDegrees = Array.from({ length: 180 }, (_, i) => i);
   longitudeMinutes = Array.from({ length: 60 }, (_, i) => i);
   longitudeSeconds = Array.from({ length: 60 }, (_, i) => i);
-  latitudeDegrees = Array.from({ length: 91 }, (_, i) => i);
+  latitudeDegrees = Array.from({ length: 90 }, (_, i) => i);
   latitudeMinutes = Array.from({ length: 60 }, (_, i) => i);
   latitudeSeconds = Array.from({ length: 60 }, (_, i) => i);
 
@@ -98,18 +97,20 @@ export class EditComponent implements OnInit {
   }
 
   ngOnInit() {
-    const native = this.router.getCurrentNavigation()?.extras.state as HoroscopeRecord;
+    const native = this.router.currentNavigation()?.extras
+      .state as HoroscopeRecord;
 
     if (native) {
       this.native = structuredClone(native);
       this.oldNative = structuredClone(native);
-      this.title = '编辑';
-    } else {
-      this.title = '新增';
     }
+
     this.titleService.setTitle(this.title);
   }
 
+  get title(): string {
+    return this.native.id === 0 ? '新增' : '编辑';
+  }
   get dateTime(): string {
     return `${this.native.birth_year}-${this.native.birth_month
       .toString()
@@ -159,39 +160,39 @@ export class EditComponent implements OnInit {
     return `${direction}${this.native.location.latitude_degree}°${this.native.location.latitude_minute}′${this.native.location.latitude_second}″`;
   }
 
-  onTimeZoneChange(event: any) {
+  onTimeZoneChange(event: CustomEvent) {
     this.native.time_zone_offset = event.detail.value;
   }
 
-  onLongitudeDirectionChange(event: any) {
+  onLongitudeDirectionChange(event: CustomEvent) {
     this.native.location.is_east = event.detail.value;
   }
 
-  onLongitudeDegreeChange(event: any) {
+  onLongitudeDegreeChange(event: CustomEvent) {
     this.native.location.longitude_degree = event.detail.value;
   }
 
-  onLongitudeMinuteChange(event: any) {
+  onLongitudeMinuteChange(event: CustomEvent) {
     this.native.location.longitude_minute = event.detail.value;
   }
 
-  onLongitudeSecondChange(event: any) {
+  onLongitudeSecondChange(event: CustomEvent) {
     this.native.location.longitude_second = event.detail.value;
   }
 
-  onLatitudeDirectionChange(event: any) {
+  onLatitudeDirectionChange(event: CustomEvent) {
     this.native.location.is_north = event.detail.value;
   }
 
-  onLatitudeDegreeChange(event: any) {
+  onLatitudeDegreeChange(event: CustomEvent) {
     this.native.location.latitude_degree = event.detail.value;
   }
 
-  onLatitudeMinuteChange(event: any) {
+  onLatitudeMinuteChange(event: CustomEvent) {
     this.native.location.latitude_minute = event.detail.value;
   }
 
-  onLatitudeSecondChange(event: any) {
+  onLatitudeSecondChange(event: CustomEvent) {
     this.native.location.latitude_second = event.detail.value;
   }
 
@@ -253,8 +254,6 @@ export class EditComponent implements OnInit {
     // 根据native生成请求数据，请求数据的类型是NativeRequest
     // 调用api的新增或更新方法
 
-    this.isSaving = true;
-
     if (this.native.id === 0) {
       this.add();
     } else {
@@ -263,11 +262,8 @@ export class EditComponent implements OnInit {
   }
 
   private add() {
-    const requestData: HoroscopeRecordRequest = {
-      ...this.native,
-      name: this.native.name,
-      description: this.native.description,
-    };
+    this.isSaving = true;
+    const requestData: HoroscopeRecordRequest = this.native;
 
     if (Math.abs(this.long) > 180) {
       this.isAlertOpen = true;
@@ -283,23 +279,32 @@ export class EditComponent implements OnInit {
       return;
     }
 
-    this.isSaving = true;
+    if (requestData.name.length < 1 || requestData.name.length > 30) {
+      this.message = '姓名长度为1-30个字符';
+      this.isAlertOpen = true;
+      this.isSaving = false;
+      return;
+    }
 
     this.api.addNative(requestData).subscribe({
       next: (res) => {
-        this.isSaving = false;
         this.native.id = res.id;
         this.oldNative = res;
+
+        this.isAlertOpen = true;
+        this.message = '新增成功';
+        this.isSaving = false;
       },
       error: (err: any) => {
-        this.isAlertOpen = true;
         this.message = '新增失败';
+        this.isAlertOpen = true;
         this.isSaving = false;
       },
     });
   }
 
   private update() {
+    this.isSaving = true;
     const requestData: UpdateHoroscopeRecordRequest = {
       name: this.native.name === this.oldNative.name ? null : this.native.name,
       gender:
@@ -347,32 +352,50 @@ export class EditComponent implements OnInit {
           : this.native.description,
     };
 
+    // 如果 requestData 的所有字段都null，不用更新
+    if (Object.values(requestData).every((value) => value === null)) {
+      this.message = '没需要更新的字段';
+      this.isAlertOpen = true;
+      this.isSaving = false;
+      return;
+    }
+
     if (requestData.location) {
       if (Math.abs(this.long) > 180) {
-        this.isAlertOpen = true;
         this.message = '经度范围为-180~180';
+        this.isAlertOpen = true;
         this.isSaving = false;
         return;
       }
 
       if (Math.abs(this.lat) > 90) {
-        this.isAlertOpen = true;
         this.message = '纬度范围为-90~90';
+        this.isAlertOpen = true;
         this.isSaving = false;
         return;
       }
     }
 
-    this.isSaving = true;
+    // min = 1, max = 30
+    if (requestData.name !== null) {
+      if (requestData.name.length < 1 || requestData.name.length > 30) {
+        this.message = '姓名长度为1-30个字符';
+        this.isAlertOpen = true;
+        this.isSaving = false;
+        return;
+      }
+    }
 
     this.api.updateNative(this.native.id, requestData).subscribe({
-      next: (res) => {
+      next: () => {
         this.oldNative = structuredClone(this.native);
+        this.message = '更新成功';
+        this.isAlertOpen = true;
         this.isSaving = false;
       },
       error: (err: any) => {
-        this.isAlertOpen = true;
         this.message = '更新失败';
+        this.isAlertOpen = true;
         this.isSaving = false;
       },
     });

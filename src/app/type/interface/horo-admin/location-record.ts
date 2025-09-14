@@ -1,3 +1,6 @@
+/**
+ * 后台对应结构体：Location
+ */
 export interface LocationRecord {
   id: number;
   name: string;
@@ -11,6 +14,9 @@ export interface LocationRecord {
   latitude_second: number;
 }
 
+/**
+ * 后台对应结构体：LocationRequest
+ */
 export interface LocationRecordRequest {
   // 城市名
   name: string;
