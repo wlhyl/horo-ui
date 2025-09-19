@@ -8,12 +8,18 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.3.0] - 2025-09-19
+
 ### Added
 
 - 新增七政知识组件
 - 七政行星增加力量
 - 增加星辰格局
 - 增加“天厨”神煞
+
+### Fixed
+
+- 修复`档案库`组件不能加载更多数据
 
 ## [0.2.0] - 2025-08-05
 
