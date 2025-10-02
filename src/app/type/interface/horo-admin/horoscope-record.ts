@@ -22,6 +22,7 @@ export interface HoroscopeRecord {
 
   created_at: string;
   updated_at: string | null;
+  lock: boolean;
 }
 
 /**
@@ -53,6 +54,8 @@ export interface HoroscopeRecordRequest {
 
   // 说明文字
   description: string;
+  // 是否锁定
+  lock: boolean;
 }
 
 /**
@@ -83,4 +86,6 @@ export interface UpdateHoroscopeRecordRequest {
   location: LocationRecordRequest | null;
   // 说明文字
   description: string | null;
+  // 是否锁定
+  lock: boolean | null;
 }

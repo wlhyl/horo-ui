@@ -153,7 +153,8 @@ export class ArchivePage implements OnInit, ViewWillEnter {
   delete(id: number) {
     this.api.deleteNative(id).subscribe({
       next: () => {
-        this.getNatives();
+        this.page = 0; // 重置页码
+        this.getNatives(undefined, true); // 刷新数据
       },
       error: (error) => {
         const msg = error.error.error;

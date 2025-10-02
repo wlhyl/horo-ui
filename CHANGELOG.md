@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- 因 horoscopes 表添加 lock 字段，UI 组件作相应变更
+
 ### Planned
 
 - 推运计划增加次限、三限

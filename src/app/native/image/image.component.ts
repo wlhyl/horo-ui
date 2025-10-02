@@ -301,6 +301,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
         latitude_second: lat.s,
       },
       description: '',
+      lock: false,
     };
 
     this.api.addNative(nativeRequest).subscribe({
@@ -332,6 +333,11 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.api.getNativeById(this.horoData.id).subscribe({
       next: (native) => {
+        if (native.lock) {
+          this.message = '记录已锁定，无法修改';
+          this.isAlertOpen = true;
+          return;
+        }
         const nativeRequest: UpdateHoroscopeRecordRequest = {
           name: this.horoData.name === native.name ? null : this.horoData.name,
           gender:
@@ -372,6 +378,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
             ? null
             : locationRequest,
           description: null,
+          lock: null,
         };
 
         if (Object.values(nativeRequest).every((value) => value === null)) {

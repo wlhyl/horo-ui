@@ -60,6 +60,7 @@ describe('ArchivePage', () => {
       description: '',
       created_at: '2023-01-01',
       updated_at: null,
+      lock: false,
     },
   ];
 
@@ -226,11 +227,17 @@ describe('ArchivePage', () => {
         of(mockPageResponse).pipe(delay(0))
       );
 
+      // Spy on component's getNatives method to verify it's called with correct parameters
+      spyOn(component, 'getNatives').and.callThrough();
+
       component.delete(1);
       tick();
 
+      expect(component['page']).toBe(0);
       expect(apiServiceSpy.deleteNative).toHaveBeenCalledWith(1);
-      expect(apiServiceSpy.getNatives).toHaveBeenCalled();
+      expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
+      // 验证getNatives方法被调用，参数为undefined和true
+      expect(component.getNatives).toHaveBeenCalledWith(undefined, true);
       // 验证删除后数据是否已刷新
       expect(component.natives).toEqual(mockPageResponse);
     }));

@@ -43,7 +43,7 @@ describe('NoteComponent', () => {
     house: 'Aquarius',
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     mockApiService = jasmine.createSpyObj('ApiService', [
       'getNativeById',
       'addNative',
@@ -55,7 +55,7 @@ describe('NoteComponent', () => {
       horoData: structuredClone(initialHoroData),
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [NoteComponent],
       imports: [IonicModule.forRoot(), FormsModule],
       providers: [
@@ -67,7 +67,7 @@ describe('NoteComponent', () => {
 
     fixture = TestBed.createComponent(NoteComponent);
     component = fixture.componentInstance;
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -75,7 +75,9 @@ describe('NoteComponent', () => {
 
   describe('ngOnInit', () => {
     it('should set the title and call loadNativeData', () => {
-      spyOn(component, 'loadNativeData' as any);
+      component['loadNativeData'] = jasmine
+        .createSpy('loadNativeData')
+        .and.stub();
       component.ngOnInit();
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('笔记');
       expect(component['loadNativeData']).toHaveBeenCalled();
@@ -147,6 +149,7 @@ describe('NoteComponent', () => {
           latitude_second: 0,
         },
         description: 'New note',
+        lock: false,
       };
 
       expect(mockApiService.addNative).toHaveBeenCalledWith(expectedRequest);
@@ -184,6 +187,7 @@ describe('NoteComponent', () => {
         is_dst: null,
         location: null,
         description: 'Updated note',
+        lock: null,
       };
 
       expect(mockApiService.updateNative).toHaveBeenCalledWith(

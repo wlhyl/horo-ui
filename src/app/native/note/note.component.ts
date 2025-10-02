@@ -88,6 +88,7 @@ export class NoteComponent implements OnInit {
           latitude_second: lat.s,
         },
         description: this.describe,
+        lock: false,
       };
 
       this.api.addNative(nativeRequest).subscribe({
@@ -116,6 +117,7 @@ export class NoteComponent implements OnInit {
         is_dst: null,
         location: null,
         description: this.describe,
+        lock: null,
       };
       this.api.updateNative(this.horoData.id, native).subscribe({
         next: () => {

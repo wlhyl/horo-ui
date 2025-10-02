@@ -882,10 +882,55 @@ describe('ApiService', () => {
         description: 'Test description',
         created_at: '2020-01-01T00:00:00Z',
         updated_at: null,
+        lock: false,
       };
 
       service.getNativeById(mockId).subscribe((record) => {
         expect(record).toEqual(mockRecord);
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.admin_url}/horoscopes/${mockId}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockRecord);
+    });
+
+    it('should handle record with lock set to true', () => {
+      const mockId = 2;
+      const mockRecord: HoroscopeRecord = {
+        id: mockId,
+        name: 'Locked Record',
+        gender: false,
+        birth_year: 1985,
+        birth_month: 6,
+        birth_day: 15,
+        birth_hour: 10,
+        birth_minute: 30,
+        birth_second: 0,
+        time_zone_offset: 8,
+        is_dst: false,
+        location: {
+          id: 2,
+          name: 'Shanghai',
+          is_east: true,
+          longitude_degree: 121,
+          longitude_minute: 28,
+          longitude_second: 0,
+          is_north: true,
+          latitude_degree: 31,
+          latitude_minute: 14,
+          latitude_second: 0,
+        },
+        description: 'Locked test description',
+        created_at: '2020-01-01T00:00:00Z',
+        updated_at: null,
+        lock: true,
+      };
+
+      service.getNativeById(mockId).subscribe((record) => {
+        expect(record).toEqual(mockRecord);
+        expect(record.lock).toBe(true);
       });
 
       const req = httpMock.expectOne(
@@ -921,6 +966,7 @@ describe('ApiService', () => {
           latitude_second: 15,
         },
         description: 'Test description',
+        lock: false,
       };
 
       const mockRecord: HoroscopeRecord = {
@@ -950,6 +996,7 @@ describe('ApiService', () => {
         description: 'Test description',
         created_at: '2020-01-01T00:00:00Z',
         updated_at: null,
+        lock: false,
       };
 
       service.addNative(mockRecordRequest).subscribe((record) => {
@@ -979,6 +1026,7 @@ describe('ApiService', () => {
         is_dst: null,
         location: null,
         description: null,
+        lock: false,
       };
 
       service.updateNative(mockId, mockRecordRequest).subscribe(() => {

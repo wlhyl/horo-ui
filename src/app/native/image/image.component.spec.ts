@@ -47,7 +47,7 @@ describe('ImageComponent', () => {
   let mockAlertController: jasmine.SpyObj<AlertController>;
   let mockNavController: jasmine.SpyObj<NavController>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     // Create spies for the services
     mockApiService = jasmine.createSpyObj('ApiService', [
       'getNativeHoroscope',
@@ -79,7 +79,7 @@ describe('ImageComponent', () => {
       writable: true,
     });
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [ImageComponent],
       imports: [
         IonicModule.forRoot(),
@@ -111,7 +111,7 @@ describe('ImageComponent', () => {
       loadFromJSON: (data: any) =>
         Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
     });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -366,6 +366,7 @@ describe('ImageComponent', () => {
       description: '',
       created_at: '2023-01-01T00:00:00Z',
       updated_at: null,
+      lock: false,
     };
 
     beforeEach(() => {
@@ -394,6 +395,7 @@ describe('ImageComponent', () => {
       expect(callArgs.time_zone_offset).toBe(mockHoroData.date.tz);
       expect(callArgs.is_dst).toBe(mockHoroData.date.st);
       expect(callArgs.description).toBe('');
+      expect(callArgs.lock).toBe(false);
 
       // 检查位置信息
       expect(callArgs.location.name).toBe(mockHoroData.geo_name);
@@ -508,6 +510,7 @@ describe('ImageComponent', () => {
       description: '',
       created_at: '',
       updated_at: '',
+      lock: false,
     };
 
     beforeEach(() => {
@@ -554,6 +557,7 @@ describe('ImageComponent', () => {
         is_dst: null,
         location: null,
         description: null,
+        lock: null,
       };
 
       expect(mockApiService.updateNative).toHaveBeenCalledWith(
@@ -594,6 +598,24 @@ describe('ImageComponent', () => {
       expect(mockApiService.updateNative).toHaveBeenCalled();
       expect(handleErrorSpy).toHaveBeenCalledWith('更新档案错误', error);
       expect(component.isSaveOpen).toBe(false);
+    });
+
+    it('should show error message when record is locked (lock is true)', () => {
+      // 创建一个锁定的记录
+      const lockedNativeRecord = {
+        ...mockNativeRecord,
+        lock: true,
+      };
+      mockApiService.getNativeById.and.returnValue(
+        of(structuredClone(lockedNativeRecord))
+      );
+
+      component.updateRecord();
+
+      expect(mockApiService.getNativeById).toHaveBeenCalledWith(1);
+      expect(mockApiService.updateNative).not.toHaveBeenCalled();
+      expect(component.message).toBe('记录已锁定，无法修改');
+      expect(component.isAlertOpen).toBe(true);
     });
   });
 

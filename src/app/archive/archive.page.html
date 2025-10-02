@@ -48,7 +48,7 @@
         <ion-item-option color="tertiary" (click)="edit(native)">
           <ion-icon slot="icon-only" name="list-outline"></ion-icon>
         </ion-item-option>
-        <ion-item-option color="danger" expandable="true" (click)="delete(native.id)">
+        <ion-item-option color="danger" expandable="true" [disabled]="native.lock" (click)="delete(native.id)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>

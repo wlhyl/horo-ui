@@ -40,6 +40,7 @@ describe('EditComponent', () => {
     description: 'Test description',
     created_at: '2023-01-01',
     updated_at: null,
+    lock: false,
   };
 
   beforeEach(() => {
@@ -96,6 +97,7 @@ describe('EditComponent', () => {
       description: '',
       created_at: '',
       updated_at: '',
+      lock: false,
     };
 
     beforeEach(() => {
@@ -188,6 +190,39 @@ describe('EditComponent', () => {
     });
   });
 
+  describe('isLocked property', () => {
+    it('should return false when oldNative.lock is false', () => {
+      component.oldNative.lock = false;
+      expect(component.isLocked).toBeFalse();
+    });
+
+    it('should return true when oldNative.lock is true', () => {
+      component.oldNative.lock = true;
+      expect(component.isLocked).toBeTrue();
+    });
+
+    it('should reflect changes to oldNative.lock', () => {
+      component.oldNative.lock = false;
+      expect(component.isLocked).toBeFalse();
+      
+      component.oldNative.lock = true;
+      expect(component.isLocked).toBeTrue();
+      
+      component.oldNative.lock = false;
+      expect(component.isLocked).toBeFalse();
+    });
+
+    it('should not be affected by changes to native.lock', () => {
+      component.oldNative.lock = false;
+      component.native.lock = true;
+      expect(component.isLocked).toBeFalse();
+      
+      component.oldNative.lock = true;
+      component.native.lock = false;
+      expect(component.isLocked).toBeTrue();
+    });
+  });
+
   describe('dateTime property', () => {
     it('should get dateTime in correct format', () => {
       // Set the component's native data to our mock data
@@ -218,6 +253,24 @@ describe('EditComponent', () => {
       expect(component.native.birth_hour).toBe(13);
       expect(component.native.birth_minute).toBe(11);
       // Note: The setter doesn't handle seconds, so we don't test it here
+    });
+
+    it('should not set dateTime when record is locked', () => {
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      const originalYear = component.native.birth_year;
+      const originalMonth = component.native.birth_month;
+      const originalDay = component.native.birth_day;
+      const originalHour = component.native.birth_hour;
+      const originalMinute = component.native.birth_minute;
+      
+      component.dateTime = '2000-02-02T13:11:10';
+      
+      expect(component.native.birth_year).toBe(originalYear);
+      expect(component.native.birth_month).toBe(originalMonth);
+      expect(component.native.birth_day).toBe(originalDay);
+      expect(component.native.birth_hour).toBe(originalHour);
+      expect(component.native.birth_minute).toBe(originalMinute);
     });
   });
 
@@ -301,6 +354,15 @@ describe('EditComponent', () => {
       component.onTimeZoneChange(event as CustomEvent);
       expect(component.native.time_zone_offset).toBe(5);
     });
+
+    it('should not update time zone offset when record is locked', () => {
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      const originalValue = component.native.time_zone_offset;
+      const event = { detail: { value: 5 } };
+      component.onTimeZoneChange(event as CustomEvent);
+      expect(component.native.time_zone_offset).toBe(originalValue);
+    });
   });
 
   describe('longitude and latitude change handlers', () => {
@@ -364,6 +426,69 @@ describe('EditComponent', () => {
       const event = { detail: { value: 15 } };
       component.onLatitudeSecondChange(event as any);
       expect(component.native.location.latitude_second).toBe(15);
+    });
+
+    describe('when record is locked', () => {
+      beforeEach(() => {
+        component.native.lock = true;
+        component.oldNative.lock = true;
+      });
+
+      it('should not update longitude direction when locked', () => {
+        const originalValue = component.native.location.is_east;
+        const event = { detail: { value: !originalValue } };
+        component.onLongitudeDirectionChange(event as any);
+        expect(component.native.location.is_east).toBe(originalValue);
+      });
+
+      it('should not update longitude degree when locked', () => {
+        const originalValue = component.native.location.longitude_degree;
+        const event = { detail: { value: originalValue + 10 } };
+        component.onLongitudeDegreeChange(event as any);
+        expect(component.native.location.longitude_degree).toBe(originalValue);
+      });
+
+      it('should not update longitude minute when locked', () => {
+        const originalValue = component.native.location.longitude_minute;
+        const event = { detail: { value: originalValue + 10 } };
+        component.onLongitudeMinuteChange(event as any);
+        expect(component.native.location.longitude_minute).toBe(originalValue);
+      });
+
+      it('should not update longitude second when locked', () => {
+        const originalValue = component.native.location.longitude_second;
+        const event = { detail: { value: originalValue + 10 } };
+        component.onLongitudeSecondChange(event as any);
+        expect(component.native.location.longitude_second).toBe(originalValue);
+      });
+
+      it('should not update latitude direction when locked', () => {
+        const originalValue = component.native.location.is_north;
+        const event = { detail: { value: !originalValue } };
+        component.onLatitudeDirectionChange(event as any);
+        expect(component.native.location.is_north).toBe(originalValue);
+      });
+
+      it('should not update latitude degree when locked', () => {
+        const originalValue = component.native.location.latitude_degree;
+        const event = { detail: { value: originalValue + 10 } };
+        component.onLatitudeDegreeChange(event as any);
+        expect(component.native.location.latitude_degree).toBe(originalValue);
+      });
+
+      it('should not update latitude minute when locked', () => {
+        const originalValue = component.native.location.latitude_minute;
+        const event = { detail: { value: originalValue + 10 } };
+        component.onLatitudeMinuteChange(event as any);
+        expect(component.native.location.latitude_minute).toBe(originalValue);
+      });
+
+      it('should not update latitude second when locked', () => {
+        const originalValue = component.native.location.latitude_second;
+        const event = { detail: { value: originalValue + 10 } };
+        component.onLatitudeSecondChange(event as any);
+        expect(component.native.location.latitude_second).toBe(originalValue);
+      });
     });
   });
 
@@ -434,6 +559,41 @@ describe('EditComponent', () => {
       expect(component.native.location.latitude_degree).toBe(39);
       expect(component.native.location.latitude_minute).toBe(54);
       expect(component.native.location.latitude_second).toBe(23);
+    });
+
+    describe('when record is locked', () => {
+      beforeEach(() => {
+        component.native.lock = true;
+        component.oldNative.lock = true;
+      });
+
+      it('should not set longitude when record is locked', () => {
+        const originalIsEast = component.native.location.is_east;
+        const originalDegree = component.native.location.longitude_degree;
+        const originalMinute = component.native.location.longitude_minute;
+        const originalSecond = component.native.location.longitude_second;
+        
+        component.long = 116.391389;
+        
+        expect(component.native.location.is_east).toBe(originalIsEast);
+        expect(component.native.location.longitude_degree).toBe(originalDegree);
+        expect(component.native.location.longitude_minute).toBe(originalMinute);
+        expect(component.native.location.longitude_second).toBe(originalSecond);
+      });
+
+      it('should not set latitude when record is locked', () => {
+        const originalIsNorth = component.native.location.is_north;
+        const originalDegree = component.native.location.latitude_degree;
+        const originalMinute = component.native.location.latitude_minute;
+        const originalSecond = component.native.location.latitude_second;
+        
+        component.lat = 39.906389;
+        
+        expect(component.native.location.is_north).toBe(originalIsNorth);
+        expect(component.native.location.latitude_degree).toBe(originalDegree);
+        expect(component.native.location.latitude_minute).toBe(originalMinute);
+        expect(component.native.location.latitude_second).toBe(originalSecond);
+      });
     });
   });
 
@@ -685,6 +845,47 @@ describe('EditComponent', () => {
       component.oldNative = structuredClone(mockHoroscopeRecord);
     });
 
+    it('should only allow updating lock and description fields when record is locked', fakeAsync(() => {
+      // Set up locked record
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      
+      // Try to modify name (should be ignored)
+      component.native.name = 'Modified Name';
+      
+      // Modify description (should be allowed)
+      component.native.description = 'Updated description';
+      
+      // Modify lock (should be allowed)
+      component.native.lock = false;
+      
+      // Mock API response
+      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      
+      (component as any).update();
+      tick();
+      
+      // Verify that only lock and description fields are included in the update
+      expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
+        component.native.id,
+        {
+          name: null,
+          gender: null,
+          birth_year: null,
+          birth_month: null,
+          birth_day: null,
+          birth_hour: null,
+          birth_minute: null,
+          birth_second: null,
+          time_zone_offset: null,
+          is_dst: null,
+          location: null,
+          description: 'Updated description',
+          lock: false,
+        }
+      );
+    }));
+
     it('should show "no fields to update" message when no data has changed', () => {
       (component as any).update();
       expect(component.message).toBe('没需要更新的字段');
@@ -692,7 +893,7 @@ describe('EditComponent', () => {
       expect(component.isSaving).toBeFalse();
     });
 
-    it('should call updateNative when only one field is changed', fakeAsync(() => {
+    it('should call updateNative with only changed fields when name is modified', fakeAsync(() => {
       component.native.name = 'New Name';
       apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
 
@@ -714,6 +915,7 @@ describe('EditComponent', () => {
           is_dst: null,
           location: null,
           description: null,
+          lock: null,
         }
       );
     }));
@@ -778,5 +980,137 @@ describe('EditComponent', () => {
       expect(component.isAlertOpen).toBeTrue();
       expect(component.isSaving).toBeFalse();
     });
+
+    it('should ignore name validation when record is locked', fakeAsync(() => {
+      // Set up locked record with invalid name
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      component.native.name = 'a'.repeat(31); // Invalid name length
+      
+      // Modify description to trigger update
+      component.native.description = 'Updated description';
+      
+      // Mock API response
+      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      
+      (component as any).update();
+      tick();
+      
+      // Should not show name validation error when locked
+      expect(component.message).not.toBe('姓名长度为1-30个字符');
+      // Should proceed with update since description was changed
+      expect(apiServiceSpy.updateNative).toHaveBeenCalled();
+    }));
+
+    it('should ignore location validation when record is locked', fakeAsync(() => {
+      // Set up locked record with invalid location
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      component.native.location.longitude_degree = 181; // Invalid longitude
+      
+      // Modify description to trigger update
+      component.native.description = 'Updated description';
+      
+      // Mock API response
+      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      
+      (component as any).update();
+      tick();
+      
+      // Should not show location validation error when locked
+      expect(component.message).not.toBe('经度范围为-180~180');
+      // Should proceed with update since description was changed
+      expect(apiServiceSpy.updateNative).toHaveBeenCalled();
+    }));
+
+    it('should show "no fields to update" when only non-allowed fields are changed in locked state', () => {
+      // Set up locked record
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      
+      // Try to modify name (not allowed in locked state)
+      component.native.name = 'Modified Name';
+      
+      (component as any).update();
+      
+      // Should show "no fields to update" message
+      expect(component.message).toBe('没需要更新的字段');
+      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isSaving).toBeFalse();
+    });
+
+    it('should handle successful update when only description is changed in locked state', fakeAsync(() => {
+      // Set up locked record
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      
+      // Modify description (allowed in locked state)
+      component.native.description = 'Updated description';
+      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+
+      (component as any).update();
+      tick();
+
+      expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
+        component.native.id,
+        {
+          name: null,
+          gender: null,
+          birth_year: null,
+          birth_month: null,
+          birth_day: null,
+          birth_hour: null,
+          birth_minute: null,
+          birth_second: null,
+          time_zone_offset: null,
+          is_dst: null,
+          location: null,
+          description: 'Updated description',
+          lock: null, // lock didn't change
+        }
+      );
+      
+      expect(component.oldNative).toEqual(component.native);
+      expect(component.message).toBe('更新成功');
+      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isSaving).toBeFalse();
+    }));
+
+    it('should handle successful update when only lock status is changed in locked state', fakeAsync(() => {
+      // Set up locked record
+      component.native.lock = true;
+      component.oldNative.lock = true;
+      
+      // Change lock status (allowed in locked state)
+      component.native.lock = false;
+      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+
+      (component as any).update();
+      tick();
+
+      expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
+        component.native.id,
+        {
+          name: null,
+          gender: null,
+          birth_year: null,
+          birth_month: null,
+          birth_day: null,
+          birth_hour: null,
+          birth_minute: null,
+          birth_second: null,
+          time_zone_offset: null,
+          is_dst: null,
+          location: null,
+          description: null, // description didn't change
+          lock: false,
+        }
+      );
+      
+      expect(component.oldNative).toEqual(component.native);
+      expect(component.message).toBe('更新成功');
+      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isSaving).toBeFalse();
+    }));
   });
 });

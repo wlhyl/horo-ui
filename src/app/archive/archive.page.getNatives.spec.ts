@@ -65,6 +65,7 @@ describe('getNatives', () => {
       description: '',
       created_at: '2023-01-01',
       updated_at: null,
+      lock: false,
     },
   ];
 

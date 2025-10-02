@@ -92,6 +92,7 @@ export class EditComponent implements OnInit {
       description: '',
       created_at: '',
       updated_at: '',
+      lock: false,
     };
     this.oldNative = structuredClone(this.native);
   }
@@ -111,6 +112,12 @@ export class EditComponent implements OnInit {
   get title(): string {
     return this.native.id === 0 ? '新增' : '编辑';
   }
+
+  // 检查是否锁定，锁定状态下只能修改lock和description字段
+  get isLocked(): boolean {
+    return this.oldNative.lock;
+  }
+
   get dateTime(): string {
     return `${this.native.birth_year}-${this.native.birth_month
       .toString()
@@ -126,6 +133,7 @@ export class EditComponent implements OnInit {
   }
 
   set dateTime(value: string) {
+    if (this.isLocked) return;
     const [date, time] = value.split('T');
     const [year, month, day] = date.split('-').map(Number);
     const [hour, minute] = time.split(':').map(Number);
@@ -161,38 +169,47 @@ export class EditComponent implements OnInit {
   }
 
   onTimeZoneChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.time_zone_offset = event.detail.value;
   }
 
   onLongitudeDirectionChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.is_east = event.detail.value;
   }
 
   onLongitudeDegreeChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.longitude_degree = event.detail.value;
   }
 
   onLongitudeMinuteChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.longitude_minute = event.detail.value;
   }
 
   onLongitudeSecondChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.longitude_second = event.detail.value;
   }
 
   onLatitudeDirectionChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.is_north = event.detail.value;
   }
 
   onLatitudeDegreeChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.latitude_degree = event.detail.value;
   }
 
   onLatitudeMinuteChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.latitude_minute = event.detail.value;
   }
 
   onLatitudeSecondChange(event: CustomEvent) {
+    if (this.isLocked) return;
     this.native.location.latitude_second = event.detail.value;
   }
 
@@ -215,6 +232,7 @@ export class EditComponent implements OnInit {
   }
 
   set long(value: number) {
+    if (this.isLocked) return;
     this.native.location.is_east = value >= 0;
     value = Math.abs(value);
     this.native.location.longitude_degree = Math.floor(value);
@@ -227,6 +245,7 @@ export class EditComponent implements OnInit {
   }
 
   set lat(value: number) {
+    if (this.isLocked) return;
     this.native.location.is_north = value >= 0;
     value = Math.abs(value);
     this.native.location.latitude_degree = Math.floor(value);
@@ -305,52 +324,81 @@ export class EditComponent implements OnInit {
 
   private update() {
     this.isSaving = true;
-    const requestData: UpdateHoroscopeRecordRequest = {
-      name: this.native.name === this.oldNative.name ? null : this.native.name,
-      gender:
-        this.native.gender === this.oldNative.gender
+
+    // 锁定状态下只能修改lock和description字段
+    let requestData: UpdateHoroscopeRecordRequest;
+
+    if (this.isLocked) {
+      requestData = {
+        name: null,
+        gender: null,
+        birth_year: null,
+        birth_month: null,
+        birth_day: null,
+        birth_hour: null,
+        birth_minute: null,
+        birth_second: null,
+        time_zone_offset: null,
+        is_dst: null,
+        location: null,
+        description:
+          this.native.description === this.oldNative.description
+            ? null
+            : this.native.description,
+        lock:
+          this.native.lock === this.oldNative.lock ? null : this.native.lock,
+      };
+    } else {
+      requestData = {
+        name:
+          this.native.name === this.oldNative.name ? null : this.native.name,
+        gender:
+          this.native.gender === this.oldNative.gender
+            ? null
+            : this.native.gender,
+        birth_year:
+          this.native.birth_year === this.oldNative.birth_year
+            ? null
+            : this.native.birth_year,
+        birth_month:
+          this.native.birth_month === this.oldNative.birth_month
+            ? null
+            : this.native.birth_month,
+        birth_day:
+          this.native.birth_day === this.oldNative.birth_day
+            ? null
+            : this.native.birth_day,
+        birth_hour:
+          this.native.birth_hour === this.oldNative.birth_hour
+            ? null
+            : this.native.birth_hour,
+        birth_minute:
+          this.native.birth_minute === this.oldNative.birth_minute
+            ? null
+            : this.native.birth_minute,
+        birth_second:
+          this.native.birth_second === this.oldNative.birth_second
+            ? null
+            : this.native.birth_second,
+        time_zone_offset:
+          this.native.time_zone_offset === this.oldNative.time_zone_offset
+            ? null
+            : this.native.time_zone_offset,
+        is_dst:
+          this.native.is_dst === this.oldNative.is_dst
+            ? null
+            : this.native.is_dst,
+        location: isLocationEqual(this.native.location, this.oldNative.location)
           ? null
-          : this.native.gender,
-      birth_year:
-        this.native.birth_year === this.oldNative.birth_year
-          ? null
-          : this.native.birth_year,
-      birth_month:
-        this.native.birth_month === this.oldNative.birth_month
-          ? null
-          : this.native.birth_month,
-      birth_day:
-        this.native.birth_day === this.oldNative.birth_day
-          ? null
-          : this.native.birth_day,
-      birth_hour:
-        this.native.birth_hour === this.oldNative.birth_hour
-          ? null
-          : this.native.birth_hour,
-      birth_minute:
-        this.native.birth_minute === this.oldNative.birth_minute
-          ? null
-          : this.native.birth_minute,
-      birth_second:
-        this.native.birth_second === this.oldNative.birth_second
-          ? null
-          : this.native.birth_second,
-      time_zone_offset:
-        this.native.time_zone_offset === this.oldNative.time_zone_offset
-          ? null
-          : this.native.time_zone_offset,
-      is_dst:
-        this.native.is_dst === this.oldNative.is_dst
-          ? null
-          : this.native.is_dst,
-      location: isLocationEqual(this.native.location, this.oldNative.location)
-        ? null
-        : this.native.location,
-      description:
-        this.native.description === this.oldNative.description
-          ? null
-          : this.native.description,
-    };
+          : this.native.location,
+        description:
+          this.native.description === this.oldNative.description
+            ? null
+            : this.native.description,
+        lock:
+          this.native.lock === this.oldNative.lock ? null : this.native.lock,
+      };
+    }
 
     // 如果 requestData 的所有字段都null，不用更新
     if (Object.values(requestData).every((value) => value === null)) {
@@ -360,7 +408,7 @@ export class EditComponent implements OnInit {
       return;
     }
 
-    if (requestData.location) {
+    if (requestData.location && !this.isLocked) {
       if (Math.abs(this.long) > 180) {
         this.message = '经度范围为-180~180';
         this.isAlertOpen = true;
@@ -377,7 +425,7 @@ export class EditComponent implements OnInit {
     }
 
     // min = 1, max = 30
-    if (requestData.name !== null) {
+    if (requestData.name !== null && !this.isLocked) {
       if (requestData.name.length < 1 || requestData.name.length > 30) {
         this.message = '姓名长度为1-30个字符';
         this.isAlertOpen = true;

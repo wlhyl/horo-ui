@@ -18,13 +18,25 @@
   </ion-header>
 
   <ion-content>
+    <!-- 锁定开关 -->
     <ion-item>
+      <ion-label>锁定记录</ion-label>
+      <ion-toggle [(ngModel)]="native.lock" name="lock" slot="end"></ion-toggle>
+    </ion-item>
+
+    @if (isLocked) {
+    <ion-item>
+      <ion-label color="warning">记录已锁定，只能修改描述和锁定状态</ion-label>
+    </ion-item>
+    }
+
+    <ion-item [disabled]="isLocked">
       <ion-label style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">姓名</ion-label>
       <ion-input [(ngModel)]="native.name" name="name" maxlength="30" required
         style="flex: 1; text-align: right;"></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item [disabled]="isLocked">
       <ion-label>性别</ion-label>
       <ion-radio-group [(ngModel)]="native.gender" name="sex" style="display: flex; justify-content: space-around;">
         <ion-item lines="none" style="flex: 1;">
@@ -38,12 +50,12 @@
       </ion-radio-group>
     </ion-item>
 
-    <ion-item (click)="showDateTimePicker = !showDateTimePicker">
+    <ion-item (click)="showDateTimePicker = !showDateTimePicker" [disabled]="isLocked">
       <ion-label>日期和时间</ion-label>
       <ion-text>{{ formattedDateTime }}</ion-text>
     </ion-item>
 
-    @if (showDateTimePicker) {
+    @if (showDateTimePicker && !isLocked) {
     <ion-item style="display: flex; align-items: end;">
       <ion-label position="floating"
         style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">选择日期和时间</ion-label>
@@ -52,19 +64,19 @@
     </ion-item>
     }
 
-    @if (showDateTimePicker) {
+    @if (showDateTimePicker && !isLocked) {
     <ion-item>
       <ion-input type="number" label="秒" [(ngModel)]="native.birth_second" name="second" min="0" max="59" required
         (ionBlur)="validateSecond()" style="text-align: right;"></ion-input>
     </ion-item>
     }
 
-    <ion-item (click)="showTimeZonePicker = !showTimeZonePicker">
+    <ion-item (click)="showTimeZonePicker = !showTimeZonePicker" [disabled]="isLocked">
       <ion-label>时区</ion-label>
       <ion-text>{{ formattedTimeZone }}</ion-text>
     </ion-item>
 
-    @if (showTimeZonePicker) {
+    @if (showTimeZonePicker && !isLocked) {
     <ion-picker>
       <ion-picker-column (ionChange)="onTimeZoneChange($event)" [value]="native.time_zone_offset">
         @for (option of timeZoneOptions; track option) {
@@ -74,12 +86,12 @@
     </ion-picker>
     }
 
-    <ion-item>
+    <ion-item [disabled]="isLocked">
       <ion-label>夏令时</ion-label>
       <ion-toggle [(ngModel)]="native.is_dst" name="st" slot="end"></ion-toggle>
     </ion-item>
 
-    <ion-item>
+    <ion-item [disabled]="isLocked">
       <ion-label style="flex: 0 0 auto; margin-right: 10px; white-space: nowrap;">城市</ion-label>
       <horo-map style="flex: 1; margin-right: 1rem;" [(localName)]="native.location.name" [(long)]="long"
         [(lat)]="lat"></horo-map>
@@ -87,12 +99,12 @@
         style="flex: 1; text-align: right;"></ion-input>
     </ion-item>
 
-    <ion-item (click)="showLongitudeInput = !showLongitudeInput">
+    <ion-item (click)="showLongitudeInput = !showLongitudeInput" [disabled]="isLocked">
       <ion-label>经度</ion-label>
       <ion-text>{{ formattedLongitude }}</ion-text>
     </ion-item>
 
-    @if (showLongitudeInput) {
+    @if (showLongitudeInput && !isLocked) {
     <ion-picker>
       <ion-picker-column (ionChange)="onLongitudeDirectionChange($event)" [value]="native.location.is_east">
         @for (option of longitudeDirections; track option) {
@@ -117,12 +129,12 @@
     </ion-picker>
     }
 
-    <ion-item (click)="showLatitudeInput = !showLatitudeInput">
+    <ion-item (click)="showLatitudeInput = !showLatitudeInput" [disabled]="isLocked">
       <ion-label>纬度</ion-label>
       <ion-text>{{ formattedLatitude }}</ion-text>
     </ion-item>
 
-    @if (showLatitudeInput) {
+    @if (showLatitudeInput && !isLocked) {
     <ion-picker>
       <ion-picker-column (ionChange)="onLatitudeDirectionChange($event)" [value]="native.location.is_north">
         @for (option of latitudeDirections; track option) {
