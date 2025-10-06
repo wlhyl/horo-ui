@@ -5,6 +5,7 @@ import { NativePage } from './native.page';
 import { ImageComponent } from './image/image.component';
 import { DetailComponent } from './detail/detail.component';
 import { NoteComponent } from './note/note.component';
+import { KnowledgeComponent } from './knowledge/knowledge.component';
 import { Path } from './enum';
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: Path.Image, component: ImageComponent },
   { path: Path.Image + '/' + Path.Detail, component: DetailComponent },
   { path: Path.Image + '/' + Path.Note, component: NoteComponent },
+  { path: Path.Knowledge, component: KnowledgeComponent },
 ];
 
 @NgModule({

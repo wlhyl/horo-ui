@@ -4,6 +4,7 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { Path } from '../type/enum/path';
+import { Path as subPath } from './enum';
 import { HoroRequest } from '../type/interface/request-data';
 import { ViewWillEnter } from '@ionic/angular';
 
@@ -38,6 +39,7 @@ export class NativePage implements OnInit, ViewWillEnter {
   };
 
   path = Path;
+  subPath = subPath;
   title = '本命星盘';
 
   constructor(

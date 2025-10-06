@@ -11,6 +11,7 @@ import { NativePage } from './native.page';
 import { ImageComponent } from './image/image.component';
 import { DetailComponent } from './detail/detail.component';
 import { NoteComponent } from './note/note.component';
+import { KnowledgeComponent } from './knowledge/knowledge.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,12 @@ import { NoteComponent } from './note/note.component';
     NativePageRoutingModule,
     HoroCommonModule,
   ],
-  declarations: [NativePage, ImageComponent, DetailComponent, NoteComponent],
+  declarations: [
+    NativePage,
+    ImageComponent,
+    DetailComponent,
+    NoteComponent,
+    KnowledgeComponent,
+  ],
 })
 export class NativePageModule {}

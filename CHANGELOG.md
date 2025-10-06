@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- 为 src/app/native 添加星座知识组件
+
 ### Planned
 
 - 推运计划增加次限、三限

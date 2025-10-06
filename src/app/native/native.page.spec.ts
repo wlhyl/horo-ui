@@ -17,6 +17,7 @@ import { MapComponent } from '../horo-common/geo/map.component';
 import { GeoComponent } from '../horo-common/geo/geo.component';
 import { DateTimeComponent } from '../horo-common/date-time/date-time.component';
 import { Path } from '../type/enum/path';
+import { Path as subPath } from './enum';
 import { Horoconfig } from '../services/config/horo-config.service';
 
 describe('NativePage', () => {
@@ -68,11 +69,11 @@ describe('NativePage', () => {
     });
 
     titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj('Router', [
-      'navigate',
-      'createUrlTree',
-      'serializeUrl',
-    ]);
+    routerSpy = jasmine.createSpyObj(
+      'Router',
+      ['navigate', 'createUrlTree', 'serializeUrl'],
+      { events: of() } // 用于防止routerlink报错
+    );
     configServiceSpy = jasmine.createSpyObj('Horoconfig', [''], {
       houses: mockHouses,
     });
@@ -182,6 +183,10 @@ describe('NativePage', () => {
 
   it('should have correct path property', () => {
     expect(component.path).toBe(Path);
+  });
+
+  it('should have correct subPath property', () => {
+    expect(component.subPath).toBe(subPath);
   });
 
   it('should have correct houses property', () => {

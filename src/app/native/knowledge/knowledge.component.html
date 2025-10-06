@@ -1,0 +1,155 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>星座知识</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">星座知识</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ion-padding">
+
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>星座分类</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">命令星座 <span class="category-symbols">♈ ♉ ♋ ♌ ♍</span></span>
+          </div>
+          <p class="category-description">太阳在北纬，代表主导、支配、阳性、外显、行动</p>
+        </div>
+
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">服从星座 <span class="category-symbols">♎ ♏ ♐ ♑ ♒ ♓</span></span>
+          </div>
+          <p class="category-description">太阳在南纬，代表顺应、接受、阴性、内向、感受</p>
+        </div>
+
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">长上升星座 <span class="category-symbols">♋ ♌ ♍ ♏ ♐</span></span>
+          </div>
+          <p class="category-description">慢、稳、持久、耐性强、事件发展较长</p>
+        </div>
+
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">短上升星座 <span class="category-symbols">♑ ♒ ♓ ♈ ♉ ♊</span></span>
+          </div>
+          <p class="category-description">快速、急促、短暂、变化快</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>四元素分类</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">火象星座 <span class="category-symbols">♈ ♌ ♐</span></span>
+          </div>
+          <p class="category-description">阳性（主动、外向），热情、冲动、主动、创意</p>
+        </div>
+
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">土象星座 <span class="category-symbols">♉ ♍ ♑</span></span>
+          </div>
+          <p class="category-description">阴性（被动、内向），稳定、现实、务实、耐心</p>
+        </div>
+
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">风象星座 <span class="category-symbols">♊ ♎ ♒</span></span>
+          </div>
+          <p class="category-description">阳性（主动），交流、思考、社交、理性</p>
+        </div>
+
+        <div class="category-item">
+          <div class="category-header">
+            <span class="category-title">水象星座 <span class="category-symbols">♋ ♏ ♓</span></span>
+          </div>
+          <p class="category-description">阴性（被动），情感、直觉、敏感、内省</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>行星与身高判断</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="table-container">
+          <table class="height-table">
+            <tbody>
+              <tr>
+                <td rowspan="2">土星</td>
+                <td>东方的</td>
+                <td rowspan="2">预示</td>
+                <td>中等身材，但略趋于矮小</td>
+              </tr>
+              <tr>
+                <td>西方的</td>
+                <td>身材矮小</td>
+              </tr>
+              <tr>
+                <td rowspan="2">木星</td>
+                <td>东方的</td>
+                <td rowspan="2">显示</td>
+                <td>身材高大、体态魁伟</td>
+              </tr>
+              <tr>
+                <td>西方的</td>
+                <td>中等身材，但略显高挑</td>
+              </tr>
+              <tr>
+                <td rowspan="2">火星</td>
+                <td>东方的</td>
+                <td rowspan="2">导致</td>
+                <td>高大身材</td>
+              </tr>
+              <tr>
+                <td>西方的</td>
+                <td>身高中等，但较偏向高而非矮</td>
+              </tr>
+              <tr>
+                <td rowspan="2">金星</td>
+                <td>东方的</td>
+                <td rowspan="2">表示</td>
+                <td>身材较高且瘦长</td>
+              </tr>
+              <tr>
+                <td>西方的</td>
+                <td>身材较矮，略显短小</td>
+              </tr>
+              <tr>
+                <td rowspan="2">水星</td>
+                <td>东方的</td>
+                <td rowspan="2">显露</td>
+                <td>身高中等，但略偏向高挑</td>
+              </tr>
+              <tr>
+                <td>西方的</td>
+                <td>身材矮小，或仅属中等偏高</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>

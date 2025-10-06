@@ -4,6 +4,11 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['./', subPath.Knowledge]">
+        <ion-icon name="book-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -43,9 +48,9 @@
         <ion-label>出生时间：</ion-label>
       </ion-col>
       <ion-col size="7">
-        <horo-date-time id="horo-birth-date" [(year)]="horoData.date.year" [(month)]="horoData.date.month" [(day)]="horoData.date.day"
-          [(hour)]="horoData.date.hour" [(minute)]="horoData.date.minute"
-        [(second)]="horoData.date.second"></horo-date-time>
+        <horo-date-time id="horo-birth-date" [(year)]="horoData.date.year" [(month)]="horoData.date.month"
+          [(day)]="horoData.date.day" [(hour)]="horoData.date.hour" [(minute)]="horoData.date.minute"
+          [(second)]="horoData.date.second"></horo-date-time>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -75,10 +80,10 @@
     </ion-col>
     <ion-col>
       <horo-map id="horo-map" style="margin-right: 1rem;" [(localName)]="horoData.geo_name" [(long)]="horoData.geo.long"
-      [(lat)]="horoData.geo.lat"></horo-map>
+        [(lat)]="horoData.geo.lat"></horo-map>
 
       <horo-geo id="horo-geo" [(geoLocalName)]="horoData.geo_name" [(geoLong)]="horoData.geo.long"
-      [(geoLat)]="horoData.geo.lat"></horo-geo>
+        [(geoLat)]="horoData.geo.lat"></horo-geo>
     </ion-col>
   </ion-row>
 
@@ -89,7 +94,7 @@
     <ion-col size="7">
       <ion-select id="horo-house" label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="horoData.house">
         @for (house of houses; track house) {
-          <ion-select-option [value]="house">{{house}}</ion-select-option>
+        <ion-select-option [value]="house">{{house}}</ion-select-option>
         }
       </ion-select>
     </ion-col>
