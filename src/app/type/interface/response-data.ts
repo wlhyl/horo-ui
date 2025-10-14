@@ -63,6 +63,9 @@ export interface Horoscope {
   dsc: Planet;
   ic: Planet;
   planets: Array<Planet>;
+  // 福点
+  part_of_fortune: Planet;
+
   is_diurnal: boolean;
   planetary_day: PlanetName;
   planetary_hours: PlanetName;
@@ -119,6 +122,9 @@ export interface HoroscopeComparison {
   // 天底
   original_ic: Planet;
   comparison_ic: Planet;
+  // 福点
+  original_part_of_fortune: Planet;
+  comparison_part_of_fortune: Planet;
 
   // 七颗行星
   original_planets: Array<Planet>;
@@ -163,6 +169,8 @@ export interface ReturnHoroscope {
 
   // 七颗行星
   planets: Array<Planet>;
+  // 福点
+  part_of_fortune: Planet;
 
   // 行星相位，仅包含四轴、行星间的相位
   aspects: Array<Aspect>;

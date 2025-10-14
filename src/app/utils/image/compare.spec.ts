@@ -126,6 +126,8 @@ const mockComparisonData: HoroscopeComparison = {
   comparison_ic: { ...mockPlanet, name: PlanetName.IC, long: 105 },
   original_planets: [{ ...mockPlanet, name: PlanetName.Sun, long: 15 }],
   comparison_planets: [{ ...mockPlanet, name: PlanetName.Mars, long: 45 }],
+  original_part_of_fortune: { ...mockPlanet, name: PlanetName.PartOfFortune, long: 25 },
+  comparison_part_of_fortune: { ...mockPlanet, name: PlanetName.PartOfFortune, long: 35 },
   aspects: [
     {
       p0: PlanetName.Sun,

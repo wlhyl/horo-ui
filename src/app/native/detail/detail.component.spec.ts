@@ -51,6 +51,7 @@ describe('DetailComponent', () => {
     mc: mockPlanet,
     dsc: mockPlanet,
     ic: mockPlanet,
+    part_of_fortune: mockPlanet,
     planets: [mockPlanet],
     is_diurnal: true,
     planetary_day: PlanetName.Sun,
@@ -60,13 +61,13 @@ describe('DetailComponent', () => {
     contraantiscias: [],
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
     titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
     horoConfigSpy = jasmine.createSpyObj('Horoconfig', ['']);
     const navControllerSpy = jasmine.createSpyObj('NavController', ['']);
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [TestDetailModule, IonicModule.forRoot()],
       providers: [
         { provide: Router, useValue: routerSpy },
@@ -75,7 +76,7 @@ describe('DetailComponent', () => {
         { provide: NavController, useValue: navControllerSpy },
       ],
     }).compileComponents();
-  }));
+  });
 
   it('should create the component and set the title', () => {
     routerSpy.currentNavigation.and.returnValue(null);

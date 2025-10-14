@@ -53,6 +53,7 @@ const mockReturnData: ReturnHoroscope = {
   mc: mockPlanet,
   dsc: mockPlanet,
   ic: mockPlanet,
+  part_of_fortune: mockPlanet,
   planets: [mockPlanet],
   aspects: [],
   antiscoins: [],

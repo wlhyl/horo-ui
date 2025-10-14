@@ -31,6 +31,7 @@ describe('HoroconfigService', () => {
       PlanetName.MC,
       PlanetName.DSC,
       PlanetName.IC,
+      PlanetName.PartOfFortune,
     ];
     expect(service.horoPlanets).toEqual(horoPlanets);
   });
@@ -60,6 +61,7 @@ describe('HoroconfigService', () => {
       { planet: PlanetName.MC, string: 'MC' },
       { planet: PlanetName.DSC, string: 'DSC' },
       { planet: PlanetName.IC, string: 'IC' },
+      { planet: PlanetName.PartOfFortune, string: '<' },
     ];
     for (let planetString of planetStrings) {
       expect(service.planetFontString(planetString.planet)).toEqual(
@@ -102,6 +104,7 @@ describe('HoroconfigService', () => {
       PlanetName.Saturn,
       PlanetName.NorthNode,
       PlanetName.SouthNode,
+      PlanetName.PartOfFortune,
     ];
 
     for (let planet of planets) {

@@ -632,7 +632,7 @@ export function drawHorosco(
     r1,
   });
   const planetElements = calculatePlanetElements(
-    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic],
+    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic, horosco.part_of_fortune],
     horosco.houses_cups[0],
     config,
     { cx, cy, r: r1 }
@@ -671,7 +671,7 @@ export function drawReturnHorosco(
     r1,
   });
   const planetElements = calculatePlanetElements(
-    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic],
+    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic, horosco.part_of_fortune],
     horosco.houses_cups[0],
     config,
     { cx, cy, r: r1 }

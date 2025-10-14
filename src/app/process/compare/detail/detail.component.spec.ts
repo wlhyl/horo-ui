@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DetailComponent } from './detail.component';
-import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import {
   HoroscopeComparison,
   Planet,
@@ -54,6 +53,8 @@ const mockCompareData: HoroscopeComparison = {
   comparison_ic: mockPlanet,
   original_planets: [mockPlanet],
   comparison_planets: [mockPlanet],
+  original_part_of_fortune: mockPlanet,
+  comparison_part_of_fortune: mockPlanet,
   aspects: [],
   antiscoins: [],
   contraantiscias: [],

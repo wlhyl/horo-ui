@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - 为 src/app/native 添加星座知识组件
+- 新增“福点”
 
 ### Planned
 

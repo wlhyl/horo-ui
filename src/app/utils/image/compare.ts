@@ -510,6 +510,7 @@ export function drawHorosco(
     horosco.comparison_mc,
     horosco.comparison_dsc,
     horosco.comparison_ic,
+    horosco.comparison_part_of_fortune,
   ];
   const comparisonPlanetElements = calculatePlanets(
     comparisonPlanets,
@@ -535,6 +536,7 @@ export function drawHorosco(
     horosco.original_mc,
     horosco.original_dsc,
     horosco.original_ic,
+    horosco.original_part_of_fortune,
   ];
   const nativePlanetElements = calculatePlanets(
     originalPlanets,

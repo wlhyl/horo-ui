@@ -15,6 +15,7 @@ export enum PlanetName {
   Saturn = 'Saturn',
   NorthNode = 'NorthNode',
   SouthNode = 'SouthNode',
+  PartOfFortune = 'PartOfFortune',
 }
 
 export enum PlanetSpeedState {

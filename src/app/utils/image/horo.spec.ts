@@ -158,6 +158,7 @@ describe('Horo Image Calculation Functions', () => {
       mc: { ...mockPlanet, name: PlanetName.MC, long: 270 },
       dsc: { ...mockPlanet, name: PlanetName.DSC, long: 180 },
       ic: { ...mockPlanet, name: PlanetName.IC, long: 90 },
+      part_of_fortune: { ...mockPlanet, name: PlanetName.PartOfFortune, long: 25 },
       date: {
         year: 2024,
         month: 7,

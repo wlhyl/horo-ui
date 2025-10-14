@@ -26,6 +26,7 @@ export class Horoconfig {
     PlanetName.MC,
     PlanetName.DSC,
     PlanetName.IC,
+    PlanetName.PartOfFortune,
   ];
 
   /**
@@ -57,6 +58,7 @@ export class Horoconfig {
       [PlanetName.MC, 'MC'],
       [PlanetName.DSC, 'DSC'],
       [PlanetName.IC, 'IC'],
+      [PlanetName.PartOfFortune, '<'],
     ]);
     if (planetString.has(planet)) {
       return planetString.get(planet) as string;

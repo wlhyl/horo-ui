@@ -76,6 +76,10 @@ export const mockHoroscopeData: Horoscope = {
     ...mockPlanet,
     name: PlanetName.IC,
   },
+  part_of_fortune: {
+    ...mockPlanet,
+    name: PlanetName.PartOfFortune,
+  },
   planets: [
     {
       name: PlanetName.Sun,
