@@ -4,14 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
-
-- 为 src/app/native 添加星座知识组件
-- 新增“福点”
-
 ### Planned
 
 - 推运计划增加次限、三限
+
+## [0.5.0] - 2025-10-08
+
+### Added
+
+- 为 src/app/native 添加星座知识组件
+- 新增"福点"
 
 ## [0.4.0] - 2025-10-08
 
