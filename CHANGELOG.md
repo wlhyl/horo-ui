@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.6.0] - 2025-10-16
+
+### Changed
+
+- 根据 Lily《基督教占星学》修订托勒密界度数分配
+
 ## [0.5.0] - 2025-10-08
 
 ### Added

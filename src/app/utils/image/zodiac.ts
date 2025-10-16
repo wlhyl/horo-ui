@@ -236,7 +236,11 @@ export function ptolemyTerm(z: Zodiac) {
     case Zodiac.Taurus:
       return [{p:PlanetName.Venus,d:8}, {p:PlanetName.Mercury,d:15}, {p:PlanetName.Jupiter,d:22}, {p:PlanetName.Saturn,d:26}, {p:PlanetName.Mars,d:30}];
     case Zodiac.Gemini:
-      return [{p:PlanetName.Mercury,d:7}, {p:PlanetName.Jupiter,d:14}, {p:PlanetName.Venus,d:21}, {p:PlanetName.Saturn,d:25}, {p:PlanetName.Mars,d:30}];
+      // 根据《基督教占星学》影印本，双子座托勒密界：
+      // 15,16,17,18,19,20度是金星的界
+      // 21度可能是土星的界（因1与2相近，误将21抄写成了22）
+      // 22,23,24,25度是土星的界
+      return [{p:PlanetName.Mercury,d:7}, {p:PlanetName.Jupiter,d:14}, {p:PlanetName.Venus,d:20}, {p:PlanetName.Saturn,d:25}, {p:PlanetName.Mars,d:30}];
     case Zodiac.Cancer:
       return [{p:PlanetName.Mars,d:6}, {p:PlanetName.Jupiter,d:13}, {p:PlanetName.Mercury,d:20}, {p:PlanetName.Venus,d:27}, {p:PlanetName.Saturn,d:30}]
     case Zodiac.Leo:
@@ -248,7 +252,7 @@ export function ptolemyTerm(z: Zodiac) {
     case Zodiac.Scorpio:
       return [{p:PlanetName.Mars,d:6}, {p:PlanetName.Jupiter,d:14}, {p:PlanetName.Venus,d:21}, {p:PlanetName.Mercury,d:27}, {p:PlanetName.Saturn,d:30}]
     case Zodiac.Sagittarius:
-      return [{p:PlanetName.Jupiter,d:8}, {p:PlanetName.Venus,d:14}, {p:PlanetName.Mercury,d:19}, {p:PlanetName.Saturn,d:25}, {p:PlanetName.Mars,d:30}]
+      return [{p:PlanetName.Jupiter,d:8}, {p:PlanetName.Venus,d:14}, {p:PlanetName.Mercury,d:20}, {p:PlanetName.Saturn,d:25}, {p:PlanetName.Mars,d:30}]
     case Zodiac.Capricorn:
       return [{p:PlanetName.Venus,d:6}, {p:PlanetName.Mercury,d:12}, {p:PlanetName.Jupiter,d:19}, {p:PlanetName.Mars,d:25}, {p:PlanetName.Saturn,d:30}]
     case Zodiac.Aquarius:
