@@ -151,5 +151,74 @@
       </ion-card-content>
     </ion-card>
 
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>视力点（Part of Vision）</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>视力点用于判断"视力"，根据ChartGPT，古代占星中没有“视力点”这一阿拉伯点。</p>
+        <p><strong>设计原理：</strong> 根据七政四余理论，白天太阳怕罗睺，因此太阳视力点需要避开火星的影响；夜晚月亮怕土星、计都，因此月亮视力点需要避开土星的影响。</p>
+
+        <div class="vision-formula">
+          <h4>视力点(太阳)</h4>
+          <p><strong>计算公式：</strong> ASC + 太阳黄道经度 - 火星黄道经度</p>
+        </div>
+
+        <div class="vision-formula">
+          <h4>视力点(月亮)</h4>
+          <p><strong>计算公式：</strong> ASC + 月亮黄道经度 - 土星黄道经度</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>行星相位容许度</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="table-container">
+          <table class="aspect-table">
+            <thead>
+              <tr>
+                <th>行星</th>
+                <th>容许度</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>太阳</td>
+                <td>15°</td>
+              </tr>
+              <tr>
+                <td>月亮</td>
+                <td>12°</td>
+              </tr>
+              <tr>
+                <td>水星</td>
+                <td>7°</td>
+              </tr>
+              <tr>
+                <td>金星</td>
+                <td>7°</td>
+              </tr>
+              <tr>
+                <td>火星</td>
+                <td>8°</td>
+              </tr>
+              <tr>
+                <td>木星</td>
+                <td>9°</td>
+              </tr>
+              <tr>
+                <td>土星</td>
+                <td>9°</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="aspect-note">注：行星相位容许度是指行星之间形成有效相位时允许的最大角度偏差。</p>
+      </ion-card-content>
+    </ion-card>
+
   </div>
 </ion-content>
