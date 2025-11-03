@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Planned
 
 - 推运计划增加次限、三限
+
+## [0.7.0] - 2025-11-3
+
+### Added
+
 - 新增"视力点"
 
 ## [0.6.0] - 2025-10-16
