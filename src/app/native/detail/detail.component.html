@@ -8,86 +8,151 @@
 </ion-header>
 
 @if (horoscopeData) {
-  <ion-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>映点</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                @for (item of horoscopeData.antiscoins; track item) {
-                  <ion-item>
-                    <ion-label>
-                      <span [ngStyle]="{'font-family': config.planetFontFamily(item.p0)}">
-                        {{ config.planetFontString(item.p0) }}
-                      </span>
-                      与
-                      <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
-                        {{ config.planetFontString(item.p1) }}
-                      </span>，
-                      @for (d of [degreeToDMSFn(item.d)]; track d) {
-                        <span>
-                          {{ d.d }}度{{ d.m }}分{{ d.s }}秒
-                        </span>
-                      }
-                    </ion-label>
-                  </ion-item>
-                }
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>反映点</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list>
-                @for (item of horoscopeData.contraantiscias; track item) {
-                  <ion-item>
-                    <ion-label>
-                      <span [ngStyle]="{'font-family': config.planetFontFamily(item.p0)}">
-                        {{ config.planetFontString(item.p0) }}
-                      </span>
-                      与
-                      <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
-                        {{ config.planetFontString(item.p1) }}
-                      </span>，
-                      @for (d of [degreeToDMSFn(item.d)]; track d) {
-                        <span>
-                          {{ d.d }}度{{ d.m }}分{{ d.s }}秒
-                        </span>
-                      }
-                    </ion-label>
-                  </ion-item>
-                }
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>映点</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              @for (item of horoscopeData.antiscoins; track item) {
+              <ion-item>
+                <ion-label>
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p0)}">
+                    {{ config.planetFontString(item.p0) }}
+                  </span>
+                  与
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
+                    {{ config.planetFontString(item.p1) }}
+                  </span>，
+                  @for (d of [degreeToDMSFn(item.d)]; track d) {
+                  <span>
+                    {{ d.d }}度{{ d.m }}分{{ d.s }}秒
+                  </span>
+                  }
+                </ion-label>
+              </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>反映点</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              @for (item of horoscopeData.contraantiscias; track item) {
+              <ion-item>
+                <ion-label>
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p0)}">
+                    {{ config.planetFontString(item.p0) }}
+                  </span>
+                  与
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
+                    {{ config.planetFontString(item.p1) }}
+                  </span>，
+                  @for (d of [degreeToDMSFn(item.d)]; track d) {
+                  <span>
+                    {{ d.d }}度{{ d.m }}分{{ d.s }}秒
+                  </span>
+                  }
+                </ion-label>
+              </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>视力点</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>
+                  视力点( <span [ngStyle]="{'font-family': config.planetFontFamily(planetName.Sun)}">
+                    {{ config.planetFontString(planetName.Sun) }}
+                  </span>)：
+                  @if (partOfSolarVision) {
+                  @for (signLong of [zodiacLong(partOfSolarVision)]; track signLong) {
+                  @for( d of [degreeToDMSFn(signLong.long)]; track d){
+                  <span>
+                    {{ d.d }}°
+                  </span>
+                  <span [ngStyle]="{'font-family': config.zodiacFontFamily()}">
+                    {{ config.zodiacFontString(signLong.zodiac) }}
+                  </span>
+                  <span>
+                    {{ d.m }}'{{d.s}}
+                  </span>
+                  }
+                  }
+                  } @else {
+                  <span style="color: #ff6b6b;">计算错误：缺少必要行星数据</span>
+                  }
+                  <br>
+                  <small>计算公式：ASC + 太阳黄道经度 - 火星黄道经度</small>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label>
+                  视力点( <span [ngStyle]="{'font-family': config.planetFontFamily(planetName.Moon)}">
+                    {{ config.planetFontString(planetName.Moon) }}
+                  </span>)：
+                  @if (partOfLunarVision) {
+                  @for (signLong of [zodiacLong(partOfLunarVision)]; track signLong) {
+                  @for( d of [degreeToDMSFn(signLong.long)]; track d){
+                  <span>
+                    {{ d.d }}°
+                  </span>
+                  <span [ngStyle]="{'font-family': config.zodiacFontFamily()}">
+                    {{ config.zodiacFontString(signLong.zodiac) }}
+                  </span>
+                  <span>
+                    {{ d.m }}'{{d.s}}
+                  </span>
+                  }
+                  }
+                  } @else {
+                  <span style="color: #ff6b6b;">计算错误：缺少必要行星数据</span>
+                  }
+                  <br>
+                  <small>计算公式：ASC + 月亮黄道经度 - 土星黄道经度</small>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
 }
 
 @if (!horoscopeData) {
-  <ion-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-card>
-            <ion-card-content>
-              <p>没有可显示的数据。</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <p>没有可显示的数据。</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
 }
