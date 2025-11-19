@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.7.1] - 2025-11-19
+
+### Changed
+
+- 根据 Lily《基督教占星学》双子座 21 度托勒密界改回金星
+
 ## [0.7.0] - 2025-11-3
 
 ### Added
