@@ -6,9 +6,10 @@ import {
 import { Horoscope, Planet } from 'src/app/type/interface/response-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
+import { createMockDateRequest, createMockGeoRequest, createMockHoroRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 // Mock Data
-const mockDate: DateRequest = {
+const mockDate: DateRequest = createMockDateRequest({
   year: 2000,
   month: 1,
   day: 1,
@@ -17,14 +18,14 @@ const mockDate: DateRequest = {
   second: 0,
   tz: 8,
   st: false,
-};
+});
 
-export const mockGeo: GeoRequest = {
+export const mockGeo: GeoRequest = createMockGeoRequest({
   long: 121.47,
   lat: 31.23,
-};
+});
 
-export const mockHoroData: DeepReadonly<HoroRequest> = {
+export const mockHoroData: DeepReadonly<HoroRequest> = createMockHoroRequest({
   id: 1,
   name: 'Test',
   sex: true,
@@ -32,9 +33,9 @@ export const mockHoroData: DeepReadonly<HoroRequest> = {
   geo: mockGeo,
   geo_name: 'Shanghai',
   house: 'Alcabitus',
-};
+}) as DeepReadonly<HoroRequest>;
 
-export const mockCurrentHoroData: HoroRequest = {
+export const mockCurrentHoroData: HoroRequest = createMockHoroRequest({
   id: 1,
   name: 'Test',
   sex: true,
@@ -42,7 +43,7 @@ export const mockCurrentHoroData: HoroRequest = {
   geo: mockGeo,
   geo_name: 'Shanghai',
   house: 'Alcabitus',
-};
+});
 
 const mockPlanet: Planet = {
   name: PlanetName.Sun,

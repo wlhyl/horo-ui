@@ -13,9 +13,10 @@ import {
 } from 'src/app/type/interface/request-data';
 import { Profection } from 'src/app/type/interface/response-data';
 import { ProcessName } from '../enum/process';
+import { createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 // Mock data
-const mockHoroData: DeepReadonly<HoroRequest> = {
+const mockHoroData: DeepReadonly<HoroRequest> = createMockHoroRequest({
   id: 1,
   name: 'Test User',
   sex: true,
@@ -35,9 +36,9 @@ const mockHoroData: DeepReadonly<HoroRequest> = {
     long: 116.4,
     lat: 39.9,
   },
-};
+}) as DeepReadonly<HoroRequest>;
 
-const mockProcessData: DeepReadonly<ProcessRequest> = {
+const mockProcessData: DeepReadonly<ProcessRequest> = createMockProcessRequest({
   process_name: ProcessName.Profection,
   date: {
     year: 2023,
@@ -55,7 +56,7 @@ const mockProcessData: DeepReadonly<ProcessRequest> = {
     lat: 31.2,
   },
   isSolarReturn: false,
-};
+}) as DeepReadonly<ProcessRequest>;
 
 const mockProfectionData: Profection = {
   year_house: 5,

@@ -22,6 +22,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
+import { createMockHoroRequest, createMockProcessRequest } from '../test-utils/test-data-factory.spec';
 
 describe('QizhengPage', () => {
   let component: QizhengPage;
@@ -31,47 +32,9 @@ describe('QizhengPage', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
 
-  const mockHoroData: HoroRequest = {
-    id: 0,
-    date: {
-      year: 2000,
-      month: 1,
-      day: 1,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      tz: 8,
-      st: false,
-    },
-    geo: {
-      long: 120,
-      lat: 30,
-    },
-    name: 'name',
-    sex: true,
-    geo_name: 'city',
-    house: 'Alcabitus',
-  };
+  const mockHoroData: HoroRequest = createMockHoroRequest();
 
-  const mockProcessData: ProcessRequest = {
-    date: {
-      year: 2020,
-      month: 1,
-      day: 1,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      tz: 8,
-      st: false,
-    },
-    geo_name: 'cty',
-    geo: {
-      long: 120,
-      lat: 30,
-    },
-    process_name: ProcessName.Profection,
-    isSolarReturn: false,
-  };
+  const mockProcessData: ProcessRequest = createMockProcessRequest();
 
   mockActivatedRoute = jasmine.createSpyObj('ActivatedRoute', [], {
     snapshot: { dat: 'test' },

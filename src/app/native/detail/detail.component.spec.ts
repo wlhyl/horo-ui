@@ -64,7 +64,12 @@ describe('DetailComponent', () => {
   beforeEach(async () => {
     routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
     titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    horoConfigSpy = jasmine.createSpyObj('Horoconfig', ['']);
+    horoConfigSpy = jasmine.createSpyObj('Horoconfig', ['planetFontFamily', 'planetFontString', 'zodiacFontFamily', 'zodiacFontString']);
+    horoConfigSpy.planetFontFamily.and.returnValue('Arial');
+    horoConfigSpy.planetFontString.and.returnValue('☀️');
+    horoConfigSpy.zodiacFontFamily.and.returnValue('Arial');
+    horoConfigSpy.zodiacFontString.and.returnValue('♈');
+
     const navControllerSpy = jasmine.createSpyObj('NavController', ['']);
 
     await TestBed.configureTestingModule({

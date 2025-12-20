@@ -21,6 +21,7 @@ import {
   IonicModule,
   NavController,
 } from '@ionic/angular';
+import { createMockHoroRequest } from '../test-utils/test-data-factory.spec';
 
 describe('ArchivePage', () => {
   let component: ArchivePage;
@@ -271,7 +272,7 @@ describe('ArchivePage', () => {
   describe('toHoro', () => {
     it('should navigate to horo page with correct data', () => {
       const native = mockHoroscopeRecords[0];
-      const expectedHoroRequest: HoroRequest = {
+      const expectedHoroRequest: HoroRequest = createMockHoroRequest({
         id: 1,
         date: {
           year: 1990,
@@ -291,7 +292,7 @@ describe('ArchivePage', () => {
         house: 'Alcabitus', // Default value from storageServiceSpy
         name: 'Test User',
         sex: true,
-      };
+      });
 
       const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
         storageServiceSpy,
@@ -314,7 +315,7 @@ describe('ArchivePage', () => {
         },
       };
 
-      const expectedHoroRequest: HoroRequest = {
+      const expectedHoroRequest: HoroRequest = createMockHoroRequest({
         id: 1,
         date: {
           year: 1990,
@@ -334,7 +335,7 @@ describe('ArchivePage', () => {
         house: 'Alcabitus', // Default value from storageServiceSpy
         name: 'Test User',
         sex: true,
-      };
+      });
 
       // Spy on the setter for horoData
       const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
@@ -354,7 +355,7 @@ describe('ArchivePage', () => {
         name: '', // Set name to empty string
       };
 
-      const expectedHoroRequest: HoroRequest = {
+      const expectedHoroRequest: HoroRequest = createMockHoroRequest({
         id: 1,
         date: {
           year: 1990,
@@ -374,7 +375,7 @@ describe('ArchivePage', () => {
         house: 'Alcabitus',
         name: '', // Expect empty string
         sex: true,
-      };
+      });
 
       const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
         storageServiceSpy,

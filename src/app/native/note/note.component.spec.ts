@@ -13,6 +13,7 @@ import {
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';
+import { createMockHoroRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 describe('NoteComponent', () => {
   let component: NoteComponent;
@@ -21,7 +22,7 @@ describe('NoteComponent', () => {
   let mockHoroStorageService: { horoData: any };
   let mockTitleService: jasmine.SpyObj<Title>;
 
-  const initialHoroData: HoroRequest = {
+  const initialHoroData: HoroRequest = createMockHoroRequest({
     id: 0,
     name: 'Test User',
     sex: true, // male
@@ -41,7 +42,7 @@ describe('NoteComponent', () => {
     },
     geo_name: 'Test City',
     house: 'Aquarius',
-  };
+  });
 
   beforeEach(async () => {
     mockApiService = jasmine.createSpyObj('ApiService', [

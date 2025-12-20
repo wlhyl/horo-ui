@@ -9,8 +9,9 @@ import {
   ReturnHoroscope,
 } from 'src/app/type/interface/response-data';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
+import { createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
 
-export const mockHoroData: DeepReadonly<HoroRequest> = {
+export const mockHoroData: DeepReadonly<HoroRequest> = createMockHoroRequest({
   id: 1,
   name: 'Test User',
   sex: true,
@@ -30,9 +31,9 @@ export const mockHoroData: DeepReadonly<HoroRequest> = {
     long: 116.4,
     lat: 39.9,
   },
-};
+}) as DeepReadonly<HoroRequest>;
 
-export const mockProcessData: DeepReadonly<ProcessRequest> = {
+export const mockProcessData: DeepReadonly<ProcessRequest> = createMockProcessRequest({
   process_name: ProcessName.Transit,
   date: {
     year: 2023,
@@ -50,7 +51,7 @@ export const mockProcessData: DeepReadonly<ProcessRequest> = {
     lat: 31.2,
   },
   isSolarReturn: false,
-};
+}) as DeepReadonly<ProcessRequest>;
 
 export const mockSolarReturnHoroscopeData: ReturnHoroscope = {
   native_date: { ...mockHoroData.date },

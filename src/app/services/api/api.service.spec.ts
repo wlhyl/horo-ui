@@ -42,6 +42,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
+import { createMockHoroRequest, createMockProfectionRequest, createMockFirdariaRequest, createMockHoroscopeComparisonRequest, createMockReturnRequest, createMockQiZhengRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 describe('ApiService', () => {
   let service: ApiService;
@@ -84,7 +85,7 @@ describe('ApiService', () => {
 
   describe('getNativeHoroscope', () => {
     it('should return a native horoscope', () => {
-      const mockData: HoroRequest = {
+      const mockData = createMockHoroRequest({
         id: 1,
         date: {
           year: 1990,
@@ -104,7 +105,7 @@ describe('ApiService', () => {
         house: 'Placidus',
         name: 'Test',
         sex: true,
-      };
+      });
 
       const mockHoroscope: Horoscope = {
         date: {
@@ -194,7 +195,7 @@ describe('ApiService', () => {
 
   describe('profection', () => {
     it('should return a profection', () => {
-      const mockData: ProfectionRequest = {
+      const mockData = createMockProfectionRequest({
         native_date: {
           year: 1990,
           month: 1,
@@ -215,7 +216,7 @@ describe('ApiService', () => {
           tz: 8,
           st: false,
         },
-      };
+      });
 
       const mockProfection: Profection = {
         year_house: 1,
@@ -239,7 +240,7 @@ describe('ApiService', () => {
 
   describe('firdaria', () => {
     it('should return firdaria periods', () => {
-      const mockData: FirdariaRequest = {
+      const mockData = createMockFirdariaRequest({
         native_date: {
           year: 1990,
           month: 1,
@@ -254,7 +255,7 @@ describe('ApiService', () => {
           long: 116.4074,
           lat: 39.9042,
         },
-      };
+      });
 
       const mockPeriods: FirdariaPeriod[] = [];
 
@@ -273,7 +274,7 @@ describe('ApiService', () => {
 
   describe('compare', () => {
     it('should return a horoscope comparison', () => {
-      const mockData: HoroscopeComparisonRequest = {
+      const mockData = createMockHoroscopeComparisonRequest({
         original_date: {
           year: 1990,
           month: 1,
@@ -303,7 +304,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house: 'Placidus',
-      };
+      });
 
       const mockComparison: HoroscopeComparison = {
         original_date: {
@@ -456,7 +457,7 @@ describe('ApiService', () => {
 
   describe('solarReturn', () => {
     it('should return a solar return horoscope', () => {
-      const mockData: ReturnRequest = {
+      const mockData = createMockReturnRequest({
         native_date: {
           year: 1990,
           month: 1,
@@ -482,7 +483,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house: 'Placidus',
-      };
+      });
 
       const mockReturn: ReturnHoroscope = {
         native_date: {
@@ -589,7 +590,7 @@ describe('ApiService', () => {
 
   describe('lunarReturn', () => {
     it('should return a lunar return horoscope', () => {
-      const mockData: ReturnRequest = {
+      const mockData = createMockReturnRequest({
         native_date: {
           year: 1990,
           month: 1,
@@ -615,7 +616,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house: 'Placidus',
-      };
+      });
 
       const mockReturn: ReturnHoroscope = {
         native_date: {
@@ -722,7 +723,7 @@ describe('ApiService', () => {
 
   describe('qizheng', () => {
     it('should return a qizheng horoscope', () => {
-      const mockData: QiZhengRequst = {
+      const mockData = createMockQiZhengRequest({
         native_date: {
           year: 1990,
           month: 1,
@@ -747,7 +748,7 @@ describe('ApiService', () => {
           long: 116.4074,
           lat: 39.9042,
         },
-      };
+      });
 
       const mockHoroscope: QiZhengHoroscope = {
         native_date: {

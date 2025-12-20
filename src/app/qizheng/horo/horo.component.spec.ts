@@ -27,6 +27,7 @@ import {
   PlanetSpeedState,
 } from 'src/app/type/enum/qizheng';
 import { fakeAsync, flush, tick } from '@angular/core/testing';
+import { createMockDateRequest, createMockGeoRequest, createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 describe('HoroComponent', () => {
   let component: HoroComponent;
@@ -44,7 +45,7 @@ describe('HoroComponent', () => {
   let mockNavController: jasmine.SpyObj<NavController>;
 
   // Mock Data
-  const mockDate: DateRequest = {
+  const mockDate: DateRequest = createMockDateRequest({
     year: 2000,
     month: 1,
     day: 1,
@@ -53,14 +54,14 @@ describe('HoroComponent', () => {
     second: 0,
     tz: 8,
     st: false,
-  };
+  });
 
-  const mockGeo: GeoRequest = {
+  const mockGeo: GeoRequest = createMockGeoRequest({
     long: 121.47,
     lat: 31.23,
-  };
+  });
 
-  const mockHoroData: DeepReadonly<HoroRequest> = {
+  const mockHoroData: DeepReadonly<HoroRequest> = createMockHoroRequest({
     id: 1,
     name: 'Test',
     sex: true,
@@ -68,15 +69,15 @@ describe('HoroComponent', () => {
     geo: mockGeo,
     geo_name: 'Shanghai',
     house: 'Alcabitus',
-  };
+  }) as DeepReadonly<HoroRequest>;
 
-  const mockProcessData: DeepReadonly<ProcessRequest> = {
+  const mockProcessData: DeepReadonly<ProcessRequest> = createMockProcessRequest({
     date: { ...mockDate, year: 2024, month: 7, day: 25 },
     geo: mockGeo,
     geo_name: 'Shanghai',
     process_name: ProcessName.Transit,
     isSolarReturn: false,
-  };
+  }) as DeepReadonly<ProcessRequest>;
 
   const mockHoroscopeData: Horoscope = {
     native_date: { ...mockDate },

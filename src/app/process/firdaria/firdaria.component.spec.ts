@@ -8,6 +8,7 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import { PlanetName } from 'src/app/type/enum/planet';
 import { DateRequest, GeoRequest } from 'src/app/type/interface/request-data';
 import { FirdariaPeriod } from 'src/app/type/interface/response-data';
+import { createMockDateRequest, createMockGeoRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 import { FirdariaComponent } from './firdaria.component';
 
@@ -24,7 +25,7 @@ describe('FirdariaComponent', () => {
     },
   ];
 
-  const mockDateRequest: DateRequest = {
+  const mockDateRequest: DateRequest = createMockDateRequest({
     year: 2000,
     month: 1,
     day: 1,
@@ -33,12 +34,12 @@ describe('FirdariaComponent', () => {
     second: 0,
     tz: 0,
     st: false,
-  };
+  });
 
-  const mockGeoRequest: GeoRequest = {
+  const mockGeoRequest: GeoRequest = createMockGeoRequest({
     lat: 0,
     long: 0,
-  };
+  });
 
   const mockHoroData = {
     date: mockDateRequest,

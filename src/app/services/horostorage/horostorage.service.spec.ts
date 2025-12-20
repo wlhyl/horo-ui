@@ -6,6 +6,7 @@ import {
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 // 辅助函数：递归检查对象的只读性
 function testDeepReadonly<T extends object>(obj: DeepReadonly<T>): void {
@@ -29,7 +30,7 @@ describe('HoroStorageService', () => {
   let service: HoroStorageService;
   let storage: Storage;
 
-  const mockHoroData: HoroRequest = {
+  const mockHoroData: HoroRequest = createMockHoroRequest({
     id: 1,
     date: {
       year: 2025,
@@ -49,9 +50,9 @@ describe('HoroStorageService', () => {
     house: 'Alcabitus',
     sex: true,
     name: 'Test Name',
-  };
+  });
 
-  const mockProcessData: ProcessRequest = {
+  const mockProcessData: ProcessRequest = createMockProcessRequest({
     date: {
       year: 2026,
       month: 8,
@@ -69,7 +70,7 @@ describe('HoroStorageService', () => {
     },
     process_name: ProcessName.Profection,
     isSolarReturn: false,
-  };
+  });
 
   beforeEach(() => {
     storage = localStorage;
@@ -156,14 +157,14 @@ describe('HoroStorageService', () => {
   describe('#localStorage交互', () => {
     it('应该从localStorage加载内容（如有）', () => {
       // 在 beforeEach 之后，手动设置 localStorage
-      const storedHoroData: HoroRequest = {
+      const storedHoroData: HoroRequest = createMockHoroRequest({
         ...mockHoroData,
         house: 'Placidus',
-      };
-      const storedProcessData: ProcessRequest = {
+      });
+      const storedProcessData: ProcessRequest = createMockProcessRequest({
         ...mockProcessData,
         geo_name: '上海',
-      };
+      });
 
       localStorage.setItem('horo_data', JSON.stringify(storedHoroData));
       localStorage.setItem('process_data', JSON.stringify(storedProcessData));

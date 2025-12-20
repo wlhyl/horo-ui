@@ -14,6 +14,7 @@ import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { ProcessRequest, HoroRequest } from '../type/interface/request-data';
+import { createMockHoroRequest, createMockProcessRequest } from '../test-utils/test-data-factory.spec';
 
 describe('ProcessPage', () => {
   let component: ProcessPage;
@@ -24,7 +25,7 @@ describe('ProcessPage', () => {
   let configServiceSpy: jasmine.SpyObj<Horoconfig>;
   let navControllerSpy: jasmine.SpyObj<NavController>;
 
-  const mockHoroData: HoroRequest = {
+  const mockHoroData: HoroRequest = createMockHoroRequest({
     id: 1,
     name: 'Test User',
     sex: true,
@@ -44,9 +45,9 @@ describe('ProcessPage', () => {
       long: 116.4,
       lat: 39.9,
     },
-  };
+  });
 
-  const mockProcessData: ProcessRequest = {
+  const mockProcessData: ProcessRequest = createMockProcessRequest({
     process_name: ProcessName.Profection,
     date: {
       year: 2023,
@@ -64,7 +65,7 @@ describe('ProcessPage', () => {
       lat: 31.2,
     },
     isSolarReturn: false,
-  };
+  });
 
   const mockHouses = ['Placidus', 'Koch', 'Campanus'];
 
@@ -136,7 +137,7 @@ describe('ProcessPage', () => {
 
   it('should get new value from this.storage.horoData when entering the component', () => {
     // Arrange: 定义一个新的数据对象，服务将提供该对象。
-    const updatedHoroData: HoroRequest = {
+    const updatedHoroData: HoroRequest = createMockHoroRequest({
       id: 2,
       name: 'updated name',
       sex: false,
@@ -156,7 +157,7 @@ describe('ProcessPage', () => {
         lat: 1,
       },
       house: 'Koch',
-    };
+    });
 
     // 配置 spy 以返回新数据。
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
@@ -179,7 +180,7 @@ describe('ProcessPage', () => {
 
   it('should get new value from this.storage.processData when entering the component', () => {
     // Arrange: 定义一个新的数据对象，服务将提供该对象。
-    const updatedProcessData: ProcessRequest = {
+    const updatedProcessData: ProcessRequest = createMockProcessRequest({
       process_name: ProcessName.Firdaria,
       date: {
         year: 2022,
@@ -197,7 +198,7 @@ describe('ProcessPage', () => {
         lat: 1,
       },
       isSolarReturn: true,
-    };
+    });
 
     // 配置 spy 以返回新数据。
     const processDataGetterSpy = Object.getOwnPropertyDescriptor(

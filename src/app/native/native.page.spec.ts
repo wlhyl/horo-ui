@@ -19,6 +19,7 @@ import { DateTimeComponent } from '../horo-common/date-time/date-time.component'
 import { Path } from '../type/enum/path';
 import { Path as subPath } from './enum';
 import { Horoconfig } from '../services/config/horo-config.service';
+import { createMockHoroRequest } from '../test-utils/test-data-factory.spec';
 
 describe('NativePage', () => {
   let component: NativePage;
@@ -29,27 +30,7 @@ describe('NativePage', () => {
   let configServiceSpy: jasmine.SpyObj<Horoconfig>;
   let navControllerSpy: jasmine.SpyObj<NavController>;
 
-  const mockHoroData: HoroRequest = {
-    id: 0,
-    date: {
-      year: 2000,
-      month: 1,
-      day: 1,
-      hour: 0,
-      minute: 0,
-      second: 0,
-      tz: 8,
-      st: false,
-    },
-    geo: {
-      long: 120,
-      lat: 30,
-    },
-    name: 'name',
-    sex: true,
-    geo_name: 'cty',
-    house: 'Alcabitus',
-  };
+  const mockHoroData: HoroRequest = createMockHoroRequest();
 
   const mockHouses = ['Alcabitus', 'Placidus', 'Koch'];
 
@@ -119,7 +100,7 @@ describe('NativePage', () => {
 
   it('should get new value from this.storage.horoData when entering the component', () => {
     // Arrange: 定义一个新的数据对象，服务将提供该对象。
-    const updatedHoroData: HoroRequest = {
+    const updatedHoroData: HoroRequest = createMockHoroRequest({
       id: 1,
       name: 'updated name',
       sex: false,
@@ -139,7 +120,7 @@ describe('NativePage', () => {
         lat: 1,
       },
       house: 'Placidus',
-    };
+    });
 
     // 配置 spy 以返回新数据。
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
