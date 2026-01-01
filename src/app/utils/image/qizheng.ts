@@ -49,8 +49,8 @@ export function drawHoroscope(
     const r1 = (r / 9) * i;
     canvas.add(
       new fabric.Circle({
-        left: cx - r1,
-        top: cy - r1,
+        left: cx,
+        top: cy,
         radius: r1,
         fill: '',
         stroke: 'black', //不填充
@@ -63,8 +63,8 @@ export function drawHoroscope(
   const dongWeiR = (r / 9) * 6.5;
   canvas.add(
     new fabric.Circle({
-      left: cx - dongWeiR,
-      top: cy - dongWeiR,
+      left: cx,
+      top: cy,
       radius: dongWeiR,
       fill: '',
       stroke: 'black', //不填充
@@ -158,8 +158,8 @@ export function drawHoroscope(
     }
   );
 
-  nativeLunarCalendarTextCanvas.left = 0;
-  nativeLunarCalendarTextCanvas.top = 0;
+  nativeLunarCalendarTextCanvas.left = nativeLunarCalendarTextCanvas.width! / 2;
+  nativeLunarCalendarTextCanvas.top = nativeLunarCalendarTextCanvas.height! / 2;
   canvas.add(nativeLunarCalendarTextCanvas);
 
   const processLunarCalendarText = formatLunarCalendar(
@@ -175,8 +175,9 @@ export function drawHoroscope(
   );
 
   processLunarCalendarTextCanvas.left =
-    canvas.width! - processLunarCalendarTextCanvas.width!;
-  processLunarCalendarTextCanvas.top = 0;
+    canvas.width! - processLunarCalendarTextCanvas.width! / 2;
+  processLunarCalendarTextCanvas.top =
+    processLunarCalendarTextCanvas.height! / 2;
   canvas.add(processLunarCalendarTextCanvas);
 
   canvas.forEachObject((obj) => (obj.selectable = false));
@@ -275,8 +276,8 @@ function drawASCHouse(
     }
   );
 
-  houseNumText.left = cx - houseNumText.width! / 2;
-  houseNumText.top = cy - houseNumText.height! / 2;
+  houseNumText.left = cx;
+  houseNumText.top = cy;
 
   // 以下一行不能放到 mousedown的回调函数中，因为houseNumText添加到组后会
   // 重新计算坐标，此坐标不再是相对于整个画布
@@ -322,7 +323,7 @@ function drawZodiac(
   ];
 
   houseNames.forEach((houseName, index) => {
-    // 画宫位分隔线
+    // 画星座分隔线
     const x0 = cx + r1 * cos(30 * index);
     const y0 = cx - r1 * sin(30 * index);
 
@@ -343,8 +344,8 @@ function drawZodiac(
       fontSize: config.fontSize,
       selectable: false,
     });
-    houseNumText.left = x - houseNumText.width! / 2;
-    houseNumText.top = y - houseNumText.height! / 2;
+    houseNumText.left = x;
+    houseNumText.top = y;
     canvas.add(houseNumText);
   });
 }
@@ -401,8 +402,8 @@ function drawHouse(
       selectable: true,
       // fontFamily: config.textFont,
     });
-    houseNumText.left = x - houseNumText.width! / 2;
-    houseNumText.top = y - houseNumText.height! / 2;
+    houseNumText.left = x;
+    houseNumText.top = y;
 
     tip.newTip(message, houseNumText, canvas);
 
@@ -573,8 +574,8 @@ function drawPlanets(
       stroke: color,
       // fontFamily: config.planetFontFamily(planets[i].name),
     });
-    planetText.left = x - planetText.width! / 2;
-    planetText.top = y - planetText.height! / 2;
+    planetText.left = x;
+    planetText.top = y;
 
     const planetLongOnZoodiac = zodiacLong(planetsSorted[i].long);
     const planetLongDMSOnZoodiac = degreeToDMS(planetLongOnZoodiac.long);
@@ -674,8 +675,8 @@ function drawDistanceStar(
       // stroke: 'black',
       // fontFamily: config.planetFontFamily(planets[i].name),
     });
-    planetText.left = x - planetText.width! / 2;
-    planetText.top = y - planetText.height! / 2;
+    planetText.left = x;
+    planetText.top = y;
 
     // 距星经度
     const planetLongOnZoodiac = zodiacLong(distance_star.long);
@@ -747,8 +748,8 @@ function drawDongWei(
       // stroke: 'black',
       // fontFamily: config.planetFontFamily(planets[i].name),
     });
-    planetText.left = x - planetText.width! / 2;
-    planetText.top = y - planetText.height! / 2;
+    planetText.left = x;
+    planetText.top = y;
 
     canvas.add(planetText);
   }

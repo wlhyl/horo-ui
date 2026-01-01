@@ -83,12 +83,12 @@ export function renderElements(
         const textAlign = element.textAlign ?? 'center';
         if (textAlign === 'center') {
           // 将文本居中
-          text.left = element.left - text.width! / 2;
+          text.left = element.left;
         } else {
           // 左对齐
-          text.left = element.left;
+          text.left = element.left + text.width! / 2;
         }
-        text.top = element.top - text.height! / 2;
+        text.top = element.top;// - text.height! / 2;
         fabricObject = text;
         break;
       case 'circle':
@@ -278,16 +278,16 @@ export function calculateHouseElements(
   // Outer and inner circles
   elements.push({
     type: 'circle',
-    left: cx - r0,
-    top: cy - r0,
+    left: cx,
+    top: cy,
     radius: r0,
     fill: '',
     stroke: 'black',
   });
   elements.push({
     type: 'circle',
-    left: cx - r1,
-    top: cy - r1,
+    left: cx,
+    top: cy,
     radius: r1,
     fill: '',
     stroke: 'black',
@@ -376,7 +376,9 @@ export function calculatePlanetElements(
   const { cx, cy, r } = options;
   const elements: (TextObject | PathObject)[] = [];
 
-  const sortedPlanets = planets.toSorted((a, b) => degNorm(a.long) - degNorm(b.long));
+  const sortedPlanets = planets.toSorted(
+    (a, b) => degNorm(a.long) - degNorm(b.long)
+  );
 
   const p = sortedPlanets.map((x) => degNorm(x.long + 180 - firstCupsLong));
   const w = 6; // Minimum angle between planets
@@ -632,7 +634,14 @@ export function drawHorosco(
     r1,
   });
   const planetElements = calculatePlanetElements(
-    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic, horosco.part_of_fortune],
+    [
+      ...horosco.planets,
+      horosco.asc,
+      horosco.mc,
+      horosco.dsc,
+      horosco.ic,
+      horosco.part_of_fortune,
+    ],
     horosco.houses_cups[0],
     config,
     { cx, cy, r: r1 }
@@ -671,7 +680,14 @@ export function drawReturnHorosco(
     r1,
   });
   const planetElements = calculatePlanetElements(
-    [...horosco.planets, horosco.asc, horosco.mc, horosco.dsc, horosco.ic, horosco.part_of_fortune],
+    [
+      ...horosco.planets,
+      horosco.asc,
+      horosco.mc,
+      horosco.dsc,
+      horosco.ic,
+      horosco.part_of_fortune,
+    ],
     horosco.houses_cups[0],
     config,
     { cx, cy, r: r1 }

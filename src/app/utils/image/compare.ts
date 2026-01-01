@@ -171,16 +171,16 @@ export function calculateHouseElements(
   // Outer and inner circles
   elements.push({
     type: 'circle',
-    left: cx - r0,
-    top: cy - r0,
+    left: cx ,
+    top: cy,
     radius: r0,
     fill: '',
     stroke: 'black',
   });
   elements.push({
     type: 'circle',
-    left: cx - r1,
-    top: cy - r1,
+    left: cx,
+    top: cy ,
     radius: r1,
     fill: '',
     stroke: 'black',
@@ -523,8 +523,8 @@ export function drawHorosco(
   const r2 = (r1 * 1.6) / 3;
   const nativeCircle: CircleObject = {
     type: 'circle',
-    left: cx - r2,
-    top: cy - r2,
+    left: cx,
+    top: cy ,
     radius: r2,
     fill: '',
     stroke: 'black',

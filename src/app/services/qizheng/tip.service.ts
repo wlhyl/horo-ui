@@ -27,24 +27,25 @@ export class TipService {
         this.object = null;
       });
 
-      // 计算tip的left,top
+      // 计算tip的left,top,left是文本的中心位置
       // text与object垂直对齐
-      let top = object.top! + object.height! / 2 - noteText.height! / 2;
+      let top = object.top!;
       // 默认text在object的右边
-      let left = object.left! + object.width!;
+      let left = object.left! + object.width! / 2 + noteText.width! / 2;
 
-      const right = left + noteText.width!;
+      // 如果tip超出画布右侧，就放到object的左边
+      const right = left + noteText.width! / 2;
       if (right > canvas.width!) {
-        left = object.left! - noteText.width!;
+        left = object.left! - object.width! / 2 - noteText.width! / 2;
       }
 
       if (top < 0) {
-        top = 0;
+        top = noteText.height! / 2;
       }
 
-      const botton = top + noteText.height!;
+      const botton = top + noteText.height! / 2;
       if (botton > canvas.height!) {
-        top = canvas.height! - noteText.height!;
+        top = canvas.height! - noteText.height! / 2;
       }
 
       noteText.top = top;

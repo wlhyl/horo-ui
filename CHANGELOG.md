@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.7.2] - 2026-01-03
+
+### Changed
+
+- 升级升级 ionice、fabricjs
+- 修正因升级 fabricjs 导致的 fabricjs 代码不兼容
+
 ## [0.7.1] - 2025-11-19
 
 ### Changed
