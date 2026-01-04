@@ -12,7 +12,7 @@ import {
 import { PlanetName } from 'src/app/type/enum/planet';
 
 @Component({
-  selector: 'app-detail',
+  selector: 'app-native-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: false,

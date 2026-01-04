@@ -7,7 +7,7 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
 @Component({
-  selector: 'app-detail',
+  selector: 'app-process-return-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: false,
