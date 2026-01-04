@@ -3,10 +3,10 @@ import {
   GeoRequest,
   HoroRequest,
 } from 'src/app/type/interface/request-data';
-import { Horoscope, Planet } from 'src/app/type/interface/response-data';
+import { Horoscope } from 'src/app/type/interface/response-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
-import { createMockDateRequest, createMockGeoRequest, createMockHoroRequest } from 'src/app/test-utils/test-data-factory.spec';
+import { createMockDateRequest, createMockGeoRequest, createMockHoroRequest, createMockPlanet, createMockHoroscope } from 'src/app/test-utils/test-data-factory.spec';
 
 // Mock Data
 const mockDate: DateRequest = createMockDateRequest({
@@ -45,58 +45,35 @@ export const mockCurrentHoroData: HoroRequest = createMockHoroRequest({
   house: 'Alcabitus',
 });
 
-const mockPlanet: Planet = {
-  name: PlanetName.Sun,
-  long: 0,
-  lat: 0,
-  speed: 0,
-  ra: 0,
-  dec: 0,
-  orb: 0,
-  speed_state: PlanetSpeedState.均,
-};
-
-export const mockHoroscopeData: Horoscope = {
-  date: { ...mockDate },
-  geo: { ...mockGeo },
+export const mockHoroscopeData: Horoscope = createMockHoroscope({
+  date: mockDate,
+  geo: mockGeo,
   house_name: 'Alcabitus',
   houses_cups: [121.123],
-  asc: {
-    ...mockPlanet,
+  asc: createMockPlanet({
     name: PlanetName.ASC,
-  },
-  mc: {
-    ...mockPlanet,
+  }),
+  mc: createMockPlanet({
     name: PlanetName.MC,
-  },
-  dsc: {
-    ...mockPlanet,
+  }),
+  dsc: createMockPlanet({
     name: PlanetName.DSC,
-  },
-  ic: {
-    ...mockPlanet,
+  }),
+  ic: createMockPlanet({
     name: PlanetName.IC,
-  },
-  part_of_fortune: {
-    ...mockPlanet,
+  }),
+  part_of_fortune: createMockPlanet({
     name: PlanetName.PartOfFortune,
-  },
+  }),
   planets: [
-    {
+    createMockPlanet({
       name: PlanetName.Sun,
       long: 100.14,
-      lat: 0,
       speed: 1,
-      ra: 0,
-      dec: 0,
-      orb: 0,
       speed_state: PlanetSpeedState.快,
-    },
+     }),
   ],
   is_diurnal: true,
   planetary_day: PlanetName.Sun,
   planetary_hours: PlanetName.Sun,
-  aspects: [],
-  antiscoins: [],
-  contraantiscias: [],
-};
+});

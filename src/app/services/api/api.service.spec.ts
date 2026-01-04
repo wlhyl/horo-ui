@@ -42,7 +42,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { createMockHoroRequest, createMockProfectionRequest, createMockFirdariaRequest, createMockHoroscopeComparisonRequest, createMockReturnRequest, createMockQiZhengRequest } from 'src/app/test-utils/test-data-factory.spec';
+import { createMockHoroRequest, createMockProfectionRequest, createMockFirdariaRequest, createMockHoroscopeComparisonRequest, createMockReturnRequest, createMockQiZhengRequest, createMockHoroscope, createMockPlanet, createMockHoroscopeComparison, createMockReturnHoroscope } from 'src/app/test-utils/test-data-factory.spec';
 
 describe('ApiService', () => {
   let service: ApiService;
@@ -107,7 +107,7 @@ describe('ApiService', () => {
         sex: true,
       });
 
-      const mockHoroscope: Horoscope = {
+      const mockHoroscope = createMockHoroscope({
         date: {
           year: 1990,
           month: 1,
@@ -123,7 +123,7 @@ describe('ApiService', () => {
         },
         house_name: 'Placidus',
         houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-        asc: {
+        asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
           lat: 0,
@@ -132,8 +132,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        mc: {
+        }),
+        mc: createMockPlanet({
           name: WesternPlanetName.MC,
           long: 0,
           lat: 0,
@@ -142,8 +142,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        dsc: {
+        }),
+        dsc: createMockPlanet({
           name: WesternPlanetName.DSC,
           long: 0,
           lat: 0,
@@ -152,8 +152,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        ic: {
+        }),
+        ic: createMockPlanet({
           name: WesternPlanetName.IC,
           long: 0,
           lat: 0,
@@ -162,8 +162,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        part_of_fortune: {
+        }),
+        part_of_fortune: createMockPlanet({
           name: WesternPlanetName.PartOfFortune,
           long: 0,
           lat: 0,
@@ -172,7 +172,7 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
+        }),
         planets: [],
         is_diurnal: true,
         planetary_day: WesternPlanetName.Sun,
@@ -180,7 +180,7 @@ describe('ApiService', () => {
         aspects: [],
         antiscoins: [],
         contraantiscias: [],
-      };
+      });
 
       service.getNativeHoroscope(mockData).subscribe((horoscope) => {
         expect(horoscope).toEqual(mockHoroscope);
@@ -306,7 +306,7 @@ describe('ApiService', () => {
         house: 'Placidus',
       });
 
-      const mockComparison: HoroscopeComparison = {
+      const mockComparison = createMockHoroscopeComparison({
         original_date: {
           year: 1990,
           month: 1,
@@ -335,7 +335,7 @@ describe('ApiService', () => {
         },
         house_name: 'Placidus',
         houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-        original_asc: {
+        original_asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
           lat: 0,
@@ -344,8 +344,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        comparison_asc: {
+        }),
+        comparison_asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
           lat: 0,
@@ -354,8 +354,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        original_mc: {
+        }),
+        original_mc: createMockPlanet({
           name: WesternPlanetName.MC,
           long: 0,
           lat: 0,
@@ -364,8 +364,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        comparison_mc: {
+        }),
+        comparison_mc: createMockPlanet({
           name: WesternPlanetName.MC,
           long: 0,
           lat: 0,
@@ -374,8 +374,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        original_dsc: {
+        }),
+        original_dsc: createMockPlanet({
           name: WesternPlanetName.DSC,
           long: 0,
           lat: 0,
@@ -384,8 +384,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        comparison_dsc: {
+        }),
+        comparison_dsc: createMockPlanet({
           name: WesternPlanetName.DSC,
           long: 0,
           lat: 0,
@@ -394,8 +394,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        original_ic: {
+        }),
+        original_ic: createMockPlanet({
           name: WesternPlanetName.IC,
           long: 0,
           lat: 0,
@@ -404,8 +404,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        comparison_ic: {
+        }),
+        comparison_ic: createMockPlanet({
           name: WesternPlanetName.IC,
           long: 0,
           lat: 0,
@@ -414,8 +414,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        original_part_of_fortune: {
+        }),
+        original_part_of_fortune: createMockPlanet({
           name: WesternPlanetName.PartOfFortune,
           long: 0,
           lat: 0,
@@ -424,8 +424,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        comparison_part_of_fortune: {
+        }),
+        comparison_part_of_fortune: createMockPlanet({
           name: WesternPlanetName.PartOfFortune,
           long: 0,
           lat: 0,
@@ -434,13 +434,13 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
+        }),
         original_planets: [],
         comparison_planets: [],
         aspects: [],
         antiscoins: [],
         contraantiscias: [],
-      };
+      });
 
       service.compare(mockData).subscribe((comparison) => {
         expect(comparison).toEqual(mockComparison);
@@ -485,7 +485,7 @@ describe('ApiService', () => {
         house: 'Placidus',
       });
 
-      const mockReturn: ReturnHoroscope = {
+      const mockReturn = createMockReturnHoroscope({
         native_date: {
           year: 1990,
           month: 1,
@@ -519,7 +519,7 @@ describe('ApiService', () => {
         },
         house_name: 'Placidus',
         houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-        asc: {
+        asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
           lat: 0,
@@ -528,8 +528,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        mc: {
+        }),
+        mc: createMockPlanet({
           name: WesternPlanetName.MC,
           long: 0,
           lat: 0,
@@ -538,8 +538,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        dsc: {
+        }),
+        dsc: createMockPlanet({
           name: WesternPlanetName.DSC,
           long: 0,
           lat: 0,
@@ -548,8 +548,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        ic: {
+        }),
+        ic: createMockPlanet({
           name: WesternPlanetName.IC,
           long: 0,
           lat: 0,
@@ -558,8 +558,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        part_of_fortune: {
+        }),
+        part_of_fortune: createMockPlanet({
           name: WesternPlanetName.PartOfFortune,
           long: 0,
           lat: 0,
@@ -568,12 +568,12 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
+        }),
         planets: [],
         aspects: [],
         antiscoins: [],
         contraantiscias: [],
-      };
+      });
 
       service.solarReturn(mockData).subscribe((returnHoroscope) => {
         expect(returnHoroscope).toEqual(mockReturn);
@@ -618,7 +618,7 @@ describe('ApiService', () => {
         house: 'Placidus',
       });
 
-      const mockReturn: ReturnHoroscope = {
+      const mockReturn = createMockReturnHoroscope({
         native_date: {
           year: 1990,
           month: 1,
@@ -652,7 +652,7 @@ describe('ApiService', () => {
         },
         house_name: 'Placidus',
         houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-        asc: {
+        asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
           lat: 0,
@@ -661,8 +661,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        mc: {
+        }),
+        mc: createMockPlanet({
           name: WesternPlanetName.MC,
           long: 0,
           lat: 0,
@@ -671,8 +671,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        dsc: {
+        }),
+        dsc: createMockPlanet({
           name: WesternPlanetName.DSC,
           long: 0,
           lat: 0,
@@ -681,8 +681,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        ic: {
+        }),
+        ic: createMockPlanet({
           name: WesternPlanetName.IC,
           long: 0,
           lat: 0,
@@ -691,8 +691,8 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
-        part_of_fortune: {
+        }),
+        part_of_fortune: createMockPlanet({
           name: WesternPlanetName.PartOfFortune,
           long: 0,
           lat: 0,
@@ -701,12 +701,12 @@ describe('ApiService', () => {
           dec: 0,
           orb: 0,
           speed_state: WesternPlanetSpeedState.均,
-        },
+        }),
         planets: [],
         aspects: [],
         antiscoins: [],
         contraantiscias: [],
-      };
+      });
 
       service.lunarReturn(mockData).subscribe((returnHoroscope) => {
         expect(returnHoroscope).toEqual(mockReturn);

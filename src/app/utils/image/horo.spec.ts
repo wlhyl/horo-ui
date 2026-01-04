@@ -11,6 +11,7 @@ import {
   calculateNotesElements,
 } from './horo';
 import { Drawable, TextObject } from './horo';
+import { createMockHoroscope, createMockPlanet, createMockAspect } from '../../test-utils/test-data-factory.spec';
 
 // Mock Horoconfig
 const mockHoroConfig: Horoconfig = {
@@ -94,21 +95,21 @@ describe('Horo Image Calculation Functions', () => {
   });
 
   describe('calculateAspectText', () => {
-    const aspects: Aspect[] = [
-      {
+    const aspects = [
+      createMockAspect({
         p0: PlanetName.Sun,
         p1: PlanetName.Moon,
         aspect_value: 60,
         d: 1.2,
         apply: true,
-      },
-      {
+      }),
+      createMockAspect({
         p0: PlanetName.Mars,
         p1: PlanetName.Jupiter,
         aspect_value: 90,
         d: 0.5,
         apply: false,
-      },
+      }),
     ];
 
     it('should generate planet names', () => {
@@ -141,24 +142,20 @@ describe('Horo Image Calculation Functions', () => {
   });
 
   describe('Horoscope Chart Calculations', () => {
-    const mockPlanet: Planet = {
+    const mockPlanet = createMockPlanet({
       name: PlanetName.Sun,
       long: 15,
       speed: 1,
-      lat: 0,
-      ra: 0,
-      dec: 0,
-      orb: 0,
       speed_state: PlanetSpeedState.快,
-    };
-    const mockHoroscope: Horoscope = {
+    });
+    const mockHoroscope = createMockHoroscope({
       houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       planets: [mockPlanet],
-      asc: { ...mockPlanet, name: PlanetName.ASC, long: 0 },
-      mc: { ...mockPlanet, name: PlanetName.MC, long: 270 },
-      dsc: { ...mockPlanet, name: PlanetName.DSC, long: 180 },
-      ic: { ...mockPlanet, name: PlanetName.IC, long: 90 },
-      part_of_fortune: { ...mockPlanet, name: PlanetName.PartOfFortune, long: 25 },
+      asc: createMockPlanet({ name: PlanetName.ASC, long: 0 }),
+      mc: createMockPlanet({ name: PlanetName.MC, long: 270 }),
+      dsc: createMockPlanet({ name: PlanetName.DSC, long: 180 }),
+      ic: createMockPlanet({ name: PlanetName.IC, long: 90 }),
+      part_of_fortune: createMockPlanet({ name: PlanetName.PartOfFortune, long: 25 }),
       date: {
         year: 2024,
         month: 7,
@@ -176,7 +173,8 @@ describe('Horo Image Calculation Functions', () => {
       aspects: [],
       antiscoins: [],
       contraantiscias: [],
-    };
+      fixed_stars: [],
+    });
 
     describe('calculateHouseElements', () => {
       it('should generate circles, cusp lines, house numbers, and zodiac signs', () => {

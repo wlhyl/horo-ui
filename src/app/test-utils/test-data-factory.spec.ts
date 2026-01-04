@@ -9,6 +9,19 @@ import {
   FirdariaRequest,
   QiZhengRequst,
 } from '../type/interface/request-data';
+import {
+  Horoscope,
+  Planet,
+  Aspect,
+  FixedStar,
+  HoroDateTime,
+  GeoPosition,
+  HoroscopeComparison,
+  ReturnHoroscope,
+} from '../type/interface/response-data';
+import { PlanetName, PlanetSpeedState } from '../type/enum/planet';
+import { FixedStarName } from '../type/enum/fixed-star';
+import { LunarMansionsName } from '../type/enum/qizheng';
 import { ProcessName } from '../process/enum/process';
 
 /**
@@ -177,6 +190,205 @@ export class TestDataFactory {
       ...overrides,
     };
   }
+
+  /**
+   * 创建默认的 HoroDateTime 对象
+   */
+  static createDefaultHoroDateTime(
+    overrides?: Partial<HoroDateTime>
+  ): HoroDateTime {
+    return {
+      year: 2024,
+      month: 8,
+      day: 6,
+      hour: 12,
+      minute: 0,
+      second: 0,
+      tz: 8,
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 GeoPosition 对象
+   */
+  static createDefaultGeoPosition(
+    overrides?: Partial<GeoPosition>
+  ): GeoPosition {
+    return {
+      long: 120,
+      lat: 30,
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 Planet 对象
+   */
+  static createDefaultPlanet(overrides?: Partial<Planet>): Planet {
+    return {
+      name: PlanetName.Sun,
+      long: 120,
+      lat: 0,
+      speed: 1,
+      ra: 0,
+      dec: 0,
+      orb: 0,
+      speed_state: PlanetSpeedState.均,
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 Aspect 对象
+   */
+  static createDefaultAspect(overrides?: Partial<Aspect>): Aspect {
+    return {
+      aspect_value: 0,
+      apply: false,
+      d: 0,
+      p0: PlanetName.Sun,
+      p1: PlanetName.Moon,
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 FixedStar 对象
+   */
+  static createDefaultFixedStar(overrides?: Partial<FixedStar>): FixedStar {
+    return {
+      fixed_star: FixedStarName.角宿一,
+      long: 0,
+      xiu: LunarMansionsName.角,
+      xiu_degree: 0,
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 Horoscope 对象
+   */
+  static createDefaultHoroscope(
+    overrides?: Partial<Horoscope>
+  ): Horoscope {
+    return {
+      date: this.createDefaultHoroDateTime(overrides?.date),
+      geo: this.createDefaultGeoPosition(overrides?.geo),
+      house_name: 'Placidus',
+      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      asc: this.createDefaultPlanet({ ...overrides?.asc, name: PlanetName.ASC }),
+      mc: this.createDefaultPlanet({ ...overrides?.mc, name: PlanetName.MC }),
+      dsc: this.createDefaultPlanet({ ...overrides?.dsc, name: PlanetName.DSC }),
+      ic: this.createDefaultPlanet({ ...overrides?.ic, name: PlanetName.IC }),
+      part_of_fortune: this.createDefaultPlanet({
+        ...overrides?.part_of_fortune,
+        name: PlanetName.PartOfFortune,
+      }),
+      planets: [this.createDefaultPlanet(overrides?.planets?.[0])],
+      is_diurnal: true,
+      planetary_day: PlanetName.Sun,
+      planetary_hours: PlanetName.Sun,
+      aspects: [this.createDefaultAspect(overrides?.aspects?.[0])],
+      antiscoins: [],
+      contraantiscias: [],
+      fixed_stars: [],
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 HoroscopeComparison 对象
+   */
+  static createDefaultHoroscopeComparison(
+    overrides?: Partial<HoroscopeComparison>
+  ): HoroscopeComparison {
+    return {
+      original_date: this.createDefaultHoroDateTime(overrides?.original_date),
+      comparison_date: this.createDefaultHoroDateTime(
+        overrides?.comparison_date
+      ),
+      original_geo: this.createDefaultGeoPosition(overrides?.original_geo),
+      comparison_geo: this.createDefaultGeoPosition(overrides?.comparison_geo),
+      house_name: 'Placidus',
+      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      original_asc: this.createDefaultPlanet({
+        ...overrides?.original_asc,
+        name: PlanetName.ASC,
+      }),
+      comparison_asc: this.createDefaultPlanet({
+        ...overrides?.comparison_asc,
+        name: PlanetName.ASC,
+      }),
+      original_mc: this.createDefaultPlanet({
+        ...overrides?.original_mc,
+        name: PlanetName.MC,
+      }),
+      comparison_mc: this.createDefaultPlanet({
+        ...overrides?.comparison_mc,
+        name: PlanetName.MC,
+      }),
+      original_dsc: this.createDefaultPlanet({
+        ...overrides?.original_dsc,
+        name: PlanetName.DSC,
+      }),
+      comparison_dsc: this.createDefaultPlanet({
+        ...overrides?.comparison_dsc,
+        name: PlanetName.DSC,
+      }),
+      original_ic: this.createDefaultPlanet({
+        ...overrides?.original_ic,
+        name: PlanetName.IC,
+      }),
+      comparison_ic: this.createDefaultPlanet({
+        ...overrides?.comparison_ic,
+        name: PlanetName.IC,
+      }),
+      original_part_of_fortune: this.createDefaultPlanet({
+        ...overrides?.original_part_of_fortune,
+        name: PlanetName.PartOfFortune,
+      }),
+      comparison_part_of_fortune: this.createDefaultPlanet({
+        ...overrides?.comparison_part_of_fortune,
+        name: PlanetName.PartOfFortune,
+      }),
+      original_planets: [],
+      comparison_planets: [],
+      aspects: [],
+      antiscoins: [],
+      contraantiscias: [],
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 ReturnHoroscope 对象
+   */
+  static createDefaultReturnHoroscope(
+    overrides?: Partial<ReturnHoroscope>
+  ): ReturnHoroscope {
+    return {
+      native_date: this.createDefaultHoroDateTime(overrides?.native_date),
+      process_date: this.createDefaultHoroDateTime(overrides?.process_date),
+      return_date: this.createDefaultHoroDateTime(overrides?.return_date),
+      geo: this.createDefaultGeoPosition(overrides?.geo),
+      house_name: 'Placidus',
+      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      asc: this.createDefaultPlanet({ ...overrides?.asc, name: PlanetName.ASC }),
+      mc: this.createDefaultPlanet({ ...overrides?.mc, name: PlanetName.MC }),
+      dsc: this.createDefaultPlanet({ ...overrides?.dsc, name: PlanetName.DSC }),
+      ic: this.createDefaultPlanet({ ...overrides?.ic, name: PlanetName.IC }),
+      part_of_fortune: this.createDefaultPlanet({
+        ...overrides?.part_of_fortune,
+        name: PlanetName.PartOfFortune,
+      }),
+      planets: [],
+      aspects: [],
+      antiscoins: [],
+      contraantiscias: [],
+      ...overrides,
+    };
+  }
 }
 
 /**
@@ -258,4 +470,70 @@ export function createMockQiZhengRequest(
   overrides?: Partial<QiZhengRequst>
 ): QiZhengRequst {
   return TestDataFactory.createDefaultQiZhengRequest(overrides);
+}
+
+/**
+ * 便利函数：创建 HoroDateTime
+ */
+export function createMockHoroDateTime(
+  overrides?: Partial<HoroDateTime>
+): HoroDateTime {
+  return TestDataFactory.createDefaultHoroDateTime(overrides);
+}
+
+/**
+ * 便利函数：创建 GeoPosition
+ */
+export function createMockGeoPosition(
+  overrides?: Partial<GeoPosition>
+): GeoPosition {
+  return TestDataFactory.createDefaultGeoPosition(overrides);
+}
+
+/**
+ * 便利函数：创建 Planet
+ */
+export function createMockPlanet(overrides?: Partial<Planet>): Planet {
+  return TestDataFactory.createDefaultPlanet(overrides);
+}
+
+/**
+ * 便利函数：创建 Aspect
+ */
+export function createMockAspect(overrides?: Partial<Aspect>): Aspect {
+  return TestDataFactory.createDefaultAspect(overrides);
+}
+
+/**
+ * 便利函数：创建 FixedStar
+ */
+export function createMockFixedStar(overrides?: Partial<FixedStar>): FixedStar {
+  return TestDataFactory.createDefaultFixedStar(overrides);
+}
+
+/**
+ * 便利函数：创建 Horoscope
+ */
+export function createMockHoroscope(
+  overrides?: Partial<Horoscope>
+): Horoscope {
+  return TestDataFactory.createDefaultHoroscope(overrides);
+}
+
+/**
+ * 便利函数：创建 HoroscopeComparison
+ */
+export function createMockHoroscopeComparison(
+  overrides?: Partial<HoroscopeComparison>
+): HoroscopeComparison {
+  return TestDataFactory.createDefaultHoroscopeComparison(overrides);
+}
+
+/**
+ * 便利函数：创建 ReturnHoroscope
+ */
+export function createMockReturnHoroscope(
+  overrides?: Partial<ReturnHoroscope>
+): ReturnHoroscope {
+  return TestDataFactory.createDefaultReturnHoroscope(overrides);
 }
