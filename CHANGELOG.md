@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.8.0] - 2026-01-04
+
+### Added
+
+- 本命盘增加恒星
+
 ## [0.7.2] - 2026-01-03
 
 ### Changed
