@@ -1,4 +1,6 @@
+import { FixedStarName } from '../enum/fixed-star';
 import { PlanetName, PlanetSpeedState } from '../enum/planet';
+import { LunarMansionsName } from '../enum/qizheng';
 
 export interface HoroDateTime {
   year: number;
@@ -49,6 +51,17 @@ export interface Aspect {
   p1: PlanetName;
 }
 
+export interface FixedStar {
+  // 恒星的名称
+  fixed_star: FixedStarName;
+  // 恒星距星的黄道经度
+  long: number;
+  // 行星在黄道上的入宿名
+  xiu: LunarMansionsName;
+  // 行星在黄道上的入宿度
+  xiu_degree: number;
+}
+
 /**
  * 本命星盘的返回数据
  */
@@ -74,6 +87,8 @@ export interface Horoscope {
   antiscoins: Array<Aspect>;
   // 反映点
   contraantiscias: Array<Aspect>;
+  // 恒星
+  fixed_stars: Array<FixedStar>;
 }
 
 export interface Profection {

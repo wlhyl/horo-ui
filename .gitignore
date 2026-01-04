@@ -74,3 +74,4 @@ package-lock.json
 *.bak
 QWEN.md
 .qoder
+.trae

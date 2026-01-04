@@ -87,4 +87,22 @@ export class DetailComponent implements OnInit {
     const visionPoint = ascLong + moonLong - saturnLong;
     return degNorm(visionPoint);
   }
+
+  // 计算行星与恒星的黄道经度差
+  calculateLongitudeDifference(planetLong: number, starLong: number): number {
+    const diff = degNorm(planetLong - starLong);
+    return diff > 180 ? 360 - diff : diff;
+  }
+
+  // 获取包含四轴和行星的数组，用于与恒星比较
+  get angularHousesAndPlanets() {
+    if (!this.horoscopeData) return [];
+    return [
+      this.horoscopeData.asc,
+      this.horoscopeData.mc,
+      this.horoscopeData.dsc,
+      this.horoscopeData.ic,
+      ...this.horoscopeData.planets,
+    ];
+  }
 }

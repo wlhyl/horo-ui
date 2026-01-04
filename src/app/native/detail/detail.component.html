@@ -28,11 +28,10 @@
                   <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
                     {{ config.planetFontString(item.p1) }}
                   </span>，
-                  @for (d of [degreeToDMSFn(item.d)]; track d) {
+                  @let d = degreeToDMSFn(item.d);
                   <span>
                     {{ d.d }}度{{ d.m }}分{{ d.s }}秒
                   </span>
-                  }
                 </ion-label>
               </ion-item>
               }
@@ -59,11 +58,10 @@
                   <span [ngStyle]="{'font-family': config.planetFontFamily(item.p1)}">
                     {{ config.planetFontString(item.p1) }}
                   </span>，
-                  @for (d of [degreeToDMSFn(item.d)]; track d) {
+                  @let d = degreeToDMSFn(item.d);
                   <span>
                     {{ d.d }}度{{ d.m }}分{{ d.s }}秒
                   </span>
-                  }
                 </ion-label>
               </ion-item>
               }
@@ -86,8 +84,8 @@
                     {{ config.planetFontString(planetName.Sun) }}
                   </span>)：
                   @if (partOfSolarVision) {
-                  @for (signLong of [zodiacLong(partOfSolarVision)]; track signLong) {
-                  @for( d of [degreeToDMSFn(signLong.long)]; track d){
+                  @let signLong = zodiacLong(partOfSolarVision);
+                  @let d = degreeToDMSFn(signLong.long);
                   <span>
                     {{ d.d }}°
                   </span>
@@ -97,8 +95,6 @@
                   <span>
                     {{ d.m }}'{{d.s}}
                   </span>
-                  }
-                  }
                   } @else {
                   <span style="color: #ff6b6b;">计算错误：缺少必要行星数据</span>
                   }
@@ -112,8 +108,8 @@
                     {{ config.planetFontString(planetName.Moon) }}
                   </span>)：
                   @if (partOfLunarVision) {
-                  @for (signLong of [zodiacLong(partOfLunarVision)]; track signLong) {
-                  @for( d of [degreeToDMSFn(signLong.long)]; track d){
+                  @let signLong = zodiacLong(partOfLunarVision);
+                  @let d = degreeToDMSFn(signLong.long);
                   <span>
                     {{ d.d }}°
                   </span>
@@ -123,8 +119,6 @@
                   <span>
                     {{ d.m }}'{{d.s}}
                   </span>
-                  }
-                  }
                   } @else {
                   <span style="color: #ff6b6b;">计算错误：缺少必要行星数据</span>
                   }
@@ -132,6 +126,50 @@
                   <small>计算公式：ASC + 月亮黄道经度 - 土星黄道经度</small>
                 </ion-label>
               </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>恒星</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              @for (star of horoscopeData.fixed_stars; track star) {
+              <ion-item>
+                <ion-label>
+                  <h2> {{ star.fixed_star }}</h2>
+                  <p>
+                    @for( d of [degreeToDMSFn(star.xiu_degree)]; track d){
+                    {{ star.xiu }}宿：{{ d.d }}°{{ d.m }}'{{ d.s }}
+                    }
+                  </p>
+
+                  <p>
+
+                    @for (planet of angularHousesAndPlanets; track planet) {
+                    @let diff = calculateLongitudeDifference(planet.long, star.long);
+                    @if (diff <= 5) { <span>
+                      <span [ngStyle]="{'font-family': config.planetFontFamily(planet.name)}">
+                        {{ config.planetFontString(planet.name) }}
+                      </span>
+                      <span>
+                        {{ degreeToDMSFn(diff).d }}°
+                        {{ degreeToDMSFn(diff).m }}'
+                        {{ degreeToDMSFn(diff).s }}
+                      </span>
+                      &nbsp;
+                      </span>
+                      }
+                      }
+                  </p>
+                </ion-label>
+              </ion-item>
+              }
             </ion-list>
           </ion-card-content>
         </ion-card>
