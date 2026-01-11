@@ -6,7 +6,10 @@ import {
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
+import {
+  createMockHoroRequest,
+  createMockProcessRequest,
+} from 'src/app/test-utils/test-data-factory.spec';
 
 // 辅助函数：递归检查对象的只读性
 function testDeepReadonly<T extends object>(obj: DeepReadonly<T>): void {
@@ -72,6 +75,28 @@ describe('HoroStorageService', () => {
     isSolarReturn: false,
   });
 
+  const mockSynastryData: HoroRequest = createMockHoroRequest({
+    id: 2,
+    date: {
+      year: 2024,
+      month: 1,
+      day: 15,
+      hour: 8,
+      minute: 30,
+      second: 0,
+      tz: -5,
+      st: false,
+    },
+    geo_name: 'New York',
+    geo: {
+      long: -74.006,
+      lat: 40.7128,
+    },
+    house: 'Placidus',
+    sex: false,
+    name: 'Synastry Partner',
+  });
+
   beforeEach(() => {
     storage = localStorage;
     // 监听 localStorage 交互来检查是否被调用
@@ -109,10 +134,22 @@ describe('HoroStorageService', () => {
     });
   });
 
+  describe('#set synastryData()', () => {
+    it('应设置 synastryData 并保存到 localStorage', () => {
+      service.synastryData = mockSynastryData;
+      const stored = localStorage.getItem('synastry_data') as string;
+      expect(JSON.parse(stored)).toEqual(mockSynastryData);
+      expect(service.synastryData).toEqual(mockSynastryData);
+      // 检查 synastryData 是否是只读的
+      testDeepReadonly(service.synastryData);
+    });
+  });
+
   describe('#clean()', () => {
-    it('应清除 horo 和 process 数据从 localStorage 并重设初始值', () => {
+    it('应清除 horo、process 和 synastry 数据从 localStorage 并重设初始值', () => {
       service.horoData = mockHoroData;
       service.processData = mockProcessData;
+      service.synastryData = mockSynastryData;
 
       // 执行
       service.clean();
@@ -120,6 +157,7 @@ describe('HoroStorageService', () => {
       // 检查从 localStorage 删除数据
       expect(localStorage.getItem('horo_data')).toBeNull();
       expect(localStorage.getItem('process_data')).toBeNull();
+      expect(localStorage.getItem('synastry_data')).toBeNull();
 
       // 检查重置到默认初始值
       const now = new Date();
@@ -151,6 +189,17 @@ describe('HoroStorageService', () => {
           }),
         })
       );
+
+      // 检查 synastryData 也重置到默认初始值
+      expect(service.synastryData).toEqual(
+        jasmine.objectContaining({
+          ...expectedHoroData,
+          date: jasmine.objectContaining({
+            ...expectedHoroData.date,
+            tz: jasmine.any(Number),
+          }),
+        })
+      );
     });
   });
 
@@ -165,9 +214,15 @@ describe('HoroStorageService', () => {
         ...mockProcessData,
         geo_name: '上海',
       });
+      const storedSynastryData: HoroRequest = createMockHoroRequest({
+        ...mockSynastryData,
+        geo_name: '伦敦',
+        house: 'Whole Sign',
+      });
 
       localStorage.setItem('horo_data', JSON.stringify(storedHoroData));
       localStorage.setItem('process_data', JSON.stringify(storedProcessData));
+      localStorage.setItem('synastry_data', JSON.stringify(storedSynastryData));
 
       // 重新初始化 TestBed，确保服务能从 localStorage 读取
       TestBed.resetTestingModule();
@@ -183,9 +238,13 @@ describe('HoroStorageService', () => {
       expect(localStorage.getItem('process_data')).toBe(
         JSON.stringify(storedProcessData)
       );
+      expect(localStorage.getItem('synastry_data')).toBe(
+        JSON.stringify(storedSynastryData)
+      );
       // 检查初始值是否取自存储内容
       expect(testService.horoData).toEqual(storedHoroData);
       expect(testService.processData).toEqual(storedProcessData);
+      expect(testService.synastryData).toEqual(storedSynastryData);
     });
   });
 });

@@ -11,6 +11,7 @@ import {
   trashOutline,
   personOutline,
   chatboxEllipsesOutline,
+  copyOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -32,6 +33,7 @@ export class HomePage {
       trashOutline,
       personOutline,
       chatboxEllipsesOutline,
+      copyOutline,
     });
   }
   navigate(url: string) {

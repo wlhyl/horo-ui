@@ -119,8 +119,10 @@ export interface HoroscopeComparison {
 
   // 星盘的宫位
   house_name: string;
-  // 12宫头黄经度数
+  // 原盘12宫头黄经度数
   houses_cups: Array<number>;
+  // 比较盘12宫头黄经度数
+  comparison_cups: Array<number>;
 
   // 上升点
   original_asc: Planet;

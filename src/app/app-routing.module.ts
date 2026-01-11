@@ -56,6 +56,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./about/about.module').then((m) => m.AboutPageModule),
   },
+  {
+    path: Path.Synastry,
+    loadChildren: () =>
+      import('./synastry/synastry.module').then((m) => m.SynastryModule),
+  },
 ];
 
 @NgModule({

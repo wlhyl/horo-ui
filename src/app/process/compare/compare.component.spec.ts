@@ -34,7 +34,7 @@ describe('CompareComponent', () => {
   let mockActivatedRoute: any;
   let mockNavController: jasmine.SpyObj<NavController>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     mockApiService = jasmine.createSpyObj('ApiService', [
       'compare',
       'solarReturn',
@@ -63,7 +63,7 @@ describe('CompareComponent', () => {
       },
     };
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [CompareComponent],
       imports: [
         IonicModule.forRoot(),
@@ -92,7 +92,7 @@ describe('CompareComponent', () => {
       loadFromJSON: (data: any) =>
         Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
     });
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

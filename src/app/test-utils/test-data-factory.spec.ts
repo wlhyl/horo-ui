@@ -19,6 +19,10 @@ import {
   HoroscopeComparison,
   ReturnHoroscope,
 } from '../type/interface/response-data';
+import {
+  HoroscopeRecord,
+} from '../type/interface/horo-admin/horoscope-record';
+import { LocationRecord } from '../type/interface/horo-admin/location-record';
 import { PlanetName, PlanetSpeedState } from '../type/enum/planet';
 import { FixedStarName } from '../type/enum/fixed-star';
 import { LunarMansionsName } from '../type/enum/qizheng';
@@ -312,6 +316,7 @@ export class TestDataFactory {
       comparison_geo: this.createDefaultGeoPosition(overrides?.comparison_geo),
       house_name: 'Placidus',
       houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      comparison_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       original_asc: this.createDefaultPlanet({
         ...overrides?.original_asc,
         name: PlanetName.ASC,
@@ -386,6 +391,54 @@ export class TestDataFactory {
       aspects: [],
       antiscoins: [],
       contraantiscias: [],
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 LocationRecord 对象
+   */
+  static createDefaultLocationRecord(
+    overrides?: Partial<LocationRecord>
+  ): LocationRecord {
+    return {
+      id: 1,
+      name: 'Beijing',
+      is_east: true,
+      longitude_degree: 116,
+      longitude_minute: 24,
+      longitude_second: 26,
+      is_north: true,
+      latitude_degree: 39,
+      latitude_minute: 54,
+      latitude_second: 15,
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 HoroscopeRecord 对象
+   */
+  static createDefaultHoroscopeRecord(
+    overrides?: Partial<HoroscopeRecord>
+  ): HoroscopeRecord {
+    return {
+      id: 1,
+      name: 'Test User',
+      gender: true,
+      birth_year: 1990,
+      birth_month: 1,
+      birth_day: 1,
+      birth_hour: 12,
+      birth_minute: 0,
+      birth_second: 0,
+      time_zone_offset: 8,
+      is_dst: false,
+      location: this.createDefaultLocationRecord(overrides?.location),
+      description: 'Test record',
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: null,
+      lock: false,
       ...overrides,
     };
   }
@@ -536,4 +589,22 @@ export function createMockReturnHoroscope(
   overrides?: Partial<ReturnHoroscope>
 ): ReturnHoroscope {
   return TestDataFactory.createDefaultReturnHoroscope(overrides);
+}
+
+/**
+ * 便利函数：创建 LocationRecord
+ */
+export function createMockLocationRecord(
+  overrides?: Partial<LocationRecord>
+): LocationRecord {
+  return TestDataFactory.createDefaultLocationRecord(overrides);
+}
+
+/**
+ * 便利函数：创建 HoroscopeRecord
+ */
+export function createMockHoroscopeRecord(
+  overrides?: Partial<HoroscopeRecord>
+): HoroscopeRecord {
+  return TestDataFactory.createDefaultHoroscopeRecord(overrides);
 }

@@ -9,7 +9,7 @@ import {
   ReturnHoroscope,
 } from 'src/app/type/interface/response-data';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
-import { createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
+import { createMockHoroRequest, createMockProcessRequest, createMockReturnHoroscope, createMockHoroscopeComparison } from 'src/app/test-utils/test-data-factory.spec';
 
 export const mockHoroData: DeepReadonly<HoroRequest> = createMockHoroRequest({
   id: 1,
@@ -53,7 +53,7 @@ export const mockProcessData: DeepReadonly<ProcessRequest> = createMockProcessRe
   isSolarReturn: false,
 }) as DeepReadonly<ProcessRequest>;
 
-export const mockSolarReturnHoroscopeData: ReturnHoroscope = {
+export const mockSolarReturnHoroscopeData: ReturnHoroscope = createMockReturnHoroscope({
   native_date: { ...mockHoroData.date },
   process_date: { ...mockProcessData.date },
   return_date: { ...mockHoroData.date, year: 2022 },
@@ -114,14 +114,14 @@ export const mockSolarReturnHoroscopeData: ReturnHoroscope = {
   aspects: [],
   antiscoins: [],
   contraantiscias: [],
-};
+});
 
 export const mockLunarReturnHoroscopeData: ReturnHoroscope = {
   ...mockSolarReturnHoroscopeData,
   return_date: { ...mockHoroData.date, month: 5 },
 };
 
-export const mockSolarComparisonNativeData: HoroscopeComparison = {
+export const mockSolarComparisonNativeData: HoroscopeComparison = createMockHoroscopeComparison({
   original_date: { ...mockHoroData.date },
   comparison_date: { ...mockSolarReturnHoroscopeData.return_date },
   original_geo: { ...mockHoroData.geo },
@@ -143,7 +143,7 @@ export const mockSolarComparisonNativeData: HoroscopeComparison = {
   aspects: [],
   antiscoins: [],
   contraantiscias: [],
-};
+});
 
 export const mockNativeComparisonSolarData: HoroscopeComparison = {
   ...mockSolarComparisonNativeData,

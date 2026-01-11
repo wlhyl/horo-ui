@@ -1,0 +1,40 @@
+.planet-relation {
+  margin-top: 10px;
+}
+
+.relation-item {
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+  border-left: 4px solid var(--ion-color-primary);
+}
+
+.relation-planet {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin-bottom: 8px;
+}
+
+.relation-details {
+  margin-left: 8px;
+}
+
+.relation-details p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.relation-note {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: var(--ion-color-light-shade);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.note-label {
+  color: var(--ion-color-danger);
+}

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { DetailComponent } from './detail.component';
@@ -8,6 +8,7 @@ import {
 } from 'src/app/type/interface/response-data';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
 import { IonicModule, NavController } from '@ionic/angular';
+import { createMockHoroscopeComparison } from 'src/app/test-utils/test-data-factory.spec';
 
 const mockPlanet: Planet = {
   name: PlanetName.Sun,
@@ -20,7 +21,7 @@ const mockPlanet: Planet = {
   speed_state: PlanetSpeedState.均,
 };
 
-const mockCompareData: HoroscopeComparison = {
+const mockCompareData: HoroscopeComparison = createMockHoroscopeComparison({
   original_date: {
     year: 2024,
     month: 8,
@@ -39,10 +40,6 @@ const mockCompareData: HoroscopeComparison = {
     second: 0,
     tz: 8,
   },
-  original_geo: { long: 120, lat: 30 },
-  comparison_geo: { long: 120, lat: 30 },
-  house_name: 'Placidus',
-  houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
   original_asc: mockPlanet,
   comparison_asc: mockPlanet,
   original_mc: mockPlanet,
@@ -55,10 +52,7 @@ const mockCompareData: HoroscopeComparison = {
   comparison_planets: [mockPlanet],
   original_part_of_fortune: mockPlanet,
   comparison_part_of_fortune: mockPlanet,
-  aspects: [],
-  antiscoins: [],
-  contraantiscias: [],
-};
+});
 
 describe('DetailComponent', () => {
   let component: DetailComponent;

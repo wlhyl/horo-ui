@@ -13,10 +13,12 @@ import { deepFreeze } from 'src/app/utils/deep-freeze/deep-freeze';
 export class HoroStorageService {
   private _horoData!: HoroRequest;
   private _processData!: ProcessRequest;
+  private _synastryData!: HoroRequest;
 
   constructor() {
     this._initProcessData();
     this._initHoroData();
+    this._initSynastryData();
   }
 
   public get horoData(): DeepReadonly<HoroRequest> {
@@ -37,11 +39,22 @@ export class HoroStorageService {
     localStorage.setItem('process_data', JSON.stringify(data));
   }
 
+  public get synastryData(): DeepReadonly<HoroRequest> {
+    return this._synastryData;
+  }
+
+  public set synastryData(data: HoroRequest) {
+    this._synastryData = deepFreeze(data);
+    localStorage.setItem('synastry_data', JSON.stringify(data));
+  }
+
   public clean() {
     localStorage.removeItem('horo_data');
     localStorage.removeItem('process_data');
+    localStorage.removeItem('synastry_data');
     this._initHoroData();
     this._initProcessData();
+    this._initSynastryData();
   }
 
   private _initProcessData() {
@@ -101,6 +114,37 @@ export class HoroStorageService {
         name: '',
       };
       this._horoData = Object.freeze(horoData);
+    }
+  }
+
+  private _initSynastryData() {
+    let synastryData = this._getParsedItem<HoroRequest>('synastry_data');
+    if (synastryData) {
+      this._synastryData = Object.freeze(synastryData);
+    } else {
+      let t = this.nowDate();
+      synastryData = {
+        id: 0,
+        date: {
+          year: t.year,
+          month: t.month,
+          day: t.day,
+          hour: t.hour,
+          minute: t.minute,
+          second: t.second,
+          tz: t.tz,
+          st: t.st,
+        },
+        geo_name: '北京',
+        geo: {
+          long: 116 + 25 / 60.0,
+          lat: 39 + 54 / 60.0,
+        },
+        house: 'Alcabitus',
+        sex: true,
+        name: '',
+      };
+      this._synastryData = Object.freeze(synastryData);
     }
   }
 

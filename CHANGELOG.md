@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.9.0] - 2026-01-16
+
+### Added
+
+- 新增合盘（Synastry）功能，支持两个星盘的对比分析
+- HoroStorageService 新增 synastryData 存储功能
 
 ### Planned
 

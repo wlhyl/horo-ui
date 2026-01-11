@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>选择档案记录</ion-title>
+    </ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearchChange($event)" placeholder="搜索记录..."></ion-searchbar>
+</ion-header>
+
+<ion-content>
+    <ion-list [inset]="true">
+        @for (record of natives; track record.id) {
+        <ion-item [button]="true" (click)="selectRecord(record)">
+            <ion-avatar aria-hidden="true" slot="start">
+                <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <ion-label>
+                <h2>{{ record.name }}</h2>
+                <p>
+                    {{ record.birth_year }}/{{ record.birth_month }}/{{
+                    record.birth_day
+                    }}
+                </p>
+            </ion-label>
+        </ion-item>
+        }
+    </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    @if (loading) {
+    <div class="loading-spinner">
+        <ion-spinner></ion-spinner>
+    </div>
+    }
+
+    @if (!loading && natives.length === 0) {
+    <ion-text class="no-data">
+        <p>暂无数据</p>
+    </ion-text>
+    }
+</ion-content>

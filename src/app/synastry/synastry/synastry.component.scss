@@ -1,0 +1,59 @@
+.synastry-toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  background: var(--ion-background-color, #ffffff);
+  border-top: 1px solid var(--ion-border-color, #e0e0e0);
+  z-index: 100;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.toolbar-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.horo-aspect-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.horo-aspect-toggle ion-label {
+  margin: 0 8px;
+}
+
+.friendship-button {
+  --border-radius: 50%;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  width: 36px;
+  height: 36px;
+}
+
+.swap-button {
+  --border-radius: 50%;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  width: 36px;
+  height: 36px;
+}
+
+ion-content {
+  --padding-bottom: 60px;
+}

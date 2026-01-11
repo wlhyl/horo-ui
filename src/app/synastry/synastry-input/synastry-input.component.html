@@ -1,0 +1,197 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title [routerLink]='"/"+path.Home'>合盘信息输入</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large" [routerLink]='"/"+path.Home'>合盘信息输入</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="form-container">
+    <ion-grid class="form-grid">
+      <ion-row>
+        <ion-col size="12">
+          <div class="horo-title-container">
+            <div class="horo-title">基础盘</div>
+            <ion-button fill="clear" size="small" (click)="selectFromArchive(true)">
+              <ion-icon name="list-outline"></ion-icon>
+              从档案库选择
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>姓名：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-input [(ngModel)]="originalHoroData.name"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>性别：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-radio-group [(ngModel)]="originalHoroData.sex">
+            <ion-label>男：</ion-label>
+            <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+            <ion-label>女：</ion-label>
+            <ion-radio [value]="false"></ion-radio>
+          </ion-radio-group>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>出生时间：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <horo-date-time [(year)]="originalHoroData.date.year" [(month)]="originalHoroData.date.month"
+            [(day)]="originalHoroData.date.day" [(hour)]="originalHoroData.date.hour"
+            [(minute)]="originalHoroData.date.minute" [(second)]="originalHoroData.date.second"></horo-date-time>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>时区：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <horo-time-zone [(zone)]="originalHoroData.date.tz"></horo-time-zone>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>夏令时：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-checkbox [(ngModel)]="originalHoroData.date.st"></ion-checkbox>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>出生地：</ion-label>
+        </ion-col>
+        <ion-col>
+          <horo-map [(localName)]="originalHoroData.geo_name" [(long)]="originalHoroData.geo.long"
+            [(lat)]="originalHoroData.geo.lat"></horo-map>
+          <horo-geo [(geoLocalName)]="originalHoroData.geo_name" [(geoLong)]="originalHoroData.geo.long"
+            [(geoLat)]="originalHoroData.geo.lat"></horo-geo>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>宫位系统：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-select label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="originalHoroData.house">
+            @for (house of houses; track house) {
+            <ion-select-option [value]="house">{{house}}</ion-select-option>
+            }
+          </ion-select>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="swap-container">
+      <ion-button (click)="swapHoroData()" fill="clear" size="small">
+        <ion-icon name="swap-vertical-outline"></ion-icon>
+        交换
+      </ion-button>
+    </div>
+
+    <ion-grid class="form-grid">
+      <ion-row>
+        <ion-col size="12">
+          <div class="horo-title-container">
+            <div class="horo-title">比较盘</div>
+            <ion-button fill="clear" size="small" (click)="selectFromArchive(false)">
+              <ion-icon name="list-outline"></ion-icon>
+              从档案库选择
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>姓名：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-input [(ngModel)]="comparisonHoroData.name"></ion-input>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>性别：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-radio-group [(ngModel)]="comparisonHoroData.sex">
+            <ion-label>男：</ion-label>
+            <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+            <ion-label>女：</ion-label>
+            <ion-radio [value]="false"></ion-radio>
+          </ion-radio-group>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>出生时间：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <horo-date-time [(year)]="comparisonHoroData.date.year" [(month)]="comparisonHoroData.date.month"
+            [(day)]="comparisonHoroData.date.day" [(hour)]="comparisonHoroData.date.hour"
+            [(minute)]="comparisonHoroData.date.minute" [(second)]="comparisonHoroData.date.second"></horo-date-time>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>时区：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <horo-time-zone [(zone)]="comparisonHoroData.date.tz"></horo-time-zone>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>夏令时：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-checkbox [(ngModel)]="comparisonHoroData.date.st"></ion-checkbox>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>出生地：</ion-label>
+        </ion-col>
+        <ion-col>
+          <horo-map [(localName)]="comparisonHoroData.geo_name" [(long)]="comparisonHoroData.geo.long"
+            [(lat)]="comparisonHoroData.geo.lat"></horo-map>
+          <horo-geo [(geoLocalName)]="comparisonHoroData.geo_name" [(geoLong)]="comparisonHoroData.geo.long"
+            [(geoLat)]="comparisonHoroData.geo.lat"></horo-geo>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-button (click)="getSynastry()" expand="block" fill="clear">提交</ion-button>
+  </div>
+
+</ion-content>

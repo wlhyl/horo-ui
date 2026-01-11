@@ -1,0 +1,24 @@
+:host {
+    ion-content {
+        --overflow: auto;
+    }
+}
+
+ion-list {
+    padding-bottom: 50px;
+}
+
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: var(--ion-color-medium);
+}

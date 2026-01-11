@@ -1,0 +1,58 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.swap-container {
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+
+  ion-button {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
+.form-grid {
+  width: 100%;
+  max-width: 500px;
+}
+
+.horo-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.horo-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  color: var(--ion-color-primary);
+  flex: 1;
+}
+
+.horo-title-container ion-button {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  height: 32px;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+.label-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0;
+}
+
+.label-col ion-label {
+  margin-right: 4px;
+}

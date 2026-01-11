@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Horoconfig } from '../../services/config/horo-config.service';
-import { PlanetName, PlanetSpeedState } from '../../type/enum/planet';
+import { PlanetName } from '../../type/enum/planet';
 import { Zodiac } from '../../type/enum/zodiac';
 import {
   HoroscopeComparison,
@@ -12,9 +12,11 @@ import {
   calculateHouseElements,
   calculatePlanets,
 } from './compare';
-import * as Horo from './horo';
-import { Drawable, TextObject, PathObject } from './horo';
-import * as fabric from 'fabric';
+import { Drawable, TextObject } from './horo';
+import {
+  createMockHoroscopeComparison,
+  createMockPlanet,
+} from '../../test-utils/test-data-factory.spec';
 
 // Mock Horoconfig from horo.spec.ts
 const mockHoroConfig: Horoconfig = {
@@ -82,18 +84,7 @@ const mockHoroConfig: Horoconfig = {
   },
 };
 
-const mockPlanet: Planet = {
-  name: PlanetName.Sun,
-  long: 15,
-  speed: 1,
-  lat: 0,
-  ra: 0,
-  dec: 0,
-  orb: 0,
-  speed_state: PlanetSpeedState.快,
-};
-
-const mockComparisonData: HoroscopeComparison = {
+const mockComparisonData: HoroscopeComparison = createMockHoroscopeComparison({
   original_date: {
     year: 2024,
     month: 7,
@@ -112,22 +103,24 @@ const mockComparisonData: HoroscopeComparison = {
     second: 0,
     tz: 8,
   },
-  original_geo: { long: 120, lat: 30 },
-  comparison_geo: { long: 120, lat: 30 },
-  house_name: 'Placidus',
-  houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-  original_asc: { ...mockPlanet, name: PlanetName.ASC, long: 0 },
-  comparison_asc: { ...mockPlanet, name: PlanetName.ASC, long: 15 },
-  original_mc: { ...mockPlanet, name: PlanetName.MC, long: 270 },
-  comparison_mc: { ...mockPlanet, name: PlanetName.MC, long: 285 },
-  original_dsc: { ...mockPlanet, name: PlanetName.DSC, long: 180 },
-  comparison_dsc: { ...mockPlanet, name: PlanetName.DSC, long: 195 },
-  original_ic: { ...mockPlanet, name: PlanetName.IC, long: 90 },
-  comparison_ic: { ...mockPlanet, name: PlanetName.IC, long: 105 },
-  original_planets: [{ ...mockPlanet, name: PlanetName.Sun, long: 15 }],
-  comparison_planets: [{ ...mockPlanet, name: PlanetName.Mars, long: 45 }],
-  original_part_of_fortune: { ...mockPlanet, name: PlanetName.PartOfFortune, long: 25 },
-  comparison_part_of_fortune: { ...mockPlanet, name: PlanetName.PartOfFortune, long: 35 },
+  original_asc: createMockPlanet({ name: PlanetName.ASC, long: 0 }),
+  comparison_asc: createMockPlanet({ name: PlanetName.ASC, long: 15 }),
+  original_mc: createMockPlanet({ name: PlanetName.MC, long: 270 }),
+  comparison_mc: createMockPlanet({ name: PlanetName.MC, long: 285 }),
+  original_dsc: createMockPlanet({ name: PlanetName.DSC, long: 180 }),
+  comparison_dsc: createMockPlanet({ name: PlanetName.DSC, long: 195 }),
+  original_ic: createMockPlanet({ name: PlanetName.IC, long: 90 }),
+  comparison_ic: createMockPlanet({ name: PlanetName.IC, long: 105 }),
+  original_planets: [createMockPlanet({ name: PlanetName.Sun, long: 15 })],
+  comparison_planets: [createMockPlanet({ name: PlanetName.Mars, long: 45 })],
+  original_part_of_fortune: createMockPlanet({
+    name: PlanetName.PartOfFortune,
+    long: 25,
+  }),
+  comparison_part_of_fortune: createMockPlanet({
+    name: PlanetName.PartOfFortune,
+    long: 35,
+  }),
   aspects: [
     {
       p0: PlanetName.Sun,
@@ -137,9 +130,7 @@ const mockComparisonData: HoroscopeComparison = {
       apply: true,
     },
   ],
-  antiscoins: [],
-  contraantiscias: [],
-};
+});
 
 describe('Compare Image Calculation Functions', () => {
   describe('calculateAspectGrid', () => {
@@ -174,6 +165,7 @@ describe('Compare Image Calculation Functions', () => {
         elements.filter((e: TextObject) => e.text === '1 A 0').length
       ).toBe(1); // Aspect value
     });
+
     it('should return empty array when aspects and planets are empty', () => {
       const elements = calculateAspectText([], [], mockHoroConfig, 280, 280);
       expect(elements.length).toBe(0);
@@ -267,8 +259,8 @@ describe('Compare Image Calculation Functions', () => {
 
       it('should add retrograde symbols when speed < 0', () => {
         const elements = createTestElements([
-          { ...mockPlanet, name: PlanetName.Sun, speed: -1 },
-          { ...mockPlanet, name: PlanetName.Mars, speed: -0.5 },
+          createMockPlanet({ name: PlanetName.Sun, speed: -1 }),
+          createMockPlanet({ name: PlanetName.Mars, speed: -0.5 }),
         ]);
 
         const retroSymbols = elements
@@ -280,8 +272,8 @@ describe('Compare Image Calculation Functions', () => {
 
       it('should not add symbols when speed >= 0', () => {
         const elements = createTestElements([
-          { ...mockPlanet, name: PlanetName.Sun, speed: 1 },
-          { ...mockPlanet, name: PlanetName.Mars, speed: 0 },
+          createMockPlanet({ name: PlanetName.Sun, speed: 1 }),
+          createMockPlanet({ name: PlanetName.Mars, speed: 0 }),
         ]);
 
         const hasRetroSymbol = elements
