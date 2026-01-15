@@ -67,7 +67,9 @@ const mockHoroConfig: Horoconfig = {
     return map[aspectValue] || '';
   },
   aspectImage: { width: 700, height: 700 },
-  HoroscoImage: { width: 700, height: 700 },
+  horoscoImage: { width: 700, height: 700 },
+  synastryAspectImage: { width: 700 * 1.3, height: 700 * 1.3 },
+  synastryHoroscoImage: { width: 700 * 1.3, height: 700 * 1.3 },
   houses: [],
   httpOptions: {
     headers: { 'Content-Type': 'application/json' } as any,

@@ -66,7 +66,7 @@ describe('ImageComponent', () => {
       horoData: mockHoroData,
     };
     mockHoroConfigService = {
-      HoroscoImage: { width: 800, height: 600 },
+      horoscoImage: { width: 800, height: 600 },
       aspectImage: { width: 800, height: 600 },
     };
     mockPlatform = {

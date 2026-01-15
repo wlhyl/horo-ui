@@ -26,7 +26,9 @@ describe('appInit', () => {
       zodiacFontString: () => '',
       zodiacFontFamily: () => '',
       aspectImage: { width: 0, height: 0 },
-      HoroscoImage: { width: 0, height: 0 },
+      horoscoImage: { width: 0, height: 0 },
+      synastryAspectImage: { width: 0, height: 0 },
+      synastryHoroscoImage: { width: 0, height: 0 },
       httpOptions: { headers: {} as any },
     };
 

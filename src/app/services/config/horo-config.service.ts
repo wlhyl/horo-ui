@@ -148,7 +148,11 @@ export class Horoconfig {
 
   // 初始宽、高，绘制完成后会根据屏幕大小缩放
   readonly aspectImage = { width: 700, height: 700 };
-  readonly HoroscoImage = { width: 700, height: 700 };
+  readonly horoscoImage = { width: 700, height: 700 };
+
+  // 合盘的初始宽、高，绘制完成后会根据屏幕大小缩放
+  readonly synastryAspectImage = { width: 700 * 1.3, height: 700 * 1.3 };
+  readonly synastryHoroscoImage = { width: 700 * 1.3, height: 700 * 1.3 };
 
   // 支持的宫位系统，应用启动时会通过http获取
   public houses: Array<string> = [];

@@ -162,8 +162,8 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     } else {
       drawHorosco(this.horoscoData, this.canvas!, this.config, {
-        width: this.config.HoroscoImage.width,
-        height: this.config.HoroscoImage.height,
+        width: this.config.horoscoImage.width,
+        height: this.config.horoscoImage.height,
       });
     }
     zoomImage(this.canvas!, this.platform);

@@ -11,7 +11,11 @@ import {
   calculateNotesElements,
 } from './horo';
 import { Drawable, TextObject } from './horo';
-import { createMockHoroscope, createMockPlanet, createMockAspect } from '../../test-utils/test-data-factory.spec';
+import {
+  createMockHoroscope,
+  createMockPlanet,
+  createMockAspect,
+} from '../../test-utils/test-data-factory.spec';
 
 // Mock Horoconfig
 const mockHoroConfig: Horoconfig = {
@@ -72,7 +76,9 @@ const mockHoroConfig: Horoconfig = {
     return map[aspectValue] || '';
   },
   aspectImage: { width: 700, height: 700 },
-  HoroscoImage: { width: 700, height: 700 },
+  horoscoImage: { width: 700, height: 700 },
+  synastryAspectImage: { width: 700 * 1.3, height: 700 * 1.3 },
+  synastryHoroscoImage: { width: 700 * 1.3, height: 700 * 1.3 },
   houses: [],
   httpOptions: {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -155,7 +161,10 @@ describe('Horo Image Calculation Functions', () => {
       mc: createMockPlanet({ name: PlanetName.MC, long: 270 }),
       dsc: createMockPlanet({ name: PlanetName.DSC, long: 180 }),
       ic: createMockPlanet({ name: PlanetName.IC, long: 90 }),
-      part_of_fortune: createMockPlanet({ name: PlanetName.PartOfFortune, long: 25 }),
+      part_of_fortune: createMockPlanet({
+        name: PlanetName.PartOfFortune,
+        long: 25,
+      }),
       date: {
         year: 2024,
         month: 7,

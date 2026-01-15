@@ -148,8 +148,18 @@ describe('HoroconfigService', () => {
   });
 
   it('HoroscoImage 配置', () => {
-    expect(service.HoroscoImage.width).toBe(700);
-    expect(service.HoroscoImage.height).toBe(700);
+    expect(service.horoscoImage.width).toBe(700);
+    expect(service.horoscoImage.height).toBe(700);
+  });
+
+  it('synastryAspectImage 配置', () => {
+    expect(service.synastryAspectImage.width).toBe(700 * 1.3);
+    expect(service.synastryAspectImage.height).toBe(700 * 1.3);
+  });
+
+  it('synastryHoroscoImage 配置', () => {
+    expect(service.synastryHoroscoImage.width).toBe(700 * 1.3);
+    expect(service.synastryHoroscoImage.height).toBe(700 * 1.3);
   });
 
   it('houses应初始化为空数组', () => {

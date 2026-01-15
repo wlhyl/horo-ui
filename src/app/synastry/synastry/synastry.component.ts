@@ -143,13 +143,13 @@ export class SynastryComponent implements OnInit, AfterViewInit, OnDestroy {
   private draw(horoscopeComparisonData: HoroscopeComparison) {
     if (this.isAspect) {
       drawAspect(horoscopeComparisonData.aspects, this.canvas!, this.config, {
-        width: this.config.aspectImage.width * 1.3,
-        height: this.config.aspectImage.height * 1.3,
+        width: this.config.synastryAspectImage.width,
+        height: this.config.synastryAspectImage.height,
       });
     } else {
       drawHorosco(horoscopeComparisonData, this.canvas!, this.config, {
-        width: this.config.HoroscoImage.width * 1.3,
-        height: this.config.HoroscoImage.height * 1.3,
+        width: this.config.synastryHoroscoImage.width,
+        height: this.config.synastryHoroscoImage.height,
       });
     }
     zoomImage(this.canvas!, this.platform);
