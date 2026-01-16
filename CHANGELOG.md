@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.9.1] - 2026-01-18
+
+## Changed
+
+- 将合盘组件的天宫图、相位图的宽、高属性设置为独立参数
+- 将 archive-selection-modal 放到 horo-common 中成为一个独立的组件
+
 ## [0.9.0] - 2026-01-16
 
 ### Added

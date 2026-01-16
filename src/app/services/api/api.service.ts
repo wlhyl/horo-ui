@@ -24,6 +24,7 @@ import {
   HoroscopeRecord,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
+  SearchHoroscopeRecordRequest,
 } from '../../type/interface/horo-admin/horoscope-record';
 import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
 
@@ -162,6 +163,16 @@ export class ApiService {
   getLongLat(name: string): Observable<Array<LongLatResponse>> {
     return this.http.get<Array<LongLatResponse>>(
       `${this.admin_url}/location_search?q=${name}`
+    );
+  }
+
+  // 搜索horoscopes记录
+  searchHoroscopes(
+    params: SearchHoroscopeRecordRequest & Record<string, string | number>
+  ): Observable<PageResponser<Array<HoroscopeRecord>>> {
+    return this.http.get<PageResponser<Array<HoroscopeRecord>>>(
+      `${this.admin_url}/horoscopes/search`,
+      { params }
     );
   }
 }

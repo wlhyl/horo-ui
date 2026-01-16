@@ -1,4 +1,4 @@
-FROM node:22.17.0 as build-stage
+FROM node:24.13.0 as build-stage
 
 WORKDIR /app
 COPY ./ /app/

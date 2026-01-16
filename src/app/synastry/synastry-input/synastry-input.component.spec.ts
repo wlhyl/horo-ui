@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { SynastryInputComponent } from './synastry-input.component';
 import { HoroStorageService } from '../../services/horostorage/horostorage.service';
-import { Path } from '../../type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { Horoconfig } from '../../services/config/horo-config.service';
 import { HoroRequest } from '../../type/interface/request-data';
@@ -13,20 +12,11 @@ import {
   createMockHoroRequest,
   createMockDateRequest,
   createMockGeoRequest,
-  createMockHoroscopeRecord,
-  createMockLocationRecord,
 } from '../../test-utils/test-data-factory.spec';
-import {
-  AlertController,
-  IonicModule,
-  ModalController,
-  NavController,
-} from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HoroCommonModule } from '../../horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth/auth.service';
-import { HoroscopeRecord } from '../../type/interface/horo-admin/horoscope-record';
 
 describe('SynastryInputComponent', () => {
   let component: SynastryInputComponent;
@@ -36,9 +26,6 @@ describe('SynastryInputComponent', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let configServiceSpy: jasmine.SpyObj<Horoconfig>;
   let navControllerSpy: jasmine.SpyObj<NavController>;
-  let alertControllerSpy: jasmine.SpyObj<AlertController>;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let modalControllerSpy: jasmine.SpyObj<any>;
 
   const mockOriginalHoroData: HoroRequest = createMockHoroRequest({
     id: 1,
@@ -118,14 +105,6 @@ describe('SynastryInputComponent', () => {
       houses: mockHouses,
     });
     navControllerSpy = jasmine.createSpyObj('NavController', ['navigateBack']);
-    alertControllerSpy = jasmine.createSpyObj('AlertController', ['create']);
-    authServiceSpy = jasmine.createSpyObj('AuthService', [], {
-      isAuth: true,
-    });
-    modalControllerSpy = jasmine.createSpyObj('ModalController', [
-      'create',
-      'present',
-    ]);
 
     routerSpy.createUrlTree.and.returnValue({} as any);
     routerSpy.serializeUrl.and.returnValue('url');
@@ -147,9 +126,6 @@ describe('SynastryInputComponent', () => {
         { provide: Horoconfig, useValue: configServiceSpy },
         { provide: Title, useValue: titleServiceSpy },
         { provide: NavController, useValue: navControllerSpy },
-        { provide: AlertController, useValue: alertControllerSpy },
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: ModalController, useValue: modalControllerSpy },
       ],
     }).compileComponents();
 
@@ -257,14 +233,6 @@ describe('SynastryInputComponent', () => {
     });
   });
 
-  it('should have correct path property', () => {
-    expect(component.path).toBe(Path);
-  });
-
-  it('should have correct subPath property', () => {
-    expect(component.subPath).toBe(subPath);
-  });
-
   it('should have correct houses property from config', () => {
     expect(component.houses).toBe(mockHouses);
   });
@@ -319,137 +287,6 @@ describe('SynastryInputComponent', () => {
     expect(storedComparison.name).toBe('Test Comparison');
   });
 
-  describe('selectFromArchive', () => {
-    it('should show alert and not open modal when user is not logged in', async () => {
-      Object.defineProperty(authServiceSpy, 'isAuth', {
-        get: () => false,
-        configurable: true,
-      });
-
-      const mockAlert = {
-        present: jasmine.createSpy('present'),
-      } as any;
-      alertControllerSpy.create.and.returnValue(Promise.resolve(mockAlert));
-
-      await component.selectFromArchive(true);
-
-      expect(alertControllerSpy.create).toHaveBeenCalledWith({
-        header: '提示',
-        message: '请先登录后再从档案库选择记录',
-        buttons: ['确定'],
-      });
-      expect(mockAlert.present).toHaveBeenCalled();
-      expect(modalControllerSpy.create).not.toHaveBeenCalled();
-      expect(modalControllerSpy.present).not.toHaveBeenCalled();
-    });
-
-    it('should open modal and update comparisonHoroData when user is logged in', async () => {
-      Object.defineProperty(authServiceSpy, 'isAuth', {
-        get: () => true,
-        configurable: true,
-      });
-
-      const mockRecord: HoroscopeRecord = createMockHoroscopeRecord({
-        id: 100,
-        name: 'Test User',
-        gender: true,
-        birth_year: 1990,
-        birth_month: 1,
-        birth_day: 1,
-        birth_hour: 12,
-        birth_minute: 0,
-        birth_second: 0,
-        time_zone_offset: 8,
-        is_dst: false,
-        location: createMockLocationRecord({
-          id: 1,
-          name: 'Beijing',
-          is_east: true,
-          longitude_degree: 116,
-          longitude_minute: 24,
-          longitude_second: 0,
-          is_north: true,
-          latitude_degree: 39,
-          latitude_minute: 54,
-          latitude_second: 0,
-        }),
-        description: '',
-        created_at: '',
-        updated_at: null,
-        lock: false,
-      });
-
-      const mockModal = {
-        present: jasmine.createSpy('present'),
-        onDidDismiss: () => Promise.resolve({ data: mockRecord }),
-      } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
-
-      await component.selectFromArchive(false);
-
-      expect(modalControllerSpy.create).toHaveBeenCalled();
-      expect(mockModal.present).toHaveBeenCalled();
-      expect(component.comparisonHoroData.id).toBe(mockRecord.id);
-      expect(component.comparisonHoroData.name).toBe(mockRecord.name);
-      expect(component.comparisonHoroData.sex).toBe(mockRecord.gender);
-      expect(component.comparisonHoroData.house).toBe(
-        component.originalHoroData.house
-      );
-    });
-
-    it('should update originalHoroData when selecting from archive for original', async () => {
-      Object.defineProperty(authServiceSpy, 'isAuth', {
-        get: () => true,
-        configurable: true,
-      });
-
-      const mockRecord: HoroscopeRecord = createMockHoroscopeRecord({
-        id: 200,
-        name: 'Archive User',
-        gender: false,
-        birth_year: 1985,
-        birth_month: 6,
-        birth_day: 15,
-        birth_hour: 8,
-        birth_minute: 30,
-        birth_second: 0,
-        time_zone_offset: 8,
-        is_dst: false,
-        location: createMockLocationRecord({
-          id: 2,
-          name: 'Shanghai',
-          is_east: true,
-          longitude_degree: 121,
-          longitude_minute: 28,
-          longitude_second: 0,
-          is_north: true,
-          latitude_degree: 31,
-          latitude_minute: 14,
-          latitude_second: 0,
-        }),
-        description: '',
-        created_at: '',
-        updated_at: null,
-        lock: false,
-      });
-
-      const originalHouse = component.originalHoroData.house;
-
-      const mockModal = {
-        present: jasmine.createSpy('present'),
-        onDidDismiss: () => Promise.resolve({ data: mockRecord }),
-      } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
-
-      await component.selectFromArchive(true);
-
-      expect(component.originalHoroData.id).toBe(mockRecord.id);
-      expect(component.originalHoroData.name).toBe(mockRecord.name);
-      expect(component.originalHoroData.sex).toBe(mockRecord.gender);
-      expect(component.originalHoroData.house).toBe(originalHouse);
-    });
-  });
-
   describe('multiple swaps', () => {
     it('should handle multiple swapHoroData calls correctly', () => {
       const originalName = component.originalHoroData.name;
@@ -460,176 +297,6 @@ describe('SynastryInputComponent', () => {
 
       component.swapHoroData();
       expect(component.originalHoroData.name).toBe(originalName);
-    });
-  });
-
-  describe('selectFromArchive error handling', () => {
-    it('should not update data when modal dismissed without data', async () => {
-      Object.defineProperty(authServiceSpy, 'isAuth', {
-        get: () => true,
-        configurable: true,
-      });
-
-      const originalId = component.comparisonHoroData.id;
-      const originalName = component.comparisonHoroData.name;
-
-      const mockModal = {
-        present: jasmine.createSpy('present'),
-        onDidDismiss: () => Promise.resolve({ data: null }),
-      } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
-
-      await component.selectFromArchive(false);
-
-      expect(component.comparisonHoroData.id).toBe(originalId);
-      expect(component.comparisonHoroData.name).toBe(originalName);
-    });
-
-    it('should create modal with correct parameters when selecting from archive', async () => {
-      Object.defineProperty(authServiceSpy, 'isAuth', {
-        get: () => true,
-        configurable: true,
-      });
-
-      const mockModal = {
-        present: jasmine.createSpy('present'),
-        onDidDismiss: () => Promise.resolve({ data: null }),
-      } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
-
-      await component.selectFromArchive(false);
-
-      expect(modalControllerSpy.create).toHaveBeenCalledWith({
-        component: jasmine.any(Function),
-        breakpoints: [0, 0.5, 1],
-        initialBreakpoint: 1,
-        backdropDismiss: false,
-      });
-    });
-  });
-
-  describe('convertRecordToHoroRequest', () => {
-    it('should correctly convert HoroscopeRecord with east and north coordinates', () => {
-      const record: HoroscopeRecord = createMockHoroscopeRecord({
-        id: 100,
-        name: 'Test User',
-        gender: true,
-        birth_year: 1990,
-        birth_month: 1,
-        birth_day: 1,
-        birth_hour: 12,
-        birth_minute: 30,
-        birth_second: 0,
-        time_zone_offset: 8,
-        is_dst: false,
-        location: createMockLocationRecord({
-          id: 1,
-          name: 'Beijing',
-          is_east: true,
-          longitude_degree: 116,
-          longitude_minute: 24,
-          longitude_second: 0,
-          is_north: true,
-          latitude_degree: 39,
-          latitude_minute: 54,
-          latitude_second: 0,
-        }),
-        description: '',
-        created_at: '',
-        updated_at: null,
-        lock: false,
-      });
-
-      const result = (component as any).convertRecordToHoroRequest(record);
-
-      expect(result.id).toBe(100);
-      expect(result.name).toBe('Test User');
-      expect(result.sex).toBe(true);
-      expect(result.geo.long).toBeCloseTo(116.4, 1);
-      expect(result.geo.lat).toBeCloseTo(39.9, 1);
-      expect(result.geo_name).toBe('Beijing');
-      expect(result.house).toBe(component.originalHoroData.house);
-      expect(result.date.year).toBe(1990);
-      expect(result.date.month).toBe(1);
-      expect(result.date.day).toBe(1);
-      expect(result.date.hour).toBe(12);
-      expect(result.date.minute).toBe(30);
-      expect(result.date.tz).toBe(8);
-      expect(result.date.st).toBe(false);
-    });
-
-    it('should correctly convert HoroscopeRecord with west and south coordinates', () => {
-      const record: HoroscopeRecord = createMockHoroscopeRecord({
-        id: 200,
-        name: 'New York User',
-        gender: false,
-        birth_year: 1995,
-        birth_month: 6,
-        birth_day: 15,
-        birth_hour: 14,
-        birth_minute: 0,
-        birth_second: 0,
-        time_zone_offset: -5,
-        is_dst: true,
-        location: createMockLocationRecord({
-          id: 2,
-          name: 'New York',
-          is_east: false,
-          longitude_degree: 74,
-          longitude_minute: 0,
-          longitude_second: 0,
-          is_north: false,
-          latitude_degree: 40,
-          latitude_minute: 43,
-          latitude_second: 0,
-        }),
-        description: '',
-        created_at: '',
-        updated_at: null,
-        lock: false,
-      });
-
-      const result = (component as any).convertRecordToHoroRequest(record);
-
-      expect(result.geo.long).toBeCloseTo(-74, 1);
-      expect(result.geo.lat).toBeCloseTo(-40.72, 1);
-      expect(result.date.st).toBe(true);
-    });
-
-    it('should handle record with null name', () => {
-      const record: HoroscopeRecord = createMockHoroscopeRecord({
-        id: 300,
-        name: null as any,
-        gender: true,
-        birth_year: 2000,
-        birth_month: 1,
-        birth_day: 1,
-        birth_hour: 0,
-        birth_minute: 0,
-        birth_second: 0,
-        time_zone_offset: 0,
-        is_dst: false,
-        location: createMockLocationRecord({
-          id: 3,
-          name: 'London',
-          is_east: true,
-          longitude_degree: 0,
-          longitude_minute: 7,
-          longitude_second: 0,
-          is_north: true,
-          latitude_degree: 51,
-          latitude_minute: 30,
-          latitude_second: 0,
-        }),
-        description: '',
-        created_at: '',
-        updated_at: null,
-        lock: false,
-      });
-
-      const result = (component as any).convertRecordToHoroRequest(record);
-
-      expect(result.name).toBe('');
     });
   });
 });

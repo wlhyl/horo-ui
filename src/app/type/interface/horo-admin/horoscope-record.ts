@@ -89,3 +89,26 @@ export interface UpdateHoroscopeRecordRequest {
   // 是否锁定
   lock: boolean | null;
 }
+
+/**
+ * 后台对应的结构体是：SearchHoroscopeRequest
+ */
+export interface SearchHoroscopeRecordRequest {
+  // 分页参数
+  page: number;
+  size: number;
+  // 姓名（模糊搜索）
+  name?: string;
+  // 年（精确搜索）
+  year?: number;
+  // 月（精确搜索）
+  month?: number;
+  // 日（精确搜索）
+  day?: number;
+  // 时（用于时间搜索）
+  hour?: number;
+  // 分（用于时间搜索）
+  minute?: number;
+  // 秒（用于时间搜索）
+  second?: number;
+}

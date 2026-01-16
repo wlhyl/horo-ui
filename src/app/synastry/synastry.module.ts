@@ -10,7 +10,6 @@ import { SynastryRoutingModule } from './synastry-routing.module';
 
 import { SynastryInputComponent } from './synastry-input/synastry-input.component';
 import { SynastryComponent } from './synastry/synastry.component';
-import { ArchiveSelectionModalComponent } from './archive-selection-modal/archive-selection-modal.component';
 import { PlanetFriendshipComponent } from './planet-friendship/planet-friendship.component';
 
 @NgModule({
@@ -24,7 +23,6 @@ import { PlanetFriendshipComponent } from './planet-friendship/planet-friendship
   declarations: [
     SynastryInputComponent,
     SynastryComponent,
-    ArchiveSelectionModalComponent,
     PlanetFriendshipComponent,
   ],
 })

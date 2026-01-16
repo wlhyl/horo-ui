@@ -10,6 +10,8 @@
     <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearchChange($event)" placeholder="搜索记录..."></ion-searchbar>
 </ion-header>
 
+<ion-alert [isOpen]="isAlertOpen" header="错误" [message]="alertMessage" [buttons]="alertButtons" (didDismiss)="isAlertOpen = false"></ion-alert>
+
 <ion-content>
     <ion-list [inset]="true">
         @for (record of natives; track record.id) {

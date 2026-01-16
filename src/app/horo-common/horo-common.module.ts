@@ -12,6 +12,8 @@ import { TimeZoneComponent } from './time-zone/time-zone.component';
 import { GeoComponent } from './geo/geo.component';
 import { MapComponent } from './geo/map.component';
 import { DateTimeChangeComponent } from './date-time-change/date-time-change.component';
+import { ArchiveSelectionModalComponent } from './archive-selection-modal/archive-selection-modal.component';
+import { ArchiveSelectorComponent } from './archive-selector/archive-selector.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { DateTimeChangeComponent } from './date-time-change/date-time-change.com
     GeoComponent,
     MapComponent,
     DateTimeChangeComponent,
+    ArchiveSelectionModalComponent,
+    ArchiveSelectorComponent,
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [
@@ -29,6 +33,7 @@ import { DateTimeChangeComponent } from './date-time-change/date-time-change.com
     GeoComponent,
     MapComponent,
     DateTimeChangeComponent,
+    ArchiveSelectorComponent,
   ],
 })
 export class HoroCommonModule {}

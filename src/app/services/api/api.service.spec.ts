@@ -27,6 +27,7 @@ import {
   HoroscopeRecord,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
+  SearchHoroscopeRecordRequest,
 } from '../../type/interface/horo-admin/horoscope-record';
 import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
 import {
@@ -42,7 +43,18 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { createMockHoroRequest, createMockProfectionRequest, createMockFirdariaRequest, createMockHoroscopeComparisonRequest, createMockReturnRequest, createMockQiZhengRequest, createMockHoroscope, createMockPlanet, createMockHoroscopeComparison, createMockReturnHoroscope } from 'src/app/test-utils/test-data-factory.spec';
+import {
+  createMockHoroRequest,
+  createMockProfectionRequest,
+  createMockFirdariaRequest,
+  createMockHoroscopeComparisonRequest,
+  createMockReturnRequest,
+  createMockQiZhengRequest,
+  createMockHoroscope,
+  createMockPlanet,
+  createMockHoroscopeComparison,
+  createMockReturnHoroscope,
+} from 'src/app/test-utils/test-data-factory.spec';
 
 describe('ApiService', () => {
   let service: ApiService;
@@ -1128,6 +1140,79 @@ describe('ApiService', () => {
 
       const req = httpMock.expectOne(
         `${environment.admin_url}/location_search?q=${mockName}`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+  });
+
+  describe('searchHoroscopes', () => {
+    it('should search horoscopes with pagination parameters', () => {
+      const mockParams: SearchHoroscopeRecordRequest &
+        Record<string, string | number> = {
+        page: 0,
+        size: 20,
+      };
+      const mockResponse: PageResponser<HoroscopeRecord[]> = {
+        data: [],
+        total: 0,
+      };
+
+      service.searchHoroscopes(mockParams).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.admin_url}/horoscopes/search?page=0&size=20`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('should search horoscopes with name filter', () => {
+      const mockParams: SearchHoroscopeRecordRequest &
+        Record<string, string | number> = {
+        page: 0,
+        size: 20,
+        name: 'John',
+      };
+      const mockResponse: PageResponser<HoroscopeRecord[]> = {
+        data: [],
+        total: 0,
+      };
+
+      service.searchHoroscopes(mockParams).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.admin_url}/horoscopes/search?page=0&size=20&name=John`
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockResponse);
+    });
+
+    it('should search horoscopes with all filters', () => {
+      const mockParams: SearchHoroscopeRecordRequest &
+        Record<string, string | number> = {
+        page: 1,
+        size: 10,
+        name: 'John',
+        year: 1990,
+        month: 1,
+        day: 15,
+      };
+      const mockResponse: PageResponser<HoroscopeRecord[]> = {
+        data: [],
+        total: 0,
+      };
+
+      service.searchHoroscopes(mockParams).subscribe((response) => {
+        expect(response).toEqual(mockResponse);
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.admin_url}/horoscopes/search?page=1&size=10&name=John&year=1990&month=1&day=15`
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
