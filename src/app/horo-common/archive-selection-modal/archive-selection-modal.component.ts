@@ -44,7 +44,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalController: ModalController,
-    private api: ApiService
+    private api: ApiService,
   ) {}
 
   ngOnInit() {
@@ -70,6 +70,10 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
   }
 
   loadRecords(isLoadMore: boolean = false): void {
+    if (this.loading || this.isLoadingMore) {
+      return;
+    }
+
     if (isLoadMore) {
       this.isLoadingMore = true;
     } else {
@@ -85,7 +89,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
         finalize(() => {
           this.loading = false;
           this.isLoadingMore = false;
-        })
+        }),
       )
       .subscribe({
         next: (res) => {
@@ -97,7 +101,6 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
           this.totalPages = res.total;
         },
         error: (error) => {
-          this.loading = false;
           this.alertMessage =
             '加载记录失败：' +
             (error.message || '未知错误') +
@@ -129,7 +132,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (res) => {
@@ -137,7 +140,6 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
           this.totalPages = res.total;
         },
         error: (error) => {
-          this.loading = false;
           this.alertMessage =
             '搜索失败：' +
             (error.message || '未知错误') +
@@ -162,7 +164,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
   }
 
   private filterUndefined(
-    obj: SearchHoroscopeRecordRequest & Record<string, unknown>
+    obj: SearchHoroscopeRecordRequest & Record<string, unknown>,
   ): SearchHoroscopeRecordRequest & Record<string, string | number> {
     const result: Record<string, string | number> = {};
     for (const [key, value] of Object.entries(obj)) {
@@ -191,7 +193,6 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.isLoadingMore = true;
     event.target.complete();
     this.infiniteScrollSubject$.next();
   }
@@ -226,7 +227,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.isLoadingMore = false;
-        })
+        }),
       )
       .subscribe({
         next: (res) => {

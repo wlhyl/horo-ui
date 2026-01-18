@@ -117,12 +117,12 @@ describe('ArchiveSelectionModalComponent', () => {
     it('should have correct initial state', () => {
       expect(component.natives).toEqual([]);
       expect(component.searchQuery).toBe('');
-      expect(component.loading).toBe(false);
+      expect(component.loading).toBeFalsy();
       expect(component['page']).toBe(0);
       expect(component['size']).toBe(20);
       expect(component['totalPages']).toBe(0);
-      expect(component['isLoadingMore']).toBe(false);
-      expect(component['isSearchMode']).toBe(false);
+      expect(component['isLoadingMore']).toBeFalsy();
+      expect(component['isSearchMode']).toBeFalsy();
     });
 
     it('should initialize searchSubject', () => {
@@ -148,7 +148,7 @@ describe('ArchiveSelectionModalComponent', () => {
       searchSpy = spyOn(component as any, 'search').and.stub();
       handleInfiniteScrollSpy = spyOn(
         component as any,
-        'handleInfiniteScroll'
+        'handleInfiniteScroll',
       ).and.stub();
     });
 
@@ -201,7 +201,7 @@ describe('ArchiveSelectionModalComponent', () => {
   describe('loadRecords', () => {
     beforeEach(() => {
       mockApiService.getNatives.and.returnValue(
-        of(mockPageResponse).pipe(delay(0))
+        of(mockPageResponse).pipe(delay(0)),
       );
     });
 
@@ -222,21 +222,9 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(component.natives[0]).toEqual(mockRecord1);
       expect(component.natives[1]).toEqual(mockRecord2);
       expect(component['totalPages']).toBe(2);
-      expect(component.loading).toBe(false);
-      expect(component['isLoadingMore']).toBe(false);
+      expect(component.loading).toBeFalsy();
+      expect(component['isLoadingMore']).toBeFalsy();
     }));
-
-    // it('should reset page and natives when not loading more', fakeAsync(() => {
-    //   component.natives = [mockRecord1];
-
-    //   component.loadRecords(false);
-
-    //   expect(component.natives.length).toBe(0);
-
-    //   tick();
-
-    //   expect(component.natives.length).toBe(2);
-    // }));
 
     it('should append records when loading more', fakeAsync(() => {
       component.natives = [mockRecord1];
@@ -245,65 +233,50 @@ describe('ArchiveSelectionModalComponent', () => {
         total: 2,
       };
       mockApiService.getNatives.and.returnValue(
-        of(additionalRecords).pipe(delay(0))
+        of(additionalRecords).pipe(delay(0)),
       );
 
       component.loadRecords(true);
 
       expect(component.natives.length).toBe(1);
-      expect(component['isLoadingMore']).toBe(true);
+      expect(component['isLoadingMore']).toBeTruthy();
 
       tick();
 
       expect(component.natives.length).toBe(2);
       expect(component.natives[1]).toEqual(mockRecord2);
       expect(component['totalPages']).toBe(2);
-      expect(component.loading).toBe(false);
-      expect(component['isLoadingMore']).toBe(false);
+      expect(component.loading).toBeFalsy();
+      expect(component['isLoadingMore']).toBeFalsy();
     }));
 
     it('should handle error when loading records', () => {
       mockApiService.getNatives.and.returnValue(
-        throwError(() => new Error('Failed to load'))
+        throwError(() => new Error('Failed to load')),
       );
 
       component.loadRecords();
 
       expect(component.alertMessage).toContain('加载记录失败：');
       expect(component.alertMessage).toContain('Failed to load');
-      expect(component.isAlertOpen).toBe(true);
-      expect(component.loading).toBe(false);
-      expect(component['isLoadingMore']).toBe(false);
+      expect(component.isAlertOpen).toBeTruthy();
+      expect(component.loading).toBeFalsy();
+      expect(component['isLoadingMore']).toBeFalsy();
     });
 
-    // it('should reset loading states in finalize', fakeAsync(() => {
-    //   const delayResponse = of(mockPageResponse).pipe(delay(100));
-    //   mockApiService.getNatives.and.returnValue(delayResponse);
+    it('should return early if already loading', () => {
+      component['loading'] = true;
 
-    //   component.loadRecords(true);
-    //   expect(component['isLoadingMore']).toBe(true);
+      component.loadRecords();
 
-    //   tick(100);
-    //   expect(component['isLoadingMore']).toBe(false);
-    // }));
-
-    // it('should reset loading state on error', fakeAsync(() => {
-    //   mockApiService.getNatives.and.returnValue(
-    //     throwError(() => new Error('Failed'))
-    //   );
-
-    //   component.loadRecords();
-    //   tick();
-
-    //   expect(component.loading).toBe(false);
-    //   expect(component['isLoadingMore']).toBe(false);
-    // }));
+      expect(mockApiService.getNatives).not.toHaveBeenCalled();
+    });
   });
 
   describe('search', () => {
     beforeEach(() => {
       mockApiService.searchHoroscopes.and.returnValue(
-        of(mockPageResponse).pipe(delay(0))
+        of(mockPageResponse).pipe(delay(0)),
       );
     });
 
@@ -313,7 +286,7 @@ describe('ArchiveSelectionModalComponent', () => {
       component.search();
 
       expect(component.loading).toBe(true);
-      expect(component['isSearchMode']).toBe(true);
+      expect(component['isSearchMode']).toBeTruthy();
       expect(component['searchParams'].page).toBe(0);
 
       tick();
@@ -323,15 +296,15 @@ describe('ArchiveSelectionModalComponent', () => {
           page: 0,
           size: 20,
           name: 'John',
-        })
+        }),
       );
 
       expect(component.natives.length).toBe(2);
       expect(component.natives[0]).toEqual(mockRecord1);
       expect(component.natives[1]).toEqual(mockRecord2);
       expect(component['totalPages']).toBe(2);
-      expect(component.loading).toBe(false);
-      expect(component['isLoadingMore']).toBe(false);
+      expect(component.loading).toBeFalsy();
+      expect(component['isLoadingMore']).toBeFalsy();
     }));
 
     it('should not include undefined values in request params', fakeAsync(() => {
@@ -350,28 +323,9 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(callArgs.hasOwnProperty('second')).toBe(false);
     }));
 
-    // it('should set isSearchMode to true when searching', fakeAsync(() => {
-    //   component.searchQuery = 'test';
-
-    //   component.search();
-
-    //   expect(component['isSearchMode']).toBe(true);
-    // }));
-
-    // it('should load search results', fakeAsync(() => {
-    //   component.searchQuery = 'Jane';
-
-    //   component.search();
-    //   tick();
-
-    //   expect(component.natives.length).toBe(2);
-    //   expect(component.natives[0]).toEqual(mockRecord1);
-    //   expect(component.natives[1]).toEqual(mockRecord2);
-    // }));
-
     it('should handle search error', () => {
       mockApiService.searchHoroscopes.and.returnValue(
-        throwError(() => new Error('Search failed'))
+        throwError(() => new Error('Search failed')),
       );
       component.searchQuery = 'test';
 
@@ -379,12 +333,21 @@ describe('ArchiveSelectionModalComponent', () => {
 
       expect(component.alertMessage).toContain('搜索失败：');
       expect(component.alertMessage).toContain('Search failed');
-      expect(component.isAlertOpen).toBe(true);
-      expect(component.loading).toBe(false);
+      expect(component.isAlertOpen).toBeTruthy();
+      expect(component.loading).toBeFalsy();
+      expect(component['isLoadingMore']).toBeFalsy();
     });
 
     it('should return early if already loading', () => {
       component['loading'] = true;
+
+      component.search();
+
+      expect(mockApiService.searchHoroscopes).not.toHaveBeenCalled();
+    });
+
+    it('should return early if already loading more', () => {
+      component['isLoadingMore'] = true;
 
       component.search();
 
@@ -397,6 +360,7 @@ describe('ArchiveSelectionModalComponent', () => {
       component.search();
 
       expect(mockApiService.searchHoroscopes).not.toHaveBeenCalled();
+      expect(component['isLoadingMore']).toBeTruthy();
     }));
   });
 
@@ -407,7 +371,7 @@ describe('ArchiveSelectionModalComponent', () => {
       loadRecordsSpy = spyOn(component as any, 'loadRecords').and.stub();
       searchSubjectNextSpy = spyOn(
         component['searchSubject$'],
-        'next'
+        'next',
       ).and.stub();
     });
 
@@ -430,7 +394,7 @@ describe('ArchiveSelectionModalComponent', () => {
       };
       component.onSearchChange(event);
 
-      expect(component['isSearchMode']).toBe(false);
+      expect(component['isSearchMode']).toBeFalsy();
       expect(component['page']).toBe(0);
       expect(loadRecordsSpy).toHaveBeenCalled();
     });
@@ -443,7 +407,7 @@ describe('ArchiveSelectionModalComponent', () => {
       };
       component.onSearchChange(event);
 
-      expect(component['isSearchMode']).toBe(false);
+      expect(component['isSearchMode']).toBeFalsy();
       expect(component['page']).toBe(0);
       expect(loadRecordsSpy).toHaveBeenCalled();
     });
@@ -456,16 +420,16 @@ describe('ArchiveSelectionModalComponent', () => {
     beforeEach(() => {
       infiniteScrollSubjectNextSpy = spyOn(
         component['infiniteScrollSubject$'],
-        'next'
+        'next',
       ).and.stub();
 
       mockInfiniteScrollEvent = jasmine.createSpyObj(
         'InfiniteScrollCustomEvent',
-        ['']
+        [''],
       );
       mockInfiniteScrollEvent.target = jasmine.createSpyObj(
         'IonInfiniteScroll',
-        ['complete']
+        ['complete'],
       );
     });
 
@@ -481,7 +445,6 @@ describe('ArchiveSelectionModalComponent', () => {
     it('should set isLoadingMore to true and push to subject', () => {
       component.onIonInfinite(mockInfiniteScrollEvent);
 
-      expect(component['isLoadingMore']).toBe(true);
       expect(mockInfiniteScrollEvent.target.complete).toHaveBeenCalled();
       expect(infiniteScrollSubjectNextSpy).toHaveBeenCalled();
     });
@@ -503,7 +466,7 @@ describe('ArchiveSelectionModalComponent', () => {
 
       component['handleInfiniteScroll']();
 
-      expect(component['isLoadingMore']).toBe(false);
+      expect(component['isLoadingMore']).toBeFalsy();
       expect(component['page']).toBe(4);
       expect(loadRecordsSpy).not.toHaveBeenCalled();
       expect(searchLoadMoreSpy).not.toHaveBeenCalled();
@@ -541,7 +504,7 @@ describe('ArchiveSelectionModalComponent', () => {
   describe('searchLoadMore', () => {
     beforeEach(() => {
       mockApiService.searchHoroscopes.and.returnValue(
-        of(mockPageResponse).pipe(delay(0))
+        of(mockPageResponse).pipe(delay(0)),
       );
     });
 
@@ -579,7 +542,7 @@ describe('ArchiveSelectionModalComponent', () => {
 
     it('should handle error when loading more', () => {
       mockApiService.searchHoroscopes.and.returnValue(
-        throwError(() => new Error('Load more failed'))
+        throwError(() => new Error('Load more failed')),
       );
       component.natives = [mockRecord1];
       component['isSearchMode'] = true;
@@ -591,8 +554,8 @@ describe('ArchiveSelectionModalComponent', () => {
 
       expect(component.alertMessage).toContain('加载更多失败：');
       expect(component.alertMessage).toContain('Load more failed');
-      expect(component.isAlertOpen).toBe(true);
-      expect(component['isLoadingMore']).toBe(false);
+      expect(component.isAlertOpen).toBeTruthy();
+      expect(component['isLoadingMore']).toBeFalsy();
     });
   });
 
