@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { of } from 'rxjs';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { QizhengPage } from './qizheng.page';
-import { Path as subPath } from './path';
+import { Path } from './path';
 import { IonicModule, NavController } from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { FormsModule } from '@angular/forms';
@@ -16,13 +16,15 @@ import { TimeZoneComponent } from '../horo-common/time-zone/time-zone.component'
 import { MapComponent } from '../horo-common/geo/map.component';
 import { GeoComponent } from '../horo-common/geo/geo.component';
 import { DateTimeComponent } from '../horo-common/date-time/date-time.component';
-import { Path } from '../type/enum/path';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { createMockHoroRequest, createMockProcessRequest } from '../test-utils/test-data-factory.spec';
+import {
+  createMockHoroRequest,
+  createMockProcessRequest,
+} from '../test-utils/test-data-factory.spec';
 
 describe('QizhengPage', () => {
   let component: QizhengPage;
@@ -54,7 +56,7 @@ describe('QizhengPage', () => {
       {
         routerState: { root: mockActivatedRoute },
         events: of(),
-      }
+      },
     );
 
     await TestBed.configureTestingModule({
@@ -96,11 +98,11 @@ describe('QizhengPage', () => {
     // 检查 getter 是否被正确调用
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
-      'horoData'
+      'horoData',
     )?.get;
     const processDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
-      'processData'
+      'processData',
     )?.get;
 
     expect(horoDataGetterSpy).toBeDefined();
@@ -120,27 +122,23 @@ describe('QizhengPage', () => {
     // 检查 setter 是否被正确调用
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
-      'horoData'
+      'horoData',
     )?.set as jasmine.Spy;
     const processDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
-      'processData'
+      'processData',
     )?.set as jasmine.Spy;
 
     expect(horoDataSetterSpy).toHaveBeenCalledWith(originalHoroData);
     expect(processDataSetterSpy).toHaveBeenCalledWith(originalProcessData);
 
-    expect(routerSpy.navigate).toHaveBeenCalledWith([subPath.Horo], {
+    expect(routerSpy.navigate).toHaveBeenCalledWith([Path.Horo], {
       relativeTo: mockActivatedRoute,
     });
   });
 
   it('should have correct title', () => {
     expect(component.title).toBe('七政四余');
-  });
-
-  it('should have correct path property', () => {
-    expect(component.path).toBe(Path);
   });
 
   it('should not affect original storage.horoData when modifying horoData property', () => {
@@ -188,11 +186,11 @@ describe('QizhengPage', () => {
     // 检查setter是否被正确调用
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
-      'horoData'
+      'horoData',
     )?.set as jasmine.Spy;
     const processDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
-      'processData'
+      'processData',
     )?.set as jasmine.Spy;
 
     // 验证storage.horoData与component.horoData是不同的对象
@@ -227,7 +225,7 @@ describe('QizhengPage', () => {
       processDSTCheckbox = fixture.debugElement.query(By.css('#process-dst'));
       submitButton = fixture.debugElement.query(By.css('#submit-button'));
       birthTimezone = fixture.debugElement.query(
-        By.css('#horo-birth-timezone')
+        By.css('#horo-birth-timezone'),
       );
       processTimezone = fixture.debugElement.query(By.css('#process-timezone'));
       mapComponent = fixture.debugElement.query(By.css('horo-map'));

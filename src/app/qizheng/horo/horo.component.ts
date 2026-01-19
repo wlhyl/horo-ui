@@ -14,9 +14,8 @@ import { drawHoroscope } from 'src/app/utils/image/qizheng';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { TipService } from 'src/app/services/qizheng/tip.service';
 import { Platform } from '@ionic/angular';
-import { Path } from '../../type/enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { Path as subPath } from '../path';
+import { Path } from '../path';
 import { informationCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
@@ -29,8 +28,6 @@ import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
   standalone: false,
 })
 export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
-  path = Path;
-
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
   currentProcessData: ProcessRequest = structuredClone(this.processData);
@@ -65,7 +62,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private platform: Platform,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     addIcons({ informationCircleOutline });
   }
@@ -121,7 +118,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (data) => {
@@ -132,7 +129,9 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
         error: (err) => {
           this.horoscopeData = null;
           this.message =
-            (err.message ?? '未知错误') + ' ' + (err.error?.error??  '未知错误详情');
+            (err.message ?? '未知错误') +
+            ' ' +
+            (err.error?.error ?? '未知错误详情');
           this.isAlertOpen = true;
         },
       });
@@ -176,7 +175,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentProcessData.date.day,
       this.currentProcessData.date.hour,
       this.currentProcessData.date.minute,
-      this.currentProcessData.date.second
+      this.currentProcessData.date.second,
     );
 
     date.setFullYear(date.getFullYear() + step.year);
@@ -198,7 +197,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onDetail() {
     if (this.horoscopeData) {
-      this.router.navigate([subPath.HoroDetail], {
+      this.router.navigate([Path.HoroDetail], {
         relativeTo: this.route,
         state: { data: this.horoscopeData },
       });

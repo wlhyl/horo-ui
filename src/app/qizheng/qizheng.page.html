@@ -3,23 +3,26 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title [routerLink]='"/"+path.Home'>{{title}}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button [routerLink]="['/', path.Qizheng, subPath.Knowledge]">
-        <ion-icon name="book-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large" [routerLink]='"/"+path.Home'>{{title}}</ion-title>
+      <ion-title size="large">{{title}}</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-grid>
+    <ion-row>
+      <ion-col size="5" class="left_col">
+      </ion-col>
+      <ion-col size="7">
+        <app-archive-selector [defaultHouse]="horoData.house"
+          (horoRequestSelected)="onArchiveSelected($event)"></app-archive-selector>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col size="5" class="left_col">
         <ion-label>姓名：</ion-label>

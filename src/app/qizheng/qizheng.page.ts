@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Path as subPath } from './path';
-import { Path } from '../type/enum/path';
+import { Path } from './path';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 
 @Component({
@@ -13,9 +12,6 @@ import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
   standalone: false,
 })
 export class QizhengPage implements OnInit {
-  path = Path;
-  subPath = subPath;
-
   horoData: HoroRequest = structuredClone(this.storage.horoData);
   processData: ProcessRequest = structuredClone(this.storage.processData);
 
@@ -25,7 +21,7 @@ export class QizhengPage implements OnInit {
     private storage: HoroStorageService,
     private titleService: Title,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -35,9 +31,13 @@ export class QizhengPage implements OnInit {
   getProcess() {
     this.storage.horoData = structuredClone(this.horoData);
     this.storage.processData = structuredClone(this.processData);
-    const path = subPath.Horo;
-    this.router.navigate([path], {
+
+    this.router.navigate([Path.Horo], {
       relativeTo: this.route,
     });
+  }
+
+  onArchiveSelected(horoData: HoroRequest): void {
+    this.horoData = horoData;
   }
 }
