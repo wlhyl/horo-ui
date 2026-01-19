@@ -3,18 +3,26 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title [routerLink]='"/"+path.Home'>{{ title }}</ion-title>
+    <ion-title>{{ title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large" [routerLink]='"/"+path.Home'>{{ title }}</ion-title>
+      <ion-title size="large">{{ title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-grid>
+    <ion-row>
+      <ion-col size="5" class="left_col">
+      </ion-col>
+      <ion-col size="7">
+        <app-archive-selector [defaultHouse]="horaData.house"
+          (horoRequestSelected)="onArchiveSelected($event)"></app-archive-selector>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col size="5" class="left_col">
         <ion-label>姓名：</ion-label>
@@ -46,7 +54,7 @@
       <ion-col size="7">
         <horo-date-time [(year)]="horaData.date.year" [(month)]="horaData.date.month" [(day)]="horaData.date.day"
           [(hour)]="horaData.date.hour" [(minute)]="horaData.date.minute"
-        [(second)]="horaData.date.second"></horo-date-time>
+          [(second)]="horaData.date.second"></horo-date-time>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -76,10 +84,10 @@
     </ion-col>
     <ion-col>
       <horo-map style="margin-right: 1rem;" [(localName)]="horaData.geo_name" [(long)]="horaData.geo.long"
-      [(lat)]="horaData.geo.lat"></horo-map>
+        [(lat)]="horaData.geo.lat"></horo-map>
 
       <horo-geo [(geoLocalName)]="horaData.geo_name" [(geoLong)]="horaData.geo.long"
-      [(geoLat)]="horaData.geo.lat"></horo-geo>
+        [(geoLat)]="horaData.geo.lat"></horo-geo>
     </ion-col>
   </ion-row>
 
@@ -90,7 +98,7 @@
     <ion-col size="7">
       <ion-select label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="horaData.house">
         @for (house of houses; track house) {
-          <ion-select-option [value]="house">{{ house }}</ion-select-option>
+        <ion-select-option [value]="house">{{ house }}</ion-select-option>
         }
       </ion-select>
     </ion-col>
@@ -116,8 +124,8 @@
           <ion-picker>
             <ion-picker-column [value]="currentProcess" (ionChange)="onIonChange($event)">
               @for (option of processOptions; track option) {
-                <ion-picker-column-option [value]="option.value">{{ option.text }}
-                </ion-picker-column-option>
+              <ion-picker-column-option [value]="option.value">{{ option.text }}
+              </ion-picker-column-option>
               }
             </ion-picker-column>
           </ion-picker>
@@ -133,7 +141,7 @@
     <ion-col size="7">
       <horo-date-time [(year)]="processData.date.year" [(month)]="processData.date.month" [(day)]="processData.date.day"
         [(hour)]="processData.date.hour" [(minute)]="processData.date.minute"
-      [(second)]="processData.date.second"></horo-date-time>
+        [(second)]="processData.date.second"></horo-date-time>
     </ion-col>
   </ion-row>
 
@@ -162,23 +170,24 @@
     </ion-col>
     <ion-col>
       <horo-map style="margin-right: 1rem;" [(localName)]="processData.geo_name" [(long)]="processData.geo.long"
-      [(lat)]="processData.geo.lat"></horo-map>
+        [(lat)]="processData.geo.lat"></horo-map>
 
       <horo-geo [(geoLocalName)]="processData.geo_name" [(geoLong)]="processData.geo.long"
-      [(geoLat)]="processData.geo.lat"></horo-geo>
+        [(geoLat)]="processData.geo.lat"></horo-geo>
     </ion-col>
   </ion-row>
 
-  @if (processData.process_name===processNameEnum.LunarReturn || processData.process_name===processNameEnum.LunarcomparNative || processData.process_name===processNameEnum.NativecomparLunar) {
-    <ion-row
-      >
-      <ion-col size="5" class="left_col">
-        <ion-label>日返月亮：</ion-label>
-      </ion-col>
-      <ion-col size="7">
-        <ion-checkbox [(ngModel)]="processData.isSolarReturn"></ion-checkbox>
-      </ion-col>
-    </ion-row>
+  @if (processData.process_name===processNameEnum.LunarReturn ||
+  processData.process_name===processNameEnum.LunarcomparNative ||
+  processData.process_name===processNameEnum.NativecomparLunar) {
+  <ion-row>
+    <ion-col size="5" class="left_col">
+      <ion-label>日返月亮：</ion-label>
+    </ion-col>
+    <ion-col size="7">
+      <ion-checkbox [(ngModel)]="processData.isSolarReturn"></ion-checkbox>
+    </ion-col>
+  </ion-row>
   }
 
   <ion-button (click)="getProcess()" expand="block" fill="clear">提交</ion-button>

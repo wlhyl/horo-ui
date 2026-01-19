@@ -173,9 +173,5 @@ describe('ProfectionComponent', () => {
       expect(component.alertButtons).toEqual(['OK']);
       expect(component.message).toBe('');
     });
-
-    it('should have correct path property', () => {
-      expect(component.path).toBeTruthy();
-    });
   });
 });

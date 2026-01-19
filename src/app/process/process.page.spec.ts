@@ -7,7 +7,6 @@ import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { ProcessName } from './enum/process';
-import { Path } from '../type/enum/path';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, NavController } from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
@@ -251,10 +250,6 @@ describe('ProcessPage', () => {
 
   it('should have correct title', () => {
     expect(component.title).toBe('推运');
-  });
-
-  it('should have correct path property', () => {
-    expect(component.path).toBe(Path);
   });
 
   it('should have correct houses property', () => {

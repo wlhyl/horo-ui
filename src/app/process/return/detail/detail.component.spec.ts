@@ -143,7 +143,6 @@ describe('DetailComponent', () => {
 
     it('should have correct initial property values', () => {
       expect(component.title).toBe('返照盘详情');
-      expect(component.path).toBeDefined();
       expect(component.config).toBeDefined();
       expect(component.config instanceof Horoconfig).toBe(true);
     });

@@ -4,7 +4,6 @@ import { ProcessName } from './enum/process';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
-import { Path } from '../type/enum/path';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 
 @Component({
@@ -18,7 +17,6 @@ export class ProcessPage implements OnInit {
   horaData: HoroRequest = structuredClone(this.storage.horoData);
   processData: ProcessRequest = structuredClone(this.storage.processData);
   title = '推运';
-  path = Path;
 
   currentProcess = this.processData.process_name;
 
@@ -31,7 +29,7 @@ export class ProcessPage implements OnInit {
     private route: ActivatedRoute,
     private storage: HoroStorageService,
     private config: Horoconfig,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit() {
@@ -81,5 +79,9 @@ export class ProcessPage implements OnInit {
         process_name: event.detail.data,
       };
     }
+  }
+
+  onArchiveSelected(horoData: HoroRequest): void {
+    this.horaData = horoData;
   }
 }

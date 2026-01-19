@@ -17,7 +17,6 @@ import { Platform } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
-import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
@@ -29,7 +28,6 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
   standalone: false,
 })
 export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
-  path = Path;
   process_name = ProcessName.SolarReturn;
 
   isAlertOpen = false;
@@ -97,7 +95,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig,
-    private titleService: Title
+    private titleService: Title,
   ) {
     const process_name = this.route.snapshot.data['process_name'];
     if (!process_name) {
@@ -154,7 +152,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
         finalize(() => {
           this.isDrawing = false; // 结束绘制
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (data) => {
@@ -172,7 +170,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // 获取取返照盘
   private getReturnData(
-    process_name: ProcessName
+    process_name: ProcessName,
   ): Observable<ReturnHoroscope> {
     return process_name === ProcessName.SolarReturn
       ? this.getSolarReturnData()
@@ -204,7 +202,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
             second: solarReturnData.return_date.second,
             tz: solarReturnData.return_date.tz,
             st: false,
-          }))
+          })),
         )
       : of(this.horoData.date);
 
@@ -217,7 +215,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
           process_date: this.currentProcessData.date, // 这里使用当前的processData.date
         };
         return this.api.lunarReturn(requestData);
-      })
+      }),
     );
   }
 
@@ -251,7 +249,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       this.currentProcessData.date.day,
       this.currentProcessData.date.hour,
       this.currentProcessData.date.minute,
-      this.currentProcessData.date.second
+      this.currentProcessData.date.second,
     );
 
     date.setFullYear(date.getFullYear() + step.year);

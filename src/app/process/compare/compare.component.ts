@@ -29,7 +29,6 @@ import {
 } from 'rxjs';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/compare';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
-import { Path } from 'src/app/type/enum/path';
 import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
@@ -48,7 +47,6 @@ enum ComparisonType {
   standalone: false,
 })
 export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
-  path = Path;
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
   currentProcessData: ProcessRequest = structuredClone(this.processData);
@@ -97,7 +95,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     private titleService: Title,
     private api: ApiService,
     private storage: HoroStorageService,
-    public config: Horoconfig
+    public config: Horoconfig,
   ) {
     const process_name = this.route.snapshot.data['process_name'];
 
@@ -169,7 +167,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (data: HoroscopeComparison) => {
@@ -260,7 +258,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentProcessData.date.day,
       this.currentProcessData.date.hour,
       this.currentProcessData.date.minute,
-      this.currentProcessData.date.second
+      this.currentProcessData.date.second,
     );
 
     date.setFullYear(date.getFullYear() + step.year);
@@ -290,7 +288,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
    * @returns 返回一个Observable，发出HoroscopeComparison类型的对象
    */
   private getHoroscopeComparisonData(
-    process_name: ProcessName
+    process_name: ProcessName,
   ): Observable<HoroscopeComparison> {
     switch (process_name) {
       case ProcessName.Transit:
@@ -326,7 +324,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
   // 日返盘与本命盘的计算，应该分别计算两个盘，然后将两个盘的数据进行比较
   // 以上问题已经修复
   private getReturnComparData(
-    comparisonType: ComparisonType
+    comparisonType: ComparisonType,
   ): Observable<HoroscopeComparison> {
     // 获取返照数据
     const isSolar =
@@ -364,7 +362,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         return this.api.compare(requestData);
-      })
+      }),
     );
   }
 
@@ -409,7 +407,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
           return this.api.lunarReturn(requestData);
         }),
-        switchMap((requestObservable) => requestObservable)
+        switchMap((requestObservable) => requestObservable),
       );
     }
 

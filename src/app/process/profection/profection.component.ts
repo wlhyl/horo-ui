@@ -4,16 +4,14 @@ import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { ProfectionRequest } from 'src/app/type/interface/request-data';
 import { Profection } from 'src/app/type/interface/response-data';
-import { Path } from 'src/app/type/enum/path';
 
 @Component({
-    selector: 'app-profection',
-    templateUrl: './profection.component.html',
-    styleUrls: ['./profection.component.scss'],
-    standalone: false
+  selector: 'app-profection',
+  templateUrl: './profection.component.html',
+  styleUrls: ['./profection.component.scss'],
+  standalone: false,
 })
 export class ProfectionComponent implements OnInit {
-  path = Path;
   horoData = this.storage.horoData;
   processData = this.storage.processData;
   profection: Profection = {
@@ -32,7 +30,7 @@ export class ProfectionComponent implements OnInit {
   constructor(
     private api: ApiService,
     private storage: HoroStorageService,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit() {

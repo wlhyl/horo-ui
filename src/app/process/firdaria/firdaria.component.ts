@@ -5,7 +5,6 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { FirdariaRequest } from 'src/app/type/interface/request-data';
 import { FirdariaPeriod } from 'src/app/type/interface/response-data';
-import { Path } from 'src/app/type/enum/path';
 
 @Component({
   selector: 'app-firdaria',
@@ -14,8 +13,6 @@ import { Path } from 'src/app/type/enum/path';
   standalone: false,
 })
 export class FirdariaComponent implements OnInit {
-  path = Path;
-
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
@@ -30,7 +27,7 @@ export class FirdariaComponent implements OnInit {
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit() {
