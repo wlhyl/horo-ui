@@ -16,8 +16,7 @@ import { TimeZoneComponent } from '../horo-common/time-zone/time-zone.component'
 import { MapComponent } from '../horo-common/geo/map.component';
 import { GeoComponent } from '../horo-common/geo/geo.component';
 import { DateTimeComponent } from '../horo-common/date-time/date-time.component';
-import { Path } from '../type/enum/path';
-import { Path as subPath } from './enum';
+import { Path } from './enum';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { createMockHoroRequest } from '../test-utils/test-data-factory.spec';
 
@@ -164,10 +163,6 @@ describe('NativePage', () => {
 
   it('should have correct path property', () => {
     expect(component.path).toBe(Path);
-  });
-
-  it('should have correct subPath property', () => {
-    expect(component.subPath).toBe(subPath);
   });
 
   it('should have correct houses property', () => {

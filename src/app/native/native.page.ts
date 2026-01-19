@@ -3,8 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
-import { Path } from '../type/enum/path';
-import { Path as subPath } from './enum';
+import { Path } from './enum';
 import { HoroRequest } from '../type/interface/request-data';
 import { ViewWillEnter } from '@ionic/angular';
 
@@ -39,7 +38,6 @@ export class NativePage implements OnInit, ViewWillEnter {
   };
 
   path = Path;
-  subPath = subPath;
   title = '本命星盘';
 
   constructor(
@@ -47,7 +45,7 @@ export class NativePage implements OnInit, ViewWillEnter {
     private route: ActivatedRoute,
     private storage: HoroStorageService,
     private config: Horoconfig,
-    private titleService: Title
+    private titleService: Title,
   ) {}
 
   ngOnInit() {
@@ -61,5 +59,9 @@ export class NativePage implements OnInit, ViewWillEnter {
   getHoro() {
     this.storage.horoData = structuredClone(this.horoData);
     this.router.navigate(['./image'], { relativeTo: this.route });
+  }
+
+  onArchiveSelected(horoData: HoroRequest): void {
+    this.horoData = horoData;
   }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
-import { Path } from 'src/app/type/enum/path';
 import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
@@ -10,13 +9,12 @@ import {
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
 @Component({
-    selector: 'app-note',
-    templateUrl: './note.component.html',
-    styleUrls: ['./note.component.scss'],
-    standalone: false
+  selector: 'app-note',
+  templateUrl: './note.component.html',
+  styleUrls: ['./note.component.scss'],
+  standalone: false,
 })
 export class NoteComponent implements OnInit {
-  path = Path;
   title = '笔记';
 
   isAlertOpen = false;
@@ -31,7 +29,7 @@ export class NoteComponent implements OnInit {
   constructor(
     private titleService: Title,
     private api: ApiService,
-    private storage: HoroStorageService
+    private storage: HoroStorageService,
   ) {}
 
   ngOnInit() {

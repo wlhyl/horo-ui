@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Path } from 'src/app/type/enum/path';
 import { Title } from '@angular/platform-browser';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Router } from '@angular/router'; // 导入 Router
@@ -18,7 +17,6 @@ import { PlanetName } from 'src/app/type/enum/planet';
   standalone: false,
 })
 export class DetailComponent implements OnInit {
-  path = Path;
   title = '星盘详情';
 
   horoscopeData: Horoscope | null = null;
@@ -30,7 +28,7 @@ export class DetailComponent implements OnInit {
   constructor(
     private titleService: Title,
     private router: Router,
-    public config: Horoconfig
+    public config: Horoconfig,
   ) {
     this.titleService.setTitle(this.title);
     // 从路由的 state 获取 horoscopeData 的值
@@ -47,13 +45,13 @@ export class DetailComponent implements OnInit {
     if (!this.horoscopeData) return null;
 
     const sun = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Sun
+      (p) => p.name === PlanetName.Sun,
     );
     if (!sun) return null;
     const sunLong = sun.long;
 
     const mars = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Mars
+      (p) => p.name === PlanetName.Mars,
     );
     if (!mars) return null;
     const marsLong = mars.long;
@@ -70,13 +68,13 @@ export class DetailComponent implements OnInit {
     if (!this.horoscopeData) return null;
 
     const moon = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Moon
+      (p) => p.name === PlanetName.Moon,
     );
     if (!moon) return null;
     const moonLong = moon.long;
 
     const saturn = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Saturn
+      (p) => p.name === PlanetName.Saturn,
     );
     if (!saturn) return null;
     const saturnLong = saturn.long;

@@ -9,7 +9,6 @@ import { StaticCanvas } from 'fabric';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/horo';
 import { Title } from '@angular/platform-browser';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
-import { Path } from 'src/app/type/enum/path';
 import { AuthService } from 'src/app/services/auth/auth.service'; // 导入 AuthService
 import { Router, ActivatedRoute } from '@angular/router'; // 导入 Router 和 ActivatedRoute
 import {
@@ -35,7 +34,6 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
   standalone: false,
 })
 export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
-  path = Path;
   private horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   currentHoroData: HoroRequest = structuredClone(this.horoData);
 
@@ -81,7 +79,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private alertController: AlertController
+    private alertController: AlertController,
   ) {
     addIcons({ informationCircleOutline, createOutline, archiveOutline });
   }
@@ -131,7 +129,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
-        })
+        }),
       )
       .subscribe({
         next: (data) => {
@@ -221,7 +219,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentHoroData.date.day,
       this.currentHoroData.date.hour,
       this.currentHoroData.date.minute,
-      this.currentHoroData.date.second
+      this.currentHoroData.date.second,
     );
 
     date.setFullYear(date.getFullYear() + step.year);
