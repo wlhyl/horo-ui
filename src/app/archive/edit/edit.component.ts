@@ -7,7 +7,6 @@ import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
-import { Path } from '../../type/enum/path';
 import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 
 @Component({
@@ -17,8 +16,6 @@ import { isLocationEqual } from 'src/app/utils/location-record/location-record';
   standalone: false,
 })
 export class EditComponent implements OnInit {
-  path = Path;
-
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';

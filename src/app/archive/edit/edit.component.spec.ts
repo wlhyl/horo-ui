@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { of, delay, throwError } from 'rxjs';
 import { HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
-import { Path } from '../../type/enum/path';
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -204,10 +203,10 @@ describe('EditComponent', () => {
     it('should reflect changes to oldNative.lock', () => {
       component.oldNative.lock = false;
       expect(component.isLocked).toBeFalse();
-      
+
       component.oldNative.lock = true;
       expect(component.isLocked).toBeTrue();
-      
+
       component.oldNative.lock = false;
       expect(component.isLocked).toBeFalse();
     });
@@ -216,7 +215,7 @@ describe('EditComponent', () => {
       component.oldNative.lock = false;
       component.native.lock = true;
       expect(component.isLocked).toBeFalse();
-      
+
       component.oldNative.lock = true;
       component.native.lock = false;
       expect(component.isLocked).toBeTrue();
@@ -263,9 +262,9 @@ describe('EditComponent', () => {
       const originalDay = component.native.birth_day;
       const originalHour = component.native.birth_hour;
       const originalMinute = component.native.birth_minute;
-      
+
       component.dateTime = '2000-02-02T13:11:10';
-      
+
       expect(component.native.birth_year).toBe(originalYear);
       expect(component.native.birth_month).toBe(originalMonth);
       expect(component.native.birth_day).toBe(originalDay);
@@ -572,9 +571,9 @@ describe('EditComponent', () => {
         const originalDegree = component.native.location.longitude_degree;
         const originalMinute = component.native.location.longitude_minute;
         const originalSecond = component.native.location.longitude_second;
-        
+
         component.long = 116.391389;
-        
+
         expect(component.native.location.is_east).toBe(originalIsEast);
         expect(component.native.location.longitude_degree).toBe(originalDegree);
         expect(component.native.location.longitude_minute).toBe(originalMinute);
@@ -586,9 +585,9 @@ describe('EditComponent', () => {
         const originalDegree = component.native.location.latitude_degree;
         const originalMinute = component.native.location.latitude_minute;
         const originalSecond = component.native.location.latitude_second;
-        
+
         component.lat = 39.906389;
-        
+
         expect(component.native.location.is_north).toBe(originalIsNorth);
         expect(component.native.location.latitude_degree).toBe(originalDegree);
         expect(component.native.location.latitude_minute).toBe(originalMinute);
@@ -614,12 +613,6 @@ describe('EditComponent', () => {
       component.native.birth_second = 30;
       component.validateSecond();
       expect(component.native.birth_second).toBe(30);
-    });
-  });
-
-  describe('Path enum', () => {
-    it('should have correct Path enum', () => {
-      expect(component.path).toBe(Path);
     });
   });
 
@@ -849,22 +842,22 @@ describe('EditComponent', () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
-      
+
       // Try to modify name (should be ignored)
       component.native.name = 'Modified Name';
-      
+
       // Modify description (should be allowed)
       component.native.description = 'Updated description';
-      
+
       // Modify lock (should be allowed)
       component.native.lock = false;
-      
+
       // Mock API response
       apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
-      
+
       (component as any).update();
       tick();
-      
+
       // Verify that only lock and description fields are included in the update
       expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
         component.native.id,
@@ -882,7 +875,7 @@ describe('EditComponent', () => {
           location: null,
           description: 'Updated description',
           lock: false,
-        }
+        },
       );
     }));
 
@@ -916,7 +909,7 @@ describe('EditComponent', () => {
           location: null,
           description: null,
           lock: null,
-        }
+        },
       );
     }));
 
@@ -938,7 +931,7 @@ describe('EditComponent', () => {
     it('should handle update failure', fakeAsync(() => {
       component.native.name = 'Updated Name';
       apiServiceSpy.updateNative.and.returnValue(
-        throwError(() => new Error('Update failed'))
+        throwError(() => new Error('Update failed')),
       );
 
       (component as any).update();
@@ -986,16 +979,16 @@ describe('EditComponent', () => {
       component.native.lock = true;
       component.oldNative.lock = true;
       component.native.name = 'a'.repeat(31); // Invalid name length
-      
+
       // Modify description to trigger update
       component.native.description = 'Updated description';
-      
+
       // Mock API response
       apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
-      
+
       (component as any).update();
       tick();
-      
+
       // Should not show name validation error when locked
       expect(component.message).not.toBe('姓名长度为1-30个字符');
       // Should proceed with update since description was changed
@@ -1007,16 +1000,16 @@ describe('EditComponent', () => {
       component.native.lock = true;
       component.oldNative.lock = true;
       component.native.location.longitude_degree = 181; // Invalid longitude
-      
+
       // Modify description to trigger update
       component.native.description = 'Updated description';
-      
+
       // Mock API response
       apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
-      
+
       (component as any).update();
       tick();
-      
+
       // Should not show location validation error when locked
       expect(component.message).not.toBe('经度范围为-180~180');
       // Should proceed with update since description was changed
@@ -1027,12 +1020,12 @@ describe('EditComponent', () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
-      
+
       // Try to modify name (not allowed in locked state)
       component.native.name = 'Modified Name';
-      
+
       (component as any).update();
-      
+
       // Should show "no fields to update" message
       expect(component.message).toBe('没需要更新的字段');
       expect(component.isAlertOpen).toBeTrue();
@@ -1043,7 +1036,7 @@ describe('EditComponent', () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
-      
+
       // Modify description (allowed in locked state)
       component.native.description = 'Updated description';
       apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
@@ -1067,9 +1060,9 @@ describe('EditComponent', () => {
           location: null,
           description: 'Updated description',
           lock: null, // lock didn't change
-        }
+        },
       );
-      
+
       expect(component.oldNative).toEqual(component.native);
       expect(component.message).toBe('更新成功');
       expect(component.isAlertOpen).toBeTrue();
@@ -1080,7 +1073,7 @@ describe('EditComponent', () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
-      
+
       // Change lock status (allowed in locked state)
       component.native.lock = false;
       apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
@@ -1104,9 +1097,9 @@ describe('EditComponent', () => {
           location: null,
           description: null, // description didn't change
           lock: false,
-        }
+        },
       );
-      
+
       expect(component.oldNative).toEqual(component.native);
       expect(component.message).toBe('更新成功');
       expect(component.isAlertOpen).toBeTrue();

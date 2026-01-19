@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.9.2] - 2026-01-19
+
+## Added
+
+- 为 native、process、qizheng 添加 从档案库加载数据的功能
+
 ## [0.9.1] - 2026-01-18
 
 ## Changed

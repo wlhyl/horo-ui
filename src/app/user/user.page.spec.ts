@@ -4,7 +4,6 @@ import { Title } from '@angular/platform-browser';
 import { AuthService } from '../services/auth/auth.service';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Path } from '../type/enum/path';
 import { AuthUser } from '../type/interface/user';
 
 describe('UserPage', () => {
@@ -21,7 +20,7 @@ describe('UserPage', () => {
     mockAuthService = jasmine.createSpyObj<AuthService>(
       'AuthService',
       ['auth', 'deleteToken'],
-      ['isAuth', 'user']
+      ['isAuth', 'user'],
     );
     isAuthSpy = Object.getOwnPropertyDescriptor(mockAuthService, 'isAuth')!
       .get as jasmine.Spy;
@@ -55,12 +54,8 @@ describe('UserPage', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should set the page title', () => {
+    it('should set page title', () => {
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('用户');
-    });
-
-    it('should have correct path enum', () => {
-      expect(component.path).toBe(Path);
     });
 
     it('should set user name if user is authenticated', () => {

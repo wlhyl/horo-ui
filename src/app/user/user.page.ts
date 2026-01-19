@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from '../services/auth/auth.service';
-import { Path } from '../type/enum/path';
 
 @Component({
   selector: 'app-user',
@@ -10,14 +9,16 @@ import { Path } from '../type/enum/path';
   standalone: false,
 })
 export class UserPage implements OnInit {
-  path = Path;
   title = '用户';
 
   user = '';
   password = '';
   error = '';
 
-  constructor(private titleService: Title, public authService: AuthService) {}
+  constructor(
+    private titleService: Title,
+    public authService: AuthService,
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle(this.title);

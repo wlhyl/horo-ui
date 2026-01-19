@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title [routerLink]='"/"+path.Home'>{{ title }}</ion-title>
+    <ion-title>{{ title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,44 +13,40 @@
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title size="large" [routerLink]='"/"+path.Home'>{{ title }}</ion-title>
+      <ion-title size="large">{{ title }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-
-  <!-- <ion-row class="user"> -->
-  <!-- <ion-label *ngIf="authService.isAuth" (click)="logoutModalOpen=true">已登录：{{ authService.user.name }}</ion-label> -->
-  <!-- <ion-label *ngIf="!authService.isAuth" (click)="login()">未登录</ion-label> -->
   <ion-grid class="user">
     @if (!authService.isAuth) {
-      <ion-row>
-        <ion-input label="用户：" [(ngModel)]="user"></ion-input>
-      </ion-row>
-      <ion-row>
-        <ion-input type="password" label="密码：" [(ngModel)]="password">
-          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-        </ion-input>
-      </ion-row>
-      @if (error) {
-        <ion-row class="error">
-          {{ error }}
-        </ion-row>
-      }
-      <ion-button expand="full" fill="clear" (click)="login()">登录</ion-button>
+    <ion-row>
+      <ion-input label="用户：" [(ngModel)]="user"></ion-input>
+    </ion-row>
+    <ion-row>
+      <ion-input type="password" label="密码：" [(ngModel)]="password">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-row>
+    @if (error) {
+    <ion-row class="error">
+      {{ error }}
+    </ion-row>
     }
-  <!-- </ion-grid> -->
+    <ion-button expand="full" fill="clear" (click)="login()">登录</ion-button>
+    }
+    <!-- </ion-grid> -->
 
-  @if (authService.isAuth) {
+    @if (authService.isAuth) {
     <ng-container class="user">
       <ion-row><strong>已登录</strong></ion-row>
       <ion-row><strong>用户：{{ user}}</strong></ion-row>
       @if (error) {
-        <ion-row class="error">
-          {{ error }}
-        </ion-row>
+      <ion-row class="error">
+        {{ error }}
+      </ion-row>
       }
       <ion-button expand="full" fill="clear" (click)="logout()">注销</ion-button>
     </ng-container>
-  }
-</ion-grid>
+    }
+  </ion-grid>
 </ion-content>

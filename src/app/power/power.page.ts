@@ -13,7 +13,6 @@ import {
   tripilicity,
   tripilicityOfLily,
 } from '../utils/image/zodiac';
-import { Path } from '../type/enum/path';
 
 @Component({
     selector: 'app-power',
@@ -22,7 +21,6 @@ import { Path } from '../type/enum/path';
     standalone: false
 })
 export class PowerPage implements OnInit {
-  path = Path;
   title = '行星力量表';
   selectedSegment: string = 'natal'; // 默认选中的段
 
