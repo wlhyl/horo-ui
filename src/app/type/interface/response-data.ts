@@ -60,6 +60,8 @@ export interface FixedStar {
   xiu: LunarMansionsName;
   // 行星在黄道上的入宿度
   xiu_degree: number;
+  // 描述
+  desc: string;
 }
 
 /**

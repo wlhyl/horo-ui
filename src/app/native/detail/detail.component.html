@@ -143,10 +143,10 @@
               <ion-item>
                 <ion-label>
                   <h2> {{ star.fixed_star }}</h2>
+                  <p>{{ star.desc }}</p>
+                  @let d = degreeToDMSFn(star.xiu_degree);
                   <p>
-                    @for( d of [degreeToDMSFn(star.xiu_degree)]; track d){
                     {{ star.xiu }}宿：{{ d.d }}°{{ d.m }}'{{ d.s }}
-                    }
                   </p>
 
                   <p>
