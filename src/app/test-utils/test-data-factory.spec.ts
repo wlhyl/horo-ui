@@ -266,6 +266,7 @@ export class TestDataFactory {
       long: 0,
       xiu: LunarMansionsName.角,
       xiu_degree: 0,
+      desc: '',
       ...overrides,
     };
   }

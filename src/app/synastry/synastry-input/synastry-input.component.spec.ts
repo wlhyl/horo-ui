@@ -201,6 +201,15 @@ describe('SynastryInputComponent', () => {
     });
   });
 
+  it('should navigate to Qizheng subpath when getSynastry is called and isQizheng is true', () => {
+    component.isQizheng = true;
+    component.getSynastry();
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith([subPath.Qizheng], {
+      relativeTo: TestBed.inject(ActivatedRoute),
+    });
+  });
+
   it('should save originalHoroData to storage.horoData when getSynastry is called', () => {
     const originalDataBefore = component.originalHoroData;
 

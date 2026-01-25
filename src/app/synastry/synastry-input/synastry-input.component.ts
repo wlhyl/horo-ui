@@ -17,6 +17,7 @@ export class SynastryInputComponent implements OnInit {
 
   originalHoroData: HoroRequest = structuredClone(this.storage.horoData);
   comparisonHoroData: HoroRequest = structuredClone(this.storage.synastryData);
+  isQizheng = false;
 
   constructor(
     private router: Router,
@@ -24,7 +25,7 @@ export class SynastryInputComponent implements OnInit {
     private titleService: Title,
     private config: Horoconfig,
     private storage: HoroStorageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.titleService.setTitle('合盘信息输入');
@@ -42,9 +43,15 @@ export class SynastryInputComponent implements OnInit {
       ...structuredClone(this.comparisonHoroData),
       house: this.originalHoroData.house,
     };
-    this.router.navigate([Path.Horo], {
-      relativeTo: this.route,
-    });
+    if (this.isQizheng) {
+      this.router.navigate([Path.Qizheng], {
+        relativeTo: this.route,
+      });
+    } else {
+      this.router.navigate([Path.Horo], {
+        relativeTo: this.route,
+      });
+    }
   }
 
   onOriginalSelected(horoData: HoroRequest): void {

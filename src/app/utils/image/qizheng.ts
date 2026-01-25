@@ -143,12 +143,10 @@ export function drawHoroscope(
   const nativeLunarCalendarText = `${formatLunarCalendar(
     horoscope.native_lunar_calendar
   )}
-八字：${horoscope.bazi[0][0]} ${horoscope.bazi[1][0]} ${horoscope.bazi[2][0]} ${
-    horoscope.bazi[3][0]
-  }
-            ${horoscope.bazi[0][1]} ${horoscope.bazi[1][1]} ${
-    horoscope.bazi[2][1]
-  } ${horoscope.bazi[3][1]}`;
+八字：${horoscope.bazi[0][0]} ${horoscope.bazi[1][0]} ${horoscope.bazi[2][0]} ${horoscope.bazi[3][0]
+    }
+            ${horoscope.bazi[0][1]} ${horoscope.bazi[1][1]} ${horoscope.bazi[2][1]
+    } ${horoscope.bazi[3][1]}`;
 
   const nativeLunarCalendarTextCanvas = new fabric.FabricText(
     nativeLunarCalendarText,
@@ -199,7 +197,7 @@ function formatDate(date: {
 }
 
 // 添加农历信息格式化辅助函数
-function formatLunarCalendar(lunar: LunarCalendar): string {
+export function formatLunarCalendar(lunar: LunarCalendar): string {
   const {
     lunar_year_gan_zhi,
     lunar_month_gan_zhi,
@@ -212,12 +210,10 @@ function formatLunarCalendar(lunar: LunarCalendar): string {
     lunar_day,
   } = lunar;
 
-  return `${lunar_year_gan_zhi[0]} ${lunar_month_gan_zhi[0]} ${
-    lunar_day_gan_zhi[0]
-  } ${time_gan_zhi[0]}
-${lunar_year_gan_zhi[1]} ${lunar_month_gan_zhi[1]} ${lunar_day_gan_zhi[1]} ${
-    time_gan_zhi[1]
-  }
+  return `${lunar_year_gan_zhi[0]} ${lunar_month_gan_zhi[0]} ${lunar_day_gan_zhi[0]
+    } ${time_gan_zhi[0]}
+${lunar_year_gan_zhi[1]} ${lunar_month_gan_zhi[1]} ${lunar_day_gan_zhi[1]} ${time_gan_zhi[1]
+    }
 ${solar_term_first.name}：${formatDate(solar_term_first)}
 ${solar_term_second.name}：${formatDate(solar_term_second)}
 农历：${lunar_year}年${lunar_month}${lunar_day}`;
@@ -264,9 +260,8 @@ function drawASCHouse(
 
   const message = `命度：${asc_house.xiu}${Math.floor(
     asc_house.xiu_degree
-  )}度\n上升：${houseNames[n]}宫${ascLongDMS.d}度${ascLongDMS.m}分${
-    ascLongDMS.s
-  }秒`;
+  )}度\n上升：${houseNames[n]}宫${ascLongDMS.d}度${ascLongDMS.m}分${ascLongDMS.s
+    }秒`;
 
   const houseNumText = new fabric.FabricText(
     `${asc_house.xiu}${Math.floor(asc_house.xiu_degree)}度`,
@@ -291,7 +286,7 @@ function drawASCHouse(
  * @param canvas 天宫图canvas
  * @param options 天宫图的相关参数
  */
-function drawZodiac(
+export function drawZodiac(
   canvas: fabric.Canvas,
   config: DeepReadonly<QizhengConfigService>,
   options: Readonly<{
@@ -356,7 +351,7 @@ function drawZodiac(
  * @param canvas 天宫图canvas
  * @param options 天宫图的相关参数
  */
-function drawHouse(
+export function drawHouse(
   houses: ReadonlyArray<House>,
   canvas: fabric.Canvas,
   config: DeepReadonly<QizhengConfigService>,
@@ -415,10 +410,9 @@ function drawHouse(
  * 绘制本命盘行星
  * @param planets 行星数组，包含了四轴
  * @param canvas canvas
- * @param firstCupsLong 第一宫头度数
  * @param options (cx, cy)：画布中心坐标，r: 行星字符位置不能超过的半径
  */
-function drawPlanets(
+export function drawPlanets(
   planets: ReadonlyArray<Planet>,
   transformed_stars: ReadonlyArray<StarTransformedStar>,
   canvas: fabric.Canvas,
@@ -622,7 +616,7 @@ ${planetsSorted[i].xiu}宿：${xiuDMS.d}度${xiuDMS.m}分${xiuDMS.s}秒`;
  * @param config
  * @param options
  */
-function drawDistanceStar(
+export function drawDistanceStar(
   distanceStarLongs: ReadonlyArray<DistanceStarLong>,
   canvas: fabric.Canvas,
   tip: TipService,
@@ -664,7 +658,7 @@ function drawDistanceStar(
     // const long = (next_distance_star.long + distance_star.long) / 2;
     const long = degNorm(
       degNorm(next_distance_star.long - distance_star.long) / 2 +
-        distance_star.long
+      distance_star.long
     );
     const x = cx + ((r0 + r1) / 2) * cos(long - 30);
     const y = cy - ((r0 + r1) / 2) * sin(long - 30);

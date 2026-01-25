@@ -20,7 +20,8 @@
         <ion-col size="12">
           <div class="horo-title-container">
             <div class="horo-title">基础盘</div>
-            <app-archive-selector [defaultHouse]="originalHoroData.house" (horoRequestSelected)="onOriginalSelected($event)"></app-archive-selector>
+            <app-archive-selector [defaultHouse]="originalHoroData.house"
+              (horoRequestSelected)="onOriginalSelected($event)"></app-archive-selector>
           </div>
         </ion-col>
       </ion-row>
@@ -101,6 +102,15 @@
           </ion-select>
         </ion-col>
       </ion-row>
+
+      <ion-row>
+        <ion-col size="5" class="label-col">
+          <ion-label>七政四余：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-checkbox [(ngModel)]="isQizheng"></ion-checkbox>
+        </ion-col>
+      </ion-row>
     </ion-grid>
 
     <div class="swap-container">
@@ -115,7 +125,8 @@
         <ion-col size="12">
           <div class="horo-title-container">
             <div class="horo-title">比较盘</div>
-            <app-archive-selector [defaultHouse]="originalHoroData.house" (horoRequestSelected)="onComparisonSelected($event)"></app-archive-selector>
+            <app-archive-selector [defaultHouse]="originalHoroData.house"
+              (horoRequestSelected)="onComparisonSelected($event)"></app-archive-selector>
           </div>
         </ion-col>
       </ion-row>

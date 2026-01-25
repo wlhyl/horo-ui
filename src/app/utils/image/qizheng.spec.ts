@@ -9,7 +9,6 @@ import { TipService } from 'src/app/services/qizheng/tip.service';
 describe('Qizheng Horo Image Functions', () => {
   let canvas: fabric.Canvas;
   let config: QizhengConfigService;
-  // let tip: TipService;
   let fabricjsObjects: fabric.Object[];
 
   beforeEach(() => {

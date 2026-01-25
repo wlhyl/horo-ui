@@ -11,6 +11,7 @@ import { SynastryRoutingModule } from './synastry-routing.module';
 import { SynastryInputComponent } from './synastry-input/synastry-input.component';
 import { SynastryComponent } from './synastry/synastry.component';
 import { PlanetFriendshipComponent } from './planet-friendship/planet-friendship.component';
+import { QizhengSynastryComponent } from './qizheng-synastry/qizheng-synastry.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { PlanetFriendshipComponent } from './planet-friendship/planet-friendship
     SynastryInputComponent,
     SynastryComponent,
     PlanetFriendshipComponent,
+    QizhengSynastryComponent,
   ],
 })
-export class SynastryModule {}
+export class SynastryModule { }

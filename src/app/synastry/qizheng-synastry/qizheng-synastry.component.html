@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>七政四余合盘</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">七政四余合盘</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-alert [isOpen]="isAlertOpen" header="错误" [message]="message" [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen = false"></ion-alert>
+
+  @if (loading) {
+  <div class="ion-text-center">
+    <ion-label>获取星盘</ion-label>
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
+  }
+
+  <div class="canvas-container">
+    <canvas id="canvas" width="0" height="0"></canvas>
+  </div>
+
+  <ion-toolbar class="synastry-toolbar" [class.hidden]="isDrawing || loading">
+    <div class="toolbar-content">
+      <ion-button (click)="swap()" fill="clear" class="swap-button">
+        <ion-icon name="swap-horizontal-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-content>

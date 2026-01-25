@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.11.0] - 2026-01-28
+
+## Added
+
+- 加七政四余合盘
+
+## [0.10.0] - 2026-01-28
+
+## Added
+
+- 增加：北河三、氐宿四
+- 恒星增加描述信息
+
 ## [0.9.2] - 2026-01-19
 
 ## Added
