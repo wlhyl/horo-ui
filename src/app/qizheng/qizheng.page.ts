@@ -16,6 +16,7 @@ export class QizhengPage implements OnInit {
   processData: ProcessRequest = structuredClone(this.storage.processData);
 
   title = '七政四余';
+  Path = Path;
 
   constructor(
     private storage: HoroStorageService,

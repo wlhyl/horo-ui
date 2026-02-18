@@ -10,7 +10,7 @@ RUN ionic build --prod
 
 RUN gzip /app/www/browser/*js && gzip /app/www/browser/*css #  && gzip /app/www/*html
 
-FROM nginx:1.29-alpine
+FROM nginx:1.29-alpine-slim
 
 # RUN rm -rf  /usr/share/nginx/html/*
 

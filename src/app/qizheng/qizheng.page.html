@@ -4,6 +4,11 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>{{title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['./', Path.Knowledge]">
+        <ion-icon name="book-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

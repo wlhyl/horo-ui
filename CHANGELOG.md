@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 - 推运计划增加次限、三限
 
+## [0.11.1] - 2026-02-18
+
+### Changed
+
+- 修改 native 和 qizheng 模块中 knowledge 组件的 selector，避免重名
+- 为 qizheng 模块添加知识页面入口
+
 ## [0.11.0] - 2026-01-28
 
 ## Added

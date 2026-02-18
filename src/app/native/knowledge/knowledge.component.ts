@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-knowledge',
+  selector: 'app-native-knowledge',
   templateUrl: './knowledge.component.html',
   styleUrls: ['./knowledge.component.scss'],
   standalone: false,
