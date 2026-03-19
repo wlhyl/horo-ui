@@ -1,7 +1,7 @@
-<ion-label (click)="isOpen=true">{{ year }}-{{ month }}-{{ day }}
+<ion-label [class.disabled]="disabled" (click)="!disabled && (isOpen=true)">{{ year }}-{{ month }}-{{ day }}
   {{ hour }}:{{ minute }}:{{ second }}
 </ion-label>
-<ion-icon class="now_date_icon" name="time-outline" (click)="nowDate()"></ion-icon>
+<ion-icon class="now_date_icon" [class.disabled]="disabled" name="time-outline" (click)="!disabled && nowDate()"></ion-icon>
 
 <ion-modal #modal [isOpen]="isOpen" (didDismiss)="onDidDismiss($event)">
   <ng-template>

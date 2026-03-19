@@ -7,6 +7,7 @@ import {
   HoroscopeComparisonRequest,
   ReturnRequest,
   FirdariaRequest,
+  DirectionRequest,
   QiZhengRequst,
 } from '../type/interface/request-data';
 import {
@@ -18,10 +19,10 @@ import {
   GeoPosition,
   HoroscopeComparison,
   ReturnHoroscope,
+  Direction,
+  Promittor,
 } from '../type/interface/response-data';
-import {
-  HoroscopeRecord,
-} from '../type/interface/horo-admin/horoscope-record';
+import { HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
 import { LocationRecord } from '../type/interface/horo-admin/location-record';
 import { PlanetName, PlanetSpeedState } from '../type/enum/planet';
 import { FixedStarName } from '../type/enum/fixed-star';
@@ -51,7 +52,7 @@ export class TestDataFactory {
    * 创建默认的 DateRequest 对象
    */
   static createDefaultDateRequest(
-    overrides?: Partial<DateRequest>
+    overrides?: Partial<DateRequest>,
   ): DateRequest {
     return {
       year: 2000,
@@ -82,7 +83,7 @@ export class TestDataFactory {
    * 这是最常用的测试数据
    */
   static createDefaultHoroRequest(
-    overrides?: Partial<HoroRequest>
+    overrides?: Partial<HoroRequest>,
   ): HoroRequest {
     return {
       id: 0,
@@ -100,7 +101,7 @@ export class TestDataFactory {
    * 创建默认的 ProcessRequest 对象
    */
   static createDefaultProcessRequest(
-    overrides?: Partial<ProcessRequest>
+    overrides?: Partial<ProcessRequest>,
   ): ProcessRequest {
     return {
       date: this.createDefaultDateRequest(overrides?.date),
@@ -116,7 +117,7 @@ export class TestDataFactory {
    * 创建默认的 ProfectionRequest 对象
    */
   static createDefaultProfectionRequest(
-    overrides?: Partial<ProfectionRequest>
+    overrides?: Partial<ProfectionRequest>,
   ): ProfectionRequest {
     return {
       native_date: this.createDefaultDateRequest(overrides?.native_date),
@@ -132,7 +133,7 @@ export class TestDataFactory {
    * 创建默认的 HoroscopeComparisonRequest 对象
    */
   static createDefaultHoroscopeComparisonRequest(
-    overrides?: Partial<HoroscopeComparisonRequest>
+    overrides?: Partial<HoroscopeComparisonRequest>,
   ): HoroscopeComparisonRequest {
     return {
       original_date: this.createDefaultDateRequest(overrides?.original_date),
@@ -151,7 +152,7 @@ export class TestDataFactory {
    * 创建默认的 ReturnRequest 对象
    */
   static createDefaultReturnRequest(
-    overrides?: Partial<ReturnRequest>
+    overrides?: Partial<ReturnRequest>,
   ): ReturnRequest {
     return {
       native_date: this.createDefaultDateRequest(overrides?.native_date),
@@ -169,8 +170,21 @@ export class TestDataFactory {
    * 创建默认的 FirdariaRequest 对象
    */
   static createDefaultFirdariaRequest(
-    overrides?: Partial<FirdariaRequest>
+    overrides?: Partial<FirdariaRequest>,
   ): FirdariaRequest {
+    return {
+      native_date: this.createDefaultDateRequest(overrides?.native_date),
+      geo: this.createDefaultGeoRequest(overrides?.geo),
+      ...overrides,
+    };
+  }
+
+  /**
+   * 创建默认的 DirectionRequest 对象
+   */
+  static createDefaultDirectionRequest(
+    overrides?: Partial<DirectionRequest>,
+  ): DirectionRequest {
     return {
       native_date: this.createDefaultDateRequest(overrides?.native_date),
       geo: this.createDefaultGeoRequest(overrides?.geo),
@@ -182,7 +196,7 @@ export class TestDataFactory {
    * 创建默认的 QiZhengRequst 对象
    */
   static createDefaultQiZhengRequest(
-    overrides?: Partial<QiZhengRequst>
+    overrides?: Partial<QiZhengRequst>,
   ): QiZhengRequst {
     return {
       native_date: this.createDefaultDateRequest(overrides?.native_date),
@@ -199,7 +213,7 @@ export class TestDataFactory {
    * 创建默认的 HoroDateTime 对象
    */
   static createDefaultHoroDateTime(
-    overrides?: Partial<HoroDateTime>
+    overrides?: Partial<HoroDateTime>,
   ): HoroDateTime {
     return {
       year: 2024,
@@ -217,7 +231,7 @@ export class TestDataFactory {
    * 创建默认的 GeoPosition 对象
    */
   static createDefaultGeoPosition(
-    overrides?: Partial<GeoPosition>
+    overrides?: Partial<GeoPosition>,
   ): GeoPosition {
     return {
       long: 120,
@@ -274,17 +288,21 @@ export class TestDataFactory {
   /**
    * 创建默认的 Horoscope 对象
    */
-  static createDefaultHoroscope(
-    overrides?: Partial<Horoscope>
-  ): Horoscope {
+  static createDefaultHoroscope(overrides?: Partial<Horoscope>): Horoscope {
     return {
       date: this.createDefaultHoroDateTime(overrides?.date),
       geo: this.createDefaultGeoPosition(overrides?.geo),
       house_name: 'Placidus',
       houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-      asc: this.createDefaultPlanet({ ...overrides?.asc, name: PlanetName.ASC }),
+      asc: this.createDefaultPlanet({
+        ...overrides?.asc,
+        name: PlanetName.ASC,
+      }),
       mc: this.createDefaultPlanet({ ...overrides?.mc, name: PlanetName.MC }),
-      dsc: this.createDefaultPlanet({ ...overrides?.dsc, name: PlanetName.DSC }),
+      dsc: this.createDefaultPlanet({
+        ...overrides?.dsc,
+        name: PlanetName.DSC,
+      }),
       ic: this.createDefaultPlanet({ ...overrides?.ic, name: PlanetName.IC }),
       part_of_fortune: this.createDefaultPlanet({
         ...overrides?.part_of_fortune,
@@ -306,12 +324,12 @@ export class TestDataFactory {
    * 创建默认的 HoroscopeComparison 对象
    */
   static createDefaultHoroscopeComparison(
-    overrides?: Partial<HoroscopeComparison>
+    overrides?: Partial<HoroscopeComparison>,
   ): HoroscopeComparison {
     return {
       original_date: this.createDefaultHoroDateTime(overrides?.original_date),
       comparison_date: this.createDefaultHoroDateTime(
-        overrides?.comparison_date
+        overrides?.comparison_date,
       ),
       original_geo: this.createDefaultGeoPosition(overrides?.original_geo),
       comparison_geo: this.createDefaultGeoPosition(overrides?.comparison_geo),
@@ -371,7 +389,7 @@ export class TestDataFactory {
    * 创建默认的 ReturnHoroscope 对象
    */
   static createDefaultReturnHoroscope(
-    overrides?: Partial<ReturnHoroscope>
+    overrides?: Partial<ReturnHoroscope>,
   ): ReturnHoroscope {
     return {
       native_date: this.createDefaultHoroDateTime(overrides?.native_date),
@@ -380,9 +398,15 @@ export class TestDataFactory {
       geo: this.createDefaultGeoPosition(overrides?.geo),
       house_name: 'Placidus',
       houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-      asc: this.createDefaultPlanet({ ...overrides?.asc, name: PlanetName.ASC }),
+      asc: this.createDefaultPlanet({
+        ...overrides?.asc,
+        name: PlanetName.ASC,
+      }),
       mc: this.createDefaultPlanet({ ...overrides?.mc, name: PlanetName.MC }),
-      dsc: this.createDefaultPlanet({ ...overrides?.dsc, name: PlanetName.DSC }),
+      dsc: this.createDefaultPlanet({
+        ...overrides?.dsc,
+        name: PlanetName.DSC,
+      }),
       ic: this.createDefaultPlanet({ ...overrides?.ic, name: PlanetName.IC }),
       part_of_fortune: this.createDefaultPlanet({
         ...overrides?.part_of_fortune,
@@ -400,7 +424,7 @@ export class TestDataFactory {
    * 创建默认的 LocationRecord 对象
    */
   static createDefaultLocationRecord(
-    overrides?: Partial<LocationRecord>
+    overrides?: Partial<LocationRecord>,
   ): LocationRecord {
     return {
       id: 1,
@@ -421,7 +445,7 @@ export class TestDataFactory {
    * 创建默认的 HoroscopeRecord 对象
    */
   static createDefaultHoroscopeRecord(
-    overrides?: Partial<HoroscopeRecord>
+    overrides?: Partial<HoroscopeRecord>,
   ): HoroscopeRecord {
     return {
       id: 1,
@@ -443,13 +467,30 @@ export class TestDataFactory {
       ...overrides,
     };
   }
+
+  static createDefaultPromittor(overrides?: Partial<Promittor>): Promittor {
+    return {
+      conjunction: PlanetName.Sun,
+      ...overrides,
+    } as Promittor;
+  }
+
+  static createDefaultDirection(overrides?: Partial<Direction>): Direction {
+    return {
+      significator: PlanetName.MC,
+      promittor: this.createDefaultPromittor(overrides?.promittor),
+      arc: 45.5,
+      date: this.createDefaultHoroDateTime(overrides?.date),
+      ...overrides,
+    };
+  }
 }
 
 /**
  * 便利函数：创建 HoroRequest
  */
 export function createMockHoroRequest(
-  overrides?: Partial<HoroRequest>
+  overrides?: Partial<HoroRequest>,
 ): HoroRequest {
   return TestDataFactory.createDefaultHoroRequest(overrides);
 }
@@ -458,7 +499,7 @@ export function createMockHoroRequest(
  * 便利函数：创建 DateRequest
  */
 export function createMockDateRequest(
-  overrides?: Partial<DateRequest>
+  overrides?: Partial<DateRequest>,
 ): DateRequest {
   return TestDataFactory.createDefaultDateRequest(overrides);
 }
@@ -467,7 +508,7 @@ export function createMockDateRequest(
  * 便利函数：创建 GeoRequest
  */
 export function createMockGeoRequest(
-  overrides?: Partial<GeoRequest>
+  overrides?: Partial<GeoRequest>,
 ): GeoRequest {
   return TestDataFactory.createDefaultGeoRequest(overrides);
 }
@@ -476,7 +517,7 @@ export function createMockGeoRequest(
  * 便利函数：创建 ProcessRequest
  */
 export function createMockProcessRequest(
-  overrides?: Partial<ProcessRequest>
+  overrides?: Partial<ProcessRequest>,
 ): ProcessRequest {
   return TestDataFactory.createDefaultProcessRequest(overrides);
 }
@@ -485,7 +526,7 @@ export function createMockProcessRequest(
  * 便利函数：创建 ProfectionRequest
  */
 export function createMockProfectionRequest(
-  overrides?: Partial<ProfectionRequest>
+  overrides?: Partial<ProfectionRequest>,
 ): ProfectionRequest {
   return TestDataFactory.createDefaultProfectionRequest(overrides);
 }
@@ -494,7 +535,7 @@ export function createMockProfectionRequest(
  * 便利函数：创建 HoroscopeComparisonRequest
  */
 export function createMockHoroscopeComparisonRequest(
-  overrides?: Partial<HoroscopeComparisonRequest>
+  overrides?: Partial<HoroscopeComparisonRequest>,
 ): HoroscopeComparisonRequest {
   return TestDataFactory.createDefaultHoroscopeComparisonRequest(overrides);
 }
@@ -503,7 +544,7 @@ export function createMockHoroscopeComparisonRequest(
  * 便利函数：创建 ReturnRequest
  */
 export function createMockReturnRequest(
-  overrides?: Partial<ReturnRequest>
+  overrides?: Partial<ReturnRequest>,
 ): ReturnRequest {
   return TestDataFactory.createDefaultReturnRequest(overrides);
 }
@@ -512,16 +553,22 @@ export function createMockReturnRequest(
  * 便利函数：创建 FirdariaRequest
  */
 export function createMockFirdariaRequest(
-  overrides?: Partial<FirdariaRequest>
+  overrides?: Partial<FirdariaRequest>,
 ): FirdariaRequest {
   return TestDataFactory.createDefaultFirdariaRequest(overrides);
+}
+
+export function createMockDirectionRequest(
+  overrides?: Partial<DirectionRequest>,
+): DirectionRequest {
+  return TestDataFactory.createDefaultDirectionRequest(overrides);
 }
 
 /**
  * 便利函数：创建 QiZhengRequst
  */
 export function createMockQiZhengRequest(
-  overrides?: Partial<QiZhengRequst>
+  overrides?: Partial<QiZhengRequst>,
 ): QiZhengRequst {
   return TestDataFactory.createDefaultQiZhengRequest(overrides);
 }
@@ -530,7 +577,7 @@ export function createMockQiZhengRequest(
  * 便利函数：创建 HoroDateTime
  */
 export function createMockHoroDateTime(
-  overrides?: Partial<HoroDateTime>
+  overrides?: Partial<HoroDateTime>,
 ): HoroDateTime {
   return TestDataFactory.createDefaultHoroDateTime(overrides);
 }
@@ -539,7 +586,7 @@ export function createMockHoroDateTime(
  * 便利函数：创建 GeoPosition
  */
 export function createMockGeoPosition(
-  overrides?: Partial<GeoPosition>
+  overrides?: Partial<GeoPosition>,
 ): GeoPosition {
   return TestDataFactory.createDefaultGeoPosition(overrides);
 }
@@ -568,9 +615,7 @@ export function createMockFixedStar(overrides?: Partial<FixedStar>): FixedStar {
 /**
  * 便利函数：创建 Horoscope
  */
-export function createMockHoroscope(
-  overrides?: Partial<Horoscope>
-): Horoscope {
+export function createMockHoroscope(overrides?: Partial<Horoscope>): Horoscope {
   return TestDataFactory.createDefaultHoroscope(overrides);
 }
 
@@ -578,7 +623,7 @@ export function createMockHoroscope(
  * 便利函数：创建 HoroscopeComparison
  */
 export function createMockHoroscopeComparison(
-  overrides?: Partial<HoroscopeComparison>
+  overrides?: Partial<HoroscopeComparison>,
 ): HoroscopeComparison {
   return TestDataFactory.createDefaultHoroscopeComparison(overrides);
 }
@@ -587,7 +632,7 @@ export function createMockHoroscopeComparison(
  * 便利函数：创建 ReturnHoroscope
  */
 export function createMockReturnHoroscope(
-  overrides?: Partial<ReturnHoroscope>
+  overrides?: Partial<ReturnHoroscope>,
 ): ReturnHoroscope {
   return TestDataFactory.createDefaultReturnHoroscope(overrides);
 }
@@ -596,7 +641,7 @@ export function createMockReturnHoroscope(
  * 便利函数：创建 LocationRecord
  */
 export function createMockLocationRecord(
-  overrides?: Partial<LocationRecord>
+  overrides?: Partial<LocationRecord>,
 ): LocationRecord {
   return TestDataFactory.createDefaultLocationRecord(overrides);
 }
@@ -605,7 +650,15 @@ export function createMockLocationRecord(
  * 便利函数：创建 HoroscopeRecord
  */
 export function createMockHoroscopeRecord(
-  overrides?: Partial<HoroscopeRecord>
+  overrides?: Partial<HoroscopeRecord>,
 ): HoroscopeRecord {
   return TestDataFactory.createDefaultHoroscopeRecord(overrides);
+}
+
+export function createMockPromittor(overrides?: Partial<Promittor>): Promittor {
+  return TestDataFactory.createDefaultPromittor(overrides);
+}
+
+export function createMockDirection(overrides?: Partial<Direction>): Direction {
+  return TestDataFactory.createDefaultDirection(overrides);
 }

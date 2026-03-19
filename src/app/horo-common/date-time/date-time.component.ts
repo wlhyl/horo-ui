@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -15,6 +16,7 @@ import { timeOutline } from 'ionicons/icons';
   templateUrl: './date-time.component.html',
   styleUrls: ['./date-time.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateTimeComponent implements OnInit, OnChanges {
   @Input()
@@ -30,6 +32,9 @@ export class DateTimeComponent implements OnInit, OnChanges {
   minute = 0;
   @Input()
   second = 0;
+
+  @Input()
+  disabled = false;
 
   @Output()
   yearChange = new EventEmitter<number>();

@@ -30,6 +30,7 @@ describe('DateTimeComponent', () => {
     expect(component.hour).toBe(0);
     expect(component.minute).toBe(0);
     expect(component.second).toBe(0);
+    expect(component.disabled).toBe(false);
   });
 
   it('should initialize arrays correctly', () => {
@@ -377,6 +378,74 @@ describe('DateTimeComponent', () => {
       expect(days.length).toBe(30);
       expect(days[0]).toBe(1);
       expect(days[29]).toBe(30);
+    });
+  });
+
+  describe('disabled state', () => {
+    it('should have disabled input default to false', () => {
+      expect(component.disabled).toBe(false);
+    });
+
+    it('should accept disabled input as true', () => {
+      component.disabled = true;
+      fixture.detectChanges();
+      expect(component.disabled).toBe(true);
+    });
+
+    it('should not open modal when disabled is true and label is clicked', () => {
+      component.disabled = true;
+      component.isOpen = false;
+      fixture.detectChanges();
+
+      const labelEl = fixture.nativeElement.querySelector('ion-label');
+      labelEl.click();
+
+      expect(component.isOpen).toBe(false);
+    });
+
+    it('should not call nowDate when disabled is true and icon is clicked', () => {
+      component.disabled = true;
+      fixture.detectChanges();
+
+      spyOn(component.yearChange, 'emit');
+      const mockDate = new Date(2023, 4, 15, 10, 30, 45);
+      jasmine.clock().install();
+      jasmine.clock().mockDate(mockDate);
+
+      const iconEl = fixture.nativeElement.querySelector('ion-icon');
+      iconEl.click();
+
+      expect(component.yearChange.emit).not.toHaveBeenCalled();
+
+      jasmine.clock().uninstall();
+    });
+
+    it('should open modal when disabled is false and label is clicked', () => {
+      component.disabled = false;
+      component.isOpen = false;
+      fixture.detectChanges();
+
+      const labelEl = fixture.nativeElement.querySelector('ion-label');
+      labelEl.click();
+
+      expect(component.isOpen).toBe(true);
+    });
+
+    it('should call nowDate when disabled is false and icon is clicked', () => {
+      component.disabled = false;
+      fixture.detectChanges();
+
+      spyOn(component.yearChange, 'emit');
+      const mockDate = new Date(2023, 4, 15, 10, 30, 45);
+      jasmine.clock().install();
+      jasmine.clock().mockDate(mockDate);
+
+      const iconEl = fixture.nativeElement.querySelector('ion-icon');
+      iconEl.click();
+
+      expect(component.yearChange.emit).toHaveBeenCalledWith(2023);
+
+      jasmine.clock().uninstall();
     });
   });
 });

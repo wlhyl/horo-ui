@@ -214,3 +214,23 @@ export interface FirdariaSubPeriod {
   period: PlanetName;
   start_date: HoroDateTime;
 }
+
+export type Promittor =
+  | { conjunction: PlanetName }
+  | { sinisterTrine: PlanetName }
+  | { dexterTrine: PlanetName }
+  | { sinisterSextile: PlanetName }
+  | { dexterSextile: PlanetName }
+  | { sinisterSquare: PlanetName }
+  | { dexterSquare: PlanetName }
+  | { opposition: PlanetName }
+  | { term: [PlanetName, number] }
+  | { antiscoins: PlanetName }
+  | { contraantiscias: PlanetName };
+
+export interface Direction {
+  significator: PlanetName;
+  promittor: Promittor;
+  arc: number;
+  date: HoroDateTime;
+}

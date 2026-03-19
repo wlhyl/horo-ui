@@ -10,4 +10,5 @@ export enum Path {
   NativecomparLunar = 'return/native_lunar',
   ReturnDetails = 'details',
   ComparisonDetails = 'details',
+  Direction = 'direction',
 }

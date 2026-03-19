@@ -2,9 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-### Planned
+## [unreleased]
 
-- 推运计划增加次限、三限
+### Added
+
+- 新增主向推运（Direction）功能
 
 ## [0.11.1] - 2026-02-18
 

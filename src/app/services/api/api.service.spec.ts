@@ -6,19 +6,9 @@ import {
 import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
 import {
-  HoroRequest,
-  ProfectionRequest,
-  ReturnRequest,
-  HoroscopeComparisonRequest,
-  FirdariaRequest,
-  QiZhengRequst,
-} from 'src/app/type/interface/request-data';
-import {
   FirdariaPeriod,
-  Horoscope,
-  HoroscopeComparison,
   Profection,
-  ReturnHoroscope,
+  Direction,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { UpdateUserRequest } from '../../type/interface/user';
@@ -34,11 +24,7 @@ import {
   PlanetName as WesternPlanetName,
   PlanetSpeedState as WesternPlanetSpeedState,
 } from 'src/app/type/enum/planet';
-import {
-  PlanetName as ChinesePlanetName,
-  LunarMansionsName,
-  PlanetSpeedState as ChinesePlanetSpeedState,
-} from 'src/app/type/enum/qizheng';
+import { LunarMansionsName } from 'src/app/type/enum/qizheng';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
@@ -47,6 +33,7 @@ import {
   createMockHoroRequest,
   createMockProfectionRequest,
   createMockFirdariaRequest,
+  createMockDirectionRequest,
   createMockHoroscopeComparisonRequest,
   createMockReturnRequest,
   createMockQiZhengRequest,
@@ -54,6 +41,7 @@ import {
   createMockPlanet,
   createMockHoroscopeComparison,
   createMockReturnHoroscope,
+  createMockDirection,
 } from 'src/app/test-utils/test-data-factory.spec';
 
 describe('ApiService', () => {
@@ -242,7 +230,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/process/profection`
+        `${environment.base_url}/api/process/profection`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);
@@ -276,11 +264,60 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/process/firdaria`
+        `${environment.base_url}/api/process/firdaria`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);
       req.flush(mockPeriods);
+    });
+  });
+
+  describe('direction', () => {
+    it('should return directions', () => {
+      const mockData = createMockDirectionRequest({
+        native_date: {
+          year: 1990,
+          month: 1,
+          day: 1,
+          hour: 12,
+          minute: 0,
+          second: 0,
+          tz: 8,
+          st: false,
+        },
+        geo: {
+          long: 116.4074,
+          lat: 39.9042,
+        },
+      });
+
+      const mockDirections: Direction[] = [
+        createMockDirection({
+          significator: WesternPlanetName.MC,
+          promittor: { conjunction: WesternPlanetName.Sun },
+          arc: 45.5,
+          date: {
+            year: 2045,
+            month: 6,
+            day: 15,
+            hour: 10,
+            minute: 30,
+            second: 0,
+            tz: 8,
+          },
+        }),
+      ];
+
+      service.direction(mockData).subscribe((directions) => {
+        expect(directions).toEqual(mockDirections);
+      });
+
+      const req = httpMock.expectOne(
+        `${environment.base_url}/api/process/directions`,
+      );
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(mockData);
+      req.flush(mockDirections);
     });
   });
 
@@ -459,7 +496,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/process/compare`
+        `${environment.base_url}/api/process/compare`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);
@@ -592,7 +629,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/process/return/solar`
+        `${environment.base_url}/api/process/return/solar`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);
@@ -725,7 +762,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/process/return/lunar`
+        `${environment.base_url}/api/process/return/lunar`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);
@@ -867,7 +904,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/qizheng/horo`
+        `${environment.base_url}/api/qizheng/horo`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);
@@ -908,7 +945,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes?page=${mockPage}&size=${mockSize}`
+        `${environment.admin_url}/horoscopes?page=${mockPage}&size=${mockSize}`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
@@ -953,7 +990,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/${mockId}`
+        `${environment.admin_url}/horoscopes/${mockId}`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockRecord);
@@ -997,7 +1034,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/${mockId}`
+        `${environment.admin_url}/horoscopes/${mockId}`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockRecord);
@@ -1098,7 +1135,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/${mockId}`
+        `${environment.admin_url}/horoscopes/${mockId}`,
       );
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(mockRecordRequest);
@@ -1116,7 +1153,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/${mockId}`
+        `${environment.admin_url}/horoscopes/${mockId}`,
       );
       expect(req.request.method).toBe('DELETE');
       req.flush({});
@@ -1139,7 +1176,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/location_search?q=${mockName}`
+        `${environment.admin_url}/location_search?q=${mockName}`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
@@ -1163,7 +1200,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/search?page=0&size=20`
+        `${environment.admin_url}/horoscopes/search?page=0&size=20`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
@@ -1186,7 +1223,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/search?page=0&size=20&name=John`
+        `${environment.admin_url}/horoscopes/search?page=0&size=20&name=John`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);
@@ -1212,7 +1249,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.admin_url}/horoscopes/search?page=1&size=10&name=John&year=1990&month=1&day=15`
+        `${environment.admin_url}/horoscopes/search?page=1&size=10&name=John&year=1990&month=1&day=15`,
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockResponse);

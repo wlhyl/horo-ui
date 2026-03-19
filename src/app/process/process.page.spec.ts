@@ -337,6 +337,7 @@ describe('ProcessPage', () => {
       const expectedOptions = [
         { text: '法达', value: ProcessName.Firdaria },
         { text: '小限', value: ProcessName.Profection },
+        { text: '主向推运', value: ProcessName.Direction },
         { text: '行运', value: ProcessName.Transit },
         { text: '日返', value: ProcessName.SolarReturn },
         { text: '月返', value: ProcessName.LunarReturn },

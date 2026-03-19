@@ -7,6 +7,7 @@ import {
   ReturnRequest,
   HoroscopeComparisonRequest,
   FirdariaRequest,
+  DirectionRequest,
   QiZhengRequst,
 } from 'src/app/type/interface/request-data';
 import {
@@ -15,6 +16,7 @@ import {
   HoroscopeComparison,
   Profection,
   ReturnHoroscope,
+  Direction,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { environment } from 'src/environments/environment';
@@ -68,6 +70,13 @@ export class ApiService {
   public firdaria(data: FirdariaRequest): Observable<Array<FirdariaPeriod>> {
     return this.http.post<Array<FirdariaPeriod>>(
       `${this.url}/process/firdaria`,
+      data
+    );
+  }
+
+  public direction(data: DirectionRequest): Observable<Array<Direction>> {
+    return this.http.post<Array<Direction>>(
+      `${this.url}/process/directions`,
       data
     );
   }

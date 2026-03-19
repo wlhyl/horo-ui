@@ -13,6 +13,7 @@ import { ProfectionComponent } from './profection/profection.component';
 import { ReturnComponent } from './return/return.component';
 import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
+import { DirectionComponent } from './direction/direction.component';
 import { DetailComponent as ReturnDetailComponent } from './return/detail/detail.component';
 import { DetailComponent as ComparisonDetailComponent } from './compare/detail/detail.component';
 
@@ -30,6 +31,7 @@ import { DetailComponent as ComparisonDetailComponent } from './compare/detail/d
     ReturnComponent,
     CompareComponent,
     FirdariaComponent,
+    DirectionComponent,
     ReturnDetailComponent,
     ComparisonDetailComponent,
   ],

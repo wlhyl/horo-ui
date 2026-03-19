@@ -80,6 +80,11 @@ export interface FirdariaRequest {
 }
 
 /**
+ * 主向推运
+ */
+export type DirectionRequest = FirdariaRequest;
+
+/**
  * 七政
  */
 export interface QiZhengRequst {

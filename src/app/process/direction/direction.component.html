@@ -1,0 +1,176 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen=false"></ion-alert>
+
+  <div class="table-container">
+    <ul>
+      <li>主向星为MC（中天）</li>
+      <li>弧度正值为正向推运，负值为反向推运</li>
+      <li>一度约等于一年</li>
+      <li>相位符号在行星左侧为promittor的左相位，在右侧为右相位</li>
+    </ul>
+
+    <div class="filter-container">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>出生时间:</label>
+          <horo-date-time [disabled]="isLoading" [(year)]="nativeDate.year" [(month)]="nativeDate.month"
+            [(day)]="nativeDate.day" [(hour)]="nativeDate.hour" [(minute)]="nativeDate.minute"
+            [(second)]="nativeDate.second"></horo-date-time>
+        </div>
+
+        <ion-button size="small" (click)="updateNativeDate()" [disabled]="isLoading">
+          @if (isLoading) {
+          <ion-spinner name="crescent"></ion-spinner>
+          }
+          更新
+        </ion-button>
+
+        <ion-button size="small" fill="clear" (click)="showGeoInput = !showGeoInput">
+          {{ showGeoInput ? '隐藏经纬度' : '显示经纬度' }}
+        </ion-button>
+      </div>
+
+      @if (showGeoInput) {
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>经度:</label>
+          <ion-input type="number" [(ngModel)]="geoLongD" [disabled]="isLoading"></ion-input>
+          <ion-select [(ngModel)]="geoEW" [disabled]="isLoading">
+            <ion-select-option [value]="EW.E">E</ion-select-option>
+            <ion-select-option [value]="EW.W">W</ion-select-option>
+          </ion-select>
+          <ion-input type="number" min="0" max="59" [(ngModel)]="geoLongM" [disabled]="isLoading"></ion-input>
+          <span>′</span>
+          <ion-input type="number" min="0" max="59" [(ngModel)]="geoLongS" [disabled]="isLoading"></ion-input>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>纬度:</label>
+          <ion-input type="number" [(ngModel)]="geoLatD" [disabled]="isLoading"></ion-input>
+          <ion-select [(ngModel)]="geoNS" [disabled]="isLoading">
+            <ion-select-option [value]="NS.N">N</ion-select-option>
+            <ion-select-option [value]="NS.S">S</ion-select-option>
+          </ion-select>
+          <ion-input type="number" min="0" max="59" [(ngModel)]="geoLatM" [disabled]="isLoading"></ion-input>
+          <span>′</span>
+          <ion-input type="number" min="0" max="59" [(ngModel)]="geoLatS" [disabled]="isLoading"></ion-input>
+        </div>
+      </div>
+      }
+
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>开始日期:</label>
+          <horo-date-time [disabled]="isLoading" [(year)]="startDate.year" [(month)]="startDate.month"
+            [(day)]="startDate.day" [(hour)]="startDate.hour" [(minute)]="startDate.minute"
+            [(second)]="startDate.second"></horo-date-time>
+        </div>
+
+        <div class="filter-group">
+          <label>结束日期:</label>
+          <horo-date-time [disabled]="isLoading" [(year)]="endDate.year" [(month)]="endDate.month"
+            [(day)]="endDate.day" [(hour)]="endDate.hour" [(minute)]="endDate.minute"
+            [(second)]="endDate.second"></horo-date-time>
+        </div>
+      </div>
+
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>Significator:</label>
+          <ion-select multiple="true" [(ngModel)]="selectedSignificators" placeholder="全部" [disabled]="isLoading"
+            interface="alert" [interfaceOptions]="{ cssClass: 'planet-select-alert' }">
+            @for (sig of allSignificators; track sig) {
+            <ion-select-option [value]="sig">{{ getSignificatorDisplayText(sig) }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+
+        <ion-button size="small" (click)="resetFilters()" [disabled]="isLoading">
+          @if (isLoading) {
+          <ion-spinner name="crescent"></ion-spinner>
+          }
+          重置
+        </ion-button>
+      </div>
+    </div>
+
+    <h2 class="center-title">主向推运表</h2>
+    <div class="table-wrapper" [class.loading]="isLoading">
+      @if (isLoading) {
+      <div class="loading-overlay">
+        <ion-spinner name="crescent"></ion-spinner>
+        <span>数据加载中...</span>
+      </div>
+      }
+      <table class="direction-table ion-text-center">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>significator</th>
+            <th>promittor</th>
+            <th>方向弧</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredDirectionData; track item) {
+          <tr>
+            <td>{{ formatDate(item.date) }}</td>
+            <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(item.significator)  + ';' ">
+              {{ config.planetFontString(item.significator) }}
+            </td>
+            <td>
+              @if (getPromittorAspect(item.promittor); as aspectInfo) {
+              @if (aspectInfo.isLeft) {
+              <span [style]=" 'font-family: ' + config.aspectFontFamily()  + ';' ">
+                {{ config.aspectFontString(aspectInfo.aspect) }}
+              </span>
+              }
+              }
+              @if (getAntisciaInfo(item.promittor); as antiscia) {
+              {{ antiscia }}
+              }
+              @if (getPromittorPlanet(item.promittor); as planet) {
+              <span class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(planet)  + ';' ">
+                {{ config.planetFontString(planet) }}
+              </span>
+              }
+              @if (getPromittorAspect(item.promittor); as aspectInfo) {
+              @if (!aspectInfo.isLeft) {
+              <span [style]=" 'font-family: ' + config.aspectFontFamily()  + ';' ">
+                {{ config.aspectFontString(aspectInfo.aspect) }}
+              </span>
+              }
+              }
+              @if (getTermInfo(item.promittor); as termInfo) {
+              <span [style]=" 'font-family: ' + config.zodiacFontFamily()  + ';' ">
+                {{ termInfo.zodiac }}
+              </span>
+              {{ termInfo.dms }}
+              }
+            </td>
+            <td>{{ formatArc(item.arc) }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ion-content>

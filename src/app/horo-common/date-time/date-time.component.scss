@@ -2,6 +2,12 @@
   margin-left: 1rem;
 }
 
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 ion-modal {
   --height: auto;
 
