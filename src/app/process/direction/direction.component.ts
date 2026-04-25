@@ -13,10 +13,17 @@ import {
   HoroDateTime,
   Promittor,
 } from 'src/app/type/interface/response-data';
-import { degreeToDMS, zodiacLong } from 'src/app/utils/horo-math/horo-math';
+import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
+import {
+  getAntisciaInfo as getAntisciaInfoUtil,
+  getPromittorAspect as getPromittorAspectUtil,
+  getPromittorPlanet as getPromittorPlanetUtil,
+  getTermInfo as getTermInfoUtil,
+} from 'src/app/utils/promittor/promittor';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
+import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 
 @Component({
   selector: 'app-direction',
@@ -138,8 +145,25 @@ export class DirectionComponent implements OnInit, OnDestroy {
     };
   }
 
+  private validateGeo(): boolean {
+    const result = validateGeo({
+      longD: this.geoLongD,
+      longM: this.geoLongM,
+      longS: this.geoLongS,
+      latD: this.geoLatD,
+      latM: this.geoLatM,
+      latS: this.geoLatS,
+    });
+    if (!result.valid) {
+      this.message = result.message;
+      this.isAlertOpen = true;
+    }
+    return result.valid;
+  }
+
   fetchDirectionData(): void {
     if (this.isLoading) return;
+    if (!this.validateGeo()) return;
     const requestData: DirectionRequest = {
       native_date: this.nativeDate,
       geo: this.geo,
@@ -199,59 +223,21 @@ export class DirectionComponent implements OnInit, OnDestroy {
   }
 
   getPromittorPlanet(promittor: Promittor): PlanetName | null {
-    if ('conjunction' in promittor) return promittor.conjunction;
-    if ('sinisterTrine' in promittor) return promittor.sinisterTrine;
-    if ('dexterTrine' in promittor) return promittor.dexterTrine;
-    if ('sinisterSextile' in promittor) return promittor.sinisterSextile;
-    if ('dexterSextile' in promittor) return promittor.dexterSextile;
-    if ('sinisterSquare' in promittor) return promittor.sinisterSquare;
-    if ('dexterSquare' in promittor) return promittor.dexterSquare;
-    if ('opposition' in promittor) return promittor.opposition;
-    if ('term' in promittor) return promittor.term[0];
-    if ('antiscoins' in promittor) return promittor.antiscoins;
-    if ('contraantiscias' in promittor) return promittor.contraantiscias;
-    return null;
+    return getPromittorPlanetUtil(promittor);
   }
 
   getPromittorAspect(
     promittor: Promittor,
   ): { aspect: number; isLeft: boolean } | null {
-    if ('conjunction' in promittor) return { aspect: 0, isLeft: true };
-    if ('sinisterTrine' in promittor) return { aspect: 120, isLeft: true };
-    if ('dexterTrine' in promittor) return { aspect: 120, isLeft: false };
-    if ('sinisterSextile' in promittor) return { aspect: 60, isLeft: true };
-    if ('dexterSextile' in promittor) return { aspect: 60, isLeft: false };
-    if ('sinisterSquare' in promittor) return { aspect: 90, isLeft: true };
-    if ('dexterSquare' in promittor) return { aspect: 90, isLeft: false };
-    if ('opposition' in promittor) return { aspect: 180, isLeft: true };
-    if ('antiscoins' in promittor) return { aspect: 0, isLeft: true };
-    if ('contraantiscias' in promittor) return { aspect: 0, isLeft: true };
-    return null;
+    return getPromittorAspectUtil(promittor);
   }
 
   getTermInfo(promittor: Promittor): { zodiac: string; dms: string } | null {
-    if ('term' in promittor) {
-      const termLong = promittor.term[1];
-      const zodiacInfo = zodiacLong(termLong);
-      const dms = degreeToDMS(zodiacInfo.long);
-      let dmsStr: string;
-      if (dms.m === 0 && dms.s === 0) {
-        dmsStr = `${dms.d}°`;
-      } else {
-        dmsStr = `${dms.d}°${dms.m.toString().padStart(2, '0')}'${dms.s.toString().padStart(2, '0')}"`;
-      }
-      return {
-        zodiac: this.config.zodiacFontString(zodiacInfo.zodiac),
-        dms: dmsStr,
-      };
-    }
-    return null;
+    return getTermInfoUtil(promittor, this.config);
   }
 
   getAntisciaInfo(promittor: Promittor): string | null {
-    if ('antiscoins' in promittor) return 'Ant';
-    if ('contraantiscias' in promittor) return 'C-Ant';
-    return null;
+    return getAntisciaInfoUtil(promittor);
   }
 
   formatDate(date: {

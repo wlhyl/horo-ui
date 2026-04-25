@@ -11,6 +11,7 @@ export enum ProcessName {
   LunarcomparNative = 'LunarcomparNative',
   NativecomparLunar = 'NativecomparLunar',
   Direction = 'Direction',
+  QuadrantProcess = 'QuadrantProcess',
 }
 
 export namespace ProcessName {
@@ -25,6 +26,7 @@ export namespace ProcessName {
     [ProcessName.LunarcomparNative]: '月返比本命',
     [ProcessName.NativecomparLunar]: '本命比月返',
     [ProcessName.Direction]: '主向推运',
+    [ProcessName.QuadrantProcess]: '象限推运',
   };
 
   const pathMap: { [key in ProcessName]: Path } = {
@@ -38,6 +40,7 @@ export namespace ProcessName {
     [ProcessName.LunarcomparNative]: Path.LunarcomparNative,
     [ProcessName.NativecomparLunar]: Path.NativecomparLunar,
     [ProcessName.Direction]: Path.Direction,
+    [ProcessName.QuadrantProcess]: Path.QuadrantProcess,
   };
 
   export function name(process: ProcessName): string {

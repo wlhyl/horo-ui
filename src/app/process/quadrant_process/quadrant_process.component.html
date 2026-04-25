@@ -1,0 +1,245 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleView()">
+        @if (viewMode === 'chart') {
+        <ion-icon slot="icon-only" name="list"></ion-icon>
+        } @else {
+        <ion-icon slot="icon-only" name="star"></ion-icon>
+        }
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen=false"></ion-alert>
+
+  <div class="view-container">
+  @if (viewMode === 'chart') {
+    <div class="chart-container fade-in">
+      <div class="filter-container">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>出生时间:</label>
+            <horo-date-time [disabled]="isLoading" [(year)]="nativeDate.year" [(month)]="nativeDate.month"
+              [(day)]="nativeDate.day" [(hour)]="nativeDate.hour" [(minute)]="nativeDate.minute"
+              [(second)]="nativeDate.second"></horo-date-time>
+          </div>
+
+          <ion-button size="small" (click)="updateNativeDate()" [disabled]="isLoading">
+            @if (isLoading) {
+            <ion-spinner name="crescent"></ion-spinner>
+            }
+            更新
+          </ion-button>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>推运时间:</label>
+            <horo-date-time [disabled]="isLoading" [(year)]="processDate.year" [(month)]="processDate.month"
+              [(day)]="processDate.day" [(hour)]="processDate.hour" [(minute)]="processDate.minute"
+              [(second)]="processDate.second"></horo-date-time>
+          </div>
+
+          <ion-button size="small" (click)="updateProcessDate()" [disabled]="isLoading">
+            计算
+          </ion-button>
+        </div>
+
+        <div class="filter-row">
+          <ion-button size="small" fill="clear" (click)="showGeoInput = !showGeoInput">
+            {{ showGeoInput ? '隐藏经纬度' : '显示经纬度' }}
+          </ion-button>
+        </div>
+
+        @if (showGeoInput) {
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>经度:</label>
+            <ion-input type="number" min="0" max="180" [(ngModel)]="geoLongD" [disabled]="isLoading"></ion-input>
+            <ion-select [(ngModel)]="geoEW" [disabled]="isLoading">
+              <ion-select-option [value]="EW.E">E</ion-select-option>
+              <ion-select-option [value]="EW.W">W</ion-select-option>
+            </ion-select>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLongM" [disabled]="isLoading"></ion-input>
+            <span>′</span>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLongS" [disabled]="isLoading"></ion-input>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>纬度:</label>
+            <ion-input type="number" min="0" max="90" [(ngModel)]="geoLatD" [disabled]="isLoading"></ion-input>
+            <ion-select [(ngModel)]="geoNS" [disabled]="isLoading">
+              <ion-select-option [value]="NS.N">N</ion-select-option>
+              <ion-select-option [value]="NS.S">S</ion-select-option>
+            </ion-select>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLatM" [disabled]="isLoading"></ion-input>
+            <span>′</span>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLatS" [disabled]="isLoading"></ion-input>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="ion-text-center chart-canvas-wrapper">
+        <canvas id="canvas" width="0" height="0"></canvas>
+      </div>
+    </div>
+  } @else {
+    <div class="table-container fade-in">
+      <ul>
+        <li>象限推运以四轴(ASC、MC、DSC、IC)为象限分割点</li>
+        <li>每20年为一个象限，共四个象限</li>
+        <li>托勒界显示在星盘外圈</li>
+      </ul>
+
+      <div class="filter-container">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>出生时间:</label>
+            <horo-date-time [disabled]="isLoading" [(year)]="nativeDate.year" [(month)]="nativeDate.month"
+              [(day)]="nativeDate.day" [(hour)]="nativeDate.hour" [(minute)]="nativeDate.minute"
+              [(second)]="nativeDate.second"></horo-date-time>
+          </div>
+
+          <ion-button size="small" (click)="updateNativeDate()" [disabled]="isLoading">
+            @if (isLoading) {
+            <ion-spinner name="crescent"></ion-spinner>
+            }
+            更新
+          </ion-button>
+
+          <ion-button size="small" fill="clear" (click)="showGeoInput = !showGeoInput">
+            {{ showGeoInput ? '隐藏经纬度' : '显示经纬度' }}
+          </ion-button>
+        </div>
+
+        @if (showGeoInput) {
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>经度:</label>
+            <ion-input type="number" min="0" max="180" [(ngModel)]="geoLongD" [disabled]="isLoading"></ion-input>
+            <ion-select [(ngModel)]="geoEW" [disabled]="isLoading">
+              <ion-select-option [value]="EW.E">E</ion-select-option>
+              <ion-select-option [value]="EW.W">W</ion-select-option>
+            </ion-select>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLongM" [disabled]="isLoading"></ion-input>
+            <span>′</span>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLongS" [disabled]="isLoading"></ion-input>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>纬度:</label>
+            <ion-input type="number" min="0" max="90" [(ngModel)]="geoLatD" [disabled]="isLoading"></ion-input>
+            <ion-select [(ngModel)]="geoNS" [disabled]="isLoading">
+              <ion-select-option [value]="NS.N">N</ion-select-option>
+              <ion-select-option [value]="NS.S">S</ion-select-option>
+            </ion-select>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLatM" [disabled]="isLoading"></ion-input>
+            <span>′</span>
+            <ion-input type="number" min="0" max="59" [(ngModel)]="geoLatS" [disabled]="isLoading"></ion-input>
+          </div>
+        </div>
+        }
+
+        <div class="filter-row">
+          <div class="filter-group">
+            <label>开始日期:</label>
+            <horo-date-time [disabled]="isLoading" [(year)]="startDate.year" [(month)]="startDate.month"
+              [(day)]="startDate.day" [(hour)]="startDate.hour" [(minute)]="startDate.minute"
+              [(second)]="startDate.second"></horo-date-time>
+          </div>
+
+          <div class="filter-group">
+            <label>结束日期:</label>
+            <horo-date-time [disabled]="isLoading" [(year)]="endDate.year" [(month)]="endDate.month"
+              [(day)]="endDate.day" [(hour)]="endDate.hour" [(minute)]="endDate.minute"
+              [(second)]="endDate.second"></horo-date-time>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <ion-button size="small" (click)="resetFilters()" [disabled]="isLoading">
+            @if (isLoading) {
+            <ion-spinner name="crescent"></ion-spinner>
+            }
+            重置
+          </ion-button>
+        </div>
+      </div>
+
+      <h2 class="center-title">象限推运表</h2>
+      <div class="table-wrapper" [class.loading]="isLoading">
+        @if (isLoading) {
+        <div class="loading-overlay">
+          <ion-spinner name="crescent"></ion-spinner>
+          <span>数据加载中...</span>
+        </div>
+        }
+        <table class="direction-table ion-text-center">
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>promittor</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of filteredQuadrantData; track item) {
+            <tr>
+              <td>{{ formatDate(item.date) }}</td>
+              <td>
+                @if (getPromittorAspect(item.promittor); as aspectInfo) {
+                @if (aspectInfo.isLeft) {
+                <span [style]="'font-family: ' + config.aspectFontFamily() + ';' ">
+                  {{ config.aspectFontString(aspectInfo.aspect) }}
+                </span>
+                }
+                }
+                @if (getAntisciaInfo(item.promittor); as antiscia) {
+                {{ antiscia }}
+                }
+                @if (getPromittorPlanet(item.promittor); as planet) {
+                <span class="planet-name" [style]="'font-family: ' + config.planetFontFamily(planet) + ';' ">
+                  {{ config.planetFontString(planet) }}
+                </span>
+                }
+                @if (getPromittorAspect(item.promittor); as aspectInfo) {
+                @if (!aspectInfo.isLeft) {
+                <span [style]="'font-family: ' + config.aspectFontFamily() + ';' ">
+                  {{ config.aspectFontString(aspectInfo.aspect) }}
+                </span>
+                }
+                }
+                @if (getTermInfo(item.promittor); as termInfo) {
+                <span [style]="'font-family: ' + config.zodiacFontFamily() + ';' ">
+                  {{ termInfo.zodiac }}
+                </span>
+                {{ termInfo.dms }}
+                }
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
+</ion-content>

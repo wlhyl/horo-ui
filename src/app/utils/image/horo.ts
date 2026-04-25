@@ -28,6 +28,7 @@ export interface PathObject extends DrawingElement {
   stroke: string;
   strokeDashArray?: number[];
   selectable?: boolean;
+  strokeWidth?: number;
 }
 
 export interface TextObject extends DrawingElement {
@@ -58,9 +59,8 @@ export type Drawable = PathObject | TextObject | CircleObject;
 export function renderElements(
   canvas: fabric.StaticCanvas,
   elements: readonly Drawable[],
-  options: Readonly<{ width: number; height: number }>
+  options: Readonly<{ width: number; height: number }>,
 ) {
-  canvas.clear();
   canvas.setDimensions({ width: options.width, height: options.height });
 
   for (const element of elements) {
@@ -71,6 +71,7 @@ export function renderElements(
           stroke: element.stroke,
           strokeDashArray: element.strokeDashArray,
           selectable: element.selectable ?? false,
+          ...(element.strokeWidth !== undefined ? { strokeWidth: element.strokeWidth } : {}),
         });
         break;
       case 'text':
@@ -88,7 +89,7 @@ export function renderElements(
           // 左对齐
           text.left = element.left + text.width! / 2;
         }
-        text.top = element.top;// - text.height! / 2;
+        text.top = element.top; // - text.height! / 2;
         fabricObject = text;
         break;
       case 'circle':
@@ -113,7 +114,7 @@ export function renderElements(
 export function calculateAspectGrid(
   planets: readonly PlanetName[],
   width: number,
-  height: number
+  height: number,
 ): PathObject[] {
   const elements: PathObject[] = [];
   const col = planets.length + 1;
@@ -174,7 +175,7 @@ export function calculateAspectText(
   planets: readonly PlanetName[],
   config: Readonly<Horoconfig>,
   width: number,
-  height: number
+  height: number,
 ): TextObject[] {
   const elements: TextObject[] = [];
   const col = planets.length + 1;
@@ -270,7 +271,7 @@ export function calculateAspectText(
 export function calculateHouseElements(
   cups: readonly number[],
   config: Horoconfig,
-  options: Readonly<{ cx: number; cy: number; r0: number; r1: number }>
+  options: Readonly<{ cx: number; cy: number; r0: number; r1: number }>,
 ): Drawable[] {
   const { cx, cy, r0, r1 } = options;
   const elements: Drawable[] = [];
@@ -371,13 +372,13 @@ export function calculatePlanetElements(
   planets: readonly Planet[],
   firstCupsLong: number,
   config: Horoconfig,
-  options: Readonly<{ cx: number; cy: number; r: number }>
+  options: Readonly<{ cx: number; cy: number; r: number }>,
 ): (TextObject | PathObject)[] {
   const { cx, cy, r } = options;
   const elements: (TextObject | PathObject)[] = [];
 
   const sortedPlanets = planets.toSorted(
-    (a, b) => degNorm(a.long) - degNorm(b.long)
+    (a, b) => degNorm(a.long) - degNorm(b.long),
   );
 
   const p = sortedPlanets.map((x) => degNorm(x.long + 180 - firstCupsLong));
@@ -510,7 +511,7 @@ export function calculatePlanetElements(
 // 在左上角绘制说明文字
 export function calculateNotesElements(
   horosco: Readonly<Horoscope>,
-  config: Readonly<Horoconfig>
+  config: Readonly<Horoconfig>,
 ): TextObject[] {
   const elements: TextObject[] = [];
   const fontSize = 20;
@@ -591,21 +592,22 @@ export function drawAspect(
   aspects: readonly Aspect[],
   aspectCanvas: fabric.StaticCanvas,
   config: Readonly<Horoconfig>,
-  options: Readonly<{ width: number; height: number }>
+  options: Readonly<{ width: number; height: number }>,
 ): void {
   const planets = config.horoPlanets;
   const gridElements = calculateAspectGrid(
     planets,
     options.width,
-    options.height
+    options.height,
   );
   const textElements = calculateAspectText(
     aspects,
     planets,
     config,
     options.width,
-    options.height
+    options.height,
   );
+  aspectCanvas.clear();
   renderElements(aspectCanvas, [...gridElements, ...textElements], options);
 }
 
@@ -620,7 +622,7 @@ export function drawHorosco(
   horosco: Readonly<Horoscope>,
   canvas: fabric.StaticCanvas,
   config: Readonly<Horoconfig>,
-  options: Readonly<{ width: number; height: number }>
+  options: Readonly<{ width: number; height: number }>,
 ) {
   const cx = options.width / 2;
   const cy = options.height / 2;
@@ -644,14 +646,15 @@ export function drawHorosco(
     ],
     horosco.houses_cups[0],
     config,
-    { cx, cy, r: r1 }
+    { cx, cy, r: r1 },
   );
   const noteElements = calculateNotesElements(horosco, config);
 
+  canvas.clear();
   renderElements(
     canvas,
     [...houseElements, ...planetElements, ...noteElements],
-    options
+    options,
   );
 }
 
@@ -666,7 +669,7 @@ export function drawReturnHorosco(
   horosco: Readonly<ReturnHoroscope>,
   canvas: fabric.StaticCanvas,
   config: Readonly<Horoconfig>,
-  options: Readonly<{ width: number; height: number }>
+  options: Readonly<{ width: number; height: number }>,
 ) {
   const cx = options.width / 2;
   const cy = options.height / 2;
@@ -690,9 +693,10 @@ export function drawReturnHorosco(
     ],
     horosco.houses_cups[0],
     config,
-    { cx, cy, r: r1 }
+    { cx, cy, r: r1 },
   );
 
+  canvas.clear();
   renderElements(canvas, [...houseElements, ...planetElements], options);
 }
 // #endregion

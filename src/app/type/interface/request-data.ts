@@ -97,3 +97,17 @@ export interface QiZhengRequst {
   // 推运时间
   process_date: DateRequest;
 }
+
+/**
+ * 象限推运请求数据
+ */
+export interface QuadrantProcessRequest {
+  date: DateRequest;
+  geo: GeoRequest;
+  house: string;
+}
+
+/**
+ * 象限推运黄经请求数据
+ */
+export type QuadrantProcessLongitudeRequest = ReturnRequest;

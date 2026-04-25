@@ -53,6 +53,7 @@ export class ProcessPage implements OnInit {
     ProcessName.Firdaria,
     ProcessName.Profection,
     ProcessName.Direction,
+    ProcessName.QuadrantProcess,
     ProcessName.Transit,
     ProcessName.SolarReturn,
     ProcessName.LunarReturn,

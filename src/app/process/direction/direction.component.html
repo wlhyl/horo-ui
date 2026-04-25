@@ -50,7 +50,7 @@
       <div class="filter-row">
         <div class="filter-group">
           <label>经度:</label>
-          <ion-input type="number" [(ngModel)]="geoLongD" [disabled]="isLoading"></ion-input>
+          <ion-input type="number" min="0" max="180" [(ngModel)]="geoLongD" [disabled]="isLoading"></ion-input>
           <ion-select [(ngModel)]="geoEW" [disabled]="isLoading">
             <ion-select-option [value]="EW.E">E</ion-select-option>
             <ion-select-option [value]="EW.W">W</ion-select-option>
@@ -64,7 +64,7 @@
       <div class="filter-row">
         <div class="filter-group">
           <label>纬度:</label>
-          <ion-input type="number" [(ngModel)]="geoLatD" [disabled]="isLoading"></ion-input>
+          <ion-input type="number" min="0" max="90" [(ngModel)]="geoLatD" [disabled]="isLoading"></ion-input>
           <ion-select [(ngModel)]="geoNS" [disabled]="isLoading">
             <ion-select-option [value]="NS.N">N</ion-select-option>
             <ion-select-option [value]="NS.S">S</ion-select-option>

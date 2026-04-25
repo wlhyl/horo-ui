@@ -477,6 +477,7 @@ export function drawAspect(
     options.width,
     options.height
   );
+  aspectCanvas.clear();
   renderElements(aspectCanvas, [...gridElements, ...textElements], options);
 }
 
@@ -546,6 +547,7 @@ export function drawHorosco(
     true
   );
 
+  canvas.clear();
   renderElements(
     canvas,
     [

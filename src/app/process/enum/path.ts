@@ -11,4 +11,5 @@ export enum Path {
   ReturnDetails = 'details',
   ComparisonDetails = 'details',
   Direction = 'direction',
+  QuadrantProcess = 'quadrant_process',
 }

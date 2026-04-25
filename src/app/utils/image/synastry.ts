@@ -234,6 +234,7 @@ export function drawHorosco(
     true
   );
 
+  canvas.clear();
   renderElements(
     canvas,
     [

@@ -9,6 +9,8 @@ import {
   FirdariaRequest,
   DirectionRequest,
   QiZhengRequst,
+  QuadrantProcessRequest,
+  QuadrantProcessLongitudeRequest,
 } from 'src/app/type/interface/request-data';
 import {
   FirdariaPeriod,
@@ -17,6 +19,7 @@ import {
   Profection,
   ReturnHoroscope,
   Direction,
+  QuadrantProcess,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { environment } from 'src/environments/environment';
@@ -77,6 +80,32 @@ export class ApiService {
   public direction(data: DirectionRequest): Observable<Array<Direction>> {
     return this.http.post<Array<Direction>>(
       `${this.url}/process/directions`,
+      data
+    );
+  }
+
+  /**
+   *
+   * @returns 获取象限推运
+   */
+  public quadrantProcess(
+    data: QuadrantProcessRequest
+  ): Observable<Array<QuadrantProcess>> {
+    return this.http.post<Array<QuadrantProcess>>(
+      `${this.url}/process/quadrant_process`,
+      data
+    );
+  }
+
+  /**
+   *
+   * @returns 获取象限推运黄经
+   */
+  public quadrantProcessLongitude(
+    data: QuadrantProcessLongitudeRequest
+  ): Observable<number> {
+    return this.http.post<number>(
+      `${this.url}/process/quadrant_process_longitude`,
       data
     );
   }

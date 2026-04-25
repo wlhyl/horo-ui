@@ -1,0 +1,192 @@
+.view-container {
+  position: relative;
+  min-height: 100%;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.table-container,
+.chart-container {
+  margin: 1rem auto;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  width: calc(100% - 2rem);
+  max-width: 800px;
+}
+
+ion-content {
+  --padding-bottom: 2rem;
+}
+
+.chart-canvas-wrapper {
+  padding-bottom: 1rem;
+}
+
+.center-title {
+  text-align: center;
+}
+
+.filter-container {
+  margin: 1rem auto;
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.table-wrapper.loading {
+  opacity: 0.6;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 10;
+  gap: 0.5rem;
+
+  ion-spinner {
+    width: 32px;
+    height: 32px;
+  }
+
+  span {
+    font-size: 0.9rem;
+    color: #666;
+  }
+}
+
+.direction-table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0 auto;
+  min-width: 600px;
+}
+
+.direction-table,
+.direction-table th,
+.direction-table td {
+  border: 2px solid #dee2e6;
+  padding: 10px;
+}
+
+.direction-table th {
+  background-color: #e9ecef;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.direction-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.direction-table td {
+  white-space: nowrap;
+}
+
+.planet-name {
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .direction-table {
+    font-size: 0.8rem;
+    min-width: 600px;
+  }
+
+  .direction-table th,
+  .direction-table td {
+    padding: 6px 4px;
+  }
+}
+
+@media (max-width: 576px) {
+
+  .table-container,
+  .chart-container {
+    margin: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .filter-container {
+    margin: 0.5rem;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .direction-table {
+    font-size: 0.75rem;
+    min-width: 400px;
+  }
+
+  .direction-table th,
+  .direction-table td {
+    padding: 4px 2px;
+  }
+
+  .center-title {
+    font-size: 1.1rem;
+  }
+
+  .chart-canvas-wrapper {
+    padding-bottom: 0.5rem;
+  }
+}
+
+::ng-deep {
+  ion-alert .alert-checkbox-label {
+    font-size: 1.3em !important;
+  }
+}

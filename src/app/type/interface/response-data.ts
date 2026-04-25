@@ -234,3 +234,11 @@ export interface Direction {
   arc: number;
   date: HoroDateTime;
 }
+
+/**
+ * 象限推运返回数据
+ */
+export interface QuadrantProcess {
+  promittor: Promittor;
+  date: HoroDateTime;
+}
