@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-04-27
+
+### Added
+
+- 新增象限推运功能
+
 ## [0.12.0] - 2026-04-05
 
 ### Added
