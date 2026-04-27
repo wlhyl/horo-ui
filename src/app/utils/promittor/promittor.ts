@@ -56,6 +56,11 @@ export function getPromittorAspect(
   return null;
 }
 
+export function getCuspInfo(promittor: Promittor): number | null {
+  if ('cusp' in promittor) return promittor.cusp;
+  return null;
+}
+
 export function getAntisciaInfo(promittor: Promittor): string | null {
   if ('antiscoins' in promittor) return 'Ant';
   if ('contraantiscias' in promittor) return 'C-Ant';

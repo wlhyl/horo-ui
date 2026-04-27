@@ -226,7 +226,8 @@ export type Promittor =
   | { opposition: PlanetName }
   | { term: [PlanetName, number] }
   | { antiscoins: PlanetName }
-  | { contraantiscias: PlanetName };
+  | { contraantiscias: PlanetName }
+  | { cusp: number };
 
 export interface Direction {
   significator: PlanetName;

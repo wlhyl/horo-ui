@@ -147,6 +147,9 @@
               @if (getAntisciaInfo(item.promittor); as antiscia) {
               {{ antiscia }}
               }
+              @if (getCusp(item.promittor); as cusp) {
+              {{ cusp }}C
+              }
               @if (getPromittorPlanet(item.promittor); as planet) {
               <span class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(planet)  + ';' ">
                 {{ config.planetFontString(planet) }}

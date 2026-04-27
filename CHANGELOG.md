@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.1] - 2026-04-28
+
+### Added
+
+- Promittor 增加 cusp（宫头）信息
+
+### Fixed
+
+- 修复象限推运过滤条件中，开始时间设置为出生时间时不显示第1宫的问题（浮点精度判断）
+
 ## [0.13.0] - 2026-04-27
 
 ### Added

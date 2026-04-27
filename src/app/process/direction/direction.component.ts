@@ -16,6 +16,7 @@ import {
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import {
   getAntisciaInfo as getAntisciaInfoUtil,
+  getCuspInfo as getCuspInfoUtil,
   getPromittorAspect as getPromittorAspectUtil,
   getPromittorPlanet as getPromittorPlanetUtil,
   getTermInfo as getTermInfoUtil,
@@ -238,6 +239,10 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
   getAntisciaInfo(promittor: Promittor): string | null {
     return getAntisciaInfoUtil(promittor);
+  }
+
+  getCusp(promittor: Promittor): number | null {
+    return getCuspInfoUtil(promittor);
   }
 
   formatDate(date: {

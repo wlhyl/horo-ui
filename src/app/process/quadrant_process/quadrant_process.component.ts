@@ -34,6 +34,7 @@ import {
 } from 'src/app/utils/horo-math/horo-math';
 import {
   getAntisciaInfo as getAntisciaInfoUtil,
+  getCuspInfo as getCuspInfoUtil,
   getPromittorAspect as getPromittorAspectUtil,
   getPromittorPlanet as getPromittorPlanetUtil,
   getTermInfo as getTermInfoUtil,
@@ -503,6 +504,10 @@ export class QuadrantProcessComponent
     return getAntisciaInfoUtil(promittor);
   }
 
+  getCusp(promittor: Promittor): number | null {
+    return getCuspInfoUtil(promittor);
+  }
+
   get filteredQuadrantData(): QuadrantProcess[] {
     return this.quadrantData.filter((item) => {
       return this.checkDateRange(item.date);
@@ -511,8 +516,9 @@ export class QuadrantProcessComponent
 
   checkDateRange(date: HoroDateTime): boolean {
     const dateTime = this.dateToNumber(date);
-    if (dateTime < this.dateToNumber(this.startDate)) return false;
-    if (dateTime > this.dateToNumber(this.endDate)) return false;
+    const tolerance = 1000; // 1秒容差，处理浮点精度问题
+    if (dateTime < this.dateToNumber(this.startDate) - tolerance) return false;
+    if (dateTime > this.dateToNumber(this.endDate) + tolerance) return false;
     return true;
   }
 
