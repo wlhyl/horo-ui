@@ -48,7 +48,7 @@ const mockReturnData: ReturnHoroscope = {
   },
   geo: { long: 120, lat: 30 },
   house_name: 'Placidus',
-  houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+  houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
   asc: mockPlanet,
   mc: mockPlanet,
   dsc: mockPlanet,

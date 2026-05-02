@@ -72,7 +72,7 @@ export interface Horoscope {
   geo: GeoPosition;
   house_name: string;
 
-  houses_cups: Array<number>;
+  cusps: Array<number>;
   asc: Planet;
   mc: Planet;
   dsc: Planet;
@@ -122,9 +122,9 @@ export interface HoroscopeComparison {
   // 星盘的宫位
   house_name: string;
   // 原盘12宫头黄经度数
-  houses_cups: Array<number>;
+  houses_cusps: Array<number>;
   // 比较盘12宫头黄经度数
-  comparison_cups: Array<number>;
+  comparison_cusps: Array<number>;
 
   // 上升点
   original_asc: Planet;
@@ -172,7 +172,7 @@ export interface ReturnHoroscope {
   // 星盘的宫位
   house_name: string;
   // 12宫头黄经度数
-  houses_cups: Array<number>;
+  houses_cusps: Array<number>;
 
   // 上升点
   asc: Planet;

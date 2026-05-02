@@ -296,10 +296,10 @@ export class QuadrantProcessComponent
     const r0 = r2 - 30;
     const r1 = r0 - 50;
 
-    const firstCupsLong = this.horoscoData.houses_cups[0];
+    const firstCuspLong = this.horoscoData.cusps[0];
 
     const houseElements = calculateHouseElements(
-      this.horoscoData.houses_cups,
+      this.horoscoData.cusps,
       this.config,
       {
         cx,
@@ -317,7 +317,7 @@ export class QuadrantProcessComponent
         this.horoscoData.ic,
         this.horoscoData.part_of_fortune,
       ],
-      firstCupsLong,
+      firstCuspLong,
       this.config,
       { cx, cy, r: r1 },
     );
@@ -341,7 +341,7 @@ export class QuadrantProcessComponent
       for (const term of terms) {
         const termEndLong =
           term.d != 30 ? i * 30 + term.d + 1 : i * 30 + term.d;
-        const angle = termEndLong + 180 - firstCupsLong;
+        const angle = termEndLong + 180 - firstCuspLong;
 
         const innerRadius = r0;
         const outerRadius = r2;
@@ -361,7 +361,7 @@ export class QuadrantProcessComponent
         // 画界行星
         const termCenter =
           termStartLong + degNorm(termEndLong - termStartLong) / 2;
-        const termCenterAngle = termCenter + 180 - firstCupsLong;
+        const termCenterAngle = termCenter + 180 - firstCuspLong;
         const x = cx + (r0 + (r2 - r0) / 2) * cos(termCenterAngle);
         const y = cy - (r0 + (r2 - r0) / 2) * sin(termCenterAngle);
 
@@ -380,7 +380,7 @@ export class QuadrantProcessComponent
     }
 
     if (this.processLongitude !== 0) {
-      const markerAngle = this.processLongitude + 180 - firstCupsLong;
+      const markerAngle = this.processLongitude + 180 - firstCuspLong;
 
       const x0 = cx + r0 * cos(markerAngle);
       const y0 = cy - r0 * sin(markerAngle);

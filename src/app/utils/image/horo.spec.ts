@@ -155,7 +155,7 @@ describe('Horo Image Calculation Functions', () => {
       speed_state: PlanetSpeedState.快,
     });
     const mockHoroscope = createMockHoroscope({
-      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       planets: [mockPlanet],
       asc: createMockPlanet({ name: PlanetName.ASC, long: 0 }),
       mc: createMockPlanet({ name: PlanetName.MC, long: 270 }),
@@ -188,7 +188,7 @@ describe('Horo Image Calculation Functions', () => {
     describe('calculateHouseElements', () => {
       it('should generate circles, cusp lines, house numbers, and zodiac signs', () => {
         const elements = calculateHouseElements(
-          mockHoroscope.houses_cups,
+          mockHoroscope.cusps,
           mockHoroConfig,
           { cx: 150, cy: 150, r0: 150, r1: 100 }
         );
@@ -227,7 +227,7 @@ describe('Horo Image Calculation Functions', () => {
         ];
         const elements = calculatePlanetElements(
           planets,
-          mockHoroscope.houses_cups[0],
+          mockHoroscope.cusps[0],
           mockHoroConfig,
           { cx: 150, cy: 150, r: 100 }
         );
@@ -256,7 +256,7 @@ describe('Horo Image Calculation Functions', () => {
         ];
         const elements = calculatePlanetElements(
           planets,
-          mockHoroscope.houses_cups[0],
+          mockHoroscope.cusps[0],
           mockHoroConfig,
           { cx: 150, cy: 150, r: 100 }
         );

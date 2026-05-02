@@ -84,14 +84,14 @@ describe('HoroconfigService', () => {
   });
 
   it('行星字体', () => {
-    let angularHouseCups = [
+    let angularHouseCusps = [
       PlanetName.ASC,
       PlanetName.MC,
       PlanetName.DSC,
       PlanetName.IC,
     ];
-    for (let cups of angularHouseCups) {
-      expect(service.planetFontFamily(cups)).toEqual(service.textFont);
+    for (let cusp of angularHouseCusps) {
+      expect(service.planetFontFamily(cusp)).toEqual(service.textFont);
     }
 
     let planets = [

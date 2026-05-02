@@ -49,7 +49,7 @@ export const mockHoroscopeData: Horoscope = createMockHoroscope({
   date: mockDate,
   geo: mockGeo,
   house_name: 'Alcabitus',
-  houses_cups: [121.123],
+  cusps: [121.123],
   asc: createMockPlanet({
     name: PlanetName.ASC,
   }),

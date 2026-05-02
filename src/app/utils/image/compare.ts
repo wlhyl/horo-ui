@@ -161,7 +161,7 @@ export function calculateAspectText(
 }
 
 export function calculateHouseElements(
-  cups: readonly number[],
+  cusps: readonly number[],
   config: Readonly<Horoconfig>,
   options: Readonly<{ cx: number; cy: number; r0: number; r1: number }>
 ): Drawable[] {
@@ -187,11 +187,11 @@ export function calculateHouseElements(
   });
 
   // 宫头在canvas中的角度
-  // 第一宫在cups[0],在180度
-  const cupsOfImage: number[] = cups.map((x) => x + 180 - cups[0]);
+  // 第一宫在cusp[0],在180度
+  const cuspOfImage: number[] = cusps.map((x) => x + 180 - cusps[0]);
 
-  for (let i = 0; i < cupsOfImage.length; i++) {
-    const cupAngle = cupsOfImage[i];
+  for (let i = 0; i < cuspOfImage.length; i++) {
+    const cupAngle = cuspOfImage[i];
     // Cusp lines
     let x = cx + r1 * cos(cupAngle);
     let y = cy - r1 * sin(cupAngle);
@@ -203,7 +203,7 @@ export function calculateHouseElements(
 
     // 计算并画宫位号，计算文字的圆心
     // d: 宫位宽度，>=0
-    const d = degNorm(cupsOfImage[(i + 1) % cupsOfImage.length] - cupAngle);
+    const d = degNorm(cuspOfImage[(i + 1) % cuspOfImage.length] - cupAngle);
     x = cx + (r1 / 8) * cos(cupAngle + d / 2);
     y = cy - (r1 / 8) * sin(cupAngle + d / 2);
     elements.push({
@@ -216,12 +216,12 @@ export function calculateHouseElements(
     });
 
     // Zodiac signs on cusps
-    const cupsZodiacLong = zodiacLong(cups[i]);
+    const cuspZodiacLong = zodiacLong(cusps[i]);
     x = cx + (r1 + (r0 - r1) / 2) * cos(cupAngle);
     y = cy - (r1 + (r0 - r1) / 2) * sin(cupAngle);
     elements.push({
       type: 'text',
-      text: `${config.zodiacFontString(cupsZodiacLong.zodiac)}`,
+      text: `${config.zodiacFontString(cuspZodiacLong.zodiac)}`,
       left: x,
       top: y,
       fontSize: (r0 - r1) / 2,
@@ -229,7 +229,7 @@ export function calculateHouseElements(
     });
 
     // Cusp degrees and minutes
-    const cupsZodiacLongDMS = degreeToDMS(cupsZodiacLong.long);
+    const cuspZodiacLongDMS = degreeToDMS(cuspZodiacLong.long);
     const angleOffset = 5;
     const textRadius = r1 + (r0 - r1) / 2;
 
@@ -238,7 +238,7 @@ export function calculateHouseElements(
     y = cy - textRadius * sin(dAngle);
     elements.push({
       type: 'text',
-      text: `${cupsZodiacLongDMS.d};`,
+      text: `${cuspZodiacLongDMS.d};`,
       left: x,
       top: y,
       fontSize: (r0 - r1) / 4,
@@ -250,7 +250,7 @@ export function calculateHouseElements(
     y = cy - textRadius * sin(mAngle);
     elements.push({
       type: 'text',
-      text: `${cupsZodiacLongDMS.m}'`,
+      text: `${cuspZodiacLongDMS.m}'`,
       left: x,
       top: y,
       fontSize: (r0 - r1) / 4,
@@ -338,7 +338,7 @@ function addPlanetDetails(
 
 export function calculatePlanets(
   planets: readonly Planet[],
-  firstCupsLong: number,
+  firstCuspLong: number,
   config: Readonly<Horoconfig>,
   options: Readonly<{ cx: number; cy: number; r: number }>,
   isNative: boolean
@@ -352,7 +352,7 @@ export function calculatePlanets(
   );
 
   // p：行星在canvas的位置
-  const p = sortedPlanets.map((x) => degNorm(x.long + 180 - firstCupsLong));
+  const p = sortedPlanets.map((x) => degNorm(x.long + 180 - firstCuspLong));
 
   // Adjust planet positions to avoid overlap
   for (let i = 0; i < p.length; i++) {
@@ -370,7 +370,7 @@ export function calculatePlanets(
 
   for (let i = 0; i < p.length; i++) {
     const angle = p[i];
-    const originalAngle = sortedPlanets[i].long + 180 - firstCupsLong;
+    const originalAngle = sortedPlanets[i].long + 180 - firstCuspLong;
 
     // 先画行星指示线，以保证行星名字的图层能在指示线之上
     // 文字中心位置
@@ -498,7 +498,7 @@ export function drawHorosco(
   const r0 = options.width / 2;
   const r1 = r0 - 50;
 
-  const houseElements = calculateHouseElements(horosco.houses_cups, config, {
+  const houseElements = calculateHouseElements(horosco.houses_cusps, config, {
     cx: cx,
     cy: cy,
     r0: r0,
@@ -515,7 +515,7 @@ export function drawHorosco(
   ];
   const comparisonPlanetElements = calculatePlanets(
     comparisonPlanets,
-    horosco.houses_cups[0],
+    horosco.houses_cusps[0],
     config,
     { cx: cx, cy: cy, r: r1 },
     false
@@ -541,7 +541,7 @@ export function drawHorosco(
   ];
   const nativePlanetElements = calculatePlanets(
     originalPlanets,
-    horosco.houses_cups[0],
+    horosco.houses_cusps[0],
     config,
     { cx: cx, cy: cy, r: r2 },
     true

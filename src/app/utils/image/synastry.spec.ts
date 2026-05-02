@@ -120,8 +120,8 @@ describe('Synastry Image Calculation Functions', () => {
   describe('calculateOrginalHouseElements', () => {
     it('should generate correct number of elements for original house chart', () => {
       const elements = calculateHouseElements(
-        mockSynastryData.houses_cups,
-        mockSynastryData.houses_cups[0],
+        mockSynastryData.houses_cusps,
+        mockSynastryData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 0 },
         true
@@ -140,8 +140,8 @@ describe('Synastry Image Calculation Functions', () => {
 
     it('should generate correct number of elements for comparison house chart', () => {
       const elements = calculateHouseElements(
-        mockSynastryData.comparison_cups,
-        mockSynastryData.houses_cups[0],
+        mockSynastryData.comparison_cusps,
+        mockSynastryData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 75 },
         false
@@ -160,8 +160,8 @@ describe('Synastry Image Calculation Functions', () => {
 
     it('should generate zodiac signs on cusps for original chart', () => {
       const elements = calculateHouseElements(
-        mockSynastryData.houses_cups,
-        mockSynastryData.houses_cups[0],
+        mockSynastryData.houses_cusps,
+        mockSynastryData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 0 },
         true
@@ -194,8 +194,8 @@ describe('Synastry Image Calculation Functions', () => {
 
     it('should generate house numbers for original chart', () => {
       const elements = calculateHouseElements(
-        mockSynastryData.houses_cups,
-        mockSynastryData.houses_cups[0],
+        mockSynastryData.houses_cusps,
+        mockSynastryData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 0 },
         true
@@ -227,8 +227,8 @@ describe('Synastry Image Calculation Functions', () => {
 
     it('should generate zodiac signs on cusps for comparison chart', () => {
       const elements = calculateHouseElements(
-        mockSynastryData.comparison_cups,
-        mockSynastryData.houses_cups[0],
+        mockSynastryData.comparison_cusps,
+        mockSynastryData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 75 },
         false
@@ -261,8 +261,8 @@ describe('Synastry Image Calculation Functions', () => {
 
     it('should generate house numbers for comparison chart', () => {
       const elements = calculateHouseElements(
-        mockSynastryData.comparison_cups,
-        mockSynastryData.houses_cups[0],
+        mockSynastryData.comparison_cusps,
+        mockSynastryData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 75 },
         false

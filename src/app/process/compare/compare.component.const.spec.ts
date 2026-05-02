@@ -59,7 +59,7 @@ export const mockSolarReturnHoroscopeData: ReturnHoroscope = createMockReturnHor
   return_date: { ...mockHoroData.date, year: 2022 },
   geo: { ...mockProcessData.geo },
   house_name: mockHoroData.house,
-  houses_cups: [],
+  houses_cusps: [],
   asc: {
     name: PlanetName.ASC,
     long: 0,
@@ -127,7 +127,7 @@ export const mockSolarComparisonNativeData: HoroscopeComparison = createMockHoro
   original_geo: { ...mockHoroData.geo },
   comparison_geo: { ...mockSolarReturnHoroscopeData.geo },
   house_name: mockSolarReturnHoroscopeData.house_name,
-  houses_cups: [],
+  houses_cusps: [],
   original_asc: mockSolarReturnHoroscopeData.asc,
   comparison_asc: mockSolarReturnHoroscopeData.asc,
   original_mc: mockSolarReturnHoroscopeData.mc,

@@ -177,7 +177,7 @@ describe('Compare Image Calculation Functions', () => {
   describe('calculateHouseElements', () => {
     it('should generate basic house structure elements', () => {
       const elements = calculateHouseElements(
-        mockComparisonData.houses_cups,
+        mockComparisonData.houses_cusps,
         mockHoroConfig,
         { cx: 150, cy: 150, r0: 150, r1: 100 }
       );
@@ -193,7 +193,7 @@ describe('Compare Image Calculation Functions', () => {
       // 12 house numbers + 12 zodiac signs + 12 degree numbers + 12 minute numbers
       expect(textElements.length).toBe(48);
     });
-    it('should return default circles when houses_cups is empty', () => {
+    it('should return default circles when houses_cusp is empty', () => {
       const elements = calculateHouseElements([], mockHoroConfig, {
         cx: 150,
         cy: 150,
@@ -209,7 +209,7 @@ describe('Compare Image Calculation Functions', () => {
     it('should generate elements for both native and transit planets', () => {
       const elements = calculatePlanets(
         mockComparisonData.original_planets,
-        mockComparisonData.houses_cups[0],
+        mockComparisonData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r: 100 },
         true // isNative
@@ -224,7 +224,7 @@ describe('Compare Image Calculation Functions', () => {
 
       const transitElements = calculatePlanets(
         mockComparisonData.comparison_planets,
-        mockComparisonData.houses_cups[0],
+        mockComparisonData.houses_cusps[0],
         mockHoroConfig,
         { cx: 150, cy: 150, r: 120 },
         false // isNative = false
@@ -252,7 +252,7 @@ describe('Compare Image Calculation Functions', () => {
       const createTestElements = (planets: Planet[]) => {
         return calculatePlanets(
           planets,
-          mockComparisonData.houses_cups[0],
+          mockComparisonData.houses_cusps[0],
           mockHoroConfig,
           { cx: 150, cy: 150, r: 100 },
           true

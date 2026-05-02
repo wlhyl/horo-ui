@@ -16,8 +16,8 @@ const houseWidth = 50;
 
 /**
  * 计算星盘的宫位元素
- * @param cups 星盘的宫头黄经度数
- * @param original_first_cups 被比较的星盘的第一宫的黄经度数
+ * @param cusps 星盘的宫头黄经度数
+ * @param original_first_cusps 被比较的星盘的第一宫的黄经度数
  * @param config 配置
  * @param options 星盘图的相关参数
  * @param options.cx 星图的中心x坐标
@@ -27,8 +27,8 @@ const houseWidth = 50;
  * @returns 星盘的宫位元素
  */
 export function calculateHouseElements(
-  cups: readonly number[],
-  original_first_cups: number,
+  cusps: readonly number[],
+  original_first_cusps: number,
   config: Readonly<Horoconfig>,
   options: Readonly<{ cx: number; cy: number; r0: number; r1: number }>,
   original = true
@@ -69,11 +69,11 @@ export function calculateHouseElements(
   }
 
   // 宫头在canvas中的角度
-  // 第一宫在cups[0],在180度
-  const cupsOfImage: number[] = cups.map((x) => x + 180 - original_first_cups);
+  // 第一宫在cusp[0],在180度
+  const cuspOfImage: number[] = cusps.map((x) => x + 180 - original_first_cusps);
 
-  for (let i = 0; i < cupsOfImage.length; i++) {
-    const cupAngle = cupsOfImage[i];
+  for (let i = 0; i < cuspOfImage.length; i++) {
+    const cupAngle = cuspOfImage[i];
     {
       // 宫头线
       const x0 = cx + (r0 - houseWidth) * cos(cupAngle);
@@ -94,7 +94,7 @@ export function calculateHouseElements(
       // d: 宫位宽度，>=0
       // (r0-r1)/8+r1
       const ratio = original ? 8 : 20;
-      const d = degNorm(cupsOfImage[(i + 1) % cupsOfImage.length] - cupAngle);
+      const d = degNorm(cuspOfImage[(i + 1) % cuspOfImage.length] - cupAngle);
       let x0 = cx + ((r0 - r1) / ratio + r1) * cos(cupAngle + d / 2);
       let y0 = cy - ((r0 - r1) / ratio + r1) * sin(cupAngle + d / 2);
       elements.push({
@@ -107,7 +107,7 @@ export function calculateHouseElements(
       });
     }
 
-    const cupsZodiacLong = zodiacLong(cups[i]);
+    const cuspZodiacLong = zodiacLong(cusps[i]);
     const fontSize = houseWidth / 4;
     {
       // Zodiac signs on cusps
@@ -116,7 +116,7 @@ export function calculateHouseElements(
       const y = cy - (r0 - houseWidth / 2) * sin(cupAngle);
       elements.push({
         type: 'text',
-        text: `${config.zodiacFontString(cupsZodiacLong.zodiac)}`,
+        text: `${config.zodiacFontString(cuspZodiacLong.zodiac)}`,
         left: x,
         top: y,
         fontSize: fontSize * 1.5,
@@ -126,7 +126,7 @@ export function calculateHouseElements(
 
     {
       // 宫头的度和分
-      const cupsZodiacLongDMS = degreeToDMS(cupsZodiacLong.long);
+      const cuspZodiacLongDMS = degreeToDMS(cuspZodiacLong.long);
       const angleOffset = original ? 5 : 3;
       const textRadius = r0 - houseWidth / 2;
 
@@ -136,7 +136,7 @@ export function calculateHouseElements(
       const y0 = cy - textRadius * sin(dAngle);
       elements.push({
         type: 'text',
-        text: `${cupsZodiacLongDMS.d};`,
+        text: `${cuspZodiacLongDMS.d};`,
         left: x0,
         top: y0,
         fontSize: fontSize,
@@ -148,7 +148,7 @@ export function calculateHouseElements(
       const y1 = cy - textRadius * sin(mAngle);
       elements.push({
         type: 'text',
-        text: `${cupsZodiacLongDMS.m}'`,
+        text: `${cuspZodiacLongDMS.m}'`,
         left: x1,
         top: y1,
         fontSize: fontSize,
@@ -177,8 +177,8 @@ export function drawHorosco(
 
   // 画原盘宫痊
   const originalHouseElements = calculateHouseElements(
-    horosco.houses_cups,
-    horosco.houses_cups[0],
+    horosco.houses_cusps,
+    horosco.houses_cusps[0],
     config,
     {
       cx: cx,
@@ -190,8 +190,8 @@ export function drawHorosco(
 
   // 画比较盘宫位
   const compareHouseElements = calculateHouseElements(
-    horosco.comparison_cups,
-    horosco.houses_cups[0],
+    horosco.comparison_cusps,
+    horosco.houses_cusps[0],
     config,
     {
       cx: cx,
@@ -212,7 +212,7 @@ export function drawHorosco(
   ];
   const comparisonPlanetElements = calculatePlanets(
     comparisonPlanets,
-    horosco.houses_cups[0],
+    horosco.houses_cusps[0],
     config,
     { cx: cx, cy: cy, r: r0 - houseWidth },
     false
@@ -228,7 +228,7 @@ export function drawHorosco(
   ];
   const nativePlanetElements = calculatePlanets(
     originalPlanets,
-    horosco.houses_cups[0],
+    horosco.houses_cusps[0],
     config,
     { cx: cx, cy: cy, r: r0 / 2 - houseWidth },
     true

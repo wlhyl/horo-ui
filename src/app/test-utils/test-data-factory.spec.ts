@@ -293,7 +293,7 @@ export class TestDataFactory {
       date: this.createDefaultHoroDateTime(overrides?.date),
       geo: this.createDefaultGeoPosition(overrides?.geo),
       house_name: 'Placidus',
-      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       asc: this.createDefaultPlanet({
         ...overrides?.asc,
         name: PlanetName.ASC,
@@ -334,8 +334,8 @@ export class TestDataFactory {
       original_geo: this.createDefaultGeoPosition(overrides?.original_geo),
       comparison_geo: this.createDefaultGeoPosition(overrides?.comparison_geo),
       house_name: 'Placidus',
-      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-      comparison_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      comparison_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       original_asc: this.createDefaultPlanet({
         ...overrides?.original_asc,
         name: PlanetName.ASC,
@@ -397,7 +397,7 @@ export class TestDataFactory {
       return_date: this.createDefaultHoroDateTime(overrides?.return_date),
       geo: this.createDefaultGeoPosition(overrides?.geo),
       house_name: 'Placidus',
-      houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       asc: this.createDefaultPlanet({
         ...overrides?.asc,
         name: PlanetName.ASC,

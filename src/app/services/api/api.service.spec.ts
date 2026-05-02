@@ -122,7 +122,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house_name: 'Placidus',
-        houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+        cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
         asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
@@ -383,7 +383,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house_name: 'Placidus',
-        houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+        houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
         original_asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
@@ -567,7 +567,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house_name: 'Placidus',
-        houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+        houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
         asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
@@ -700,7 +700,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house_name: 'Placidus',
-        houses_cups: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+        houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
         asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
