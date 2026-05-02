@@ -49,6 +49,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
   startDate!: HoroDateTime;
   endDate!: HoroDateTime;
   selectedSignificators: PlanetName[] = [];
+  arcDirectionFilter: 'all' | 'direct' | 'converse' = 'all';
   allSignificators: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
@@ -266,8 +267,16 @@ export class DirectionComponent implements OnInit, OnDestroy {
     return this.directionData.filter((item) => {
       const dateMatch = this.checkDateRange(item.date);
       const significatorMatch = this.checkSignificator(item.significator);
-      return dateMatch && significatorMatch;
+      const arcMatch = this.checkArcDirection(item.arc);
+      return dateMatch && significatorMatch && arcMatch;
     });
+  }
+
+  checkArcDirection(arc: number): boolean {
+    if (this.arcDirectionFilter === 'all') return true;
+    if (this.arcDirectionFilter === 'direct') return arc >= 0;
+    if (this.arcDirectionFilter === 'converse') return arc < 0;
+    return true;
   }
 
   checkDateRange(date: HoroDateTime): boolean {
@@ -301,6 +310,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
     this.startDate = structuredClone(this.nativeDate);
     this.endDate = this.addYears(this.nativeDate, 120);
     this.selectedSignificators = [];
+    this.arcDirectionFilter = 'all';
     this.setGeoFromHoroData();
     this.resetFiltersSubject.next();
   }

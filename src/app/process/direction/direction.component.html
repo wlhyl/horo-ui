@@ -103,6 +103,15 @@
           </ion-select>
         </div>
 
+        <div class="filter-group">
+          <label>弧方向:</label>
+          <ion-select [(ngModel)]="arcDirectionFilter" placeholder="全部" [disabled]="isLoading">
+            <ion-select-option value="all">全部</ion-select-option>
+            <ion-select-option value="direct">正向弧</ion-select-option>
+            <ion-select-option value="converse">反向弧</ion-select-option>
+          </ion-select>
+        </div>
+
         <ion-button size="small" (click)="resetFilters()" [disabled]="isLoading">
           @if (isLoading) {
           <ion-spinner name="crescent"></ion-spinner>

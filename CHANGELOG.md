@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- 主向推运增加弧度方向过滤功能，可选择显示正向弧、反向弧或全部
+
 ## [0.13.1] - 2026-04-28
 
 ### Added
