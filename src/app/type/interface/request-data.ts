@@ -1,4 +1,5 @@
 import { ProcessName } from '../../process/enum/process';
+import { DirectionMethod } from '../../process/enum/direction-method';
 
 export interface DateRequest {
   year: number;
@@ -39,6 +40,7 @@ export interface ProcessRequest {
   geo: GeoRequest;
   process_name: ProcessName;
   isSolarReturn: boolean;
+  direction_method: DirectionMethod;
 }
 
 export interface ProfectionRequest {
@@ -82,7 +84,19 @@ export interface FirdariaRequest {
 /**
  * 主向推运
  */
-export type DirectionRequest = FirdariaRequest;
+export interface DirectionRequest {
+  // 出生时间
+  native_date: DateRequest;
+
+  // 出生地大地经纬度
+  geo: GeoRequest;
+
+  // 主限法算法
+  method: DirectionMethod;
+
+  // 宫位系统
+  house: string;
+}
 
 /**
  * 七政

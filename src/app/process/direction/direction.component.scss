@@ -1,6 +1,13 @@
 .table-container {
   margin: 1rem auto;
-  display: table;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  width: calc(100% - 2rem);
+  max-width: 800px;
+}
+
+ion-content {
+  --padding-bottom: 2rem;
 }
 
 .center-title {
@@ -42,6 +49,7 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .table-wrapper.loading {

@@ -28,6 +28,7 @@ import { PlanetName, PlanetSpeedState } from '../type/enum/planet';
 import { FixedStarName } from '../type/enum/fixed-star';
 import { LunarMansionsName } from '../type/enum/qizheng';
 import { ProcessName } from '../process/enum/process';
+import { DirectionMethod } from '../process/enum/direction-method';
 
 /**
  * 测试数据工厂类
@@ -109,6 +110,7 @@ export class TestDataFactory {
       geo: this.createDefaultGeoRequest(overrides?.geo),
       process_name: ProcessName.Transit,
       isSolarReturn: false,
+      direction_method: DirectionMethod.SemiArc,
       ...overrides,
     };
   }
@@ -188,6 +190,8 @@ export class TestDataFactory {
     return {
       native_date: this.createDefaultDateRequest(overrides?.native_date),
       geo: this.createDefaultGeoRequest(overrides?.geo),
+      method: DirectionMethod.SemiArc,
+      house: 'Placidus',
       ...overrides,
     };
   }

@@ -243,3 +243,48 @@ export interface QuadrantProcess {
   promittor: Promittor;
   date: HoroDateTime;
 }
+
+/**
+ * 主向推运相位类型
+ */
+export enum PromittorType {
+  Conjunction = 'conjunction',
+  SinisterTrine = 'sinisterTrine',
+  DexterTrine = 'dexterTrine',
+  SinisterSextile = 'sinisterSextile',
+  DexterSextile = 'dexterSextile',
+  SinisterSquare = 'sinisterSquare',
+  DexterSquare = 'dexterSquare',
+  Opposition = 'opposition',
+  Term = 'term',
+  Antiscoins = 'antiscoins',
+  Contraantiscias = 'contraantiscias',
+  Cusp = 'cusp',
+}
+
+export namespace PromittorType {
+  const nameMap: { [key in PromittorType]: string } = {
+    [PromittorType.Conjunction]: '合相',
+    [PromittorType.SinisterTrine]: '左三合',
+    [PromittorType.DexterTrine]: '右三合',
+    [PromittorType.SinisterSextile]: '左六合',
+    [PromittorType.DexterSextile]: '右六合',
+    [PromittorType.SinisterSquare]: '左刑',
+    [PromittorType.DexterSquare]: '右刑',
+    [PromittorType.Opposition]: '对冲',
+    [PromittorType.Term]: '界',
+    [PromittorType.Antiscoins]: '映点',
+    [PromittorType.Contraantiscias]: '反映点',
+    [PromittorType.Cusp]: '宫头',
+  };
+
+  export function name(type: PromittorType): string {
+    return nameMap[type];
+  }
+
+  export function values(): PromittorType[] {
+    return Object.values(PromittorType).filter(
+      (v) => typeof v === 'string'
+    ) as PromittorType[];
+  }
+}

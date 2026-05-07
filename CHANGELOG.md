@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - 主向推运增加弧度方向过滤功能，可选择显示正向弧、反向弧或全部
+- 主向推运增加ppromissor过滤功能
+- 增加极下的主向推运
+
+### Fixed
+
+- HoroStorageService 初始化数据时改用 deepFreeze，确保嵌套属性也被冻结
+
+## Changed
+
+- date-time 组件 增加年份范围，从 1900 到 2199
 
 ## [0.13.1] - 2026-04-28
 

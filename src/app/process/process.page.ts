@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ProcessName } from './enum/process';
+import { DirectionMethod } from './enum/direction-method';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -67,6 +68,13 @@ export class ProcessPage implements OnInit {
       value: process_name,
     };
   });
+
+  directionMethodOptions = Object.values(DirectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: DirectionMethod.name(method),
+      value: method,
+    }));
 
   onIonChange(event: CustomEvent) {
     this.currentProcess = event.detail.value;

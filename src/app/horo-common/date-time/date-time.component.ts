@@ -54,7 +54,7 @@ export class DateTimeComponent implements OnInit, OnChanges {
   @Output()
   secondChange = new EventEmitter<number>();
 
-  years = [...Array(200)].map((_, index) => 1900 + index);
+  years = [...Array(300)].map((_, index) => 1900 + index);
 
   months = [...Array(12)].map((_, index) => 1 + index);
 

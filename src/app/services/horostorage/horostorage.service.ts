@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProcessName } from 'src/app/process/enum/process';
+import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import {
   HoroRequest,
@@ -60,11 +61,11 @@ export class HoroStorageService {
   private _initProcessData() {
     let processData = this._getParsedItem<ProcessRequest>('process_data');
     if (processData) {
-      this._processData = Object.freeze(processData);
+      this._processData = deepFreeze(processData);
     } else {
       let t = this.nowDate();
 
-      this._processData = Object.freeze({
+      this._processData = deepFreeze({
         date: {
           year: t.year,
           month: t.month,
@@ -82,6 +83,7 @@ export class HoroStorageService {
         },
         process_name: ProcessName.Profection,
         isSolarReturn: false,
+        direction_method: DirectionMethod.SemiArc,
       });
     }
   }
@@ -89,7 +91,7 @@ export class HoroStorageService {
   private _initHoroData() {
     let horoData = this._getParsedItem<HoroRequest>('horo_data');
     if (horoData) {
-      this._horoData = Object.freeze(horoData);
+      this._horoData = deepFreeze(horoData);
     } else {
       let t = this.nowDate();
       horoData = {
@@ -113,14 +115,14 @@ export class HoroStorageService {
         sex: true,
         name: '',
       };
-      this._horoData = Object.freeze(horoData);
+      this._horoData = deepFreeze(horoData);
     }
   }
 
   private _initSynastryData() {
     let synastryData = this._getParsedItem<HoroRequest>('synastry_data');
     if (synastryData) {
-      this._synastryData = Object.freeze(synastryData);
+      this._synastryData = deepFreeze(synastryData);
     } else {
       let t = this.nowDate();
       synastryData = {
@@ -144,7 +146,7 @@ export class HoroStorageService {
         sex: true,
         name: '',
       };
-      this._synastryData = Object.freeze(synastryData);
+      this._synastryData = deepFreeze(synastryData);
     }
   }
 

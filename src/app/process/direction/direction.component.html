@@ -34,15 +34,33 @@
             [(second)]="nativeDate.second"></horo-date-time>
         </div>
 
+        <ion-button size="small" fill="clear" (click)="showGeoInput = !showGeoInput">
+          {{ showGeoInput ? '隐藏经纬度' : '显示经纬度' }}
+        </ion-button>
+
+        <div class="filter-group">
+          <label>算法:</label>
+          <ion-select [(ngModel)]="directionMethod" [disabled]="isLoading">
+            @for (option of directionMethodOptions; track option) {
+            <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+
+        <div class="filter-group">
+          <label>宫位:</label>
+          <ion-select [(ngModel)]="house" [disabled]="isLoading">
+            @for (h of config.houses; track h) {
+            <ion-select-option [value]="h">{{ h }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+
         <ion-button size="small" (click)="updateNativeDate()" [disabled]="isLoading">
           @if (isLoading) {
           <ion-spinner name="crescent"></ion-spinner>
           }
           更新
-        </ion-button>
-
-        <ion-button size="small" fill="clear" (click)="showGeoInput = !showGeoInput">
-          {{ showGeoInput ? '隐藏经纬度' : '显示经纬度' }}
         </ion-button>
       </div>
 
@@ -109,6 +127,15 @@
             <ion-select-option value="all">全部</ion-select-option>
             <ion-select-option value="direct">正向弧</ion-select-option>
             <ion-select-option value="converse">反向弧</ion-select-option>
+          </ion-select>
+        </div>
+
+        <div class="filter-group">
+          <label>相位类型:</label>
+          <ion-select multiple="true" [(ngModel)]="promittorTypeFilter" placeholder="全部" [disabled]="isLoading">
+            @for (option of promittorTypeOptions; track option.value) {
+            <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
           </ion-select>
         </div>
 

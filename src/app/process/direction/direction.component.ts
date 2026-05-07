@@ -1,17 +1,27 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
   DateRequest,
   DirectionRequest,
   GeoRequest,
+  HoroRequest,
 } from 'src/app/type/interface/request-data';
+import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import {
   Direction,
   HoroDateTime,
   Promittor,
+  PromittorType,
 } from 'src/app/type/interface/response-data';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import {
@@ -25,6 +35,7 @@ import { PlanetName } from 'src/app/type/enum/planet';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 
 @Component({
   selector: 'app-direction',
@@ -40,16 +51,23 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
   title = '主向推运';
 
-  horoData = this.storage.horoData;
+  horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
 
   directionData: Array<Direction> = [];
   isLoading = false;
 
-  nativeDate!: DateRequest;
-  startDate!: HoroDateTime;
-  endDate!: HoroDateTime;
-  selectedSignificators: PlanetName[] = [];
+  nativeDate: DateRequest = structuredClone(this.horoData.date);
+  startDate: HoroDateTime = this.getCurrentDateMinusYears(5);
+  endDate: HoroDateTime = this.addYears(this.horoData.date, 120);
+  selectedSignificators: PlanetName[] = [
+    PlanetName.ASC,
+    PlanetName.MC,
+    PlanetName.Sun,
+    PlanetName.Moon,
+    PlanetName.PartOfFortune,
+  ];
   arcDirectionFilter: 'all' | 'direct' | 'converse' = 'all';
+  promittorTypeFilter: PromittorType[] = [];
   allSignificators: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
@@ -82,6 +100,29 @@ export class DirectionComponent implements OnInit, OnDestroy {
   EW = EW;
   NS = NS;
 
+  // 主限法算法枚举，供模板使用
+  DirectionMethod = DirectionMethod;
+
+  // 主限法算法选项
+  directionMethodOptions = Object.values(DirectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: DirectionMethod.name(method),
+      value: method,
+    }));
+
+  // 相位类型过滤选项
+  promittorTypeOptions: { value: PromittorType; text: string }[] =
+    PromittorType.values().map((type) => ({
+      value: type,
+      text: PromittorType.name(type),
+    }));
+
+  // 主限法算法选择
+  directionMethod: DirectionMethod;
+  // 宫位系统选择
+  house: string = this.horoData.house;
+
   private destroy$ = new Subject<void>();
   private updateNativeDateSubject = new Subject<void>();
   private resetFiltersSubject = new Subject<void>();
@@ -92,14 +133,12 @@ export class DirectionComponent implements OnInit, OnDestroy {
     public config: Horoconfig,
     private titleService: Title,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+    this.directionMethod = this.storage.processData.direction_method;
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
-
-    this.nativeDate = structuredClone(this.horoData.date);
-    this.startDate = structuredClone(this.horoData.date);
-    this.endDate = this.addYears(this.horoData.date, 120);
 
     this.setGeoFromHoroData();
 
@@ -169,6 +208,8 @@ export class DirectionComponent implements OnInit, OnDestroy {
     const requestData: DirectionRequest = {
       native_date: this.nativeDate,
       geo: this.geo,
+      method: this.directionMethod,
+      house: this.house,
     };
 
     this.isLoading = true;
@@ -187,8 +228,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         },
         error: (error) => {
-          const message = error.message + ' ' + error.error.message;
-          this.message = message;
+          this.message = getApiErrorMessage(error);
           this.isAlertOpen = true;
           this.cdr.markForCheck();
         },
@@ -221,6 +261,19 @@ export class DirectionComponent implements OnInit, OnDestroy {
       minute: date.minute,
       second: date.second,
       tz: date.tz,
+    };
+  }
+
+  getCurrentDateMinusYears(years: number): HoroDateTime {
+    const now = new Date();
+    return {
+      year: now.getFullYear() - years,
+      month: now.getMonth() + 1,
+      day: now.getDate(),
+      hour: now.getHours(),
+      minute: now.getMinutes(),
+      second: now.getSeconds(),
+      tz: this.horoData.date.tz,
     };
   }
 
@@ -268,8 +321,14 @@ export class DirectionComponent implements OnInit, OnDestroy {
       const dateMatch = this.checkDateRange(item.date);
       const significatorMatch = this.checkSignificator(item.significator);
       const arcMatch = this.checkArcDirection(item.arc);
-      return dateMatch && significatorMatch && arcMatch;
+      const promittorMatch = this.checkPromittorType(item.promittor);
+      return dateMatch && significatorMatch && arcMatch && promittorMatch;
     });
+  }
+
+  checkPromittorType(promittor: Promittor): boolean {
+    if (this.promittorTypeFilter.length === 0) return true;
+    return this.promittorTypeFilter.some((type) => type in promittor);
   }
 
   checkArcDirection(arc: number): boolean {
@@ -311,6 +370,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
     this.endDate = this.addYears(this.nativeDate, 120);
     this.selectedSignificators = [];
     this.arcDirectionFilter = 'all';
+    this.promittorTypeFilter = [];
     this.setGeoFromHoroData();
     this.resetFiltersSubject.next();
   }
