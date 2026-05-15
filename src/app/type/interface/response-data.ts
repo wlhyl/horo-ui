@@ -172,7 +172,7 @@ export interface ReturnHoroscope {
   // 星盘的宫位
   house_name: string;
   // 12宫头黄经度数
-  houses_cusps: Array<number>;
+  cusps: Array<number>;
 
   // 上升点
   asc: Planet;

@@ -676,7 +676,7 @@ export function drawReturnHorosco(
   const r0 = options.width / 2;
   const r1 = r0 - 50;
 
-  const houseElements = calculateHouseElements(horosco.houses_cusps, config, {
+  const houseElements = calculateHouseElements(horosco.cusps, config, {
     cx,
     cy,
     r0,
@@ -691,7 +691,7 @@ export function drawReturnHorosco(
       horosco.ic,
       horosco.part_of_fortune,
     ],
-    horosco.houses_cusps[0],
+    horosco.cusps[0],
     config,
     { cx, cy, r: r1 },
   );

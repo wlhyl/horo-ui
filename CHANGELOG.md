@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.14.1] - 2026-05-16
+
+### Fixed
+
+- 修复日返/月返无法显示星盘的问题（ReturnHoroscope 接口字段名由 houses_cusps 改为 cusps，与后端返回一致）
+
 ## [0.14.0] - 2026-05-16
 
 ### Added
