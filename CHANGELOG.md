@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-05-16
+
 ### Added
 
 - 主向推运增加弧度方向过滤功能，可选择显示正向弧、反向弧或全部
-- 主向推运增加ppromissor过滤功能
+- 主向推运增加promissor过滤功能
 - 增加极下的主向推运
 
 ### Fixed
