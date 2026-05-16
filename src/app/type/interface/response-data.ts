@@ -100,8 +100,12 @@ export interface Profection {
   month_house: number;
   // 日小限所在宫位
   day_house: number;
+  // 时小限所在宫位
+  hour_house: number;
   // 每宫对应的日小限开始时间
   date_per_house: Array<HoroDateTime>;
+  // 每宫对应的时小限开始时间
+  hour_per_house: Array<HoroDateTime>;
 }
 
 /**

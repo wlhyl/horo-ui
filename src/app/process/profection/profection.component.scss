@@ -1,46 +1,101 @@
-/* filepath: /Users/lzh/vscode/horo_workspace/ui/src/app/process/profection/profection.component.scss */
-.table-container {
-    margin: 1rem;
-    /* 给表格添加适当的边距 */
+ion-grid {
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.center-title {
-    text-align: center;
-    /* 将标题居中显示 */
+ion-row {
+  border-bottom: 1px solid var(--ion-color-light);
 }
 
-.profection-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
+ion-row:last-child {
+  border-bottom: none;
 }
 
-.profection-table,
-.profection-table th,
-.profection-table td {
-    border: 2px solid #dee2e6;
-    padding: 10px;
+ion-col {
+  padding: 8px;
+  text-align: center;
+  border-right: 1px solid var(--ion-color-light);
 }
 
-.profection-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
+ion-col:last-child {
+  border-right: none;
 }
 
-.planet-name {
-    text-align: center;
+.table-header-row {
+  font-weight: bold;
+  background-color: var(--ion-color-light);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 2px solid var(--ion-color-medium);
+}
+
+.clickable-header {
+  cursor: pointer;
+  user-select: none;
+
+  ion-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  ion-icon {
     font-size: 1.2em;
-    color: #333;
-    padding: 0.5rem;
+  }
 }
 
-/* 响应式布局 */
-@media (max-width: 600px) {
-    .profection-table {
-        font-size: 0.8rem;
-        margin: 0.5rem;
-    }
+.table-data-row {
+  border-bottom: 1px solid var(--ion-color-light);
+  color: #000000;
+}
 
-    .planet-name {
-        font-size: 1em;
-    }
+.table-data-row:nth-child(even) {
+  background-color: var(--ion-color-light-tint);
+}
+
+.table-data-row:last-child {
+  border-bottom: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .table-data-row {
+    color: #ffffff;
+  }
+}
+
+ion-card-content {
+  color: var(--ion-text-color, #000000);
+  font-weight: 500;
+}
+
+ion-card-title {
+  color: var(--ion-text-color, #000000);
+  font-weight: 600;
+}
+
+.overview-grid {
+  .house-label {
+    font-size: 0.85rem;
+    color: var(--ion-color-medium);
+    margin-bottom: 4px;
+  }
+
+  .house-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+  }
+}
+
+.note {
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+.bottom-spacer {
+  height: 4rem;
 }

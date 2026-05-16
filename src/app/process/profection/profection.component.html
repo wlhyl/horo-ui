@@ -16,44 +16,101 @@
 
   <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
   (didDismiss)="isAlertOpen=false"></ion-alert>
-  <ul>
-    <li>此处没有按2.5天一个宫位，而是将每月的天数12等分</li>
-    <li>2.5天小限的时间已经扣除夏令时</li>
-  </ul>
 
-  <div class="table-container">
-    <h2 class="center-title">小限</h2>
-    <table class="profection-table ion-text-center">
-      <thead>
-        <tr>
-          <th>年小限</th>
-          <th>月小限</th>
-          <th>日小限</th>
-          <th colspan="2">2.5天小限</th>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>小限概览</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid class="overview-grid">
+              <ion-row>
+                <ion-col size="6">
+                  <div class="house-label">年小限</div>
+                  <div class="house-value">第{{profection.year_house}}宫</div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="house-label">月小限</div>
+                  <div class="house-value">第{{profection.month_house}}宫</div>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <div class="house-label">日小限</div>
+                  <div class="house-value">第{{profection.day_house}}宫</div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="house-label">时小限</div>
+                  <div class="house-value">第{{profection.hour_house}}宫</div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
 
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of profection.date_per_house; track item; let i = $index) {
-          <tr>
-            @if (i==0) {
-              <td class="planet-name" [attr.rowspan]="profection.date_per_house.length">第{{profection.year_house}}宫</td>
-            }
-            @if (i==0) {
-              <td class="planet-name" [attr.rowspan]="profection.date_per_house.length">第{{profection.month_house}}宫</td>
-            }
-            @if (i==0) {
-              <td class="planet-name" [attr.rowspan]="profection.date_per_house.length">第{{profection.day_house}}宫</td>
-            }
-            <td class="planet-name">第{{(profection.month_house + i - 1) % 12 + 1}}宫</td>
-            <td class="planet-name">
-              {{item.year}}-{{item.month.toString().padStart(2, "0")}}-{{item.day.toString().padStart(2, "0")}}
-              {{item.hour.toString().padStart(2, "0")}}:{{item.minute.toString().padStart(2,
-              "0")}}:{{item.second.toString().padStart(2, "0")}}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header (click)="isDatePerHouseCollapsed = !isDatePerHouseCollapsed" class="clickable-header">
+            <ion-card-title>
+              2.5天小限时间
+              <ion-icon [name]="isDatePerHouseCollapsed ? 'chevron-down' : 'chevron-up'"></ion-icon>
+            </ion-card-title>
+          </ion-card-header>
+          @if (!isDatePerHouseCollapsed) {
+            <ion-card-content>
+              <p class="note">此处没有按2.5天一个宫位，而是将每月的天数12等分。时间已经扣除夏令时。</p>
+              <ion-grid>
+                <ion-row class="table-header-row">
+                  <ion-col size="4"><b>宫位</b></ion-col>
+                  <ion-col size="8"><b>时间</b></ion-col>
+                </ion-row>
+                @for (item of profection.date_per_house; track item; let i = $index) {
+                  <ion-row class="table-data-row">
+                    <ion-col size="4">第{{(profection.month_house + i - 1) % 12 + 1}}宫</ion-col>
+                    <ion-col size="8">{{formatDate(item)}}</ion-col>
+                  </ion-row>
+                }
+              </ion-grid>
+            </ion-card-content>
+          }
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header (click)="isHourPerHouseCollapsed = !isHourPerHouseCollapsed" class="clickable-header">
+            <ion-card-title>
+              时小限时间
+              <ion-icon [name]="isHourPerHouseCollapsed ? 'chevron-down' : 'chevron-up'"></ion-icon>
+            </ion-card-title>
+          </ion-card-header>
+          @if (!isHourPerHouseCollapsed) {
+            <ion-card-content>
+              <p class="note">时小限的时间已经扣除夏令时。</p>
+              <ion-grid>
+                <ion-row class="table-header-row">
+                  <ion-col size="4"><b>宫位</b></ion-col>
+                  <ion-col size="8"><b>时间</b></ion-col>
+                </ion-row>
+                @for (item of profection.hour_per_house; track item; let i = $index) {
+                  <ion-row class="table-data-row">
+                    <ion-col size="4">第{{(profection.day_house + i - 1) % 12 + 1}}宫</ion-col>
+                    <ion-col size="8">{{formatDate(item)}}</ion-col>
+                  </ion-row>
+                }
+              </ion-grid>
+            </ion-card-content>
+          }
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="bottom-spacer"></div>
 </ion-content>

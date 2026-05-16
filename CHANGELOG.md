@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [0.14.1] - 2026-05-16
+## [0.14.2] - 2026-05-16
+
+### Added
+
+- 增加时小限
+
+##### [0.14.1] - 2026-05-16
 
 ### Fixed
 

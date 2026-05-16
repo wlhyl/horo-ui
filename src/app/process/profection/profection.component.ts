@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { ProfectionRequest } from 'src/app/type/interface/request-data';
-import { Profection } from 'src/app/type/interface/response-data';
+import { HoroDateTime, Profection } from 'src/app/type/interface/response-data';
 
 @Component({
   selector: 'app-profection',
@@ -18,12 +18,17 @@ export class ProfectionComponent implements OnInit {
     year_house: 0,
     month_house: 0,
     day_house: 0,
+    hour_house: 0,
     date_per_house: [],
+    hour_per_house: [],
   };
 
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
+
+  isDatePerHouseCollapsed = false;
+  isHourPerHouseCollapsed = false;
 
   title = '小限';
 
@@ -48,5 +53,9 @@ export class ProfectionComponent implements OnInit {
         this.isAlertOpen = true;
       },
     });
+  }
+
+  formatDate(date: HoroDateTime): string {
+    return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')} ${date.hour.toString().padStart(2, '0')}:${date.minute.toString().padStart(2, '0')}:${date.second.toString().padStart(2, '0')}`;
   }
 }
