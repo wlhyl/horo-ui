@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.14.3] - 2026-05-19
+
+### Added
+
+- 主向推运新增方向弧转日期换算方式（ArcToDateMethod）选择，支持"1天=1年"和"1度=1年"两种换算方式
+
 ## [0.14.2] - 2026-05-16
 
 ### Added

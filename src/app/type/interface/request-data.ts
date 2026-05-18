@@ -1,5 +1,6 @@
 import { ProcessName } from '../../process/enum/process';
 import { DirectionMethod } from '../../process/enum/direction-method';
+import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
 
 export interface DateRequest {
   year: number;
@@ -41,6 +42,7 @@ export interface ProcessRequest {
   process_name: ProcessName;
   isSolarReturn: boolean;
   direction_method: DirectionMethod;
+  arc_to_date_method: ArcToDateMethod;
 }
 
 export interface ProfectionRequest {
@@ -93,6 +95,9 @@ export interface DirectionRequest {
 
   // 主限法算法
   method: DirectionMethod;
+
+  // 弧转日期换算方式
+  arc_to_date_method: ArcToDateMethod;
 
   // 宫位系统
   house: string;

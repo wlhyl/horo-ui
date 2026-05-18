@@ -24,6 +24,8 @@ import {
 import { DateTimeComponent } from 'src/app/horo-common/date-time/date-time.component';
 
 import { DirectionComponent } from './direction.component';
+import { DirectionMethod } from 'src/app/process/enum/direction-method';
+import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 
 describe('DirectionComponent', () => {
   let component: DirectionComponent;
@@ -98,6 +100,15 @@ describe('DirectionComponent', () => {
 
     const horoStorageSpy = jasmine.createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
+      processData: {
+        date: mockDateRequest,
+        geo_name: 'cty',
+        geo: mockGeoRequest,
+        process_name: 'Direction' as any,
+        isSolarReturn: false,
+        direction_method: DirectionMethod.SemiArc,
+        arc_to_date_method: ArcToDateMethod.DegreePerYear,
+      },
     });
 
     await TestBed.configureTestingModule({
@@ -150,6 +161,9 @@ describe('DirectionComponent', () => {
       const expectedRequest = {
         native_date: mockDateRequest,
         geo: mockGeoRequest,
+        method: DirectionMethod.SemiArc,
+        arc_to_date_method: ArcToDateMethod.DegreePerYear,
+        house: 'Alcabitus',
       };
 
       expect(apiServiceSpy.direction).toHaveBeenCalledWith(expectedRequest);

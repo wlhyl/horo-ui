@@ -48,6 +48,15 @@
         </div>
 
         <div class="filter-group">
+          <label>换算:</label>
+          <ion-select [(ngModel)]="arcToDateMethod" [disabled]="isLoading">
+            @for (option of arcToDateMethodOptions; track option) {
+            <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+
+        <div class="filter-group">
           <label>宫位:</label>
           <ion-select [(ngModel)]="house" [disabled]="isLoading">
             @for (h of config.houses; track h) {

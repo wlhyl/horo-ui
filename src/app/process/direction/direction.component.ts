@@ -17,6 +17,7 @@ import {
   HoroRequest,
 } from 'src/app/type/interface/request-data';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
+import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import {
   Direction,
   HoroDateTime,
@@ -103,11 +104,22 @@ export class DirectionComponent implements OnInit, OnDestroy {
   // 主限法算法枚举，供模板使用
   DirectionMethod = DirectionMethod;
 
+  // 弧转日期换算方式枚举，供模板使用
+  ArcToDateMethod = ArcToDateMethod;
+
   // 主限法算法选项
   directionMethodOptions = Object.values(DirectionMethod)
     .filter((v) => typeof v === 'string')
     .map((method) => ({
       text: DirectionMethod.name(method),
+      value: method,
+    }));
+
+  // 弧转日期换算方式选项
+  arcToDateMethodOptions = Object.values(ArcToDateMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: ArcToDateMethod.name(method),
       value: method,
     }));
 
@@ -120,6 +132,8 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
   // 主限法算法选择
   directionMethod: DirectionMethod;
+  // 弧转日期换算方式选择
+  arcToDateMethod: ArcToDateMethod;
   // 宫位系统选择
   house: string = this.horoData.house;
 
@@ -135,6 +149,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
   ) {
     this.directionMethod = this.storage.processData.direction_method;
+    this.arcToDateMethod = this.storage.processData.arc_to_date_method;
   }
 
   ngOnInit() {
@@ -209,6 +224,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
       native_date: this.nativeDate,
       geo: this.geo,
       method: this.directionMethod,
+      arc_to_date_method: this.arcToDateMethod,
       house: this.house,
     };
 

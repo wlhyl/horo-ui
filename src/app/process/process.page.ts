@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ProcessName } from './enum/process';
 import { DirectionMethod } from './enum/direction-method';
+import { ArcToDateMethod } from './enum/arc-to-date-method';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -73,6 +74,13 @@ export class ProcessPage implements OnInit {
     .filter((v) => typeof v === 'string')
     .map((method) => ({
       text: DirectionMethod.name(method),
+      value: method,
+    }));
+
+  arcToDateMethodOptions = Object.values(ArcToDateMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: ArcToDateMethod.name(method),
       value: method,
     }));
 

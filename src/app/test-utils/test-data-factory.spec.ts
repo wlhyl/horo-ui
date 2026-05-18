@@ -29,6 +29,7 @@ import { FixedStarName } from '../type/enum/fixed-star';
 import { LunarMansionsName } from '../type/enum/qizheng';
 import { ProcessName } from '../process/enum/process';
 import { DirectionMethod } from '../process/enum/direction-method';
+import { ArcToDateMethod } from '../process/enum/arc-to-date-method';
 
 /**
  * 测试数据工厂类
@@ -111,6 +112,7 @@ export class TestDataFactory {
       process_name: ProcessName.Transit,
       isSolarReturn: false,
       direction_method: DirectionMethod.SemiArc,
+      arc_to_date_method: ArcToDateMethod.DegreePerYear,
       ...overrides,
     };
   }
@@ -191,6 +193,7 @@ export class TestDataFactory {
       native_date: this.createDefaultDateRequest(overrides?.native_date),
       geo: this.createDefaultGeoRequest(overrides?.geo),
       method: DirectionMethod.SemiArc,
+      arc_to_date_method: ArcToDateMethod.DegreePerYear,
       house: 'Placidus',
       ...overrides,
     };
