@@ -10,6 +10,7 @@ import { HoroCommonModule } from '../horo-common/horo-common.module';
 
 import { ProcessPage } from './process.page';
 import { ProfectionComponent } from './profection/profection.component';
+import { MedievalProfectionComponent } from './medieval_profection/medieval_profection.component';
 import { ReturnComponent } from './return/return.component';
 import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
@@ -29,6 +30,7 @@ import { DetailComponent as ComparisonDetailComponent } from './compare/detail/d
   declarations: [
     ProcessPage,
     ProfectionComponent,
+    MedievalProfectionComponent,
     ReturnComponent,
     CompareComponent,
     FirdariaComponent,

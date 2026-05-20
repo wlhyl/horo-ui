@@ -1,5 +1,6 @@
 export enum Path {
   Profection = 'profection',
+  MedievalProfection = 'medieval_profection',
   Transit = 'transit',
   Firdaria = 'firdaria',
   SolarReturn = 'return/solar',

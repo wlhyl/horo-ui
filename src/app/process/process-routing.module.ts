@@ -6,6 +6,7 @@ import { ProcessPage } from './process.page';
 import { ProcessName } from './enum/process';
 
 import { ProfectionComponent } from './profection/profection.component';
+import { MedievalProfectionComponent } from './medieval_profection/medieval_profection.component';
 import { ReturnComponent } from './return/return.component';
 import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: ProcessName.path(ProcessName.Profection),
     component: ProfectionComponent,
+  },
+  {
+    path: ProcessName.path(ProcessName.MedievalProfection),
+    component: MedievalProfectionComponent,
   },
   {
     path: ProcessName.path(ProcessName.Firdaria),

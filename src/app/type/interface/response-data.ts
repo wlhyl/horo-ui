@@ -249,6 +249,41 @@ export interface QuadrantProcess {
 }
 
 /**
+ * 中世纪小限星盘数据
+ */
+export interface HoroscopeProfection {
+  native_date: HoroDateTime;
+  process_date: HoroDateTime;
+  profection_date: HoroDateTime;
+  geo: GeoPosition;
+  house_name: string;
+  cusps: Array<number>;
+  asc: Planet;
+  profection_asc: Planet;
+  mc: Planet;
+  profection_mc: Planet;
+  dsc: Planet;
+  profection_dsc: Planet;
+  ic: Planet;
+  profection_ic: Planet;
+  part_of_fortune: Planet;
+  profection_part_of_fortune: Planet;
+  planets: Array<Planet>;
+  profection_planets: Array<Planet>;
+  aspects: Array<Aspect>;
+  antiscoins: Array<Aspect>;
+  contraantiscias: Array<Aspect>;
+}
+
+/**
+ * 中世纪小限返回数据
+ */
+export interface MedievalProfection {
+  horoscope: HoroscopeProfection;
+  directions: Array<Direction>;
+}
+
+/**
  * 主向推运相位类型
  */
 export enum PromittorType {

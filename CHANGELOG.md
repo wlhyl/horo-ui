@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.15.0] - 2026-05-21
+
+### Added
+
+- 增加中世纪小限
+- 为主向推运增加承诺星过滤
+
+### Changed
+
+- 象限推运条目优化默认显示数量
+- 主向推运、象限推运、中世纪小限用到的公共函数提取到独立模块
 
 ## [0.14.3] - 2026-05-19
 

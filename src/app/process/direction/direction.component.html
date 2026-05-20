@@ -148,6 +148,16 @@
           </ion-select>
         </div>
 
+        <div class="filter-group">
+          <label>Promittor:</label>
+          <ion-select multiple="true" [(ngModel)]="selectedPromittorPlanets" placeholder="全部" [disabled]="isLoading"
+            interface="alert" [interfaceOptions]="{ cssClass: 'planet-select-alert' }">
+            @for (sig of allSignificators; track sig) {
+            <ion-select-option [value]="sig">{{ getSignificatorDisplayText(sig) }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+
         <ion-button size="small" (click)="resetFilters()" [disabled]="isLoading">
           @if (isLoading) {
           <ion-spinner name="crescent"></ion-spinner>

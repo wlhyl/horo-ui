@@ -2,6 +2,7 @@ import { Path } from './path';
 
 export enum ProcessName {
   Profection = 'Profection',
+  MedievalProfection = 'MedievalProfection',
   Transit = 'Transit',
   Firdaria = 'firdaria',
   SolarReturn = 'SolarReturn',
@@ -17,6 +18,7 @@ export enum ProcessName {
 export namespace ProcessName {
   const nameMap: { [key in ProcessName]: string } = {
     [ProcessName.Profection]: '小限',
+    [ProcessName.MedievalProfection]: '中世纪小限',
     [ProcessName.Transit]: '行运',
     [ProcessName.Firdaria]: '法达',
     [ProcessName.SolarReturn]: '日返',
@@ -31,6 +33,7 @@ export namespace ProcessName {
 
   const pathMap: { [key in ProcessName]: Path } = {
     [ProcessName.Profection]: Path.Profection,
+    [ProcessName.MedievalProfection]: Path.MedievalProfection,
     [ProcessName.Transit]: Path.Transit,
     [ProcessName.Firdaria]: Path.Firdaria,
     [ProcessName.SolarReturn]: Path.SolarReturn,

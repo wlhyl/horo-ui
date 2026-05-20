@@ -1,6 +1,7 @@
 import { ProcessName } from '../../process/enum/process';
 import { DirectionMethod } from '../../process/enum/direction-method';
 import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
+import { ProfectionArcToDateMethod } from '../../process/enum/profection-arc-to-date-method';
 
 export interface DateRequest {
   year: number;
@@ -43,6 +44,7 @@ export interface ProcessRequest {
   isSolarReturn: boolean;
   direction_method: DirectionMethod;
   arc_to_date_method: ArcToDateMethod;
+  profection_arc_to_date_method: ProfectionArcToDateMethod;
 }
 
 export interface ProfectionRequest {
@@ -130,3 +132,14 @@ export interface QuadrantProcessRequest {
  * 象限推运黄经请求数据
  */
 export type QuadrantProcessLongitudeRequest = ReturnRequest;
+
+/**
+ * 中世纪小限请求数据
+ */
+export interface MedievalProfectionRequest {
+  native_date: DateRequest;
+  process_date: DateRequest;
+  geo: GeoRequest;
+  house: string;
+  arc_to_date_method: ProfectionArcToDateMethod;
+}

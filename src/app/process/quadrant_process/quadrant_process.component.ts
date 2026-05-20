@@ -54,6 +54,12 @@ import { Zodiac } from 'src/app/type/enum/zodiac';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { Platform } from '@ionic/angular';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
+import {
+  formatDate as formatDateUtil,
+  addYears as addYearsUtil,
+  getCurrentDateMinusYears as getCurrentDateMinusYearsUtil,
+  checkDateRange as checkDateRangeUtil,
+} from 'src/app/utils/direction-utils/direction-utils';
 
 type ViewMode = 'chart' | 'table';
 
@@ -82,8 +88,8 @@ export class QuadrantProcessComponent
 
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   processDate: DateRequest = structuredClone(this.processData.date);
-  startDate: HoroDateTime = structuredClone(this.horoData.date);
-  endDate: HoroDateTime = this.addYears(this.nativeDate, 80);
+  startDate: HoroDateTime = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
+  endDate: HoroDateTime = addYearsUtil(this.nativeDate, 80);
 
   geoLongD = 0;
   geoLongM = 0;
@@ -463,28 +469,11 @@ export class QuadrantProcessComponent
     this.fetchLongitude();
   }
 
-  addYears(date: HoroDateTime, years: number): HoroDateTime {
-    return {
-      year: date.year + years,
-      month: date.month,
-      day: date.day,
-      hour: date.hour,
-      minute: date.minute,
-      second: date.second,
-      tz: date.tz,
-    };
-  }
+  addYears = addYearsUtil;
 
-  formatDate(date: {
-    year: number;
-    month: number;
-    day: number;
-    hour: number;
-    minute: number;
-    second: number;
-  }): string {
-    return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')} ${date.hour.toString().padStart(2, '0')}:${date.minute.toString().padStart(2, '0')}:${date.second.toString().padStart(2, '0')}`;
-  }
+  getCurrentDateMinusYears = getCurrentDateMinusYearsUtil;
+
+  formatDate = formatDateUtil;
 
   getTermInfo(promittor: Promittor): { zodiac: string; dms: string } | null {
     return getTermInfoUtil(promittor, this.config);
@@ -510,27 +499,8 @@ export class QuadrantProcessComponent
 
   get filteredQuadrantData(): QuadrantProcess[] {
     return this.quadrantData.filter((item) => {
-      return this.checkDateRange(item.date);
+      return checkDateRangeUtil(item.date, this.startDate, this.endDate);
     });
-  }
-
-  checkDateRange(date: HoroDateTime): boolean {
-    const dateTime = this.dateToNumber(date);
-    const tolerance = 1000; // 1秒容差，处理浮点精度问题
-    if (dateTime < this.dateToNumber(this.startDate) - tolerance) return false;
-    if (dateTime > this.dateToNumber(this.endDate) + tolerance) return false;
-    return true;
-  }
-
-  dateToNumber(date: HoroDateTime): number {
-    return new Date(
-      date.year,
-      date.month - 1,
-      date.day,
-      date.hour,
-      date.minute,
-      date.second,
-    ).getTime();
   }
 
   resetFilters(): void {
@@ -539,7 +509,7 @@ export class QuadrantProcessComponent
     this.isLoading = true;
     this.cdr.markForCheck();
     this.startDate = structuredClone(this.nativeDate);
-    this.endDate = this.addYears(this.nativeDate, 80);
+    this.endDate = addYearsUtil(this.nativeDate, 80);
     this.setGeoFromHoroData();
 
     setTimeout(() => {

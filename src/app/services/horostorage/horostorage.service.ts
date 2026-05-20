@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ProcessName } from 'src/app/process/enum/process';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
+import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import {
   HoroRequest,
@@ -86,6 +87,7 @@ export class HoroStorageService {
         isSolarReturn: false,
         direction_method: DirectionMethod.SemiArc,
         arc_to_date_method: ArcToDateMethod.DegreePerYear,
+        profection_arc_to_date_method: ProfectionArcToDateMethod.TrueSolarArc,
       });
     }
   }

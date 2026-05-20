@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -12,15 +13,16 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
   DateRequest,
-  DirectionRequest,
   GeoRequest,
   HoroRequest,
+  MedievalProfectionRequest,
+  ProcessRequest,
 } from 'src/app/type/interface/request-data';
-import { DirectionMethod } from 'src/app/process/enum/direction-method';
-import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import {
   Direction,
-  HoroDateTime,
+  HoroscopeComparison,
+  HoroscopeProfection,
+  MedievalProfection,
   Promittor,
   PromittorType,
 } from 'src/app/type/interface/response-data';
@@ -33,45 +35,53 @@ import {
   getTermInfo as getTermInfoUtil,
 } from 'src/app/utils/promittor/promittor';
 import { PlanetName } from 'src/app/type/enum/planet';
+import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { StaticCanvas } from 'fabric';
+import { drawHorosco } from 'src/app/utils/image/compare';
+import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { Platform } from '@ionic/angular';
 import {
   ALL_SIGNIFICATORS,
   formatDate as formatDateUtil,
   formatArc as formatArcUtil,
-  addYears as addYearsUtil,
-  getCurrentDateMinusYears as getCurrentDateMinusYearsUtil,
   getSignificatorDisplayText as getSignificatorDisplayTextUtil,
   checkSignificator as checkSignificatorUtil,
   checkPromittorType as checkPromittorTypeUtil,
   checkPromittorPlanet as checkPromittorPlanetUtil,
-  checkDateRange as checkDateRangeUtil,
 } from 'src/app/utils/direction-utils/direction-utils';
 
+type ViewMode = 'chart' | 'table';
+
 @Component({
-  selector: 'app-direction',
-  templateUrl: './direction.component.html',
-  styleUrls: ['./direction.component.scss'],
+  selector: 'app-medieval-profection',
+  templateUrl: './medieval_profection.component.html',
+  styleUrls: ['./medieval_profection.component.scss'],
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectionComponent implements OnInit, OnDestroy {
+export class MedievalProfectionComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
 
-  title = '主向推运';
+  title = '中世纪小限';
+  viewMode: ViewMode = 'chart';
 
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
+  processData: DeepReadonly<ProcessRequest> = this.storage.processData;
 
-  directionData: Array<Direction> = [];
+  medievalProfectionData: MedievalProfection | null = null;
   isLoading = false;
 
   nativeDate: DateRequest = structuredClone(this.horoData.date);
-  startDate: HoroDateTime = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
-  endDate: HoroDateTime = addYearsUtil(this.horoData.date, 120);
+  processDate: DateRequest = structuredClone(this.processData.date);
+
   selectedSignificators: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
@@ -79,10 +89,16 @@ export class DirectionComponent implements OnInit, OnDestroy {
     PlanetName.Moon,
     PlanetName.PartOfFortune,
   ];
-  arcDirectionFilter: 'all' | 'direct' | 'converse' = 'all';
   promittorTypeFilter: PromittorType[] = [];
   selectedPromittorPlanets: PlanetName[] = [];
+
   allSignificators: PlanetName[] = ALL_SIGNIFICATORS;
+
+  promittorTypeOptions: { value: PromittorType; text: string }[] =
+    PromittorType.values().map((type) => ({
+      value: type,
+      text: PromittorType.name(type),
+    }));
 
   geoLongD = 0;
   geoLongM = 0;
@@ -99,56 +115,37 @@ export class DirectionComponent implements OnInit, OnDestroy {
   EW = EW;
   NS = NS;
 
-  // 主限法算法枚举，供模板使用
-  DirectionMethod = DirectionMethod;
+  house: string = this.horoData.house;
 
   // 弧转日期换算方式枚举，供模板使用
-  ArcToDateMethod = ArcToDateMethod;
-
-  // 主限法算法选项
-  directionMethodOptions = Object.values(DirectionMethod)
-    .filter((v) => typeof v === 'string')
-    .map((method) => ({
-      text: DirectionMethod.name(method),
-      value: method,
-    }));
+  ProfectionArcToDateMethod = ProfectionArcToDateMethod;
 
   // 弧转日期换算方式选项
-  arcToDateMethodOptions = Object.values(ArcToDateMethod)
+  arcToDateMethodOptions = Object.values(ProfectionArcToDateMethod)
     .filter((v) => typeof v === 'string')
     .map((method) => ({
-      text: ArcToDateMethod.name(method),
+      text: ProfectionArcToDateMethod.name(method),
       value: method,
     }));
 
-  // 相位类型过滤选项
-  promittorTypeOptions: { value: PromittorType; text: string }[] =
-    PromittorType.values().map((type) => ({
-      value: type,
-      text: PromittorType.name(type),
-    }));
-
-  // 主限法算法选择
-  directionMethod: DirectionMethod;
   // 弧转日期换算方式选择
-  arcToDateMethod: ArcToDateMethod;
-  // 宫位系统选择
-  house: string = this.horoData.house;
+  arcToDateMethod: ProfectionArcToDateMethod = this.processData.profection_arc_to_date_method;
+
+  private canvas?: StaticCanvas;
 
   private destroy$ = new Subject<void>();
   private updateNativeDateSubject = new Subject<void>();
+  private updateProcessDateSubject = new Subject<void>();
   private resetFiltersSubject = new Subject<void>();
 
   constructor(
+    private platform: Platform,
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig,
     private titleService: Title,
     private cdr: ChangeDetectorRef,
-  ) {
-    this.directionMethod = this.storage.processData.direction_method;
-    this.arcToDateMethod = this.storage.processData.arc_to_date_method;
-  }
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
@@ -161,18 +158,38 @@ export class DirectionComponent implements OnInit, OnDestroy {
         this.applyUpdateNativeDate();
       });
 
+    this.updateProcessDateSubject
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.applyUpdateProcessDate();
+      });
+
     this.resetFiltersSubject
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => {
         this.applyResetFilters();
       });
 
-    this.fetchDirectionData();
+    this.fetchMedievalProfectionData();
+  }
+
+  ngAfterViewInit(): void {
+    this.canvas = this.createCanvas();
+    this.drawChart();
+  }
+
+  private createCanvas(): StaticCanvas {
+    return new StaticCanvas('canvas');
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    if (this.canvas) {
+      this.canvas.dispose();
+      this.canvas = undefined;
+    }
   }
 
   private setGeoFromHoroData(): void {
@@ -215,21 +232,21 @@ export class DirectionComponent implements OnInit, OnDestroy {
     return result.valid;
   }
 
-  fetchDirectionData(): void {
+  fetchMedievalProfectionData(): void {
     if (this.isLoading) return;
     if (!this.validateGeo()) return;
-    const requestData: DirectionRequest = {
+    const requestData: MedievalProfectionRequest = {
       native_date: this.nativeDate,
+      process_date: this.processDate,
       geo: this.geo,
-      method: this.directionMethod,
-      arc_to_date_method: this.arcToDateMethod,
       house: this.house,
+      arc_to_date_method: this.arcToDateMethod,
     };
 
     this.isLoading = true;
     this.cdr.markForCheck();
     this.api
-      .direction(requestData)
+      .medievalProfection(requestData)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -238,7 +255,8 @@ export class DirectionComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          this.directionData = response;
+          this.medievalProfectionData = response;
+          this.drawChart();
           this.cdr.markForCheck();
         },
         error: (error) => {
@@ -249,26 +267,79 @@ export class DirectionComponent implements OnInit, OnDestroy {
       });
   }
 
+  private toHoroscopeComparison(
+    horoscope: HoroscopeProfection,
+  ): HoroscopeComparison {
+    return {
+      original_date: horoscope.native_date,
+      comparison_date: horoscope.profection_date,
+      original_geo: horoscope.geo,
+      comparison_geo: horoscope.geo,
+      house_name: horoscope.house_name,
+      houses_cusps: horoscope.cusps,
+      comparison_cusps: horoscope.cusps,
+      original_asc: horoscope.asc,
+      comparison_asc: horoscope.profection_asc,
+      original_mc: horoscope.mc,
+      comparison_mc: horoscope.profection_mc,
+      original_dsc: horoscope.dsc,
+      comparison_dsc: horoscope.profection_dsc,
+      original_ic: horoscope.ic,
+      comparison_ic: horoscope.profection_ic,
+      original_part_of_fortune: horoscope.part_of_fortune,
+      comparison_part_of_fortune: horoscope.profection_part_of_fortune,
+      original_planets: horoscope.planets,
+      comparison_planets: horoscope.profection_planets,
+      aspects: horoscope.aspects,
+      antiscoins: horoscope.antiscoins,
+      contraantiscias: horoscope.contraantiscias,
+    };
+  }
+
+  private drawChart(): void {
+    if (!this.medievalProfectionData || !this.canvas) return;
+
+    const comparisonData = this.toHoroscopeComparison(
+      this.medievalProfectionData.horoscope,
+    );
+
+    drawHorosco(comparisonData, this.canvas, this.config, {
+      width: this.config.horoscoImage.width,
+      height: this.config.horoscoImage.height,
+    });
+
+    zoomImage(this.canvas, this.platform);
+  }
+
   updateNativeDate(): void {
     if (this.isLoading) return;
-
     this.isLoading = true;
     this.cdr.markForCheck();
-    // this.startDate = structuredClone(this.nativeDate);
-    // this.endDate = this.addYears(this.nativeDate, 120);
-    // this.selectedSignificators = [];
     this.updateNativeDateSubject.next();
   }
 
   private applyUpdateNativeDate(): void {
     this.isLoading = false;
     this.cdr.markForCheck();
-    this.fetchDirectionData();
+    this.fetchMedievalProfectionData();
   }
 
-  addYears = addYearsUtil;
+  updateProcessDate(): void {
+    if (this.isLoading) return;
+    this.isLoading = true;
+    this.cdr.markForCheck();
+    this.updateProcessDateSubject.next();
+  }
 
-  getCurrentDateMinusYears = getCurrentDateMinusYearsUtil;
+  private applyUpdateProcessDate(): void {
+    this.isLoading = false;
+    this.cdr.markForCheck();
+    this.fetchMedievalProfectionData();
+  }
+
+  formatDate = formatDateUtil;
+
+  formatArc = formatArcUtil;
 
   getPromittorPlanet(promittor: Promittor): PlanetName | null {
     return getPromittorPlanetUtil(promittor);
@@ -292,26 +363,14 @@ export class DirectionComponent implements OnInit, OnDestroy {
     return getCuspInfoUtil(promittor);
   }
 
-  formatDate = formatDateUtil;
-
-  formatArc = formatArcUtil;
-
   get filteredDirectionData(): Direction[] {
-    return this.directionData.filter((item) => {
-      const dateMatch = checkDateRangeUtil(item.date, this.startDate, this.endDate);
+    if (!this.medievalProfectionData) return [];
+    return this.medievalProfectionData.directions.filter((item) => {
       const significatorMatch = checkSignificatorUtil(item.significator, this.selectedSignificators);
-      const arcMatch = this.checkArcDirection(item.arc);
       const promittorMatch = checkPromittorTypeUtil(item.promittor, this.promittorTypeFilter);
       const promittorPlanetMatch = checkPromittorPlanetUtil(item.promittor, this.selectedPromittorPlanets);
-      return dateMatch && significatorMatch && arcMatch && promittorMatch && promittorPlanetMatch;
+      return significatorMatch && promittorMatch && promittorPlanetMatch;
     });
-  }
-
-  checkArcDirection(arc: number): boolean {
-    if (this.arcDirectionFilter === 'all') return true;
-    if (this.arcDirectionFilter === 'direct') return arc >= 0;
-    if (this.arcDirectionFilter === 'converse') return arc < 0;
-    return true;
   }
 
   resetFilters(): void {
@@ -319,10 +378,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.cdr.markForCheck();
-    this.startDate = structuredClone(this.nativeDate);
-    this.endDate = addYearsUtil(this.nativeDate, 120);
     this.selectedSignificators = [];
-    this.arcDirectionFilter = 'all';
     this.promittorTypeFilter = [];
     this.selectedPromittorPlanets = [];
     this.setGeoFromHoroData();
@@ -338,5 +394,15 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
   getSignificatorDisplayText(sig: PlanetName): string {
     return getSignificatorDisplayTextUtil(sig, this.config);
+  }
+
+  toggleView(): void {
+    this.viewMode = this.viewMode === 'chart' ? 'table' : 'chart';
+    if (this.viewMode === 'chart') {
+      setTimeout(() => {
+        this.canvas = this.createCanvas();
+        this.drawChart();
+      });
+    }
   }
 }

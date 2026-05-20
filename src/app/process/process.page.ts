@@ -3,6 +3,7 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { ProcessName } from './enum/process';
 import { DirectionMethod } from './enum/direction-method';
 import { ArcToDateMethod } from './enum/arc-to-date-method';
+import { ProfectionArcToDateMethod } from './enum/profection-arc-to-date-method';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -54,6 +55,7 @@ export class ProcessPage implements OnInit {
   processOptions = [
     ProcessName.Firdaria,
     ProcessName.Profection,
+    ProcessName.MedievalProfection,
     ProcessName.Direction,
     ProcessName.QuadrantProcess,
     ProcessName.Transit,
@@ -81,6 +83,13 @@ export class ProcessPage implements OnInit {
     .filter((v) => typeof v === 'string')
     .map((method) => ({
       text: ArcToDateMethod.name(method),
+      value: method,
+    }));
+
+  profectionArcToDateMethodOptions = Object.values(ProfectionArcToDateMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: ProfectionArcToDateMethod.name(method),
       value: method,
     }));
 

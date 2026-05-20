@@ -11,6 +11,7 @@ import {
   QiZhengRequst,
   QuadrantProcessRequest,
   QuadrantProcessLongitudeRequest,
+  MedievalProfectionRequest,
 } from 'src/app/type/interface/request-data';
 import {
   FirdariaPeriod,
@@ -20,6 +21,7 @@ import {
   ReturnHoroscope,
   Direction,
   QuadrantProcess,
+  MedievalProfection,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { environment } from 'src/environments/environment';
@@ -64,6 +66,19 @@ export class ApiService {
    */
   public profection(data: ProfectionRequest): Observable<Profection> {
     return this.http.post<Profection>(`${this.url}/process/profection`, data);
+  }
+
+  /**
+   *
+   * @returns 获取中世纪小限
+   */
+  public medievalProfection(
+    data: MedievalProfectionRequest
+  ): Observable<MedievalProfection> {
+    return this.http.post<MedievalProfection>(
+      `${this.url}/process/medieval-profection`,
+      data
+    );
   }
 
   /**
