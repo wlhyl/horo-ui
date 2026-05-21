@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.0] - 2026-05-22
+
+### Added
+
+- 七政四余增加"交点"选项（南罗北计/南计北罗），选择南计北罗时星图中罗喉与计都名称互换
+
 ## [0.15.0] - 2026-05-21
 
 ### Added

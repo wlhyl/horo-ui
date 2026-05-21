@@ -17,11 +17,13 @@ export class HoroStorageService {
   private _horoData!: HoroRequest;
   private _processData!: ProcessRequest;
   private _synastryData!: HoroRequest;
+  private _isNanLuoBeiJi!: boolean;
 
   constructor() {
     this._initProcessData();
     this._initHoroData();
     this._initSynastryData();
+    this._initIsNanLuoBeiJi();
   }
 
   public get horoData(): DeepReadonly<HoroRequest> {
@@ -51,13 +53,24 @@ export class HoroStorageService {
     localStorage.setItem('synastry_data', JSON.stringify(data));
   }
 
+  public get isNanLuoBeiJi(): boolean {
+    return this._isNanLuoBeiJi;
+  }
+
+  public set isNanLuoBeiJi(value: boolean) {
+    this._isNanLuoBeiJi = value;
+    localStorage.setItem('node_name_option', JSON.stringify(value));
+  }
+
   public clean() {
     localStorage.removeItem('horo_data');
     localStorage.removeItem('process_data');
     localStorage.removeItem('synastry_data');
+    localStorage.removeItem('node_name_option');
     this._initHoroData();
     this._initProcessData();
     this._initSynastryData();
+    this._initIsNanLuoBeiJi();
   }
 
   private _initProcessData() {
@@ -171,5 +184,9 @@ export class HoroStorageService {
   private _getParsedItem<T>(key: string): T | null {
     const item = localStorage.getItem(key);
     return item ? (JSON.parse(item) as T) : null;
+  }
+
+  private _initIsNanLuoBeiJi() {
+    this._isNanLuoBeiJi = this._getParsedItem<boolean>('node_name_option') ?? true;
   }
 }

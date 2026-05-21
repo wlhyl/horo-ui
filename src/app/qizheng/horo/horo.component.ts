@@ -4,7 +4,7 @@ import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as fabric from 'fabric';
-import { Horoscope } from 'src/app/type/interface/response-qizheng';
+import { Horoscope, Planet } from 'src/app/type/interface/response-qizheng';
 import {
   HoroRequest,
   ProcessRequest,
@@ -20,6 +20,7 @@ import { informationCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
+import { PlanetName } from 'src/app/type/enum/qizheng';
 
 @Component({
   selector: 'app-horo',
@@ -122,6 +123,9 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
+          if (!this.storage.isNanLuoBeiJi) {
+            this.swapNodeNames(data);
+          }
           this.horoscopeData = data;
           this.isAlertOpen = false;
           this.draw();
@@ -202,5 +206,20 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
         state: { data: this.horoscopeData },
       });
     }
+  }
+
+  private swapNodeNames(horoscope: Horoscope): void {
+    const swapPlanetName = (name: PlanetName): PlanetName => {
+      if (name === PlanetName.罗) return PlanetName.计;
+      if (name === PlanetName.计) return PlanetName.罗;
+      return name;
+    };
+
+    horoscope.native_planets.forEach((p: Planet) => {
+      p.name = swapPlanetName(p.name);
+    });
+    horoscope.process_planets.forEach((p: Planet) => {
+      p.name = swapPlanetName(p.name);
+    });
   }
 }

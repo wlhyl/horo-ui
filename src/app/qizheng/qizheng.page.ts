@@ -14,6 +14,7 @@ import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 export class QizhengPage implements OnInit {
   horoData: HoroRequest = structuredClone(this.storage.horoData);
   processData: ProcessRequest = structuredClone(this.storage.processData);
+  isNanLuoBeiJi: boolean = this.storage.isNanLuoBeiJi;
 
   title = '七政四余';
   Path = Path;
@@ -32,6 +33,7 @@ export class QizhengPage implements OnInit {
   getProcess() {
     this.storage.horoData = structuredClone(this.horoData);
     this.storage.processData = structuredClone(this.processData);
+    this.storage.isNanLuoBeiJi = this.isNanLuoBeiJi;
 
     this.router.navigate([Path.Horo], {
       relativeTo: this.route,
