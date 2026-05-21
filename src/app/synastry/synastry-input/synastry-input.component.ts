@@ -18,6 +18,7 @@ export class SynastryInputComponent implements OnInit {
   originalHoroData: HoroRequest = structuredClone(this.storage.horoData);
   comparisonHoroData: HoroRequest = structuredClone(this.storage.synastryData);
   isQizheng = false;
+  isNanLuoBeiJi: boolean = this.storage.isNanLuoBeiJi;
 
   constructor(
     private router: Router,
@@ -43,6 +44,7 @@ export class SynastryInputComponent implements OnInit {
       ...structuredClone(this.comparisonHoroData),
       house: this.originalHoroData.house,
     };
+    this.storage.isNanLuoBeiJi = this.isNanLuoBeiJi;
     if (this.isQizheng) {
       this.router.navigate([Path.Qizheng], {
         relativeTo: this.route,

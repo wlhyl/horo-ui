@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.1] - 2026-05-22
+
+### Added
+
+- 七政四余合盘增加"交点"选项
+
+### Changed
+
+- 提取 swapNodeNames 为公共函数（qizheng-utils）
+
 ## [0.16.0] - 2026-05-22
 
 ### Added

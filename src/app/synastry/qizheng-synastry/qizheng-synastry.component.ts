@@ -11,6 +11,7 @@ import { QiZhengRequst } from 'src/app/type/interface/request-data';
 import { drawQizhengSynastry } from 'src/app/utils/image/qizheng-synastry';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
+import { swapNodeNames } from 'src/app/utils/qizheng-utils/qizheng-utils';
 
 @Component({
   selector: 'app-qizheng-synastry',
@@ -102,6 +103,10 @@ export class QizhengSynastryComponent
       )
       .subscribe({
         next: ([nativeHoro, comparisonHoro]) => {
+          if (!this.storage.isNanLuoBeiJi) {
+            swapNodeNames(nativeHoro);
+            swapNodeNames(comparisonHoro);
+          }
           this.nativeHoro = nativeHoro;
           this.comparisonHoro = comparisonHoro;
           if (this.canvas) {
