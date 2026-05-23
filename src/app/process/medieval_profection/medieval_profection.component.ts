@@ -33,6 +33,7 @@ import {
   getPromittorAspect as getPromittorAspectUtil,
   getPromittorPlanet as getPromittorPlanetUtil,
   getTermInfo as getTermInfoUtil,
+  getSignInfo as getSignInfoUtil,
 } from 'src/app/utils/promittor/promittor';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
@@ -361,6 +362,10 @@ export class MedievalProfectionComponent
 
   getCusp(promittor: Promittor): number | null {
     return getCuspInfoUtil(promittor);
+  }
+
+  getSign(promittor: Promittor): number | null {
+    return getSignInfoUtil(promittor);
   }
 
   get filteredDirectionData(): Direction[] {

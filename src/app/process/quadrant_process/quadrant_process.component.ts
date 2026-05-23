@@ -38,6 +38,7 @@ import {
   getPromittorAspect as getPromittorAspectUtil,
   getPromittorPlanet as getPromittorPlanetUtil,
   getTermInfo as getTermInfoUtil,
+  getSignInfo as getSignInfoUtil,
 } from 'src/app/utils/promittor/promittor';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
@@ -495,6 +496,10 @@ export class QuadrantProcessComponent
 
   getCusp(promittor: Promittor): number | null {
     return getCuspInfoUtil(promittor);
+  }
+
+  getSign(promittor: Promittor): number | null {
+    return getSignInfoUtil(promittor);
   }
 
   get filteredQuadrantData(): QuadrantProcess[] {

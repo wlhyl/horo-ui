@@ -66,3 +66,8 @@ export function getAntisciaInfo(promittor: Promittor): string | null {
   if ('contraantiscias' in promittor) return 'C-Ant';
   return null;
 }
+
+export function getSignInfo(promittor: Promittor): number | null {
+  if ('sign' in promittor) return promittor.sign;
+  return null;
+}

@@ -218,6 +218,11 @@
                 @if (getCusp(item.promittor); as cusp) {
                 {{ cusp }}C
                 }
+                @if (getSign(item.promittor); as signNum) {
+                <span [style]="'font-family: ' + config.zodiacFontFamily() + ';'">
+                  {{ config.zodiacFontString(signNum) }}
+                </span>
+                }
                 @if (getPromittorPlanet(item.promittor); as planet) {
                 <span class="planet-name" [style]="'font-family: ' + config.planetFontFamily(planet) + ';' ">
                   {{ config.planetFontString(planet) }}

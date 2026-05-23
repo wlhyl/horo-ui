@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.16.2] - 2026-05-23
+
+### Added
+
+- 世纪小限方向弧增加宫头
+- 中世纪小限方向推运支持显示星座承诺星
+- Promittor 增加 Sign（星座）类型
+
 ## [0.16.1] - 2026-05-22
 
 ### Added

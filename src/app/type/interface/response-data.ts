@@ -231,7 +231,8 @@ export type Promittor =
   | { term: [PlanetName, number] }
   | { antiscoins: PlanetName }
   | { contraantiscias: PlanetName }
-  | { cusp: number };
+  | { cusp: number }
+  | { sign: number };
 
 export interface Direction {
   significator: PlanetName;
@@ -299,6 +300,7 @@ export enum PromittorType {
   Antiscoins = 'antiscoins',
   Contraantiscias = 'contraantiscias',
   Cusp = 'cusp',
+  Sign = 'sign',
 }
 
 export namespace PromittorType {
@@ -315,6 +317,7 @@ export namespace PromittorType {
     [PromittorType.Antiscoins]: '映点',
     [PromittorType.Contraantiscias]: '反映点',
     [PromittorType.Cusp]: '宫头',
+    [PromittorType.Sign]: '星座',
   };
 
   export function name(type: PromittorType): string {
