@@ -17,12 +17,14 @@ export class HoroStorageService {
   private _horoData!: HoroRequest;
   private _processData!: ProcessRequest;
   private _synastryData!: HoroRequest;
+  private _eventData!: HoroRequest;
   private _isNanLuoBeiJi!: boolean;
 
   constructor() {
     this._initProcessData();
     this._initHoroData();
     this._initSynastryData();
+    this._initEventData();
     this._initIsNanLuoBeiJi();
   }
 
@@ -53,6 +55,15 @@ export class HoroStorageService {
     localStorage.setItem('synastry_data', JSON.stringify(data));
   }
 
+  public get eventData(): DeepReadonly<HoroRequest> {
+    return this._eventData;
+  }
+
+  public set eventData(data: HoroRequest) {
+    this._eventData = deepFreeze(data);
+    localStorage.setItem('event_data', JSON.stringify(data));
+  }
+
   public get isNanLuoBeiJi(): boolean {
     return this._isNanLuoBeiJi;
   }
@@ -66,10 +77,12 @@ export class HoroStorageService {
     localStorage.removeItem('horo_data');
     localStorage.removeItem('process_data');
     localStorage.removeItem('synastry_data');
+    localStorage.removeItem('event_data');
     localStorage.removeItem('node_name_option');
     this._initHoroData();
     this._initProcessData();
     this._initSynastryData();
+    this._initEventData();
     this._initIsNanLuoBeiJi();
   }
 
@@ -164,6 +177,37 @@ export class HoroStorageService {
         name: '',
       };
       this._synastryData = deepFreeze(synastryData);
+    }
+  }
+
+  private _initEventData() {
+    let eventData = this._getParsedItem<HoroRequest>('event_data');
+    if (eventData) {
+      this._eventData = deepFreeze(eventData);
+    } else {
+      let t = this.nowDate();
+      eventData = {
+        id: 0,
+        date: {
+          year: t.year,
+          month: t.month,
+          day: t.day,
+          hour: t.hour,
+          minute: t.minute,
+          second: t.second,
+          tz: t.tz,
+          st: t.st,
+        },
+        geo_name: '北京',
+        geo: {
+          long: 116 + 25 / 60.0,
+          lat: 39 + 54 / 60.0,
+        },
+        house: 'Alcabitus',
+        sex: true,
+        name: '',
+      };
+      this._eventData = deepFreeze(eventData);
     }
   }
 

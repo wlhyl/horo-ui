@@ -9,4 +9,5 @@ export enum Path {
   Archive = 'archive',
   About = 'about',
   Synastry = 'synastry',
+  Event = 'event',
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
@@ -7,6 +8,10 @@ import {
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
+import { HoroRequest } from 'src/app/type/interface/request-data';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
+import { Mode } from '../enum';
+import { Path } from 'src/app/type/enum/path';
 
 @Component({
   selector: 'app-note',
@@ -22,7 +27,9 @@ export class NoteComponent implements OnInit {
   message = '';
   isLoading = true;
 
-  horoData = this.storage.horoData;
+  mode: string;
+  horoData: DeepReadonly<HoroRequest>;
+
   describe: string = '';
   initialDescribe: string | null = null;
 
@@ -30,7 +37,11 @@ export class NoteComponent implements OnInit {
     private titleService: Title,
     private api: ApiService,
     private storage: HoroStorageService,
-  ) {}
+    private router: Router,
+  ) {
+    this.mode = this.router.url.startsWith('/' + Path.Event) ? Mode.Event : Mode.Native;
+    this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
@@ -91,7 +102,13 @@ export class NoteComponent implements OnInit {
 
       this.api.addNative(nativeRequest).subscribe({
         next: (data) => {
-          this.horoData = { ...this.horoData, id: data.id };
+          const updatedData = { ...this.horoData, id: data.id };
+          if (this.mode === Mode.Event) {
+            this.storage.eventData = updatedData;
+          } else {
+            this.storage.horoData = updatedData;
+          }
+          this.horoData = updatedData;
           this.initialDescribe = this.describe;
           this.message = '已新增记录';
           this.isAlertOpen = true;

@@ -12,6 +12,7 @@ import {
   personOutline,
   chatboxEllipsesOutline,
   copyOutline,
+  globeOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -34,6 +35,7 @@ export class HomePage {
       personOutline,
       chatboxEllipsesOutline,
       copyOutline,
+      globeOutline,
     });
   }
   navigate(url: string) {

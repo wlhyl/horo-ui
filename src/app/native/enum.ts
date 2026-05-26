@@ -4,3 +4,8 @@ export enum Path {
   Note = 'note',
   Knowledge = 'knowledge',
 }
+
+export enum Mode {
+  Native = 'native',
+  Event = 'event',
+}

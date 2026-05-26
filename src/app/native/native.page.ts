@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
-import { Path } from './enum';
+import { Path, Mode } from './enum';
 import { HoroRequest } from '../type/interface/request-data';
 import { ViewWillEnter } from '@ionic/angular';
 
@@ -38,7 +38,9 @@ export class NativePage implements OnInit, ViewWillEnter {
   };
 
   path = Path;
-  title = '本命星盘';
+  modeEnum = Mode;
+  mode = Mode.Native;
+  title: string;
 
   constructor(
     private router: Router,
@@ -46,18 +48,27 @@ export class NativePage implements OnInit, ViewWillEnter {
     private storage: HoroStorageService,
     private config: Horoconfig,
     private titleService: Title,
-  ) {}
+  ) {
+    this.mode = this.route.snapshot.data?.['mode'] || Mode.Native;
+    this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
   }
 
   ionViewWillEnter(): void {
-    this.horoData = structuredClone(this.storage.horoData);
+    this.horoData = structuredClone(
+      this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData,
+    );
   }
 
   getHoro() {
-    this.storage.horoData = structuredClone(this.horoData);
+    if (this.mode === Mode.Event) {
+      this.storage.eventData = structuredClone(this.horoData);
+    } else {
+      this.storage.horoData = structuredClone(this.horoData);
+    }
     this.router.navigate(['./image'], { relativeTo: this.route });
   }
 

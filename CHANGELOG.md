@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.17.0] - 2026-05-27
+
+### Added
+
+- 新增天象盘功能，数据与本命星盘互不影响
+
 ## [0.16.2] - 2026-05-23
 
 ### Added

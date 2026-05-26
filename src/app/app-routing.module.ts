@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { authGuard } from './guards/auth/auth.guard';
 
 import { Path } from './type/enum/path';
+import { Mode } from './native/enum';
 
 const routes: Routes = [
   {
@@ -19,6 +20,12 @@ const routes: Routes = [
     path: Path.Native,
     loadChildren: () =>
       import('./native/native.module').then((m) => m.NativePageModule),
+  },
+  {
+    path: Path.Event,
+    loadChildren: () =>
+      import('./native/native.module').then((m) => m.NativePageModule),
+    data: { mode: Mode.Event },
   },
   {
     path: Path.Process,

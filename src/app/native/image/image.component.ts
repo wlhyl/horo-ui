@@ -15,7 +15,8 @@ import {
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
-import { Path as subPath } from '../enum';
+import { Path as subPath, Mode } from '../enum';
+import { Path } from 'src/app/type/enum/path';
 import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
@@ -34,8 +35,9 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
   standalone: false,
 })
 export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
-  private horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
-  currentHoroData: HoroRequest = structuredClone(this.horoData);
+  mode: string;
+  private horoData: DeepReadonly<HoroRequest>;
+  currentHoroData: HoroRequest;
 
   isAlertOpen = false;
   alertButtons = ['OK'];
@@ -62,7 +64,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     second: number;
   }>();
 
-  title = '本命星盘';
+  title: string;
 
   degreeToDMSFn = degreeToDMS;
 
@@ -82,6 +84,10 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     private alertController: AlertController,
   ) {
     addIcons({ informationCircleOutline, createOutline, archiveOutline });
+    this.mode = this.router.url.startsWith('/' + Path.Event) ? Mode.Event : Mode.Native;
+    this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+    this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
+    this.currentHoroData = structuredClone(this.horoData);
   }
 
   ngOnInit() {
@@ -304,7 +310,11 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.api.addNative(nativeRequest).subscribe({
       next: (native) => {
-        this.storage.horoData = { ...this.horoData, id: native.id };
+        if (this.mode === Mode.Event) {
+          this.storage.eventData = { ...this.horoData, id: native.id };
+        } else {
+          this.storage.horoData = { ...this.horoData, id: native.id };
+        }
         this.isSaveOpen = true;
       },
       error: (error) => {
