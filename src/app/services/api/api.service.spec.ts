@@ -230,7 +230,7 @@ describe('ApiService', () => {
       });
 
       const req = httpMock.expectOne(
-        `${environment.base_url}/api/process/profection`,
+        `${environment.base_url}/api/process/profection/general`,
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockData);

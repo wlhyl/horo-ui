@@ -65,7 +65,7 @@ export class ApiService {
    * @returns 获取小限
    */
   public profection(data: ProfectionRequest): Observable<Profection> {
-    return this.http.post<Profection>(`${this.url}/process/profection`, data);
+    return this.http.post<Profection>(`${this.url}/process/profection/general`, data);
   }
 
   /**
@@ -76,7 +76,7 @@ export class ApiService {
     data: MedievalProfectionRequest
   ): Observable<MedievalProfection> {
     return this.http.post<MedievalProfection>(
-      `${this.url}/process/medieval-profection`,
+      `${this.url}/process/profection/medieval/year`,
       data
     );
   }
@@ -89,7 +89,7 @@ export class ApiService {
     data: ReturnRequest
   ): Observable<MedievalProfection> {
     return this.http.post<MedievalProfection>(
-      `${this.url}/process/custom/day`,
+      `${this.url}/process/profection/custom/day`,
       data
     );
   }

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.1] - 2026-05-28
+
+### Changed
+
+- 小限 API 路径调整：三种小限统一到 `/api/process/profection` 下
+  - 基础小限：`/process/profection` → `/process/profection/general`
+  - 中世纪小限：`/process/medieval-profection` → `/process/profection/medieval/year`
+  - 自定义日小限：`/process/custom/day` → `/process/profection/custom/day`
+
 ## [0.18.0] - 2026-05-28
 
 ### Added
