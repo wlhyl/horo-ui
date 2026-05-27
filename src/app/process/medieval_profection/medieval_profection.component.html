@@ -54,6 +54,7 @@
               [(second)]="processDate.second"></horo-date-time>
           </div>
 
+          @if (mode !== profectionMode.CustomDay) {
           <div class="filter-group">
             <label>时间换算:</label>
             <ion-select [(ngModel)]="arcToDateMethod" [disabled]="isLoading">
@@ -62,6 +63,7 @@
               }
             </ion-select>
           </div>
+          }
 
           <ion-button size="small" (click)="updateProcessDate()" [disabled]="isLoading">
             @if (isLoading) {
@@ -155,6 +157,7 @@
               [(second)]="processDate.second"></horo-date-time>
           </div>
 
+          @if (mode !== profectionMode.CustomDay) {
           <div class="filter-group">
             <label>换算:</label>
             <ion-select [(ngModel)]="arcToDateMethod" [disabled]="isLoading">
@@ -163,6 +166,7 @@
               }
             </ion-select>
           </div>
+          }
 
           <ion-button size="small" (click)="updateProcessDate()" [disabled]="isLoading">
             @if (isLoading) {

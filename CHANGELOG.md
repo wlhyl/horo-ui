@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.18.0] - 2026-05-28
+
+### Added
+
+- 新增自定义日小限功能，复用中世纪小限组件，支持星盘图和方向推运表
+
 ## [0.17.0] - 2026-05-27
 
 ### Added

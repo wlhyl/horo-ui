@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ProcessPage } from './process.page';
 
 import { ProcessName } from './enum/process';
+import { ProfectionMode } from './enum/profection-mode';
 
 import { ProfectionComponent } from './profection/profection.component';
 import { MedievalProfectionComponent } from './medieval_profection/medieval_profection.component';
@@ -28,6 +29,12 @@ const routes: Routes = [
   {
     path: ProcessName.path(ProcessName.MedievalProfection),
     component: MedievalProfectionComponent,
+    data: { mode: ProfectionMode.Medieval },
+  },
+  {
+    path: ProcessName.path(ProcessName.CustomDayProfection),
+    component: MedievalProfectionComponent,
+    data: { mode: ProfectionMode.CustomDay },
   },
   {
     path: ProcessName.path(ProcessName.Firdaria),

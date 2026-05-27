@@ -17,6 +17,7 @@ import {
   HoroRequest,
   MedievalProfectionRequest,
   ProcessRequest,
+  ReturnRequest,
 } from 'src/app/type/interface/request-data';
 import {
   Direction,
@@ -37,6 +38,7 @@ import {
 } from 'src/app/utils/promittor/promittor';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
+import { ProfectionMode } from 'src/app/process/enum/profection-mode';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
@@ -45,6 +47,7 @@ import { StaticCanvas } from 'fabric';
 import { drawHorosco } from 'src/app/utils/image/compare';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { Platform } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 import {
   ALL_SIGNIFICATORS,
   formatDate as formatDateUtil,
@@ -71,6 +74,7 @@ export class MedievalProfectionComponent
   alertButtons = ['OK'];
   message = '';
 
+  mode: ProfectionMode;
   title = '中世纪小限';
   viewMode: ViewMode = 'chart';
 
@@ -116,6 +120,8 @@ export class MedievalProfectionComponent
   EW = EW;
   NS = NS;
 
+  profectionMode = ProfectionMode;
+
   house: string = this.horoData.house;
 
   // 弧转日期换算方式枚举，供模板使用
@@ -146,7 +152,11 @@ export class MedievalProfectionComponent
     public config: Horoconfig,
     private titleService: Title,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private route: ActivatedRoute,
+  ) {
+    this.mode = this.route.snapshot.data?.['mode'] || ProfectionMode.Medieval;
+    this.title = this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
@@ -236,36 +246,66 @@ export class MedievalProfectionComponent
   fetchMedievalProfectionData(): void {
     if (this.isLoading) return;
     if (!this.validateGeo()) return;
-    const requestData: MedievalProfectionRequest = {
-      native_date: this.nativeDate,
-      process_date: this.processDate,
-      geo: this.geo,
-      house: this.house,
-      arc_to_date_method: this.arcToDateMethod,
-    };
 
     this.isLoading = true;
     this.cdr.markForCheck();
-    this.api
-      .medievalProfection(requestData)
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        }),
-      )
-      .subscribe({
-        next: (response) => {
-          this.medievalProfectionData = response;
-          this.drawChart();
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          this.message = getApiErrorMessage(error);
-          this.isAlertOpen = true;
-          this.cdr.markForCheck();
-        },
-      });
+
+    if (this.mode === ProfectionMode.CustomDay) {
+      const requestData: ReturnRequest = {
+        native_date: this.nativeDate,
+        process_date: this.processDate,
+        geo: this.geo,
+        house: this.house,
+      };
+      this.api
+        .customDayProfection(requestData)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }),
+        )
+        .subscribe({
+          next: (response) => {
+            this.medievalProfectionData = response;
+            this.drawChart();
+            this.cdr.markForCheck();
+          },
+          error: (error) => {
+            this.message = getApiErrorMessage(error);
+            this.isAlertOpen = true;
+            this.cdr.markForCheck();
+          },
+        });
+    } else {
+      const requestData: MedievalProfectionRequest = {
+        native_date: this.nativeDate,
+        process_date: this.processDate,
+        geo: this.geo,
+        house: this.house,
+        arc_to_date_method: this.arcToDateMethod,
+      };
+      this.api
+        .medievalProfection(requestData)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }),
+        )
+        .subscribe({
+          next: (response) => {
+            this.medievalProfectionData = response;
+            this.drawChart();
+            this.cdr.markForCheck();
+          },
+          error: (error) => {
+            this.message = getApiErrorMessage(error);
+            this.isAlertOpen = true;
+            this.cdr.markForCheck();
+          },
+        });
+    }
   }
 
   private toHoroscopeComparison(

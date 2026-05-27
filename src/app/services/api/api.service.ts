@@ -83,6 +83,19 @@ export class ApiService {
 
   /**
    *
+   * @returns 获取自定义日小限
+   */
+  public customDayProfection(
+    data: ReturnRequest
+  ): Observable<MedievalProfection> {
+    return this.http.post<MedievalProfection>(
+      `${this.url}/process/custom/day`,
+      data
+    );
+  }
+
+  /**
+   *
    * @returns 获取法达
    */
   public firdaria(data: FirdariaRequest): Observable<Array<FirdariaPeriod>> {
