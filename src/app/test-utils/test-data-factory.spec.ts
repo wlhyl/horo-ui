@@ -21,6 +21,7 @@ import {
   ReturnHoroscope,
   Direction,
   Promittor,
+  Significator,
 } from '../type/interface/response-data';
 import { HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
 import { LocationRecord } from '../type/interface/horo-admin/location-record';
@@ -484,7 +485,7 @@ export class TestDataFactory {
 
   static createDefaultDirection(overrides?: Partial<Direction>): Direction {
     return {
-      significator: PlanetName.MC,
+      significator: { planet: PlanetName.MC } as Significator,
       promittor: this.createDefaultPromittor(overrides?.promittor),
       arc: 45.5,
       date: this.createDefaultHoroDateTime(overrides?.date),

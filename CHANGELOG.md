@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.0] - 2026-05-29
+
+### Added
+
+- 中世纪小限和自定义日小限的象征星增加宫头（Cusp）支持，Significator 类型扩展为 `{ planet: PlanetName } | { cusp: number }`
+- 中世纪小限方向表增加宫头象征星筛选器
+
 ## [0.18.1] - 2026-05-28
 
 ### Changed

@@ -23,6 +23,7 @@ import {
   HoroDateTime,
   Promittor,
   PromittorType,
+  Significator,
 } from 'src/app/type/interface/response-data';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import {
@@ -45,6 +46,7 @@ import {
   addYears as addYearsUtil,
   getCurrentDateMinusYears as getCurrentDateMinusYearsUtil,
   getSignificatorDisplayText as getSignificatorDisplayTextUtil,
+  getSignificatorPlanet as getSignificatorPlanetUtil,
   checkSignificator as checkSignificatorUtil,
   checkPromittorType as checkPromittorTypeUtil,
   checkPromittorPlanet as checkPromittorPlanetUtil,
@@ -73,17 +75,18 @@ export class DirectionComponent implements OnInit, OnDestroy {
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   startDate: HoroDateTime = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
   endDate: HoroDateTime = addYearsUtil(this.horoData.date, 120);
-  selectedSignificators: PlanetName[] = [
+  selectedSignificatorPlanets: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
     PlanetName.Sun,
     PlanetName.Moon,
     PlanetName.PartOfFortune,
   ];
+  selectedSignificatorCusps: number[] = [];
   arcDirectionFilter: 'all' | 'direct' | 'converse' = 'all';
   promittorTypeFilter: PromittorType[] = [];
   selectedPromittorPlanets: PlanetName[] = [];
-  allSignificators: PlanetName[] = ALL_SIGNIFICATORS;
+  allSignificatorPlanets: PlanetName[] = ALL_SIGNIFICATORS;
 
   geoLongD = 0;
   geoLongM = 0;
@@ -304,7 +307,7 @@ export class DirectionComponent implements OnInit, OnDestroy {
   get filteredDirectionData(): Direction[] {
     return this.directionData.filter((item) => {
       const dateMatch = checkDateRangeUtil(item.date, this.startDate, this.endDate);
-      const significatorMatch = checkSignificatorUtil(item.significator, this.selectedSignificators);
+      const significatorMatch = checkSignificatorUtil(item.significator, this.selectedSignificatorPlanets, this.selectedSignificatorCusps);
       const arcMatch = this.checkArcDirection(item.arc);
       const promittorMatch = checkPromittorTypeUtil(item.promittor, this.promittorTypeFilter);
       const promittorPlanetMatch = checkPromittorPlanetUtil(item.promittor, this.selectedPromittorPlanets);
@@ -326,7 +329,8 @@ export class DirectionComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
     this.startDate = structuredClone(this.nativeDate);
     this.endDate = addYearsUtil(this.nativeDate, 120);
-    this.selectedSignificators = [];
+    this.selectedSignificatorPlanets = [];
+    this.selectedSignificatorCusps = [];
     this.arcDirectionFilter = 'all';
     this.promittorTypeFilter = [];
     this.selectedPromittorPlanets = [];
@@ -343,5 +347,9 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
   getSignificatorDisplayText(sig: PlanetName): string {
     return getSignificatorDisplayTextUtil(sig, this.config);
+  }
+
+  getSignificatorPlanet(sig: Significator): PlanetName | null {
+    return getSignificatorPlanetUtil(sig);
   }
 }

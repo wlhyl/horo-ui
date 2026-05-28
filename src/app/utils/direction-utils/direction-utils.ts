@@ -4,6 +4,7 @@ import {
   HoroDateTime,
   Promittor,
   PromittorType,
+  Significator,
 } from 'src/app/type/interface/response-data';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { getPromittorPlanet as getPromittorPlanetUtil } from 'src/app/utils/promittor/promittor';
@@ -24,6 +25,10 @@ export const ALL_SIGNIFICATORS: PlanetName[] = [
   PlanetName.NorthNode,
   PlanetName.SouthNode,
   PlanetName.PartOfFortune,
+];
+
+export const ALL_CUSP_SIGNIFICATORS: number[] = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
 ];
 
 export function formatDate(date: {
@@ -74,6 +79,16 @@ export function getCurrentDateMinusYears(
   };
 }
 
+export function getSignificatorPlanet(sig: Significator): PlanetName | null {
+  if ('planet' in sig) return sig.planet;
+  return null;
+}
+
+export function getSignificatorCusp(sig: Significator): number | null {
+  if ('cusp' in sig) return sig.cusp;
+  return null;
+}
+
 export function getSignificatorDisplayText(
   sig: PlanetName,
   config: Horoconfig,
@@ -96,11 +111,18 @@ export function getSignificatorDisplayText(
 }
 
 export function checkSignificator(
-  significator: PlanetName,
-  selected: PlanetName[],
+  significator: Significator,
+  selectedPlanets: PlanetName[],
+  selectedCusps: number[],
 ): boolean {
-  if (selected.length === 0) return true;
-  return selected.includes(significator);
+  if (selectedPlanets.length === 0 && selectedCusps.length === 0) return true;
+  if ('planet' in significator) {
+    return selectedPlanets.includes(significator.planet);
+  }
+  if ('cusp' in significator) {
+    return selectedCusps.includes(significator.cusp);
+  }
+  return false;
 }
 
 export function checkPromittorType(

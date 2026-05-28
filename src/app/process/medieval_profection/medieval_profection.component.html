@@ -209,10 +209,20 @@
         <div class="filter-row">
           <div class="filter-group">
             <label>Significator:</label>
-            <ion-select multiple="true" [(ngModel)]="selectedSignificators" placeholder="全部" [disabled]="isLoading"
+            <ion-select multiple="true" [(ngModel)]="selectedSignificatorPlanets" placeholder="全部" [disabled]="isLoading"
               interface="alert" [interfaceOptions]="{ cssClass: 'planet-select-alert' }">
-              @for (sig of allSignificators; track sig) {
+              @for (sig of allSignificatorPlanets; track sig) {
               <ion-select-option [value]="sig">{{ getSignificatorDisplayText(sig) }}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+
+          <div class="filter-group">
+            <label>宫头Significator:</label>
+            <ion-select multiple="true" [(ngModel)]="selectedSignificatorCusps" placeholder="全部" [disabled]="isLoading"
+              interface="alert" [interfaceOptions]="{ cssClass: 'planet-select-alert' }">
+              @for (cusp of allCuspSignificators; track cusp) {
+              <ion-select-option [value]="cusp">{{ cusp }}C</ion-select-option>
               }
             </ion-select>
           </div>
@@ -230,7 +240,7 @@
             <label>Promittor:</label>
             <ion-select multiple="true" [(ngModel)]="selectedPromittorPlanets" placeholder="全部" [disabled]="isLoading"
               interface="alert" [interfaceOptions]="{ cssClass: 'planet-select-alert' }">
-              @for (sig of allSignificators; track sig) {
+              @for (sig of allSignificatorPlanets; track sig) {
               <ion-select-option [value]="sig">{{ getSignificatorDisplayText(sig) }}</ion-select-option>
               }
             </ion-select>
@@ -266,8 +276,15 @@
             @for (item of filteredDirectionData; track item) {
             <tr>
               <td>{{ formatDate(item.date) }}</td>
-              <td class="planet-name" [style]=" 'font-family: ' + config.planetFontFamily(item.significator)  + ';' ">
-                {{ config.planetFontString(item.significator) }}
+              <td>
+                @if (getSignificatorPlanet(item.significator); as planet) {
+                <span class="planet-name" [style]="'font-family: ' + config.planetFontFamily(planet) + ';'">
+                  {{ config.planetFontString(planet) }}
+                </span>
+                }
+                @if (getSignificatorCusp(item.significator); as cusp) {
+                {{ cusp }}C
+                }
               </td>
               <td>
                 @if (getPromittorAspect(item.promittor); as aspectInfo) {

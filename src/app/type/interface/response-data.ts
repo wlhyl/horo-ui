@@ -234,8 +234,12 @@ export type Promittor =
   | { cusp: number }
   | { sign: number };
 
+export type Significator =
+  | { planet: PlanetName }
+  | { cusp: number };
+
 export interface Direction {
-  significator: PlanetName;
+  significator: Significator;
   promittor: Promittor;
   arc: number;
   date: HoroDateTime;

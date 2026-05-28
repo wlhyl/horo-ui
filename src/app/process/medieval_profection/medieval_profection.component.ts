@@ -26,6 +26,7 @@ import {
   MedievalProfection,
   Promittor,
   PromittorType,
+  Significator,
 } from 'src/app/type/interface/response-data';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import {
@@ -50,9 +51,12 @@ import { Platform } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import {
   ALL_SIGNIFICATORS,
+  ALL_CUSP_SIGNIFICATORS,
   formatDate as formatDateUtil,
   formatArc as formatArcUtil,
   getSignificatorDisplayText as getSignificatorDisplayTextUtil,
+  getSignificatorPlanet as getSignificatorPlanetUtil,
+  getSignificatorCusp as getSignificatorCuspUtil,
   checkSignificator as checkSignificatorUtil,
   checkPromittorType as checkPromittorTypeUtil,
   checkPromittorPlanet as checkPromittorPlanetUtil,
@@ -87,17 +91,19 @@ export class MedievalProfectionComponent
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   processDate: DateRequest = structuredClone(this.processData.date);
 
-  selectedSignificators: PlanetName[] = [
+  selectedSignificatorPlanets: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
     PlanetName.Sun,
     PlanetName.Moon,
     PlanetName.PartOfFortune,
   ];
+  selectedSignificatorCusps: number[] = [];
   promittorTypeFilter: PromittorType[] = [];
   selectedPromittorPlanets: PlanetName[] = [];
 
-  allSignificators: PlanetName[] = ALL_SIGNIFICATORS;
+  allSignificatorPlanets: PlanetName[] = ALL_SIGNIFICATORS;
+  allCuspSignificators: number[] = ALL_CUSP_SIGNIFICATORS;
 
   promittorTypeOptions: { value: PromittorType; text: string }[] =
     PromittorType.values().map((type) => ({
@@ -411,7 +417,7 @@ export class MedievalProfectionComponent
   get filteredDirectionData(): Direction[] {
     if (!this.medievalProfectionData) return [];
     return this.medievalProfectionData.directions.filter((item) => {
-      const significatorMatch = checkSignificatorUtil(item.significator, this.selectedSignificators);
+      const significatorMatch = checkSignificatorUtil(item.significator, this.selectedSignificatorPlanets, this.selectedSignificatorCusps);
       const promittorMatch = checkPromittorTypeUtil(item.promittor, this.promittorTypeFilter);
       const promittorPlanetMatch = checkPromittorPlanetUtil(item.promittor, this.selectedPromittorPlanets);
       return significatorMatch && promittorMatch && promittorPlanetMatch;
@@ -423,7 +429,8 @@ export class MedievalProfectionComponent
 
     this.isLoading = true;
     this.cdr.markForCheck();
-    this.selectedSignificators = [];
+    this.selectedSignificatorPlanets = [];
+    this.selectedSignificatorCusps = [];
     this.promittorTypeFilter = [];
     this.selectedPromittorPlanets = [];
     this.setGeoFromHoroData();
@@ -439,6 +446,14 @@ export class MedievalProfectionComponent
 
   getSignificatorDisplayText(sig: PlanetName): string {
     return getSignificatorDisplayTextUtil(sig, this.config);
+  }
+
+  getSignificatorPlanet(sig: Significator): PlanetName | null {
+    return getSignificatorPlanetUtil(sig);
+  }
+
+  getSignificatorCusp(sig: Significator): number | null {
+    return getSignificatorCuspUtil(sig);
   }
 
   toggleView(): void {

@@ -14,7 +14,7 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { DateRequest, GeoRequest } from 'src/app/type/interface/request-data';
-import { Direction, Promittor } from 'src/app/type/interface/response-data';
+import { Direction, Promittor, Significator } from 'src/app/type/interface/response-data';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
 import {
   createMockDateRequest,
@@ -57,7 +57,7 @@ describe('DirectionComponent', () => {
 
   const mockDirectionData: Direction[] = [
     createMockDirection({
-      significator: PlanetName.MC,
+      significator: { planet: PlanetName.MC } as Significator,
       promittor: { conjunction: PlanetName.Sun },
       arc: 45.5,
       date: {
@@ -71,7 +71,7 @@ describe('DirectionComponent', () => {
       },
     }),
     createMockDirection({
-      significator: PlanetName.ASC,
+      significator: { planet: PlanetName.ASC } as Significator,
       promittor: { opposition: PlanetName.Moon },
       arc: -30.25,
       date: {
@@ -434,10 +434,10 @@ describe('DirectionComponent', () => {
     });
     it('should filter by significator', () => {
       fixture.detectChanges();
-      component.selectedSignificators = [PlanetName.MC];
+      component.selectedSignificatorPlanets = [PlanetName.MC];
       const result = component.filteredDirectionData;
       expect(result.length).toBe(1);
-      expect(result[0].significator).toBe(PlanetName.MC);
+      expect(result[0].significator).toEqual({ planet: PlanetName.MC });
     });
     it('should filter by date range', () => {
       fixture.detectChanges();
@@ -483,10 +483,10 @@ describe('DirectionComponent', () => {
         second: 59,
         tz: 8,
       };
-      component.selectedSignificators = [PlanetName.MC];
+      component.selectedSignificatorPlanets = [PlanetName.MC];
       const result = component.filteredDirectionData;
       expect(result.length).toBe(1);
-      expect(result[0].significator).toBe(PlanetName.MC);
+      expect(result[0].significator).toEqual({ planet: PlanetName.MC });
       expect(result[0].date.year).toBe(2045);
     });
   });
@@ -586,21 +586,32 @@ describe('DirectionComponent', () => {
     });
 
     it('should return true when no significators selected', () => {
-      component.selectedSignificators = [];
+      component.selectedSignificatorPlanets = [];
+      component.selectedSignificatorCusps = [];
 
-      expect(component.checkSignificator(PlanetName.MC)).toBeTrue();
+      expect(component.filteredDirectionData.length).toBe(0);
     });
 
     it('should return true when significator is in selected list', () => {
-      component.selectedSignificators = [PlanetName.MC, PlanetName.ASC];
+      component.selectedSignificatorPlanets = [PlanetName.MC, PlanetName.ASC];
+      component.selectedSignificatorCusps = [];
 
-      expect(component.checkSignificator(PlanetName.MC)).toBeTrue();
+      const data: Direction[] = [
+        createMockDirection({ significator: { planet: PlanetName.MC } as Significator }),
+      ];
+      component.directionData = data;
+      expect(component.filteredDirectionData.length).toBe(1);
     });
 
     it('should return false when significator is not in selected list', () => {
-      component.selectedSignificators = [PlanetName.ASC];
+      component.selectedSignificatorPlanets = [PlanetName.ASC];
+      component.selectedSignificatorCusps = [];
 
-      expect(component.checkSignificator(PlanetName.MC)).toBeFalse();
+      const data: Direction[] = [
+        createMockDirection({ significator: { planet: PlanetName.MC } as Significator }),
+      ];
+      component.directionData = data;
+      expect(component.filteredDirectionData.length).toBe(0);
     });
   });
 
@@ -627,10 +638,10 @@ describe('DirectionComponent', () => {
       expect(component.isLoading).toBe(true);
     });
 
-    it('should preserve existing filter settings (startDate, endDate, selectedSignificators)', () => {
+    it('should preserve existing filter settings (startDate, endDate, selectedSignificatorPlanets)', () => {
       const originalStartDate = { ...component.startDate };
       const originalEndDate = { ...component.endDate };
-      component.selectedSignificators = [PlanetName.MC];
+      component.selectedSignificatorPlanets = [PlanetName.MC];
 
       component.nativeDate = {
         year: 1990,
@@ -646,7 +657,7 @@ describe('DirectionComponent', () => {
 
       expect(component.startDate).toEqual(originalStartDate);
       expect(component.endDate).toEqual(originalEndDate);
-      expect(component.selectedSignificators).toEqual([PlanetName.MC]);
+      expect(component.selectedSignificatorPlanets).toEqual([PlanetName.MC]);
     });
 
     it('should call fetchDirectionData after debounce', fakeAsync(() => {
@@ -743,12 +754,12 @@ describe('DirectionComponent', () => {
       expect(component.endDate.year).toBe(component.nativeDate.year + 120);
     });
 
-    it('should reset selectedSignificators to empty array', () => {
-      component.selectedSignificators = [PlanetName.MC, PlanetName.ASC];
+    it('should reset selectedSignificatorPlanets to empty array', () => {
+      component.selectedSignificatorPlanets = [PlanetName.MC, PlanetName.ASC];
 
       component.resetFilters();
 
-      expect(component.selectedSignificators).toEqual([]);
+      expect(component.selectedSignificatorPlanets).toEqual([]);
     });
   });
 
@@ -763,8 +774,8 @@ describe('DirectionComponent', () => {
       expect(component.title).toBe('主向推运');
     });
 
-    it('should have correct allSignificators', () => {
-      expect(component.allSignificators).toEqual([
+    it('should have correct allSignificatorPlanets', () => {
+      expect(component.allSignificatorPlanets).toEqual([
         PlanetName.ASC,
         PlanetName.MC,
         PlanetName.DSC,
@@ -978,7 +989,7 @@ describe('DirectionComponent', () => {
 
       const originalStartDate = { ...component.startDate };
       const originalEndDate = { ...component.endDate };
-      component.selectedSignificators = [PlanetName.MC];
+      component.selectedSignificatorPlanets = [PlanetName.MC];
 
       component.nativeDate = {
         year: 1990,
@@ -995,7 +1006,7 @@ describe('DirectionComponent', () => {
 
       expect(component.startDate).toEqual(originalStartDate);
       expect(component.endDate).toEqual(originalEndDate);
-      expect(component.selectedSignificators).toEqual([PlanetName.MC]);
+      expect(component.selectedSignificatorPlanets).toEqual([PlanetName.MC]);
     }));
 
     it('should not update data if isLoading is already true', fakeAsync(() => {
