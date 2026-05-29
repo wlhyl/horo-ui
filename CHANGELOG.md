@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.19.1] - 2026-05-30
+
+### Fixed
+
+- 修复天象盘模式下无法更新记录的问题：新增记录成功后会同步更新组件状态，使"更新记录"选项正确显示
+- 修复 changeStep 修改的日期不会保存到档案的问题：存档接口现在使用 currentHoroData 而非初始化时的快照，包含用户通过时间推移功能做的修改
+- 修复更新记录后浏览器后退显示旧数据的问题：updateRecord 成功后同步更新 storage
+
+### Changed
+
+- 优化错误处理：使用公共函数 getApiErrorMessage 替代组件内冗余的 handleError 方法
+
 ## [0.19.0] - 2026-05-29
 
 ### Added

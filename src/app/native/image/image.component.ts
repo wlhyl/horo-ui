@@ -18,6 +18,7 @@ import {
 import { Path as subPath, Mode } from '../enum';
 import { Path } from 'src/app/type/enum/path';
 import { isLocationEqual } from 'src/app/utils/location-record/location-record';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import {
@@ -246,7 +247,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async onArchive() {
-    if (this.horoData.id !== 0) {
+    if (this.currentHoroData.id !== 0) {
       const alert = await this.alertController.create({
         header: '选择操作',
         message: '您想更新现有记录还是新增记录？',
@@ -279,27 +280,27 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addRecord() {
-    const long = degreeToDMS(Math.abs(this.horoData.geo.long));
-    const lat = degreeToDMS(Math.abs(this.horoData.geo.lat));
+    const long = degreeToDMS(Math.abs(this.currentHoroData.geo.long));
+    const lat = degreeToDMS(Math.abs(this.currentHoroData.geo.lat));
 
     const nativeRequest: HoroscopeRecordRequest = {
-      name: this.horoData.name,
-      gender: this.horoData.sex,
-      birth_year: this.horoData.date.year,
-      birth_month: this.horoData.date.month,
-      birth_day: this.horoData.date.day,
-      birth_hour: this.horoData.date.hour,
-      birth_minute: this.horoData.date.minute,
-      birth_second: this.horoData.date.second,
-      time_zone_offset: this.horoData.date.tz,
-      is_dst: this.horoData.date.st,
+      name: this.currentHoroData.name,
+      gender: this.currentHoroData.sex,
+      birth_year: this.currentHoroData.date.year,
+      birth_month: this.currentHoroData.date.month,
+      birth_day: this.currentHoroData.date.day,
+      birth_hour: this.currentHoroData.date.hour,
+      birth_minute: this.currentHoroData.date.minute,
+      birth_second: this.currentHoroData.date.second,
+      time_zone_offset: this.currentHoroData.date.tz,
+      is_dst: this.currentHoroData.date.st,
       location: {
-        name: this.horoData.geo_name,
-        is_east: this.horoData.geo.long >= 0,
+        name: this.currentHoroData.geo_name,
+        is_east: this.currentHoroData.geo.long >= 0,
         longitude_degree: long.d,
         longitude_minute: long.m,
         longitude_second: long.s,
-        is_north: this.horoData.geo.lat >= 0,
+        is_north: this.currentHoroData.geo.lat >= 0,
         latitude_degree: lat.d,
         latitude_minute: lat.m,
         latitude_second: lat.s,
@@ -310,36 +311,40 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.api.addNative(nativeRequest).subscribe({
       next: (native) => {
+        const updatedData = { ...this.currentHoroData, id: native.id };
         if (this.mode === Mode.Event) {
-          this.storage.eventData = { ...this.horoData, id: native.id };
+          this.storage.eventData = updatedData;
         } else {
-          this.storage.horoData = { ...this.horoData, id: native.id };
+          this.storage.horoData = updatedData;
         }
+        this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
+        this.currentHoroData = structuredClone(this.horoData);
         this.isSaveOpen = true;
       },
       error: (error) => {
-        this.handleError('新增档案错误', error);
+        this.message = `新增档案错误：${getApiErrorMessage(error)}`;
+        this.isAlertOpen = true;
       },
     });
   }
 
   updateRecord() {
-    const long = degreeToDMS(Math.abs(this.horoData.geo.long));
-    const lat = degreeToDMS(Math.abs(this.horoData.geo.lat));
+    const long = degreeToDMS(Math.abs(this.currentHoroData.geo.long));
+    const lat = degreeToDMS(Math.abs(this.currentHoroData.geo.lat));
 
     const locationRequest = {
-      name: this.horoData.geo_name,
-      is_east: this.horoData.geo.long > 0,
+      name: this.currentHoroData.geo_name,
+      is_east: this.currentHoroData.geo.long > 0,
       longitude_degree: long.d,
       longitude_minute: long.m,
       longitude_second: long.s,
-      is_north: this.horoData.geo.lat > 0,
+      is_north: this.currentHoroData.geo.lat > 0,
       latitude_degree: lat.d,
       latitude_minute: lat.m,
       latitude_second: lat.s,
     };
 
-    this.api.getNativeById(this.horoData.id).subscribe({
+    this.api.getNativeById(this.currentHoroData.id).subscribe({
       next: (native) => {
         if (native.lock) {
           this.message = '记录已锁定，无法修改';
@@ -347,41 +352,41 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         const nativeRequest: UpdateHoroscopeRecordRequest = {
-          name: this.horoData.name === native.name ? null : this.horoData.name,
+          name: this.currentHoroData.name === native.name ? null : this.currentHoroData.name,
           gender:
-            this.horoData.sex === native.gender ? null : this.horoData.sex,
+            this.currentHoroData.sex === native.gender ? null : this.currentHoroData.sex,
           birth_year:
-            this.horoData.date.year === native.birth_year
+            this.currentHoroData.date.year === native.birth_year
               ? null
-              : this.horoData.date.year,
+              : this.currentHoroData.date.year,
           birth_month:
-            this.horoData.date.month === native.birth_month
+            this.currentHoroData.date.month === native.birth_month
               ? null
-              : this.horoData.date.month,
+              : this.currentHoroData.date.month,
           birth_day:
-            this.horoData.date.day === native.birth_day
+            this.currentHoroData.date.day === native.birth_day
               ? null
-              : this.horoData.date.day,
+              : this.currentHoroData.date.day,
           birth_hour:
-            this.horoData.date.hour === native.birth_hour
+            this.currentHoroData.date.hour === native.birth_hour
               ? null
-              : this.horoData.date.hour,
+              : this.currentHoroData.date.hour,
           birth_minute:
-            this.horoData.date.minute === native.birth_minute
+            this.currentHoroData.date.minute === native.birth_minute
               ? null
-              : this.horoData.date.minute,
+              : this.currentHoroData.date.minute,
           birth_second:
-            this.horoData.date.second === native.birth_second
+            this.currentHoroData.date.second === native.birth_second
               ? null
-              : this.horoData.date.second,
+              : this.currentHoroData.date.second,
           time_zone_offset:
-            this.horoData.date.tz === native.time_zone_offset
+            this.currentHoroData.date.tz === native.time_zone_offset
               ? null
-              : this.horoData.date.tz,
+              : this.currentHoroData.date.tz,
           is_dst:
-            this.horoData.date.st === native.is_dst
+            this.currentHoroData.date.st === native.is_dst
               ? null
-              : this.horoData.date.st,
+              : this.currentHoroData.date.st,
           location: isLocationEqual(locationRequest, native.location)
             ? null
             : locationRequest,
@@ -394,34 +399,27 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
-        this.api.updateNative(this.horoData.id, nativeRequest).subscribe({
+        this.api.updateNative(this.currentHoroData.id, nativeRequest).subscribe({
           next: () => {
+            if (this.mode === Mode.Event) {
+              this.storage.eventData = this.currentHoroData;
+            } else {
+              this.storage.horoData = this.currentHoroData;
+            }
+            this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
             this.isSaveOpen = true;
           },
           error: (error) => {
-            this.handleError('更新档案错误', error);
+            this.message = `更新档案错误：${getApiErrorMessage(error)}`;
+            this.isAlertOpen = true;
           },
         });
       },
       error: (error) => {
-        this.handleError('获取档案错误', error);
+        this.message = `获取档案错误：${getApiErrorMessage(error)}`;
+        this.isAlertOpen = true;
       },
     });
-  }
-
-  private handleError(message: string, error: any) {
-    let msg = error.error.error ? error.error.error : '';
-
-    if (error.error.message) {
-      msg = `${msg} ${error.error.message}`;
-    }
-
-    if (error.message) {
-      msg = `${msg} ${error.message}`;
-    }
-
-    this.message = `${message}：${msg}`;
-    this.isAlertOpen = true;
   }
 
   onNote() {
