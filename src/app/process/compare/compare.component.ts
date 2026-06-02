@@ -38,6 +38,8 @@ enum ComparisonType {
   NativeComparSolar, // 本命盘比日返照盘
   LunarComparNative, // 月返照盘比本命盘
   NativeComparLunar, // 本命盘比月返照盘
+  DailyComparNative, // 日回盘比本命盘
+  NativeComparDaily, // 本命盘比日回盘
 }
 
 @Component({
@@ -111,6 +113,8 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       case ProcessName.NativecomparSolar:
       case ProcessName.LunarcomparNative:
       case ProcessName.NativecomparLunar:
+      case ProcessName.DailycomparNative:
+      case ProcessName.NativecomparDaily:
         this.process_name = process_name;
         break;
       default:
@@ -297,6 +301,8 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       case ProcessName.NativecomparSolar:
       case ProcessName.LunarcomparNative:
       case ProcessName.NativecomparLunar:
+      case ProcessName.DailycomparNative:
+      case ProcessName.NativecomparDaily:
         return this.getReturnComparData(this.getComparisonType(process_name));
       default:
         this.message = `未知的推运名称: ${process_name}`;
@@ -331,9 +337,17 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       comparisonType === ComparisonType.SolarComparNative ||
       comparisonType === ComparisonType.NativeComparSolar;
 
-    return (
-      isSolar ? this.getSolarReturnData() : this.getLunarReturnData()
-    ).pipe(
+    const isDaily =
+      comparisonType === ComparisonType.DailyComparNative ||
+      comparisonType === ComparisonType.NativeComparDaily;
+
+    const getReturnData$ = isDaily
+      ? this.getDailyReturnData()
+      : isSolar
+        ? this.getSolarReturnData()
+        : this.getLunarReturnData();
+
+    return getReturnData$.pipe(
       switchMap((returnHoroData) => {
         this.returnData = returnHoroData;
 
@@ -345,7 +359,8 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const isReturnComparNative =
           comparisonType === ComparisonType.SolarComparNative ||
-          comparisonType === ComparisonType.LunarComparNative;
+          comparisonType === ComparisonType.LunarComparNative ||
+          comparisonType === ComparisonType.DailyComparNative;
 
         const requestData: HoroscopeComparisonRequest = {
           original_date: isReturnComparNative ? this.horoData.date : returnDate,
@@ -376,6 +391,18 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     return this.api.solarReturn(requestData);
+  }
+
+  // 计算每日回归盘
+  private getDailyReturnData(): Observable<ReturnHoroscope> {
+    const requestData: ReturnRequest = {
+      native_date: this.horoData.date,
+      process_date: this.currentProcessData.date,
+      geo: this.processData.geo,
+      house: this.horoData.house,
+    };
+
+    return this.api.dailyReturn(requestData);
   }
 
   // 计算月亮返照盘
@@ -440,6 +467,10 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
         return ComparisonType.LunarComparNative;
       case ProcessName.NativecomparLunar:
         return ComparisonType.NativeComparLunar;
+      case ProcessName.DailycomparNative:
+        return ComparisonType.DailyComparNative;
+      case ProcessName.NativecomparDaily:
+        return ComparisonType.NativeComparDaily;
       default:
         this.message = `无法识别的比较盘类型：${process_name}`;
         this.isAlertOpen = true;

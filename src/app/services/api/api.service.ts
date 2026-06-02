@@ -175,6 +175,17 @@ export class ApiService {
 
   /**
    *
+   * @returns 获取每日回归盘
+   */
+  public dailyReturn(data: ReturnRequest): Observable<ReturnHoroscope> {
+    return this.http.post<ReturnHoroscope>(
+      `${this.url}/process/return/daily`,
+      data
+    );
+  }
+
+  /**
+   *
    * @returns 获取七政
    */
   public qizheng(data: QiZhengRequst): Observable<QiZhengHoroscope> {

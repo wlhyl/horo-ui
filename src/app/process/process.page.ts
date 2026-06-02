@@ -62,10 +62,13 @@ export class ProcessPage implements OnInit {
     ProcessName.Transit,
     ProcessName.SolarReturn,
     ProcessName.LunarReturn,
+    ProcessName.DailyReturn,
     ProcessName.SolarcomparNative,
     ProcessName.NativecomparSolar,
     ProcessName.LunarcomparNative,
     ProcessName.NativecomparLunar,
+    ProcessName.DailycomparNative,
+    ProcessName.NativecomparDaily,
   ].map((process_name) => {
     return {
       text: ProcessName.name(process_name),

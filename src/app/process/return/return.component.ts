@@ -107,6 +107,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     switch (process_name) {
       case ProcessName.SolarReturn:
       case ProcessName.LunarReturn:
+      case ProcessName.DailyReturn:
         this.process_name = process_name;
         break;
       default:
@@ -172,9 +173,11 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   private getReturnData(
     process_name: ProcessName,
   ): Observable<ReturnHoroscope> {
-    return process_name === ProcessName.SolarReturn
-      ? this.getSolarReturnData()
-      : this.getLunarReturnData();
+    return process_name === ProcessName.LunarReturn
+      ? this.getLunarReturnData()
+      : process_name === ProcessName.SolarReturn
+        ? this.getSolarReturnData()
+        : this.getDailyReturnData();
   }
 
   // 计算日返
@@ -187,6 +190,18 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     return this.api.solarReturn(requestData);
+  }
+
+  // 计算每日回
+  private getDailyReturnData(): Observable<ReturnHoroscope> {
+    const requestData: ReturnRequest = {
+      native_date: this.horoData.date,
+      geo: this.processData.geo,
+      house: this.horoData.house,
+      process_date: this.currentProcessData.date,
+    };
+
+    return this.api.dailyReturn(requestData);
   }
 
   // 计算月返

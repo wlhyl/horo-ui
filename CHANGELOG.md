@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.20.0] - 2026-06-04
+
+### Added
+
+- 新增每日回归盘功能
+- 新增每日回比本命、本命比每日回比较盘功能
+
 ## [0.19.1] - 2026-05-30
 
 ### Fixed

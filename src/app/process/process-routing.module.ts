@@ -73,6 +73,16 @@ const routes: Routes = [
     component: CompareComponent,
     data: { process_name: ProcessName.NativecomparLunar },
   },
+  {
+    path: ProcessName.path(ProcessName.DailycomparNative),
+    component: CompareComponent,
+    data: { process_name: ProcessName.DailycomparNative },
+  },
+  {
+    path: ProcessName.path(ProcessName.NativecomparDaily),
+    component: CompareComponent,
+    data: { process_name: ProcessName.NativecomparDaily },
+  },
 
   {
     path: ProcessName.path(ProcessName.SolarReturn),
@@ -87,12 +97,23 @@ const routes: Routes = [
   },
 
   {
+    path: ProcessName.path(ProcessName.DailyReturn),
+    component: ReturnComponent,
+    data: { process_name: ProcessName.DailyReturn },
+  },
+
+  {
     path: Path.SolarReturn + '/' + Path.ReturnDetails,
     component: ReturnDetailComponent,
   },
 
   {
     path: Path.LunarReturn + '/' + Path.ReturnDetails,
+    component: ReturnDetailComponent,
+  },
+
+  {
+    path: Path.DailyReturn + '/' + Path.ReturnDetails,
     component: ReturnDetailComponent,
   },
 
@@ -118,6 +139,16 @@ const routes: Routes = [
 
   {
     path: Path.NativecomparLunar + '/' + Path.ComparisonDetails,
+    component: ComparisonDetailComponent,
+  },
+
+  {
+    path: Path.DailycomparNative + '/' + Path.ComparisonDetails,
+    component: ComparisonDetailComponent,
+  },
+
+  {
+    path: Path.NativecomparDaily + '/' + Path.ComparisonDetails,
     component: ComparisonDetailComponent,
   },
 ];
