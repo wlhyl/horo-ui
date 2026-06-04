@@ -22,12 +22,6 @@
         </div>
         <ion-label>本命</ion-label>
       </div>
-      <div class="item" (click)="navigate(path.Event)">
-        <div class="icon">
-          <ion-icon name="globe-outline"></ion-icon>
-        </div>
-        <ion-label>天象盘</ion-label>
-      </div>
       <div class="item" (click)="navigate(path.Process)">
         <div class="icon">
           <ion-icon name="play-forward-outline"></ion-icon>
@@ -40,11 +34,23 @@
         </div>
         <ion-label>七政</ion-label>
       </div>
+      <div class="item" (click)="navigate(path.Event)">
+        <div class="icon">
+          <ion-icon name="globe-outline"></ion-icon>
+        </div>
+        <ion-label>天象盘</ion-label>
+      </div>
       <div class="item" (click)="navigate(path.Synastry)">
         <div class="icon">
           <ion-icon name="copy-outline"></ion-icon>
         </div>
         <ion-label>合盘</ion-label>
+      </div>
+      <div class="item" (click)="navigate(path.Historical)">
+        <div class="icon">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <ion-label>古代星盘</ion-label>
       </div>
       <div class="item" (click)="navigate(path.Power)">
         <div class="icon">

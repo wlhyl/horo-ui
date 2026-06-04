@@ -2,6 +2,10 @@ import { ProcessName } from '../../process/enum/process';
 import { DirectionMethod } from '../../process/enum/direction-method';
 import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../../process/enum/profection-arc-to-date-method';
+import {
+  HistoricalHouseCusp,
+  HistoricalPlanetPosition,
+} from './horo-admin/historical-horoscope';
 
 export interface DateRequest {
   year: number;
@@ -142,4 +146,12 @@ export interface MedievalProfectionRequest {
   geo: GeoRequest;
   house: string;
   arc_to_date_method: ProfectionArcToDateMethod;
+}
+
+/**
+ * 古代星盘计算请求数据（horo-api）
+ */
+export interface HistoricalHoroRequest {
+  planet_positions: HistoricalPlanetPosition[];
+  house_cusps: HistoricalHouseCusp[];
 }

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.21.0] - 2026-06-05
+
+### Added
+
+- 新增古代星盘绘制功能
+- 新增 `adaptHistoricalToHoroscope` 数据适配工具，将古代星盘计算结果转换为现有绘图函数所需格式
+- ApiService 新增古代星盘相关 API 方法
+- HoroStorageService 新增 `historicalData` 缓存属性
+
 ## [0.20.0] - 2026-06-04
 
 ### Added

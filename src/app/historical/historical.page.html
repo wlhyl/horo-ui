@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>古代星盘</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large">古代星盘</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- 基本信息 -->
+  <div class="info-center">
+    <ion-list [inset]="true" lines="none">
+      <ion-item>
+        <app-historical-archive-selector (historicalSelected)="onArchiveSelected($event)"></app-historical-archive-selector>
+      </ion-item>
+      <ion-item>
+        <ion-label class="label-right">姓名</ion-label>
+        <ion-label class="value-left">{{historicalData.name || '未命名'}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label class="label-right">宫位系统</ion-label>
+        <ion-label class="value-left">{{historicalData.house_system}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-button (click)="getHoro()" expand="block" fill="clear">绘制星盘</ion-button>
+</ion-content>

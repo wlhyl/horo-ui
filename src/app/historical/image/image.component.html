@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  @if (loading) {
+    <div class="ion-text-center">
+      <ion-label>获取星盘</ion-label>
+      <ion-spinner name="bubbles"></ion-spinner>
+    </div>
+  }
+  <div class="ion-text-center">
+    <canvas id="historical-canvas" width="0" height="0"></canvas>
+  </div>
+  @if (horoscoData) {
+    <div class="horo-aspect-toggle ion-justify-content-center">
+      <ion-label>星盘</ion-label>
+      <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
+      <ion-label>相位</ion-label>
+    </div>
+  }
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons class="ion-justify-content-center">
+      <ion-button fill="clear" (click)="onDetail()" class="icon-top">
+        <div class="button-content">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <ion-label>详情</ion-label>
+        </div>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+(didDismiss)="isAlertOpen=false"></ion-alert>

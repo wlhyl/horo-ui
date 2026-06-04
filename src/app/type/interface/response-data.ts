@@ -65,6 +65,26 @@ export interface FixedStar {
 }
 
 /**
+ * 古代星盘行星（horo-api 返回）
+ */
+export interface HistoricalPlanet {
+  name: PlanetName;
+  longitude: number; // 十进制度黄经
+  latitude: number; // 十进制度黄纬（北正南负）
+}
+
+/**
+ * 古代星盘计算响应（horo-api）
+ */
+export interface HistoricalHoroResponse {
+  planets: HistoricalPlanet[];
+  cusps: number[]; // 12宫头十进制度
+  aspects: Aspect[];
+  antiscoins: Aspect[];
+  contraantiscias: Aspect[];
+}
+
+/**
  * 本命星盘的返回数据
  */
 export interface Horoscope {

@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>选择古代星盘档案</ion-title>
+    </ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearchChange($event)" placeholder="搜索记录..."></ion-searchbar>
+</ion-header>
+
+<ion-alert [isOpen]="isAlertOpen" header="错误" [message]="alertMessage" [buttons]="alertButtons" (didDismiss)="isAlertOpen = false"></ion-alert>
+
+<ion-content>
+    <ion-list [inset]="true">
+        @for (record of records; track record.id) {
+        <ion-item [button]="true" (click)="selectRecord(record)">
+            <ion-label>
+                <h2>{{ record.name }}</h2>
+                <p>{{ record.description }}</p>
+                @if (record.year) {
+                    <p>{{ record.year }}年{{ record.month ?? '?' }}月{{ record.day ?? '?' }}日</p>
+                }
+            </ion-label>
+        </ion-item>
+        }
+    </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    @if (loading) {
+    <div class="loading-spinner">
+        <ion-spinner></ion-spinner>
+    </div>
+    }
+
+    @if (!loading && records.length === 0) {
+    <ion-text class="no-data">
+        <p>暂无数据</p>
+    </ion-text>
+    }
+</ion-content>

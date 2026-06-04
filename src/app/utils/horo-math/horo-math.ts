@@ -33,9 +33,7 @@ export function cos(x: number): number {
  * @returns 将度数调整到[0, 360)
  */
 export function degNorm(x: number): number {
-  while (x < 0) x += 360;
-  while (x >= 360) x -= 360;
-  return x;
+  return ((x % 360) + 360) % 360;
 }
 
 /**
@@ -76,7 +74,7 @@ export function zodiacLong(long: number): { zodiac: Zodiac; long: number } {
  */
 export function newtonIteration(
   init_value: number,
-  f: (x: number) => number
+  f: (x: number) => number,
 ): number {
   const epsilon = 1e-7;
   const delta = 5e-6;

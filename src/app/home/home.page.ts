@@ -13,6 +13,7 @@ import {
   chatboxEllipsesOutline,
   copyOutline,
   globeOutline,
+  timeOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -24,7 +25,10 @@ import { addIcons } from 'ionicons';
 })
 export class HomePage {
   path = Path;
-  constructor(private router: Router, public authService: AuthService) {
+  constructor(
+    private router: Router,
+    public authService: AuthService,
+  ) {
     addIcons({
       starOutline,
       playForwardOutline,
@@ -36,6 +40,7 @@ export class HomePage {
       chatboxEllipsesOutline,
       copyOutline,
       globeOutline,
+      timeOutline,
     });
   }
   navigate(url: string) {

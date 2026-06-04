@@ -69,6 +69,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./synastry/synastry.module').then((m) => m.SynastryModule),
   },
+  {
+    path: Path.Historical,
+    loadChildren: () =>
+      import('./historical/historical.module').then((m) => m.HistoricalPageModule),
+  },
 ];
 
 @NgModule({

@@ -14,6 +14,8 @@ import { MapComponent } from './geo/map.component';
 import { DateTimeChangeComponent } from './date-time-change/date-time-change.component';
 import { ArchiveSelectionModalComponent } from './archive-selection-modal/archive-selection-modal.component';
 import { ArchiveSelectorComponent } from './archive-selector/archive-selector.component';
+import { HistoricalArchiveSelectionModalComponent } from './historical-archive-selection-modal/historical-archive-selection-modal.component';
+import { HistoricalArchiveSelectorComponent } from './historical-archive-selector/historical-archive-selector.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { ArchiveSelectorComponent } from './archive-selector/archive-selector.co
     DateTimeChangeComponent,
     ArchiveSelectionModalComponent,
     ArchiveSelectorComponent,
+    HistoricalArchiveSelectionModalComponent,
+    HistoricalArchiveSelectorComponent,
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [
@@ -34,6 +38,7 @@ import { ArchiveSelectorComponent } from './archive-selector/archive-selector.co
     MapComponent,
     DateTimeChangeComponent,
     ArchiveSelectorComponent,
+    HistoricalArchiveSelectorComponent,
   ],
 })
 export class HoroCommonModule {}

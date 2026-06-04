@@ -8,7 +8,20 @@ import {
   HoroRequest,
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
+import {
+  HistoricalHouseCusp,
+  HistoricalPlanetPosition,
+} from 'src/app/type/interface/horo-admin/historical-horoscope';
+import { PlanetName } from 'src/app/type/enum/planet';
 import { deepFreeze } from 'src/app/utils/deep-freeze/deep-freeze';
+
+export interface HistoricalStorageData {
+  name: string;
+  description: string;
+  house_system: string;
+  house_cusps: HistoricalHouseCusp[];
+  planet_positions: HistoricalPlanetPosition[];
+}
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +32,7 @@ export class HoroStorageService {
   private _synastryData!: HoroRequest;
   private _eventData!: HoroRequest;
   private _isNanLuoBeiJi!: boolean;
+  private _historicalData!: HistoricalStorageData;
 
   constructor() {
     this._initProcessData();
@@ -26,6 +40,7 @@ export class HoroStorageService {
     this._initSynastryData();
     this._initEventData();
     this._initIsNanLuoBeiJi();
+    this._initHistoricalData();
   }
 
   public get horoData(): DeepReadonly<HoroRequest> {
@@ -73,17 +88,28 @@ export class HoroStorageService {
     localStorage.setItem('node_name_option', JSON.stringify(value));
   }
 
+  public get historicalData(): DeepReadonly<HistoricalStorageData> {
+    return this._historicalData;
+  }
+
+  public set historicalData(data: HistoricalStorageData) {
+    this._historicalData = deepFreeze(data);
+    localStorage.setItem('historical_data', JSON.stringify(data));
+  }
+
   public clean() {
     localStorage.removeItem('horo_data');
     localStorage.removeItem('process_data');
     localStorage.removeItem('synastry_data');
     localStorage.removeItem('event_data');
     localStorage.removeItem('node_name_option');
+    localStorage.removeItem('historical_data');
     this._initHoroData();
     this._initProcessData();
     this._initSynastryData();
     this._initEventData();
     this._initIsNanLuoBeiJi();
+    this._initHistoricalData();
   }
 
   private _initProcessData() {
@@ -141,7 +167,7 @@ export class HoroStorageService {
           long: 116 + 25 / 60.0,
           lat: 39 + 54 / 60.0,
         },
-        house: 'Alcabitus',
+        house: 'Regiomontanus',
         sex: true,
         name: '',
       };
@@ -172,7 +198,7 @@ export class HoroStorageService {
           long: 116 + 25 / 60.0,
           lat: 39 + 54 / 60.0,
         },
-        house: 'Alcabitus',
+        house: 'Regiomontanus',
         sex: true,
         name: '',
       };
@@ -203,7 +229,7 @@ export class HoroStorageService {
           long: 116 + 25 / 60.0,
           lat: 39 + 54 / 60.0,
         },
-        house: 'Alcabitus',
+        house: 'Regiomontanus',
         sex: true,
         name: '',
       };
@@ -231,6 +257,108 @@ export class HoroStorageService {
   }
 
   private _initIsNanLuoBeiJi() {
-    this._isNanLuoBeiJi = this._getParsedItem<boolean>('node_name_option') ?? true;
+    this._isNanLuoBeiJi =
+      this._getParsedItem<boolean>('node_name_option') ?? true;
+  }
+
+  private _initHistoricalData() {
+    let historicalData =
+      this._getParsedItem<HistoricalStorageData>('historical_data');
+    if (historicalData) {
+      this._historicalData = deepFreeze(historicalData);
+    } else {
+      // 默认等宫制宫头（白羊座0度开始，每30度一宫）
+      const defaultCusps: HistoricalHouseCusp[] = Array.from(
+        { length: 12 },
+        (_, i) => ({
+          house_number: i + 1,
+          longitude_degree: i * 30,
+          longitude_minute: 0,
+          longitude_second: 0,
+        }),
+      );
+
+      // 默认七颗古典行星
+      const defaultPlanets: HistoricalPlanetPosition[] = [
+        {
+          planet_name: PlanetName.Sun,
+          longitude_degree: 0,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+        {
+          planet_name: PlanetName.Moon,
+          longitude_degree: 30,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+        {
+          planet_name: PlanetName.Mercury,
+          longitude_degree: 60,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+        {
+          planet_name: PlanetName.Venus,
+          longitude_degree: 90,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+        {
+          planet_name: PlanetName.Mars,
+          longitude_degree: 120,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+        {
+          planet_name: PlanetName.Jupiter,
+          longitude_degree: 150,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+        {
+          planet_name: PlanetName.Saturn,
+          longitude_degree: 180,
+          longitude_minute: 0,
+          longitude_second: 0,
+          latitude_degree: 0,
+          latitude_minute: 0,
+          latitude_second: 0,
+          latitude_north: true,
+        },
+      ];
+
+      this._historicalData = deepFreeze({
+        name: '',
+        description: '',
+        house_system: '未知',
+        house_cusps: defaultCusps,
+        planet_positions: defaultPlanets,
+      });
+    }
   }
 }
