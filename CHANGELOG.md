@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.21.1] - 2026-06-06
+
+### Added
+
+- 古代星盘行星逆行标识：`HistoricalPlanetPosition` 接口新增 `is_retrograde` 字段，适配器根据该字段在星盘图上绘制逆行符号
+
 ## [0.21.0] - 2026-06-05
 
 ### Added

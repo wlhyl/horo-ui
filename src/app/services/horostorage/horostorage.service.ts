@@ -289,6 +289,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
         {
           planet_name: PlanetName.Moon,
@@ -299,6 +300,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
         {
           planet_name: PlanetName.Mercury,
@@ -309,6 +311,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
         {
           planet_name: PlanetName.Venus,
@@ -319,6 +322,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
         {
           planet_name: PlanetName.Mars,
@@ -329,6 +333,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
         {
           planet_name: PlanetName.Jupiter,
@@ -339,6 +344,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
         {
           planet_name: PlanetName.Saturn,
@@ -349,6 +355,7 @@ export class HoroStorageService {
           latitude_minute: 0,
           latitude_second: 0,
           latitude_north: true,
+          is_retrograde: false,
         },
       ];
 

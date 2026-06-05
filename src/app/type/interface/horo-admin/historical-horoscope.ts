@@ -25,6 +25,7 @@ export interface HistoricalPlanetPosition {
   latitude_minute: number; // 0-59
   latitude_second: number; // 0-59
   latitude_north: boolean;
+  is_retrograde: boolean;
 }
 
 /**

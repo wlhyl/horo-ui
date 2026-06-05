@@ -7,6 +7,7 @@ import {
   GeoPosition,
 } from '../../type/interface/response-data';
 import { PlanetName, PlanetSpeedState } from '../../type/enum/planet';
+import { HistoricalPlanetPosition } from '../../type/interface/horo-admin/historical-horoscope';
 import { degNorm } from '../horo-math/horo-math';
 
 const ANGLE_NAMES = new Set<PlanetName>([
@@ -16,12 +17,15 @@ const ANGLE_NAMES = new Set<PlanetName>([
   PlanetName.IC,
 ]);
 
-function historicalPlanetToPlanet(hp: HistoricalPlanet): Planet {
+function historicalPlanetToPlanet(
+  hp: HistoricalPlanet,
+  isRetrograde: boolean,
+): Planet {
   return {
     name: hp.name,
     long: hp.longitude,
     lat: hp.latitude,
-    speed: 0,
+    speed: isRetrograde ? -1 : 0,
     ra: 0,
     dec: 0,
     orb: 0,
@@ -31,12 +35,24 @@ function historicalPlanetToPlanet(hp: HistoricalPlanet): Planet {
 
 /**
  * 将古代星盘计算响应适配为 Horoscope 格式，复用 drawHorosco 绘制函数
+ * @param response horo-api 返回的古代星盘计算结果
+ * @param houseSystem 宫位制名称
+ * @param storagePlanetPositions 存储数据中的行星位置（含 is_retrograde 字段）
  */
 export function adaptHistoricalToHoroscope(
   response: HistoricalHoroResponse,
   houseSystem?: string,
+  storagePlanetPositions?: readonly HistoricalPlanetPosition[],
 ): Horoscope {
   const cusps = response.cusps;
+
+  // 构建行星名称到逆行状态的映射
+  const retrogradeMap = new Map<PlanetName, boolean>();
+  if (storagePlanetPositions) {
+    for (const pp of storagePlanetPositions) {
+      retrogradeMap.set(pp.planet_name, pp.is_retrograde);
+    }
+  }
 
   // 从 cusps 推导四轴
   const ascLong = cusps[0];
@@ -67,12 +83,13 @@ export function adaptHistoricalToHoroscope(
       longitude: 0,
       latitude: 0,
     },
+    false,
   );
   const regularPlanets = response.planets
     .filter(
       (p) => p.name !== PlanetName.PartOfFortune && !ANGLE_NAMES.has(p.name),
     )
-    .map(historicalPlanetToPlanet);
+    .map((p) => historicalPlanetToPlanet(p, retrogradeMap.get(p.name) ?? false));
 
   const defaultDate: HoroDateTime = {
     year: 0,

@@ -95,7 +95,7 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (response: HistoricalHoroResponse) => {
-          this.horoscoData = adaptHistoricalToHoroscope(response, data.house_system);
+          this.horoscoData = adaptHistoricalToHoroscope(response, data.house_system, data.planet_positions);
           this.isAlertOpen = false;
           this.draw();
         },
