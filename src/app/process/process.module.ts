@@ -39,5 +39,14 @@ import { DetailComponent as ComparisonDetailComponent } from './compare/detail/d
     ReturnDetailComponent,
     ComparisonDetailComponent,
   ],
+  exports: [
+    ProfectionComponent,
+    MedievalProfectionComponent,
+    ReturnComponent,
+    CompareComponent,
+    FirdariaComponent,
+    DirectionComponent,
+    QuadrantProcessComponent,
+  ],
 })
 export class ProcessPageModule {}

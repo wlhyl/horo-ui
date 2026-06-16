@@ -50,3 +50,9 @@ ion-button .button-content ion-icon {
 ion-button .button-content ion-label {
   margin-top: 4px;
 }
+
+.embedded-footer {
+  padding: 4px 8px;
+  border-top: 1px solid var(--ion-color-light-shade, #d7d8da);
+  background: var(--ion-color-light, #f4f5f8);
+}

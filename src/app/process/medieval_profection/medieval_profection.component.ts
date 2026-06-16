@@ -5,6 +5,9 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  OnChanges,
+  Input,
+  SimpleChanges,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -72,13 +75,19 @@ type ViewMode = 'chart' | 'table';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedievalProfectionComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputProcessData?: ProcessRequest;
+  @Input() inputMode?: ProfectionMode;
+  @Input() canvasId: string = 'canvas';
+  @Input() embedded: boolean = false;
+
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
 
-  mode: ProfectionMode;
+  mode: ProfectionMode = ProfectionMode.Medieval;
   title = '中世纪小限';
   viewMode: ViewMode = 'chart';
 
@@ -87,6 +96,9 @@ export class MedievalProfectionComponent
 
   medievalProfectionData: MedievalProfection | null = null;
   isLoading = false;
+
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染）
+  initialized = false;
 
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   processDate: DateRequest = structuredClone(this.processData.date);
@@ -142,7 +154,8 @@ export class MedievalProfectionComponent
     }));
 
   // 弧转日期换算方式选择
-  arcToDateMethod: ProfectionArcToDateMethod = this.processData.profection_arc_to_date_method;
+  arcToDateMethod: ProfectionArcToDateMethod =
+    this.processData.profection_arc_to_date_method;
 
   private canvas?: StaticCanvas;
 
@@ -159,14 +172,33 @@ export class MedievalProfectionComponent
     private titleService: Title,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-  ) {
-    this.mode = this.route.snapshot.data?.['mode'] || ProfectionMode.Medieval;
-    this.title = this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
-  }
+  ) {}
 
   ngOnInit() {
-    this.titleService.setTitle(this.title);
+    if (this.embedded) {
+      if (
+        !this.inputHoroData ||
+        !this.inputProcessData ||
+        !this.inputMode
+      ) {
+        return;
+      }
+      this.horoData = this.inputHoroData;
+      this.nativeDate = structuredClone(this.horoData.date);
+      this.house = this.horoData.house;
+      this.processData = this.inputProcessData;
+      this.processDate = structuredClone(this.processData.date);
+      this.arcToDateMethod =
+        this.inputProcessData.profection_arc_to_date_method;
+      this.mode = this.inputMode;
+      this.title =
+        this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
+    } else {
+      this.mode = this.route.snapshot.data?.['mode'] || ProfectionMode.Medieval;
+      this.titleService.setTitle(this.title);
+    }
 
+    this.initialized = true;
     this.setGeoFromHoroData();
 
     this.updateNativeDateSubject
@@ -190,13 +222,46 @@ export class MedievalProfectionComponent
     this.fetchMedievalProfectionData();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRefetch = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      this.nativeDate = structuredClone(this.horoData.date);
+      this.house = this.horoData.house;
+      this.setGeoFromHoroData();
+      needRefetch = true;
+    }
+
+    if (changes['inputProcessData'] && this.inputProcessData) {
+      this.processData = this.inputProcessData;
+      this.processDate = structuredClone(this.processData.date);
+      this.arcToDateMethod =
+        this.inputProcessData.profection_arc_to_date_method;
+      needRefetch = true;
+    }
+
+    if (changes['inputMode'] && this.inputMode !== undefined) {
+      this.mode = this.inputMode;
+      this.title =
+        this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
+      needRefetch = true;
+    }
+
+    if (needRefetch) {
+      this.fetchMedievalProfectionData();
+    }
+  }
+
   ngAfterViewInit(): void {
     this.canvas = this.createCanvas();
     this.drawChart();
   }
 
   private createCanvas(): StaticCanvas {
-    return new StaticCanvas('canvas');
+    return new StaticCanvas(this.canvasId);
   }
 
   ngOnDestroy(): void {
@@ -417,9 +482,19 @@ export class MedievalProfectionComponent
   get filteredDirectionData(): Direction[] {
     if (!this.medievalProfectionData) return [];
     return this.medievalProfectionData.directions.filter((item) => {
-      const significatorMatch = checkSignificatorUtil(item.significator, this.selectedSignificatorPlanets, this.selectedSignificatorCusps);
-      const promittorMatch = checkPromittorTypeUtil(item.promittor, this.promittorTypeFilter);
-      const promittorPlanetMatch = checkPromittorPlanetUtil(item.promittor, this.selectedPromittorPlanets);
+      const significatorMatch = checkSignificatorUtil(
+        item.significator,
+        this.selectedSignificatorPlanets,
+        this.selectedSignificatorCusps,
+      );
+      const promittorMatch = checkPromittorTypeUtil(
+        item.promittor,
+        this.promittorTypeFilter,
+      );
+      const promittorPlanetMatch = checkPromittorPlanetUtil(
+        item.promittor,
+        this.selectedPromittorPlanets,
+      );
       return significatorMatch && promittorMatch && promittorPlanetMatch;
     });
   }

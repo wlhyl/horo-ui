@@ -1,3 +1,4 @@
+@if (!embedded) {
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -15,16 +16,20 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+}
 
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen=false"></ion-alert>
+
+@if (initialized) {
 <ion-content [fullscreen]="true">
+  @if (!embedded) {
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{title}}</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-    (didDismiss)="isAlertOpen=false"></ion-alert>
+  }
 
   <div class="view-container">
   @if (viewMode === 'chart') {
@@ -97,7 +102,7 @@
       </div>
 
       <div class="ion-text-center chart-canvas-wrapper">
-        <canvas id="canvas" width="0" height="0"></canvas>
+        <canvas [id]="canvasId" width="0" height="0"></canvas>
       </div>
     </div>
   } @else {
@@ -251,3 +256,8 @@
   }
 </div>
 </ion-content>
+} @else {
+  <div class="ion-text-center ion-padding">
+    <ion-label color="medium">象限推运数据未初始化</ion-label>
+  </div>
+}

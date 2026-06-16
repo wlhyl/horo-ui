@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -35,10 +43,20 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
   styleUrls: ['image.component.scss'],
   standalone: false,
 })
-export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
-  mode: string;
-  private horoData: DeepReadonly<HoroRequest>;
-  currentHoroData: HoroRequest;
+export class ImageComponent
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
+{
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputMode?: Mode;
+  @Input() canvasId: string = 'canvas';
+  @Input() embedded: boolean = false;
+
+  mode!: string;
+  private horoData!: DeepReadonly<HoroRequest>;
+  currentHoroData!: HoroRequest;
+
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染未赋值的 ! 变量）
+  initialized = false;
 
   isAlertOpen = false;
   alertButtons = ['OK'];
@@ -65,7 +83,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     second: number;
   }>();
 
-  title: string;
+  title!: string;
 
   degreeToDMSFn = degreeToDMS;
 
@@ -85,14 +103,42 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     private alertController: AlertController,
   ) {
     addIcons({ informationCircleOutline, createOutline, archiveOutline });
-    this.mode = this.router.url.startsWith('/' + Path.Event) ? Mode.Event : Mode.Native;
-    this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
-    this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
-    this.currentHoroData = structuredClone(this.horoData);
   }
 
   ngOnInit() {
-    this.titleService.setTitle(this.title);
+    // 嵌入模式下使用 @Input 数据覆盖构造函数中的初始化
+    if (this.embedded) {
+      if (this.inputMode) {
+        this.mode = this.inputMode;
+        this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+      } else {
+        this.message = '嵌入模式缺少输入参数：inputMode';
+        this.isAlertOpen = true;
+        return;
+      }
+      if (this.inputHoroData) {
+        this.horoData = this.inputHoroData;
+        this.currentHoroData = structuredClone(this.inputHoroData);
+      } else {
+        this.message = '嵌入模式缺少输入参数：inputHoroData';
+        this.isAlertOpen = true;
+        return;
+      }
+    } else {
+      // 嵌入式模式下，会初始化为本命星盘
+      this.mode = this.router.url.startsWith('/' + Path.Event)
+        ? Mode.Event
+        : Mode.Native;
+      this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+      this.horoData =
+        this.mode === Mode.Event
+          ? this.storage.eventData
+          : this.storage.horoData;
+      this.currentHoroData = structuredClone(this.horoData);
+      this.titleService.setTitle(this.title);
+    }
+
+    this.initialized = true;
 
     // 使用防抖优化频繁的日期变更操作
     this.changeStepSubject
@@ -102,10 +148,33 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRedraw = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      this.currentHoroData = structuredClone(this.inputHoroData);
+      needRedraw = true;
+    }
+
+    if (changes['inputMode'] && this.inputMode) {
+      this.mode = this.inputMode;
+      this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+    }
+
+    if (needRedraw && this.canvas) {
+      this.drawHoroscope(this.currentHoroData);
+    }
+  }
+
   ngAfterViewInit(): void {
     // 为兼容单元测试，使用这样的冗余函数
     this.canvas = this.createCanvas();
-    this.drawHoroscope(this.currentHoroData);
+    // 延迟到下一宏任务，避免 drawHoroscope 同步设置 loading=true
+    // 导致 ExpressionChangedAfterItHasBeenCheckedError (NG0100)
+    setTimeout(() => this.drawHoroscope(this.currentHoroData));
   }
 
   ngOnDestroy(): void {
@@ -120,7 +189,7 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 为了方便单元测试，使用这样的冗余函数
   private createCanvas(): StaticCanvas {
-    return new StaticCanvas('canvas');
+    return new StaticCanvas(this.canvasId);
   }
 
   private drawHoroscope(horoData: DeepReadonly<HoroRequest>) {
@@ -317,7 +386,10 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.storage.horoData = updatedData;
         }
-        this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
+        this.horoData =
+          this.mode === Mode.Event
+            ? this.storage.eventData
+            : this.storage.horoData;
         this.currentHoroData = structuredClone(this.horoData);
         this.isSaveOpen = true;
       },
@@ -352,9 +424,14 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
         const nativeRequest: UpdateHoroscopeRecordRequest = {
-          name: this.currentHoroData.name === native.name ? null : this.currentHoroData.name,
+          name:
+            this.currentHoroData.name === native.name
+              ? null
+              : this.currentHoroData.name,
           gender:
-            this.currentHoroData.sex === native.gender ? null : this.currentHoroData.sex,
+            this.currentHoroData.sex === native.gender
+              ? null
+              : this.currentHoroData.sex,
           birth_year:
             this.currentHoroData.date.year === native.birth_year
               ? null
@@ -399,21 +476,26 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
-        this.api.updateNative(this.currentHoroData.id, nativeRequest).subscribe({
-          next: () => {
-            if (this.mode === Mode.Event) {
-              this.storage.eventData = this.currentHoroData;
-            } else {
-              this.storage.horoData = this.currentHoroData;
-            }
-            this.horoData = this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData;
-            this.isSaveOpen = true;
-          },
-          error: (error) => {
-            this.message = `更新档案错误：${getApiErrorMessage(error)}`;
-            this.isAlertOpen = true;
-          },
-        });
+        this.api
+          .updateNative(this.currentHoroData.id, nativeRequest)
+          .subscribe({
+            next: () => {
+              if (this.mode === Mode.Event) {
+                this.storage.eventData = this.currentHoroData;
+              } else {
+                this.storage.horoData = this.currentHoroData;
+              }
+              this.horoData =
+                this.mode === Mode.Event
+                  ? this.storage.eventData
+                  : this.storage.horoData;
+              this.isSaveOpen = true;
+            },
+            error: (error) => {
+              this.message = `更新档案错误：${getApiErrorMessage(error)}`;
+              this.isAlertOpen = true;
+            },
+          });
       },
       error: (error) => {
         this.message = `获取档案错误：${getApiErrorMessage(error)}`;

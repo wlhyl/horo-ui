@@ -14,6 +14,7 @@ import {
   copyOutline,
   globeOutline,
   timeOutline,
+  appsOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -41,6 +42,7 @@ export class HomePage {
       copyOutline,
       globeOutline,
       timeOutline,
+      appsOutline,
     });
   }
   navigate(url: string) {

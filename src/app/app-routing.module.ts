@@ -74,6 +74,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./historical/historical.module').then((m) => m.HistoricalPageModule),
   },
+  {
+    path: Path.Workbench,
+    loadChildren: () =>
+      import('./workbench/workbench.module').then((m) => m.WorkbenchPageModule),
+  },
 ];
 
 @NgModule({

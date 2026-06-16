@@ -1,3 +1,4 @@
+@if (!embedded) {
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -6,41 +7,56 @@
     <ion-title> {{title}} </ion-title>
   </ion-toolbar>
 </ion-header>
+}
 
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen=false"></ion-alert>
+
+@if (initialized) {
 <ion-content [fullscreen]="true">
+  @if (!embedded) {
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{title}}</ion-title>
     </ion-toolbar>
   </ion-header>
+  }
 
 
 
   <div class="ion-text-center">
-    <h2>{{ currentHoroData.date.year }}年{{ currentHoroData.date.month }}月{{ currentHoroData.date.day }}日 {{ currentHoroData.date.hour }}:{{
+    <h2>{{ currentHoroData.date.year }}年{{ currentHoroData.date.month }}月{{ currentHoroData.date.day }}日 {{
+      currentHoroData.date.hour }}:{{
       currentHoroData.date.minute }}:{{
-    currentHoroData.date.second }}</h2>
+      currentHoroData.date.second }}</h2>
   </div>
 
   @if (loading) {
-    <div class="ion-text-center">
-      <ion-label>获取星盘</ion-label>
-      <ion-spinner name="bubbles"></ion-spinner>
-    </div>
+  <div class="ion-text-center">
+    <ion-label>获取星盘</ion-label>
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
   }
   <div class="ion-text-center">
-    <canvas id="canvas" width="0" height="0"></canvas>
+    <canvas [id]="canvasId" width="0" height="0"></canvas>
   </div>
   @if (horoscoData) {
-    <div class="horo-aspect-toggle">
-      <ion-label class="ion-text-right">星盘</ion-label>
-      <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
-      <ion-label>相位</ion-label>
-    </div>
+  <div class="horo-aspect-toggle">
+    <ion-label class="ion-text-right">星盘</ion-label>
+    <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
+    <ion-label>相位</ion-label>
+  </div>
+  }
+
+  @if (embedded) {
+  <div class="embedded-footer">
+    <horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change>
+  </div>
   }
 
 </ion-content>
 
+@if (!embedded) {
 <ion-footer>
   <ion-toolbar>
     <ion-grid fixed>
@@ -51,20 +67,20 @@
         <ion-col size="5" size-sm="3" class="ion-text-right">
           <ion-buttons>
             @if (isAuth) {
-              <ion-button fill="clear" (click)="onArchive()" class="icon-top">
-                <div class="button-content">
-                  <ion-icon name="archive-outline"></ion-icon>
-                  <ion-label>存档</ion-label>
-                </div>
-              </ion-button>
+            <ion-button fill="clear" (click)="onArchive()" class="icon-top">
+              <div class="button-content">
+                <ion-icon name="archive-outline"></ion-icon>
+                <ion-label>存档</ion-label>
+              </div>
+            </ion-button>
             }
             @if (isAuth) {
-              <ion-button fill="clear" (click)="onNote()" class="icon-top">
-                <div class="button-content">
-                  <ion-icon name="create-outline"></ion-icon>
-                  <ion-label>笔记</ion-label>
-                </div>
-              </ion-button>
+            <ion-button fill="clear" (click)="onNote()" class="icon-top">
+              <div class="button-content">
+                <ion-icon name="create-outline"></ion-icon>
+                <ion-label>笔记</ion-label>
+              </div>
+            </ion-button>
             }
             <ion-button fill="clear" (click)="onDetail()" class="icon-top">
               <div class="button-content">
@@ -78,9 +94,12 @@
     </ion-grid>
   </ion-toolbar>
 </ion-footer>
-
-<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-(didDismiss)="isAlertOpen=false"></ion-alert>
+}
 
 <ion-alert [isOpen]="isSaveOpen" header="存档" message="存档成功" [buttons]="alertButtons"
-(didDismiss)="isSaveOpen=false"></ion-alert>
+  (didDismiss)="isSaveOpen=false"></ion-alert>
+} @else {
+  <div class="ion-text-center ion-padding">
+    <ion-label color="medium">本命星盘或天象盘数据未初始化</ion-label>
+  </div>
+}

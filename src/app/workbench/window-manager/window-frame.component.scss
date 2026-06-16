@@ -1,0 +1,146 @@
+:host {
+  display: contents;
+}
+
+.window-frame {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--ion-color-light, #f4f5f8);
+  border: 1px solid var(--ion-color-medium-shade, #999);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  min-width: 320px;
+  min-height: 360px;
+
+  &.maximized {
+    border-radius: 0;
+  }
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 8px 0 12px;
+  background: linear-gradient(to bottom, var(--ion-color-primary, #3880ff), var(--ion-color-primary-shade, #3171e0));
+  color: #fff;
+  cursor: move;
+  user-select: none;
+  flex-shrink: 0;
+
+  .title-text {
+    font-size: 13px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.title-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.win-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &.close-btn:hover {
+    background: #e53935;
+  }
+}
+
+.window-content {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  background: #fff;
+}
+
+.resize-handle {
+  position: absolute;
+  z-index: 10;
+
+  &.handle-n {
+    top: -3px;
+    left: 6px;
+    right: 6px;
+    height: 6px;
+    cursor: n-resize;
+  }
+  &.handle-s {
+    bottom: -3px;
+    left: 6px;
+    right: 6px;
+    height: 6px;
+    cursor: s-resize;
+  }
+  &.handle-w {
+    left: -3px;
+    top: 6px;
+    bottom: 6px;
+    width: 6px;
+    cursor: w-resize;
+  }
+  &.handle-e {
+    right: -3px;
+    top: 6px;
+    bottom: 6px;
+    width: 6px;
+    cursor: e-resize;
+  }
+  &.handle-nw {
+    top: -3px;
+    left: -3px;
+    width: 10px;
+    height: 10px;
+    cursor: nw-resize;
+  }
+  &.handle-ne {
+    top: -3px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
+    cursor: ne-resize;
+  }
+  &.handle-sw {
+    bottom: -3px;
+    left: -3px;
+    width: 10px;
+    height: 10px;
+    cursor: sw-resize;
+  }
+  &.handle-se {
+    bottom: -3px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
+    cursor: se-resize;
+  }
+}

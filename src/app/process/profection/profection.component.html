@@ -1,3 +1,4 @@
+@if (!embedded) {
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -6,16 +7,20 @@
     <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
+}
 
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen=false"></ion-alert>
+
+@if (initialized) {
 <ion-content [fullscreen]="true">
+  @if (!embedded) {
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{title}}</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-  (didDismiss)="isAlertOpen=false"></ion-alert>
+  }
 
   <ion-grid>
     <ion-row>
@@ -62,21 +67,21 @@
             </ion-card-title>
           </ion-card-header>
           @if (!isDatePerHouseCollapsed) {
-            <ion-card-content>
-              <p class="note">此处没有按2.5天一个宫位，而是将每月的天数12等分。时间已经扣除夏令时。</p>
-              <ion-grid>
-                <ion-row class="table-header-row">
-                  <ion-col size="4"><b>宫位</b></ion-col>
-                  <ion-col size="8"><b>时间</b></ion-col>
-                </ion-row>
-                @for (item of profection.date_per_house; track item; let i = $index) {
-                  <ion-row class="table-data-row">
-                    <ion-col size="4">第{{(profection.month_house + i - 1) % 12 + 1}}宫</ion-col>
-                    <ion-col size="8">{{formatDate(item)}}</ion-col>
-                  </ion-row>
-                }
-              </ion-grid>
-            </ion-card-content>
+          <ion-card-content>
+            <p class="note">此处没有按2.5天一个宫位，而是将每月的天数12等分。时间已经扣除夏令时。</p>
+            <ion-grid>
+              <ion-row class="table-header-row">
+                <ion-col size="4"><b>宫位</b></ion-col>
+                <ion-col size="8"><b>时间</b></ion-col>
+              </ion-row>
+              @for (item of profection.date_per_house; track $index; let i = $index) {
+              <ion-row class="table-data-row">
+                <ion-col size="4">第{{(profection.month_house + i - 1) % 12 + 1}}宫</ion-col>
+                <ion-col size="8">{{formatDate(item)}}</ion-col>
+              </ion-row>
+              }
+            </ion-grid>
+          </ion-card-content>
           }
         </ion-card>
       </ion-col>
@@ -92,21 +97,21 @@
             </ion-card-title>
           </ion-card-header>
           @if (!isHourPerHouseCollapsed) {
-            <ion-card-content>
-              <p class="note">时小限的时间已经扣除夏令时。</p>
-              <ion-grid>
-                <ion-row class="table-header-row">
-                  <ion-col size="4"><b>宫位</b></ion-col>
-                  <ion-col size="8"><b>时间</b></ion-col>
-                </ion-row>
-                @for (item of profection.hour_per_house; track item; let i = $index) {
-                  <ion-row class="table-data-row">
-                    <ion-col size="4">第{{(profection.day_house + i - 1) % 12 + 1}}宫</ion-col>
-                    <ion-col size="8">{{formatDate(item)}}</ion-col>
-                  </ion-row>
-                }
-              </ion-grid>
-            </ion-card-content>
+          <ion-card-content>
+            <p class="note">时小限的时间已经扣除夏令时。</p>
+            <ion-grid>
+              <ion-row class="table-header-row">
+                <ion-col size="4"><b>宫位</b></ion-col>
+                <ion-col size="8"><b>时间</b></ion-col>
+              </ion-row>
+              @for (item of profection.hour_per_house; track $index; let i = $index) {
+              <ion-row class="table-data-row">
+                <ion-col size="4">第{{(profection.day_house + i - 1) % 12 + 1}}宫</ion-col>
+                <ion-col size="8">{{formatDate(item)}}</ion-col>
+              </ion-row>
+              }
+            </ion-grid>
+          </ion-card-content>
           }
         </ion-card>
       </ion-col>
@@ -114,3 +119,8 @@
   </ion-grid>
   <div class="bottom-spacer"></div>
 </ion-content>
+} @else {
+<div class="ion-text-center ion-padding">
+  <ion-label color="medium">小限数据未初始化</ion-label>
+</div>
+}

@@ -1,3 +1,4 @@
+@if (!embedded) {
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -6,16 +7,21 @@
     <ion-title>{{title}}</ion-title>
   </ion-toolbar>
 </ion-header>
+}
 
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen=false"></ion-alert>
+
+@if (initialized) {
 <ion-content [fullscreen]="true">
+  @if (!embedded) {
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{title}}</ion-title>
     </ion-toolbar>
   </ion-header>
+  }
 
-  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-    (didDismiss)="isAlertOpen=false"></ion-alert>
   <ul>
     <li>副限时间以主限所管年数7等分</li>
   </ul>
@@ -57,3 +63,8 @@
     </table>
   </div>
 </ion-content>
+} @else {
+  <div class="ion-text-center ion-padding">
+    <ion-label color="medium">法达数据未初始化</ion-label>
+  </div>
+}

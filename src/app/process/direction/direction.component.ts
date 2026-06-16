@@ -4,6 +4,9 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  OnChanges,
+  Input,
+  SimpleChanges,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -15,6 +18,7 @@ import {
   DirectionRequest,
   GeoRequest,
   HoroRequest,
+  ProcessRequest,
 } from 'src/app/type/interface/request-data';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
@@ -60,7 +64,11 @@ import {
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectionComponent implements OnInit, OnDestroy {
+export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputProcessData?: ProcessRequest;
+  @Input() embedded: boolean = false;
+
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
@@ -71,6 +79,9 @@ export class DirectionComponent implements OnInit, OnDestroy {
 
   directionData: Array<Direction> = [];
   isLoading = false;
+
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染）
+  initialized = false;
 
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   startDate: HoroDateTime = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
@@ -155,8 +166,24 @@ export class DirectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.titleService.setTitle(this.title);
+    if (this.embedded) {
+      if (!this.inputHoroData) {
+        return;
+      }
+      this.horoData = this.inputHoroData;
+      this.nativeDate = structuredClone(this.horoData.date);
+      this.startDate = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
+      this.endDate = addYearsUtil(this.horoData.date, 120);
+      this.house = this.horoData.house;
+      if (this.inputProcessData) {
+        this.directionMethod = this.inputProcessData.direction_method;
+        this.arcToDateMethod = this.inputProcessData.arc_to_date_method;
+      }
+    } else {
+      this.titleService.setTitle(this.title);
+    }
 
+    this.initialized = true;
     this.setGeoFromHoroData();
 
     this.updateNativeDateSubject
@@ -172,6 +199,32 @@ export class DirectionComponent implements OnInit, OnDestroy {
       });
 
     this.fetchDirectionData();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRefetch = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      this.nativeDate = structuredClone(this.horoData.date);
+      this.startDate = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
+      this.endDate = addYearsUtil(this.horoData.date, 120);
+      this.house = this.horoData.house;
+      this.setGeoFromHoroData();
+      needRefetch = true;
+    }
+
+    if (changes['inputProcessData'] && this.inputProcessData) {
+      this.directionMethod = this.inputProcessData.direction_method;
+      this.arcToDateMethod = this.inputProcessData.arc_to_date_method;
+      needRefetch = true;
+    }
+
+    if (needRefetch) {
+      this.fetchDirectionData();
+    }
   }
 
   ngOnDestroy(): void {

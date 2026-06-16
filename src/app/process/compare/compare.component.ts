@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  OnChanges,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Title } from '@angular/platform-browser';
@@ -48,10 +56,21 @@ enum ComparisonType {
   styleUrls: ['./compare.component.scss'],
   standalone: false,
 })
-export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CompareComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+{
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputProcessData?: ProcessRequest;
+  @Input() inputProcessName?: ProcessName;
+  @Input() canvasId: string = 'canvas';
+  @Input() embedded: boolean = false;
+
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
   currentProcessData: ProcessRequest = structuredClone(this.processData);
+
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染）
+  initialized = false;
 
   horoscopeComparisonData: HoroscopeComparison | null = null;
   returnData: ReturnHoroscope | null = null;
@@ -98,35 +117,50 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig,
-  ) {
-    const process_name = this.route.snapshot.data['process_name'];
-
-    if (process_name === null) {
-      alert('配置错误，没有正确配置比较盘类型');
-      console.error('配置错误，路由没有正确配置比较盘类型');
-      return;
-    }
-
-    switch (process_name) {
-      case ProcessName.Transit:
-      case ProcessName.SolarcomparNative:
-      case ProcessName.NativecomparSolar:
-      case ProcessName.LunarcomparNative:
-      case ProcessName.NativecomparLunar:
-      case ProcessName.DailycomparNative:
-      case ProcessName.NativecomparDaily:
-        this.process_name = process_name;
-        break;
-      default:
-        const message = `无此种比较盘：${process_name}`;
-        alert(message);
-        console.error(message);
-        return;
-    }
-  }
+  ) {}
 
   ngOnInit() {
-    this.titleService.setTitle(this.title);
+    if (this.embedded) {
+      if (
+        !this.inputProcessName ||
+        !this.inputHoroData ||
+        !this.inputProcessData
+      ) {
+        return;
+      }
+      this.process_name = this.inputProcessName;
+      this.horoData = this.inputHoroData;
+      this.processData = this.inputProcessData;
+      this.currentProcessData = structuredClone(this.inputProcessData);
+    } else {
+      const process_name = this.route.snapshot.data['process_name'];
+
+      if (process_name === null) {
+        this.message = '配置错误，路由没有正确配置比较盘类型';
+        this.isAlertOpen = true;
+        return;
+      }
+
+      switch (process_name) {
+        case ProcessName.Transit:
+        case ProcessName.SolarcomparNative:
+        case ProcessName.NativecomparSolar:
+        case ProcessName.LunarcomparNative:
+        case ProcessName.NativecomparLunar:
+        case ProcessName.DailycomparNative:
+        case ProcessName.NativecomparDaily:
+          this.process_name = process_name;
+          break;
+        default:
+          this.message = `无此种比较盘：${process_name}`;
+          this.isAlertOpen = true;
+          return;
+      }
+
+      this.titleService.setTitle(this.title);
+    }
+
+    this.initialized = true;
 
     // 使用防抖优化频繁的日期变更操作
     this.changeStepSubject
@@ -136,10 +170,38 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRedraw = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      needRedraw = true;
+    }
+
+    if (changes['inputProcessData'] && this.inputProcessData) {
+      this.processData = this.inputProcessData;
+      this.currentProcessData = structuredClone(this.inputProcessData);
+      needRedraw = true;
+    }
+
+    if (changes['inputProcessName'] && this.inputProcessName) {
+      this.process_name = this.inputProcessName;
+      needRedraw = true;
+    }
+
+    if (needRedraw && this.canvas) {
+      this.drawHoroscope(this.process_name);
+    }
+  }
+
   ngAfterViewInit(): void {
     // 为兼容单元测试，使用这样的冗余函数
     this.canvas = this.createCanvas();
-    this.drawHoroscope(this.process_name);
+    // 延迟到下一宏任务，避免 drawHoroscope 同步设置 loading=true
+    // 导致 ExpressionChangedAfterItHasBeenCheckedError (NG0100)
+    setTimeout(() => this.drawHoroscope(this.process_name));
   }
 
   ngOnDestroy(): void {
@@ -156,7 +218,7 @@ export class CompareComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // 为了方便单元测试，使用这样的冗余函数
   private createCanvas(): fabric.StaticCanvas {
-    return (this.canvas = new fabric.StaticCanvas('canvas'));
+    return (this.canvas = new fabric.StaticCanvas(this.canvasId));
   }
 
   private drawHoroscope(process_name: ProcessName) {

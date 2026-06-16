@@ -1,3 +1,4 @@
+@if (!embedded) {
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -6,18 +7,20 @@
     <ion-title> {{title}} </ion-title>
   </ion-toolbar>
 </ion-header>
+}
 
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
+(didDismiss)="isAlertOpen=false"></ion-alert>
+
+@if (initialized) {
 <ion-content [fullscreen]="true">
+  @if (!embedded) {
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large"> {{title}} </ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-  (didDismiss)="isAlertOpen=false"></ion-alert>
-
-
+  }
 
   <div class="ion-text-center">
     <h2>推运时间：{{ currentProcessData.date.year }}年{{ currentProcessData.date.month.toString().padStart(2, '0') }}月{{
@@ -45,12 +48,12 @@
     </div>
   }
   <div class="ion-text-center">
-    <canvas id="canvas" width="0" height="0"></canvas>
+    <canvas [id]="canvasId" width="0" height="0"></canvas>
   </div>
   @if (returnHoroscopeData) {
     <div class="horo-aspect-toggle">
       <ion-label class="ion-text-right">星盘</ion-label>
-      <ion-toggle [(ngModel)]="isAspect" [disabled]="loading"></ion-toggle>
+      <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
       <ion-label>相位</ion-label>
     </div>
   }
@@ -58,8 +61,15 @@
   <div style="display: flex;flex-direction: column;align-items: center;">
 
   </div>
+
+  @if (embedded) {
+  <div class="embedded-footer">
+    <horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change>
+  </div>
+  }
 </ion-content>
 
+@if (!embedded) {
 <ion-footer>
   <ion-toolbar>
     <ion-grid fixed>
@@ -81,3 +91,9 @@
     </ion-grid>
   </ion-toolbar>
 </ion-footer>
+}
+} @else {
+  <div class="ion-text-center ion-padding">
+    <ion-label color="medium">返照盘数据未初始化</ion-label>
+  </div>
+}

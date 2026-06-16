@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -10,8 +10,8 @@ import {
   ProcessRequest,
   ReturnRequest,
 } from 'src/app/type/interface/request-data';
-import { Subject, Observable, of, Subscription } from 'rxjs';
-import { debounceTime, switchMap, finalize, map } from 'rxjs/operators';
+import { Subject, Observable, of } from 'rxjs';
+import { debounceTime, switchMap, finalize, map, takeUntil } from 'rxjs/operators';
 import { drawAspect, drawReturnHorosco } from 'src/app/utils/image/horo';
 import { Platform } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
@@ -27,7 +27,13 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
   styleUrls: ['./return.component.scss'],
   standalone: false,
 })
-export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputProcessData?: ProcessRequest;
+  @Input() inputProcessName?: ProcessName;
+  @Input() canvasId: string = 'canvas';
+  @Input() embedded: boolean = false;
+
   process_name = ProcessName.SolarReturn;
 
   isAlertOpen = false;
@@ -37,6 +43,9 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   private processData: DeepReadonly<ProcessRequest> = this.storage.processData;
   currentProcessData: ProcessRequest = structuredClone(this.processData);
+
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染）
+  initialized = false;
 
   returnHoroscopeData: ReturnHoroscope | null = null; // 存储返照盘数据的缓存
 
@@ -49,6 +58,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private canvas?: fabric.StaticCanvas;
   private changeStepSubject = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   get isAspect(): boolean {
     return this._isAspect;
@@ -96,41 +106,86 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     private storage: HoroStorageService,
     public config: Horoconfig,
     private titleService: Title,
-  ) {
-    const process_name = this.route.snapshot.data['process_name'];
-    if (!process_name) {
-      alert('配置错误，没有正确配置返照盘类型');
-      console.error('配置错误，路由没有正确配置返照盘类型');
-      return;
-    }
-
-    switch (process_name) {
-      case ProcessName.SolarReturn:
-      case ProcessName.LunarReturn:
-      case ProcessName.DailyReturn:
-        this.process_name = process_name;
-        break;
-      default:
-        const message = `无此种返照盘：${process_name}`;
-        alert(message);
-        console.error(message);
-        return;
-    }
-
-    this.changeStepSubject.pipe(debounceTime(500)).subscribe(() => {
-      this.drawHoroscope(this.process_name);
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    // 设置了this.path再设置title
-    this.titleService.setTitle(this.title);
+    if (this.embedded) {
+      if (
+        !this.inputProcessName ||
+        !this.inputHoroData ||
+        !this.inputProcessData
+      ) {
+        return;
+      }
+      this.process_name = this.inputProcessName;
+      this.horoData = this.inputHoroData;
+      this.processData = this.inputProcessData;
+      this.currentProcessData = structuredClone(this.inputProcessData);
+    } else {
+      const process_name = this.route.snapshot.data['process_name'];
+      if (!process_name) {
+        this.message = '配置错误，路由没有正确配置返照盘类型';
+        this.isAlertOpen = true;
+        return;
+      }
+
+      switch (process_name) {
+        case ProcessName.SolarReturn:
+        case ProcessName.LunarReturn:
+        case ProcessName.DailyReturn:
+          this.process_name = process_name;
+          break;
+        default:
+          this.message = `无此种返照盘：${process_name}`;
+          this.isAlertOpen = true;
+          return;
+      }
+
+      this.titleService.setTitle(this.title);
+    }
+
+    this.initialized = true;
+
+    // 使用防抖优化频繁的日期变更操作
+    this.changeStepSubject
+      .pipe(debounceTime(500), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.drawHoroscope(this.process_name);
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRedraw = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      needRedraw = true;
+    }
+
+    if (changes['inputProcessData'] && this.inputProcessData) {
+      this.processData = this.inputProcessData;
+      this.currentProcessData = structuredClone(this.inputProcessData);
+      needRedraw = true;
+    }
+
+    if (changes['inputProcessName'] && this.inputProcessName) {
+      this.process_name = this.inputProcessName;
+      needRedraw = true;
+    }
+
+    if (needRedraw && this.canvas) {
+      this.drawHoroscope(this.process_name);
+    }
   }
 
   ngAfterViewInit(): void {
     // 为兼容单元测试，使用这样的冗余函数
     this.canvas = this.createCanvas();
-    this.drawHoroscope(this.process_name);
+    // 延迟到下一宏任务，避免 drawHoroscope 同步设置 loading=true
+    // 导致 ExpressionChangedAfterItHasBeenCheckedError (NG0100)
+    setTimeout(() => this.drawHoroscope(this.process_name));
   }
 
   ngOnDestroy(): void {
@@ -138,7 +193,11 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
       this.canvas.dispose();
       this.canvas = undefined;
     }
-    this.changeStepSubject.unsubscribe();
+    this.canvasCache = undefined;
+
+    // 取消订阅防止内存泄漏
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private drawHoroscope(process_name: ProcessName) {
@@ -192,7 +251,7 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.api.solarReturn(requestData);
   }
 
-  // 计算每日回
+  // 计算每日回归
   private getDailyReturnData(): Observable<ReturnHoroscope> {
     const requestData: ReturnRequest = {
       native_date: this.horoData.date,
@@ -295,6 +354,6 @@ export class ReturnComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // 为了方便单元测试，使用这样的冗余函数
   private createCanvas(): fabric.StaticCanvas {
-    return (this.canvas = new fabric.StaticCanvas('canvas'));
+    return (this.canvas = new fabric.StaticCanvas(this.canvasId));
   }
 }

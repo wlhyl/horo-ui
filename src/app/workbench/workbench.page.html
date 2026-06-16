@@ -1,0 +1,57 @@
+<div class="workbench-container">
+  <div class="workbench-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="end">
+      <span class="window-count">@if (windowCount > 0) { {{ windowCount }} 个窗口 }</span>
+    </ion-buttons>
+  </div>
+
+  <div
+    class="workbench-body"
+    [style.height.px]="workareaHeight"
+    [class.flex-fill]="workareaHeight === null"
+  >
+    <div
+      class="sidebar"
+      [class.collapsed]="sidebarCollapsed"
+      [style.width.px]="sidebarCollapsed ? null : sidebarWidth"
+    >
+      @if (!sidebarCollapsed) {
+        <app-input-panel
+          [horoData]="horoData"
+          [eventData]="eventData"
+          [processData]="processData"
+          (horoDataChange)="onHoroDataChange($event)"
+          (eventDataChange)="onEventDataChange($event)"
+          (processDataChange)="onProcessDataChange($event)"
+          (openChart)="onOpenChart($event)"
+        ></app-input-panel>
+      }
+      <div class="sidebar-resize-handle" (mousedown)="onSidebarResizeStart($event)"></div>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">
+        <ion-icon [name]="sidebarCollapsed ? 'chevron-forward' : 'chevron-back'"></ion-icon>
+      </button>
+    </div>
+
+    <div class="work-area" #workAreaEl>
+      @if (windowCount === 0) {
+        <div class="empty-state">
+          <ion-icon name="apps-outline"></ion-icon>
+          <p>从左侧面板选择星盘类型添加到工作台</p>
+        </div>
+      }
+      <app-window-manager
+        [horoData]="horoData"
+        [eventData]="eventData"
+        [processData]="processData"
+        [workArea]="workArea"
+      ></app-window-manager>
+    </div>
+  </div>
+  <div class="workarea-resize-handle" (mousedown)="onWorkareaResizeStart($event)">
+    <span class="handle-grip"></span>
+  </div>
+</div>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
-import { ProfectionRequest } from 'src/app/type/interface/request-data';
+import { HoroRequest, ProcessRequest, ProfectionRequest } from 'src/app/type/interface/request-data';
 import { HoroDateTime, Profection } from 'src/app/type/interface/response-data';
+import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 
 @Component({
   selector: 'app-profection',
@@ -11,9 +12,13 @@ import { HoroDateTime, Profection } from 'src/app/type/interface/response-data';
   styleUrls: ['./profection.component.scss'],
   standalone: false,
 })
-export class ProfectionComponent implements OnInit {
-  horoData = this.storage.horoData;
-  processData = this.storage.processData;
+export class ProfectionComponent implements OnInit, OnChanges {
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputProcessData?: ProcessRequest;
+  @Input() embedded: boolean = false;
+
+  horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
+  processData: DeepReadonly<ProcessRequest> = this.storage.processData;
   profection: Profection = {
     year_house: 0,
     month_house: 0,
@@ -30,6 +35,9 @@ export class ProfectionComponent implements OnInit {
   isDatePerHouseCollapsed = false;
   isHourPerHouseCollapsed = false;
 
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染）
+  initialized = false;
+
   title = '小限';
 
   constructor(
@@ -39,8 +47,41 @@ export class ProfectionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.titleService.setTitle(this.title);
+    if (this.embedded) {
+      if (!this.inputHoroData || !this.inputProcessData) {
+        return;
+      }
+      this.horoData = this.inputHoroData;
+      this.processData = this.inputProcessData;
+    } else {
+      this.titleService.setTitle(this.title);
+    }
 
+    this.initialized = true;
+    this.fetchProfection();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRefetch = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      needRefetch = true;
+    }
+
+    if (changes['inputProcessData'] && this.inputProcessData) {
+      this.processData = this.inputProcessData;
+      needRefetch = true;
+    }
+
+    if (needRefetch) {
+      this.fetchProfection();
+    }
+  }
+
+  private fetchProfection(): void {
     const profectionData: ProfectionRequest = {
       native_date: this.horoData.date,
       process_date: this.processData.date,

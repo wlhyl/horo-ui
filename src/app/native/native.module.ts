@@ -28,5 +28,6 @@ import { KnowledgeComponent } from './knowledge/knowledge.component';
     NoteComponent,
     KnowledgeComponent,
   ],
+  exports: [ImageComponent],
 })
 export class NativePageModule {}

@@ -1,0 +1,135 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.input-panel {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--ion-color-light, #f4f5f8);
+  padding: 8px;
+}
+
+.panel-section {
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--ion-color-primary, #3880ff);
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.section-body {
+  padding: 10px 12px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-label {
+  flex-shrink: 0;
+  width: 70px;
+  font-size: 13px;
+  color: var(--ion-color-dark, #222428);
+  text-align: right;
+}
+
+.geo-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+ion-input,
+ion-select {
+  flex: 1;
+  font-size: 13px;
+  --padding-start: 8px;
+  --padding-end: 4px;
+}
+
+ion-radio-group {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+ion-checkbox {
+  margin-top: 0;
+}
+
+.chart-section {
+  .section-body {
+    padding: 8px;
+  }
+}
+
+.chart-group {
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.chart-group-title {
+  font-size: 12px;
+  color: var(--ion-color-medium, #92949c);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.chart-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: 1px solid var(--ion-color-primary, #3880ff);
+  background: #fff;
+  color: var(--ion-color-primary, #3880ff);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--ion-color-primary, #3880ff);
+    color: #fff;
+  }
+}

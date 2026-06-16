@@ -1,0 +1,331 @@
+<div class="input-panel">
+  <div class="panel-section">
+    <div class="section-header" (click)="showNativeInput = !showNativeInput">
+      <ion-label class="section-title">出生数据</ion-label>
+      <ion-icon [name]="showNativeInput ? 'chevron-up' : 'chevron-down'"></ion-icon>
+    </div>
+
+    @if (showNativeInput) {
+    <div class="section-body">
+      <app-archive-selector
+        [defaultHouse]="horoData.house"
+        (horoRequestSelected)="onArchiveSelected($event)"
+      ></app-archive-selector>
+
+      <div class="form-row">
+        <label class="form-label">姓名</label>
+        <ion-input [(ngModel)]="horoData.name" (ionChange)="onHoroDataChange()"></ion-input>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">性别</label>
+        <ion-radio-group [(ngModel)]="horoData.sex" (ionChange)="onHoroDataChange()">
+          <ion-label>男</ion-label>
+          <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+          <ion-label>女</ion-label>
+          <ion-radio [value]="false"></ion-radio>
+        </ion-radio-group>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">出生时间</label>
+        <horo-date-time
+          [(year)]="horoData.date.year"
+          [(month)]="horoData.date.month"
+          [(day)]="horoData.date.day"
+          [(hour)]="horoData.date.hour"
+          [(minute)]="horoData.date.minute"
+          [(second)]="horoData.date.second"
+          (yearChange)="onHoroDataChange()"
+          (monthChange)="onHoroDataChange()"
+          (dayChange)="onHoroDataChange()"
+          (hourChange)="onHoroDataChange()"
+          (minuteChange)="onHoroDataChange()"
+          (secondChange)="onHoroDataChange()"
+        ></horo-date-time>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">时区</label>
+        <horo-time-zone [(zone)]="horoData.date.tz" (zoneChange)="onHoroDataChange()"></horo-time-zone>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">夏令时</label>
+        <ion-checkbox [(ngModel)]="horoData.date.st" (ionChange)="onHoroDataChange()"></ion-checkbox>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">出生地</label>
+        <div class="geo-input">
+          <horo-map
+            style="margin-right: 0.5rem;"
+            [(localName)]="horoData.geo_name"
+            [(long)]="horoData.geo.long"
+            [(lat)]="horoData.geo.lat"
+            (localNameChange)="onHoroDataChange()"
+            (longChange)="onHoroDataChange()"
+            (latChange)="onHoroDataChange()"
+          ></horo-map>
+          <horo-geo
+            [(geoLocalName)]="horoData.geo_name"
+            [(geoLong)]="horoData.geo.long"
+            [(geoLat)]="horoData.geo.lat"
+            (geoLocalNameChange)="onHoroDataChange()"
+            (geoLongChange)="onHoroDataChange()"
+            (geoLatChange)="onHoroDataChange()"
+          ></horo-geo>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">宫位系统</label>
+        <ion-select
+          label-placement="fixed"
+          okText="确定"
+          cancelText="取消"
+          [(ngModel)]="horoData.house"
+          (ionChange)="onHoroDataChange()"
+        >
+          @for (house of houses; track house) {
+            <ion-select-option [value]="house">{{ house }}</ion-select-option>
+          }
+        </ion-select>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="panel-section">
+    <div class="section-header" (click)="showEventInput = !showEventInput">
+      <ion-label class="section-title">天象数据</ion-label>
+      <ion-icon [name]="showEventInput ? 'chevron-up' : 'chevron-down'"></ion-icon>
+    </div>
+
+    @if (showEventInput) {
+      <div class="section-body">
+        <div class="form-row">
+          <label class="form-label">时间</label>
+          <horo-date-time
+            [(year)]="eventData.date.year"
+            [(month)]="eventData.date.month"
+            [(day)]="eventData.date.day"
+            [(hour)]="eventData.date.hour"
+            [(minute)]="eventData.date.minute"
+            [(second)]="eventData.date.second"
+            (yearChange)="onEventDataChange()"
+            (monthChange)="onEventDataChange()"
+            (dayChange)="onEventDataChange()"
+            (hourChange)="onEventDataChange()"
+            (minuteChange)="onEventDataChange()"
+            (secondChange)="onEventDataChange()"
+          ></horo-date-time>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">时区</label>
+          <horo-time-zone [(zone)]="eventData.date.tz" (zoneChange)="onEventDataChange()"></horo-time-zone>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">夏令时</label>
+          <ion-checkbox [(ngModel)]="eventData.date.st" (ionChange)="onEventDataChange()"></ion-checkbox>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">地点</label>
+          <div class="geo-input">
+            <horo-map
+              style="margin-right: 0.5rem;"
+              [(localName)]="eventData.geo_name"
+              [(long)]="eventData.geo.long"
+              [(lat)]="eventData.geo.lat"
+              (localNameChange)="onEventDataChange()"
+              (longChange)="onEventDataChange()"
+              (latChange)="onEventDataChange()"
+            ></horo-map>
+            <horo-geo
+              [(geoLocalName)]="eventData.geo_name"
+              [(geoLong)]="eventData.geo.long"
+              [(geoLat)]="eventData.geo.lat"
+              (geoLocalNameChange)="onEventDataChange()"
+              (geoLongChange)="onEventDataChange()"
+              (geoLatChange)="onEventDataChange()"
+            ></horo-geo>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">宫位系统</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="eventData.house"
+            (ionChange)="onEventDataChange()"
+          >
+            @for (house of houses; track house) {
+              <ion-select-option [value]="house">{{ house }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="panel-section">
+    <div class="section-header" (click)="showProcessInput = !showProcessInput">
+      <ion-label class="section-title">推运数据</ion-label>
+      <ion-icon [name]="showProcessInput ? 'chevron-up' : 'chevron-down'"></ion-icon>
+    </div>
+
+    @if (showProcessInput) {
+    <div class="section-body">
+      <div class="form-row">
+        <label class="form-label">推运时间</label>
+        <horo-date-time
+          [(year)]="processData.date.year"
+          [(month)]="processData.date.month"
+          [(day)]="processData.date.day"
+          [(hour)]="processData.date.hour"
+          [(minute)]="processData.date.minute"
+          [(second)]="processData.date.second"
+          (yearChange)="onProcessDataChange()"
+          (monthChange)="onProcessDataChange()"
+          (dayChange)="onProcessDataChange()"
+          (hourChange)="onProcessDataChange()"
+          (minuteChange)="onProcessDataChange()"
+          (secondChange)="onProcessDataChange()"
+        ></horo-date-time>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">时区</label>
+        <horo-time-zone [(zone)]="processData.date.tz" (zoneChange)="onProcessDataChange()"></horo-time-zone>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">夏令时</label>
+        <ion-checkbox [(ngModel)]="processData.date.st" (ionChange)="onProcessDataChange()"></ion-checkbox>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">现居住地</label>
+        <div class="geo-input">
+          <horo-map
+            style="margin-right: 0.5rem;"
+            [(localName)]="processData.geo_name"
+            [(long)]="processData.geo.long"
+            [(lat)]="processData.geo.lat"
+            (localNameChange)="onProcessDataChange()"
+            (longChange)="onProcessDataChange()"
+            (latChange)="onProcessDataChange()"
+          ></horo-map>
+          <horo-geo
+            [(geoLocalName)]="processData.geo_name"
+            [(geoLong)]="processData.geo.long"
+            [(geoLat)]="processData.geo.lat"
+            (geoLocalNameChange)="onProcessDataChange()"
+            (geoLongChange)="onProcessDataChange()"
+            (geoLatChange)="onProcessDataChange()"
+          ></horo-geo>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">推运类型</label>
+        <ion-select
+          label-placement="fixed"
+          okText="确定"
+          cancelText="取消"
+          [(ngModel)]="processData.process_name"
+          (ionChange)="onProcessDataChange()"
+        >
+          @for (option of processOptions; track option) {
+            <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+          }
+        </ion-select>
+      </div>
+
+      @if (processData.process_name === processNameEnum.LunarReturn ||
+        processData.process_name === processNameEnum.LunarcomparNative ||
+        processData.process_name === processNameEnum.NativecomparLunar) {
+        <div class="form-row">
+          <label class="form-label">日返月亮</label>
+          <ion-checkbox [(ngModel)]="processData.isSolarReturn" (ionChange)="onProcessDataChange()"></ion-checkbox>
+        </div>
+      }
+
+      @if (processData.process_name === processNameEnum.Direction) {
+        <div class="form-row">
+          <label class="form-label">主限算法</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="processData.direction_method"
+            (ionChange)="onProcessDataChange()"
+          >
+            @for (option of directionMethodOptions; track option) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">换算方式</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="processData.arc_to_date_method"
+            (ionChange)="onProcessDataChange()"
+          >
+            @for (option of arcToDateMethodOptions; track option) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      }
+
+      @if (processData.process_name === processNameEnum.MedievalProfection) {
+        <div class="form-row">
+          <label class="form-label">换算方式</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="processData.profection_arc_to_date_method"
+            (ionChange)="onProcessDataChange()"
+          >
+            @for (option of profectionArcToDateMethodOptions; track option) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="panel-section chart-section">
+    <div class="section-header">
+      <ion-label class="section-title">添加星盘</ion-label>
+    </div>
+    <div class="section-body">
+      @for (group of chartGroups; track group) {
+        <div class="chart-group">
+          <div class="chart-group-title">{{ group }}</div>
+          <div class="chart-buttons">
+            @for (btn of chartButtons; track btn.type) {
+              @if (btn.group === group) {
+                <button class="chart-btn" (click)="onOpenChart(btn.type)">
+                  {{ btn.label }}
+                </button>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

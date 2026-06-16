@@ -5,6 +5,9 @@ import {
   Component,
   OnDestroy,
   OnInit,
+  OnChanges,
+  Input,
+  SimpleChanges,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -72,11 +75,19 @@ type ViewMode = 'chart' | 'table';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuadrantProcessComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputProcessData?: ProcessRequest;
+  @Input() canvasId: string = 'canvas';
+  @Input() embedded: boolean = false;
+
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
+
+  // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染）
+  initialized = false;
 
   title = '象限推运';
   viewMode: ViewMode = 'chart';
@@ -125,7 +136,22 @@ export class QuadrantProcessComponent
   ) {}
 
   ngOnInit() {
-    this.titleService.setTitle(this.title);
+    if (this.embedded) {
+      if (!this.inputHoroData || !this.inputProcessData) {
+        return;
+      }
+      this.horoData = this.inputHoroData;
+      this.nativeDate = structuredClone(this.horoData.date);
+      this.startDate = getCurrentDateMinusYearsUtil(5, this.nativeDate.tz);
+      this.endDate = addYearsUtil(this.nativeDate, 80);
+
+      this.processData = this.inputProcessData;
+      this.processDate = structuredClone(this.processData.date);
+    } else {
+      this.titleService.setTitle(this.title);
+    }
+
+    this.initialized = true;
 
     this.setGeoFromHoroData();
 
@@ -145,13 +171,39 @@ export class QuadrantProcessComponent
     this.fetchHoroscopeAndLongitude();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.embedded) return;
+
+    let needRefetch = false;
+
+    if (changes['inputHoroData'] && this.inputHoroData) {
+      this.horoData = this.inputHoroData;
+      this.nativeDate = structuredClone(this.horoData.date);
+      this.startDate = getCurrentDateMinusYearsUtil(5, this.nativeDate.tz);
+      this.endDate = addYearsUtil(this.nativeDate, 80);
+      this.setGeoFromHoroData();
+      needRefetch = true;
+    }
+
+    if (changes['inputProcessData'] && this.inputProcessData) {
+      this.processData = this.inputProcessData;
+      this.processDate = structuredClone(this.processData.date);
+      needRefetch = true;
+    }
+
+    if (needRefetch) {
+      this.fetchQuadrantProcessData();
+      this.fetchHoroscopeAndLongitude();
+    }
+  }
+
   ngAfterViewInit(): void {
     this.canvas = this.createCanvas();
     this.drawChart();
   }
 
   private createCanvas(): StaticCanvas {
-    return new StaticCanvas('canvas');
+    return new StaticCanvas(this.canvasId);
   }
 
   ngOnDestroy(): void {
