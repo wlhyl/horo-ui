@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- 工作台组件（WorkbenchPage、InputPanelComponent、WindowManagerComponent、WindowFrameComponent）从 NgModule 模式迁移为 standalone 独立组件
+- 工作台路由从 `loadChildren` 改为 `loadComponent` 懒加载
+- 移除 `WorkbenchPageModule` 和 `WorkbenchPageRoutingModule`
+
 ## [0.22.0] - 2026-06-19
 
 ### Added

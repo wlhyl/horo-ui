@@ -2,15 +2,21 @@ import {
   Component,
   Input,
 } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { WindowRect } from './window-state';
+import { WindowFrameComponent } from './window-frame.component';
 import { WindowService } from './window.service';
 
 @Component({
   selector: 'app-window-manager',
   templateUrl: './window-manager.component.html',
   styleUrls: ['./window-manager.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [
+    WindowFrameComponent,
+    IonicModule,
+  ],
 })
 export class WindowManagerComponent {
   @Input() horoData!: HoroRequest;

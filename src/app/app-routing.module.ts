@@ -76,8 +76,8 @@ const routes: Routes = [
   },
   {
     path: Path.Workbench,
-    loadChildren: () =>
-      import('./workbench/workbench.module').then((m) => m.WorkbenchPageModule),
+    loadComponent: () =>
+      import('./workbench/workbench.page').then((m) => m.WorkbenchPage),
   },
 ];
 

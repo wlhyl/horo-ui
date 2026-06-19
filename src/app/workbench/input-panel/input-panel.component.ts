@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
+import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ProcessName } from 'src/app/process/enum/process';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
@@ -11,7 +14,12 @@ import { ChartType } from '../window-manager/window-state';
   selector: 'app-input-panel',
   templateUrl: './input-panel.component.html',
   styleUrls: ['./input-panel.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [
+    IonicModule,
+    FormsModule,
+    HoroCommonModule,
+  ],
 })
 export class InputPanelComponent {
   @Input() horoData!: HoroRequest;

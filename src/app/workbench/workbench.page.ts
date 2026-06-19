@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
@@ -13,12 +14,22 @@ import {
 } from 'src/app/type/interface/request-data';
 import { ChartType, WindowRect } from './window-manager/window-state';
 import { WindowService } from './window-manager/window.service';
+import { InputPanelComponent } from './input-panel/input-panel.component';
+import { WindowManagerComponent } from './window-manager/window-manager.component';
 
 @Component({
   selector: 'app-workbench',
   templateUrl: './workbench.page.html',
   styleUrls: ['./workbench.page.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [
+    IonicModule,
+    InputPanelComponent,
+    WindowManagerComponent,
+  ],
+  providers: [
+    WindowService,
+  ],
 })
 export class WorkbenchPage implements OnInit, OnDestroy {
   @ViewChild('workAreaEl', { static: true })
