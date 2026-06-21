@@ -14,7 +14,6 @@ import { FirdariaComponent } from './firdaria/firdaria.component';
 import { DirectionComponent } from './direction/direction.component';
 import { QuadrantProcessComponent } from './quadrant_process/quadrant_process.component';
 import { DetailComponent as ReturnDetailComponent } from './return/detail/detail.component';
-import { DetailComponent as ComparisonDetailComponent } from './compare/detail/detail.component';
 import { Path } from './enum/path';
 
 const routes: Routes = [
@@ -115,41 +114,6 @@ const routes: Routes = [
   {
     path: Path.DailyReturn + '/' + Path.ReturnDetails,
     component: ReturnDetailComponent,
-  },
-
-  {
-    path: Path.Transit + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
-  },
-
-  {
-    path: Path.SolarcomparNative + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
-  },
-
-  {
-    path: Path.NativecomparSolar + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
-  },
-
-  {
-    path: Path.LunarcomparNative + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
-  },
-
-  {
-    path: Path.NativecomparLunar + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
-  },
-
-  {
-    path: Path.DailycomparNative + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
-  },
-
-  {
-    path: Path.NativecomparDaily + '/' + Path.ComparisonDetails,
-    component: ComparisonDetailComponent,
   },
 ];
 

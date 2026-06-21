@@ -39,30 +39,46 @@
     </div>
   }
 
-  @if (loading) {
-    <div class="ion-text-center">
-      <ion-label>获取星盘</ion-label>
-      <ion-spinner name="bubbles"></ion-spinner>
-    </div>
-  }
-  <div class="ion-text-center">
-    <canvas [id]="canvasId" width="0" height="0"></canvas>
+  <!-- 重叠标签 -->
+  <div class="folder-tabs">
+    <div class="folder-tab" [class.active]="selectedTab === 'horoscope'" (click)="selectedTab = 'horoscope'">星盘</div>
+    <div class="folder-tab" [class.active]="selectedTab === 'detail'" (click)="selectedTab = 'detail'">详情</div>
   </div>
-  @if (horoscopeComparisonData) {
-    <div class="horo-aspect-toggle">
-      <ion-label class="ion-text-right">星盘</ion-label>
-      <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
-      <ion-label>相位</ion-label>
-    </div>
-  }
 
-  @if (isAspect) {
-    <div style="display: flex;flex-direction: column;align-items: center;">
-      <div>
-        <div>说明：比较盘行星横看，原盘行星坚看</div>
+  <div class="folder-content">
+    <!-- 星盘：始终在 DOM 中（保护 canvas），CSS 隐藏 -->
+    <div [class.tab-hidden]="selectedTab !== 'horoscope'">
+      @if (loading) {
+        <div class="ion-text-center">
+          <ion-label>获取星盘</ion-label>
+          <ion-spinner name="bubbles"></ion-spinner>
+        </div>
+      }
+      <div class="ion-text-center">
+        <canvas [id]="canvasId" width="0" height="0"></canvas>
       </div>
+      @if (horoscopeComparisonData) {
+        <div class="horo-aspect-toggle">
+          <ion-label class="ion-text-right">星盘</ion-label>
+          <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
+          <ion-label>相位</ion-label>
+        </div>
+      }
+
+      @if (isAspect) {
+        <div style="display: flex;flex-direction: column;align-items: center;">
+          <div>
+            <div>说明：比较盘行星横看，原盘行星坚看</div>
+          </div>
+        </div>
+      }
     </div>
-  }
+
+    <!-- 详情：仅选中时渲染 -->
+    @if (selectedTab === 'detail') {
+      <app-process-compare-detail [compareData]="horoscopeComparisonData"></app-process-compare-detail>
+    }
+  </div>
 
   @if (embedded) {
   <div class="embedded-footer">
@@ -79,16 +95,6 @@
       <ion-row>
         <ion-col size="9">
           <horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change>
-        </ion-col>
-        <ion-col size="3" class="ion-text-right">
-          <ion-buttons>
-            <ion-button fill="clear" (click)="onDetail()" class="icon-top">
-              <div class="button-content">
-                <ion-icon name="information-circle-outline"></ion-icon>
-                <ion-label>详情</ion-label>
-              </div>
-            </ion-button>
-          </ion-buttons>
         </ion-col>
       </ion-row>
     </ion-grid>

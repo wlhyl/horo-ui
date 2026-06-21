@@ -12,12 +12,10 @@ import { ProcessPage } from './process.page';
 import { ProfectionComponent } from './profection/profection.component';
 import { MedievalProfectionComponent } from './medieval_profection/medieval_profection.component';
 import { ReturnComponent } from './return/return.component';
-import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
 import { DirectionComponent } from './direction/direction.component';
 import { QuadrantProcessComponent } from './quadrant_process/quadrant_process.component';
 import { DetailComponent as ReturnDetailComponent } from './return/detail/detail.component';
-import { DetailComponent as ComparisonDetailComponent } from './compare/detail/detail.component';
 
 @NgModule({
   imports: [
@@ -32,18 +30,15 @@ import { DetailComponent as ComparisonDetailComponent } from './compare/detail/d
     ProfectionComponent,
     MedievalProfectionComponent,
     ReturnComponent,
-    CompareComponent,
     FirdariaComponent,
     DirectionComponent,
     QuadrantProcessComponent,
     ReturnDetailComponent,
-    ComparisonDetailComponent,
   ],
   exports: [
     ProfectionComponent,
     MedievalProfectionComponent,
     ReturnComponent,
-    CompareComponent,
     FirdariaComponent,
     DirectionComponent,
     QuadrantProcessComponent,

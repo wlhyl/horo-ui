@@ -37,9 +37,12 @@ import {
 } from 'rxjs';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/compare';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
-import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { DetailComponent } from './detail/detail.component';
+import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 
 enum ComparisonType {
   SolarComparNative, // 日返照盘比本命盘
@@ -54,7 +57,8 @@ enum ComparisonType {
   selector: 'app-compare',
   templateUrl: './compare.component.html',
   styleUrls: ['./compare.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class CompareComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy
@@ -76,6 +80,7 @@ export class CompareComponent
   returnData: ReturnHoroscope | null = null;
 
   private _isAspect = false; // 默认绘制星盘
+  selectedTab: 'horoscope' | 'detail' = 'horoscope';
 
   private canvasCache: { version: string; objects: Object[] } | undefined =
     undefined;
@@ -508,15 +513,6 @@ export class CompareComponent
     };
 
     return this.api.lunarReturn(requestData);
-  }
-
-  onDetail() {
-    if (this.horoscopeComparisonData) {
-      this.router.navigate([subPath.ComparisonDetails], {
-        relativeTo: this.route,
-        state: { data: this.horoscopeComparisonData },
-      });
-    }
   }
 
   private getComparisonType(process_name: ProcessName): ComparisonType {

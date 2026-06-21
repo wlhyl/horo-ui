@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- CompareComponent 和 CompareDetailComponent 从 NgModule 模式迁移为 standalone 独立组件
+- CompareComponent 重构为重叠标签页（与 ImageComponent 相同模式）
+- CompareDetailComponent 改为通过 `@Input() compareData` 接收数据，不再通过 router state 传递
 - ImageComponent 重构为重叠标签页：详情不再通过路由跳转，而是与星盘放在同一组件内的不同标签页中，默认显示星盘，点击详情标签切换到详细，此操作模式同时适用于非嵌入式和嵌入式模式
 - DetailComponent 改为通过 `@Input() horoscopeData` 接收数据，不再通过 router state 传递
 - WindowManagerComponent 和 WindowFrameComponent 的 `@Input() + !` 迁移为 `input.required()` signal

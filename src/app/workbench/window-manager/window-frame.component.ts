@@ -13,6 +13,7 @@ import { ImageComponent } from 'src/app/native/image/image.component';
 import { ProcessPageModule } from 'src/app/process/process.module';
 import { ProcessName } from 'src/app/process/enum/process';
 import { ProfectionMode } from 'src/app/process/enum/profection-mode';
+import { CompareComponent } from 'src/app/process/compare/compare.component';
 import {
   ChartType,
   WindowRect,
@@ -30,6 +31,7 @@ import {
     IonicModule,
     ImageComponent,
     ProcessPageModule,
+    CompareComponent,
   ],
 })
 export class WindowFrameComponent implements OnDestroy {

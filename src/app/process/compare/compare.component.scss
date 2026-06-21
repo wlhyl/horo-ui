@@ -27,32 +27,47 @@ ion-toggle.toggle-checked::part(handle) {
     background-color: white;
 }
 
-ion-button.icon-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  text-align: center;
-}
-
-ion-button .button-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-ion-button .button-content ion-icon {
-  margin-bottom: 4px;
-}
-
-ion-button .button-content ion-label {
-  margin-top: 4px;
-}
-
 .embedded-footer {
   padding: 4px 8px;
   border-top: 1px solid var(--ion-color-light-shade, #d7d8da);
   background: var(--ion-color-light, #f4f5f8);
+}
+
+.tab-hidden {
+  display: none;
+}
+
+.folder-tabs {
+  display: flex;
+  padding: 0 16px;
+}
+
+.folder-tab {
+  padding: 6px 20px;
+  background: var(--ion-color-light, #f4f5f8);
+  border: 1px solid var(--ion-color-light-shade, #d7d8da);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ion-color-medium, #92949c);
+  position: relative;
+  margin-right: -4px;
+  z-index: 1;
+  user-select: none;
+}
+
+.folder-tab.active {
+  background: white;
+  border-color: var(--ion-color-light-shade, #d7d8da);
+  color: var(--ion-color-primary, #3880ff);
+  z-index: 2;
+  font-weight: 500;
+}
+
+.folder-content {
+  border: 1px solid var(--ion-color-light-shade, #d7d8da);
+  border-radius: 0 8px 8px 8px;
+  padding: 8px;
+  background: white;
 }
