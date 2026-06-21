@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - 工作台组件（WorkbenchPage、InputPanelComponent、WindowManagerComponent、WindowFrameComponent）从 NgModule 模式迁移为 standalone 独立组件
 - 工作台路由从 `loadChildren` 改为 `loadComponent` 懒加载
 - 移除 `WorkbenchPageModule` 和 `WorkbenchPageRoutingModule`
+- 本命/天象模块（NativePage、ImageComponent、DetailComponent、NoteComponent、KnowledgeComponent）从 NgModule 模式迁移为 standalone 独立组件
+- 本命/天象路由从 `loadChildren` 改为指向独立组件导出的 `routes` 懒加载
+- WindowFrameComponent 直接导入 ImageComponent 替代原 NativePageModule
+- 移除 `NativePageModule` 和 `NativePageRoutingModule`
 
 ## [0.22.0] - 2026-06-19
 

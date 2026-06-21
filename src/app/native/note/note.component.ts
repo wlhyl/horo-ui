@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -17,7 +19,8 @@ import { Path } from 'src/app/type/enum/path';
   selector: 'app-note',
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule],
 })
 export class NoteComponent implements OnInit {
   title = '笔记';

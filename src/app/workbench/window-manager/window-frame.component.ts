@@ -9,7 +9,7 @@ import { NgStyle } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Mode } from 'src/app/native/enum';
-import { NativePageModule } from 'src/app/native/native.module';
+import { ImageComponent } from 'src/app/native/image/image.component';
 import { ProcessPageModule } from 'src/app/process/process.module';
 import { ProcessName } from 'src/app/process/enum/process';
 import { ProfectionMode } from 'src/app/process/enum/profection-mode';
@@ -28,7 +28,7 @@ import {
   imports: [
     NgStyle,
     IonicModule,
-    NativePageModule,
+    ImageComponent,
     ProcessPageModule,
   ],
 })

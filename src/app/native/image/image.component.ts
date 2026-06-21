@@ -7,6 +7,9 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -41,7 +44,8 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
   selector: 'teanote-image',
   templateUrl: 'image.component.html',
   styleUrls: ['image.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule, HoroCommonModule],
 })
 export class ImageComponent
   implements OnInit, AfterViewInit, OnDestroy, OnChanges

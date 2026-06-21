@@ -19,13 +19,13 @@ const routes: Routes = [
   {
     path: Path.Native,
     loadChildren: () =>
-      import('./native/native.module').then((m) => m.NativePageModule),
+      import('./native/native.routes').then((m) => m.routes),
     data: { mode: Mode.Native },
   },
   {
     path: Path.Event,
     loadChildren: () =>
-      import('./native/native.module').then((m) => m.NativePageModule),
+      import('./native/native.routes').then((m) => m.routes),
     data: { mode: Mode.Event },
   },
   {

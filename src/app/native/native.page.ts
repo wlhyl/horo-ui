@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -11,7 +14,8 @@ import { ViewWillEnter } from '@ionic/angular';
   selector: 'app-native',
   templateUrl: './native.page.html',
   styleUrls: ['./native.page.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule, HoroCommonModule, RouterLink],
 })
 export class NativePage implements OnInit, ViewWillEnter {
   readonly houses: ReadonlyArray<string> = this.config.houses;

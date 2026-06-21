@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NgStyle } from '@angular/common';
 import { Title } from '@angular/platform-browser';
+import { IonicModule } from '@ionic/angular';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Router } from '@angular/router'; // 导入 Router
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
@@ -14,7 +16,8 @@ import { PlanetName } from 'src/app/type/enum/planet';
   selector: 'app-native-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, NgStyle],
 })
 export class DetailComponent implements OnInit {
   title = '星盘详情';
