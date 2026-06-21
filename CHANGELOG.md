@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- ImageComponent 重构为重叠标签页：详情不再通过路由跳转，而是与星盘放在同一组件内的不同标签页中，默认显示星盘，点击详情标签切换到详细，此操作模式同时适用于非嵌入式和嵌入式模式
+- DetailComponent 改为通过 `@Input() horoscopeData` 接收数据，不再通过 router state 传递
 - WindowManagerComponent 和 WindowFrameComponent 的 `@Input() + !` 迁移为 `input.required()` signal
 - 工作台组件（WorkbenchPage、InputPanelComponent、WindowManagerComponent、WindowFrameComponent）从 NgModule 模式迁移为 standalone 独立组件
 - 工作台路由从 `loadChildren` 改为 `loadComponent` 懒加载

@@ -1,14 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{ title }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 @if (horoscopeData) {
-<ion-content>
+<div class="detail-content">
   <ion-grid>
     <ion-row>
       <ion-col>
@@ -176,21 +167,11 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-</ion-content>
+</div>
 }
 
 @if (!horoscopeData) {
-<ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-card>
-          <ion-card-content>
-            <p>没有可显示的数据。</p>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+<div class="ion-text-center ion-padding">
+  <ion-label color="medium">没有可显示的数据。</ion-label>
+</div>
 }

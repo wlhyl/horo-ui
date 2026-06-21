@@ -1,11 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import { DetailComponent } from './detail.component';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { NgModule } from '@angular/core';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import {
   createMockHoroscope,
   createMockPlanet,
@@ -23,15 +21,11 @@ class TestDetailModule {}
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
   let horoConfigSpy: jasmine.SpyObj<Horoconfig>;
 
   const mockHoroscopeData = createMockHoroscope();
 
   beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
     horoConfigSpy = jasmine.createSpyObj('Horoconfig', [
       'planetFontFamily',
       'planetFontString',
@@ -43,68 +37,37 @@ describe('DetailComponent', () => {
     horoConfigSpy.zodiacFontFamily.and.returnValue('Arial');
     horoConfigSpy.zodiacFontString.and.returnValue('♈');
 
-    const navControllerSpy = jasmine.createSpyObj('NavController', ['']);
-
     await TestBed.configureTestingModule({
       imports: [TestDetailModule, IonicModule.forRoot()],
-      providers: [
-        { provide: Router, useValue: routerSpy },
-        { provide: Title, useValue: titleServiceSpy },
-        { provide: Horoconfig, useValue: horoConfigSpy },
-        { provide: NavController, useValue: navControllerSpy },
-      ],
+      providers: [{ provide: Horoconfig, useValue: horoConfigSpy }],
     }).compileComponents();
   });
 
-  it('should create the component and set the title', () => {
-    routerSpy.currentNavigation.and.returnValue(null);
+  it('should create the component', () => {
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     expect(component).toBeTruthy();
-    expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('星盘详情');
   });
 
-  it('should set horoscopeData from router state', () => {
-    routerSpy.currentNavigation.and.returnValue({
-      extras: {
-        state: {
-          data: mockHoroscopeData,
-        },
-      },
-    } as any);
-
+  it('should have null horoscopeData by default', () => {
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component.horoscopeData).toBeNull();
+  });
+
+  it('should accept horoscopeData via @Input', () => {
+    fixture = TestBed.createComponent(DetailComponent);
+    component = fixture.componentInstance;
+    component.horoscopeData = mockHoroscopeData;
     fixture.detectChanges();
 
     expect(component.horoscopeData).toEqual(mockHoroscopeData);
   });
 
-  it('should have null horoscopeData if router state is missing', () => {
-    routerSpy.currentNavigation.and.returnValue({
-      extras: {},
-    } as any);
-
-    fixture = TestBed.createComponent(DetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(component.horoscopeData).toBeNull();
-  });
-
-  it('should have null horoscopeData if navigation is null', () => {
-    routerSpy.currentNavigation.and.returnValue(null);
-
-    fixture = TestBed.createComponent(DetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(component.horoscopeData).toBeNull();
-  });
-
   describe('partOfSolarVision', () => {
     it('should return null when horoscopeData is null', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -114,18 +77,12 @@ describe('DetailComponent', () => {
     it('should return null when Sun is not found', () => {
       const mockHoroscope = createMockHoroscope({
         asc: createMockPlanet({ name: PlanetName.ASC, long: 30 }),
-        planets: [
-          createMockPlanet({ name: PlanetName.Mars, long: 90 }),
-        ],
+        planets: [createMockPlanet({ name: PlanetName.Mars, long: 90 })],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       expect(component.partOfSolarVision).toBeNull();
@@ -134,18 +91,12 @@ describe('DetailComponent', () => {
     it('should return null when Mars is not found', () => {
       const mockHoroscope = createMockHoroscope({
         asc: createMockPlanet({ name: PlanetName.ASC, long: 30 }),
-        planets: [
-          createMockPlanet({ name: PlanetName.Sun, long: 120 }),
-        ],
+        planets: [createMockPlanet({ name: PlanetName.Sun, long: 120 })],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       expect(component.partOfSolarVision).toBeNull();
@@ -159,14 +110,10 @@ describe('DetailComponent', () => {
           createMockPlanet({ name: PlanetName.Mars, long: 90 }),
         ],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       const expected = degNorm(30 + 120 - 90);
@@ -181,14 +128,10 @@ describe('DetailComponent', () => {
           createMockPlanet({ name: PlanetName.Mars, long: 50 }),
         ],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       const expected = degNorm(300 + 200 - 50);
@@ -200,7 +143,6 @@ describe('DetailComponent', () => {
 
   describe('partOfLunarVision', () => {
     it('should return null when horoscopeData is null', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -210,18 +152,12 @@ describe('DetailComponent', () => {
     it('should return null when Moon is not found', () => {
       const mockHoroscope = createMockHoroscope({
         asc: createMockPlanet({ name: PlanetName.ASC, long: 30 }),
-        planets: [
-          createMockPlanet({ name: PlanetName.Saturn, long: 180 }),
-        ],
+        planets: [createMockPlanet({ name: PlanetName.Saturn, long: 180 })],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       expect(component.partOfLunarVision).toBeNull();
@@ -230,18 +166,12 @@ describe('DetailComponent', () => {
     it('should return null when Saturn is not found', () => {
       const mockHoroscope = createMockHoroscope({
         asc: createMockPlanet({ name: PlanetName.ASC, long: 30 }),
-        planets: [
-          createMockPlanet({ name: PlanetName.Moon, long: 150 }),
-        ],
+        planets: [createMockPlanet({ name: PlanetName.Moon, long: 150 })],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       expect(component.partOfLunarVision).toBeNull();
@@ -255,14 +185,10 @@ describe('DetailComponent', () => {
           createMockPlanet({ name: PlanetName.Saturn, long: 120 }),
         ],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       const expected = degNorm(45 + 200 - 120);
@@ -272,7 +198,6 @@ describe('DetailComponent', () => {
 
   describe('calculateLongitudeDifference', () => {
     it('should return 0 for same longitude', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -280,7 +205,6 @@ describe('DetailComponent', () => {
     });
 
     it('should return difference when less than 180', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -288,7 +212,6 @@ describe('DetailComponent', () => {
     });
 
     it('should return 360 minus difference when greater than 180', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -296,7 +219,6 @@ describe('DetailComponent', () => {
     });
 
     it('should handle edge case at 180 degrees', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -307,7 +229,6 @@ describe('DetailComponent', () => {
 
   describe('angularHousesAndPlanets', () => {
     it('should return empty array when horoscopeData is null', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
@@ -324,14 +245,10 @@ describe('DetailComponent', () => {
         ic: createMockPlanet({ name: PlanetName.IC, long: 300 }),
         planets: [mockSun, mockMoon],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       const result = component.angularHousesAndPlanets;
@@ -352,14 +269,10 @@ describe('DetailComponent', () => {
         ic: createMockPlanet({ name: PlanetName.IC, long: 300 }),
         planets: [],
       });
-      routerSpy.currentNavigation.and.returnValue({
-        extras: {
-          state: { data: mockHoroscope },
-        },
-      } as any);
 
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
       const result = component.angularHousesAndPlanets;

@@ -32,20 +32,17 @@ import { isLocationEqual } from 'src/app/utils/location-record/location-record';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import {
-  informationCircleOutline,
-  createOutline,
-  archiveOutline,
-} from 'ionicons/icons';
+import { createOutline, archiveOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { DetailComponent } from '../detail/detail.component';
 
 @Component({
   selector: 'teanote-image',
   templateUrl: 'image.component.html',
   styleUrls: ['image.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule],
+  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class ImageComponent
   implements OnInit, AfterViewInit, OnDestroy, OnChanges
@@ -92,6 +89,7 @@ export class ImageComponent
   degreeToDMSFn = degreeToDMS;
 
   private _isAspect = false; // 默认绘制星盘
+  selectedTab: 'horoscope' | 'detail' = 'horoscope';
 
   isDrawing = false; // 添加绘制状态标志
 
@@ -106,7 +104,7 @@ export class ImageComponent
     private authService: AuthService,
     private alertController: AlertController,
   ) {
-    addIcons({ informationCircleOutline, createOutline, archiveOutline });
+    addIcons({ createOutline, archiveOutline });
   }
 
   ngOnInit() {
@@ -512,15 +510,6 @@ export class ImageComponent
     this.router.navigate([subPath.Note], {
       relativeTo: this.route,
     });
-  }
-
-  onDetail() {
-    if (this.horoscoData) {
-      this.router.navigate([subPath.Detail], {
-        relativeTo: this.route,
-        state: { data: this.horoscoData },
-      });
-    }
   }
 
   get isAuth() {

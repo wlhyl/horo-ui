@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { Title } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
 import { Horoscope } from 'src/app/type/interface/response-data';
-import { Router } from '@angular/router'; // 导入 Router
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import {
   degNorm,
@@ -19,29 +17,16 @@ import { PlanetName } from 'src/app/type/enum/planet';
   standalone: true,
   imports: [IonicModule, NgStyle],
 })
-export class DetailComponent implements OnInit {
-  title = '星盘详情';
-
-  horoscopeData: Horoscope | null = null;
+export class DetailComponent {
+  @Input() horoscopeData: Horoscope | null = null;
 
   degreeToDMSFn = degreeToDMS;
   zodiacLong = zodiacLong;
   planetName = PlanetName;
 
   constructor(
-    private titleService: Title,
-    private router: Router,
     public config: Horoconfig,
-  ) {
-    this.titleService.setTitle(this.title);
-    // 从路由的 state 获取 horoscopeData 的值
-    const navigation = this.router.currentNavigation();
-    if (navigation?.extras.state) {
-      this.horoscopeData = navigation.extras.state['data'] as Horoscope;
-    }
-  }
-
-  ngOnInit() {}
+  ) {}
 
   // 计算太阳视力点：ASC + 太阳黄道经度 - 火星黄道经度
   get partOfSolarVision(): number | null {

@@ -1,7 +1,6 @@
 import {
   ComponentFixture,
   TestBed,
-  waitForAsync,
   fakeAsync,
   tick,
   flush,
@@ -21,6 +20,7 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { HoroRequest } from 'src/app/type/interface/request-data';
 import { ImageComponent } from './image.component';
+import { DetailComponent } from '../detail/detail.component';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -80,7 +80,7 @@ describe('ImageComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      declarations: [ImageComponent],
+      declarations: [ImageComponent, DetailComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
@@ -174,7 +174,7 @@ describe('ImageComponent', () => {
       component['drawHoroscope'](mockCurrentHoroData);
 
       expect(mockApiService.getNativeHoroscope).toHaveBeenCalledWith(
-        mockCurrentHoroData
+        mockCurrentHoroData,
       );
       expect(component.horoscoData).toEqual(mockHoroscopeData as any);
       expect(component.isAlertOpen).toBe(false);
@@ -190,7 +190,7 @@ describe('ImageComponent', () => {
         error: { message: 'Internal Server Error' },
       };
       mockApiService.getNativeHoroscope.and.returnValue(
-        throwError(() => errorResponse)
+        throwError(() => errorResponse),
       );
       component.horoscoData = null;
       component.isDrawing = false;
@@ -199,7 +199,7 @@ describe('ImageComponent', () => {
       component['drawHoroscope'](mockCurrentHoroData);
 
       expect(mockApiService.getNativeHoroscope).toHaveBeenCalledWith(
-        mockCurrentHoroData
+        mockCurrentHoroData,
       );
       expect(component.horoscoData).toBeNull();
       expect(component.isAlertOpen).toBe(true);
@@ -242,18 +242,18 @@ describe('ImageComponent', () => {
       const expectedDate = new Date(2001, 1, 2, 13, 1, 1);
 
       expect(component.currentHoroData.date.year).toBe(
-        expectedDate.getFullYear()
+        expectedDate.getFullYear(),
       );
       expect(component.currentHoroData.date.month).toBe(
-        expectedDate.getMonth() + 1
+        expectedDate.getMonth() + 1,
       );
       expect(component.currentHoroData.date.day).toBe(expectedDate.getDate());
       expect(component.currentHoroData.date.hour).toBe(expectedDate.getHours());
       expect(component.currentHoroData.date.minute).toBe(
-        expectedDate.getMinutes()
+        expectedDate.getMinutes(),
       );
       expect(component.currentHoroData.date.second).toBe(
-        expectedDate.getSeconds()
+        expectedDate.getSeconds(),
       );
       expect(drawHoroscopeSpy).toHaveBeenCalledWith(component.currentHoroData);
     });
@@ -264,7 +264,7 @@ describe('ImageComponent', () => {
       spyOn(component as any, 'drawHoroscope').and.stub();
       const applyStepChangeSpy = spyOn(
         component as any,
-        'applyStepChange'
+        'applyStepChange',
       ).and.stub();
 
       // 触发 ngOnInit 以设置订阅, 同时会触发 ngAfterViewInit
@@ -307,23 +307,6 @@ describe('ImageComponent', () => {
 
       expect(mockAlertController.create).toHaveBeenCalled();
       expect(alert.present).toHaveBeenCalled();
-    });
-  });
-
-  describe('onDetail', () => {
-    it('should navigate to detail page with data if horoscopeData exists', () => {
-      component.horoscoData = mockHoroscopeData;
-      component.onDetail();
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['detail'], {
-        relativeTo: mockActivatedRoute,
-        state: { data: mockHoroscopeData },
-      });
-    });
-
-    it('should not navigate if horoscopeData is null', () => {
-      component.horoscoData = null;
-      component.onDetail();
-      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
   });
 
@@ -517,7 +500,7 @@ describe('ImageComponent', () => {
       // 重置 horoData，使用 structuredClone 进行深拷贝以隔离测试
       component['horoData'] = structuredClone(mockHoroData);
       mockApiService.getNativeById.and.returnValue(
-        of(structuredClone(mockNativeRecord))
+        of(structuredClone(mockNativeRecord)),
       );
       mockApiService.updateNative.and.returnValue(of(undefined));
       component.isSaveOpen = false;
@@ -562,7 +545,7 @@ describe('ImageComponent', () => {
 
       expect(mockApiService.updateNative).toHaveBeenCalledWith(
         1,
-        jasmine.objectContaining(expectedUpdateRequest)
+        jasmine.objectContaining(expectedUpdateRequest),
       );
       expect(component.isSaveOpen).toBe(true);
     });
@@ -572,7 +555,7 @@ describe('ImageComponent', () => {
       mockApiService.getNativeById.and.returnValue(throwError(() => error));
       const handleErrorSpy = spyOn(
         component as any,
-        'handleError'
+        'handleError',
       ).and.callThrough();
 
       component.updateRecord();
@@ -587,7 +570,7 @@ describe('ImageComponent', () => {
       mockApiService.updateNative.and.returnValue(throwError(() => error));
       const handleErrorSpy = spyOn(
         component as any,
-        'handleError'
+        'handleError',
       ).and.callThrough();
       const changedHoroData = { ...mockHoroData, id: 1, name: 'New Name' };
       component['horoData'] = changedHoroData;
@@ -607,7 +590,7 @@ describe('ImageComponent', () => {
         lock: true,
       };
       mockApiService.getNativeById.and.returnValue(
-        of(structuredClone(lockedNativeRecord))
+        of(structuredClone(lockedNativeRecord)),
       );
 
       component.updateRecord();
@@ -632,6 +615,23 @@ describe('ImageComponent', () => {
         writable: true,
       });
       expect(component.isAuth).toBe(false);
+    });
+  });
+
+  describe('selectedTab', () => {
+    it('should default to horoscope', () => {
+      expect(component.selectedTab).toBe('horoscope');
+    });
+
+    it('should switch to detail', () => {
+      component.selectedTab = 'detail';
+      expect(component.selectedTab).toBe('detail');
+    });
+
+    it('should switch back to horoscope', () => {
+      component.selectedTab = 'detail';
+      component.selectedTab = 'horoscope';
+      expect(component.selectedTab).toBe('horoscope');
     });
   });
 });
