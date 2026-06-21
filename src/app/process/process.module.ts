@@ -11,11 +11,9 @@ import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { ProcessPage } from './process.page';
 import { ProfectionComponent } from './profection/profection.component';
 import { MedievalProfectionComponent } from './medieval_profection/medieval_profection.component';
-import { ReturnComponent } from './return/return.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
 import { DirectionComponent } from './direction/direction.component';
 import { QuadrantProcessComponent } from './quadrant_process/quadrant_process.component';
-import { DetailComponent as ReturnDetailComponent } from './return/detail/detail.component';
 
 @NgModule({
   imports: [
@@ -29,16 +27,13 @@ import { DetailComponent as ReturnDetailComponent } from './return/detail/detail
     ProcessPage,
     ProfectionComponent,
     MedievalProfectionComponent,
-    ReturnComponent,
     FirdariaComponent,
     DirectionComponent,
     QuadrantProcessComponent,
-    ReturnDetailComponent,
   ],
   exports: [
     ProfectionComponent,
     MedievalProfectionComponent,
-    ReturnComponent,
     FirdariaComponent,
     DirectionComponent,
     QuadrantProcessComponent,

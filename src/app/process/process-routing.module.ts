@@ -13,7 +13,6 @@ import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
 import { DirectionComponent } from './direction/direction.component';
 import { QuadrantProcessComponent } from './quadrant_process/quadrant_process.component';
-import { DetailComponent as ReturnDetailComponent } from './return/detail/detail.component';
 import { Path } from './enum/path';
 
 const routes: Routes = [
@@ -99,21 +98,6 @@ const routes: Routes = [
     path: ProcessName.path(ProcessName.DailyReturn),
     component: ReturnComponent,
     data: { process_name: ProcessName.DailyReturn },
-  },
-
-  {
-    path: Path.SolarReturn + '/' + Path.ReturnDetails,
-    component: ReturnDetailComponent,
-  },
-
-  {
-    path: Path.LunarReturn + '/' + Path.ReturnDetails,
-    component: ReturnDetailComponent,
-  },
-
-  {
-    path: Path.DailyReturn + '/' + Path.ReturnDetails,
-    component: ReturnDetailComponent,
   },
 ];
 

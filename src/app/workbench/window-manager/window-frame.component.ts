@@ -14,6 +14,7 @@ import { ProcessPageModule } from 'src/app/process/process.module';
 import { ProcessName } from 'src/app/process/enum/process';
 import { ProfectionMode } from 'src/app/process/enum/profection-mode';
 import { CompareComponent } from 'src/app/process/compare/compare.component';
+import { ReturnComponent } from 'src/app/process/return/return.component';
 import {
   ChartType,
   WindowRect,
@@ -32,6 +33,7 @@ import {
     ImageComponent,
     ProcessPageModule,
     CompareComponent,
+    ReturnComponent,
   ],
 })
 export class WindowFrameComponent implements OnDestroy {

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component, Input } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { NgStyle } from '@angular/common';
 import { ReturnHoroscope } from 'src/app/type/interface/response-data';
-import { Router } from '@angular/router';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 
@@ -9,26 +9,13 @@ import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
   selector: 'app-process-return-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, NgStyle],
 })
-export class DetailComponent implements OnInit {
-  title = '返照盘详情';
-
-  returnData: ReturnHoroscope | null = null;
+export class DetailComponent {
+  @Input() returnData: ReturnHoroscope | null = null;
 
   degreeToDMSFn = degreeToDMS;
 
-  constructor(
-    private titleService: Title,
-    private router: Router,
-    public config: Horoconfig,
-  ) {
-    this.titleService.setTitle(this.title);
-    const navigation = this.router.currentNavigation();
-    if (navigation?.extras.state) {
-      this.returnData = navigation.extras.state['data'] as ReturnHoroscope;
-    }
-  }
-
-  ngOnInit() {}
+  constructor(public config: Horoconfig) {}
 }

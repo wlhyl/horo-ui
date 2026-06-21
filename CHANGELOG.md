@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- ReturnComponent 和 ReturnDetailComponent 从 NgModule 模式迁移为 standalone 独立组件
+- ReturnComponent 重构为重叠标签页（与 ImageComponent 相同模式）
+- ReturnDetailComponent 改为通过 `@Input() returnData` 接收数据，不再通过 router state 传递
 - CompareComponent 和 CompareDetailComponent 从 NgModule 模式迁移为 standalone 独立组件
 - CompareComponent 重构为重叠标签页（与 ImageComponent 相同模式）
 - CompareDetailComponent 改为通过 `@Input() compareData` 接收数据，不再通过 router state 传递

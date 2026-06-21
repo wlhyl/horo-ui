@@ -13,19 +13,22 @@ import {
 import { Subject, Observable, of } from 'rxjs';
 import { debounceTime, switchMap, finalize, map, takeUntil } from 'rxjs/operators';
 import { drawAspect, drawReturnHorosco } from 'src/app/utils/image/horo';
-import { Platform } from '@ionic/angular';
+import { Platform, IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
-import { Path as subPath } from '../enum/path';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { DetailComponent } from './detail/detail.component';
+import { FormsModule } from '@angular/forms';
+import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 
 @Component({
   selector: 'app-return',
   templateUrl: './return.component.html',
   styleUrls: ['./return.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() inputHoroData?: HoroRequest;
@@ -50,6 +53,7 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   returnHoroscopeData: ReturnHoroscope | null = null; // 存储返照盘数据的缓存
 
   private _isAspect = false; // 默认绘制星盘
+  selectedTab: 'horoscope' | 'detail' = 'horoscope';
   private canvasCache: { version: string; objects: Object[] } | undefined =
     undefined;
 
@@ -341,15 +345,6 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     this.currentProcessData.date.second = date.getSeconds();
 
     this.changeStepSubject.next();
-  }
-
-  onDetail() {
-    if (this.returnHoroscopeData) {
-      this.router.navigate([subPath.ReturnDetails], {
-        relativeTo: this.route,
-        state: { data: this.returnHoroscopeData },
-      });
-    }
   }
 
   // 为了方便单元测试，使用这样的冗余函数
