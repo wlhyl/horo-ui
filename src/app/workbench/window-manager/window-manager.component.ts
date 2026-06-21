@@ -1,6 +1,6 @@
 import {
   Component,
-  Input,
+  input,
 } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
@@ -19,10 +19,10 @@ import { WindowService } from './window.service';
   ],
 })
 export class WindowManagerComponent {
-  @Input() horoData!: HoroRequest;
-  @Input() eventData!: HoroRequest;
-  @Input() processData!: ProcessRequest;
-  @Input() workArea: WindowRect = { x: 0, y: 0, width: 0, height: 0 };
+  horoData = input.required<HoroRequest>();
+  eventData = input.required<HoroRequest>();
+  processData = input.required<ProcessRequest>();
+  workArea = input.required<WindowRect>();
 
   constructor(public windowService: WindowService) {}
 
@@ -43,7 +43,7 @@ export class WindowManagerComponent {
   }
 
   onToggleMaximize(id: string): void {
-    this.windowService.toggleMaximize(id, this.workArea);
+    this.windowService.toggleMaximize(id, this.workArea());
   }
 
   onUpdateRect(payload: { id: string; rect: WindowRect }): void {

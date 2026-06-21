@@ -1,10 +1,9 @@
 import {
   Component,
   EventEmitter,
-  Input,
   OnDestroy,
-  OnInit,
   Output,
+  input,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
@@ -33,12 +32,12 @@ import {
     ProcessPageModule,
   ],
 })
-export class WindowFrameComponent implements OnInit, OnDestroy {
-  @Input() window!: WorkbenchWindow;
-  @Input() horoData!: HoroRequest;
-  @Input() eventData!: HoroRequest;
-  @Input() processData!: ProcessRequest;
-  @Input() workArea: WindowRect = { x: 0, y: 0, width: 0, height: 0 };
+export class WindowFrameComponent implements OnDestroy {
+  window = input.required<WorkbenchWindow>();
+  horoData = input.required<HoroRequest>();
+  eventData = input.required<HoroRequest>();
+  processData = input.required<ProcessRequest>();
+  workArea = input.required<WindowRect>();
 
   @Output() focus = new EventEmitter<string>();
   @Output() close = new EventEmitter<string>();
@@ -57,35 +56,32 @@ export class WindowFrameComponent implements OnInit, OnDestroy {
   private resizing: string | null = null;
   private dragStart = { x: 0, y: 0, rectX: 0, rectY: 0, rectW: 0, rectH: 0 };
 
-  ngOnInit(): void {
-    if (!this.window) return;
-  }
-
   ngOnDestroy(): void {
     this.detachDragListeners();
   }
 
   get isVisible(): boolean {
     return (
-      this.window.state === WindowState.Normal ||
-      this.window.state === WindowState.Maximized
+      this.window().state === WindowState.Normal ||
+      this.window().state === WindowState.Maximized
     );
   }
 
   get isMaximized(): boolean {
-    return this.window.state === WindowState.Maximized;
+    return this.window().state === WindowState.Maximized;
   }
 
   onTitleMouseDown(event: MouseEvent): void {
     if (this.isMaximized) return;
     if ((event.target as HTMLElement).closest('.win-btn')) return;
-    this.focus.emit(this.window.id);
+    const win = this.window();
+    this.focus.emit(win.id);
     this.dragging = true;
     this.dragStart = {
       x: event.clientX,
       y: event.clientY,
-      rectX: this.window.rect.x,
-      rectY: this.window.rect.y,
+      rectX: win.rect.x,
+      rectY: win.rect.y,
       rectW: 0,
       rectH: 0,
     };
@@ -95,15 +91,16 @@ export class WindowFrameComponent implements OnInit, OnDestroy {
 
   onResizeHandleMouseDown(event: MouseEvent, handle: string): void {
     if (this.isMaximized) return;
-    this.focus.emit(this.window.id);
+    const win = this.window();
+    this.focus.emit(win.id);
     this.resizing = handle;
     this.dragStart = {
       x: event.clientX,
       y: event.clientY,
-      rectX: this.window.rect.x,
-      rectY: this.window.rect.y,
-      rectW: this.window.rect.width,
-      rectH: this.window.rect.height,
+      rectX: win.rect.x,
+      rectY: win.rect.y,
+      rectW: win.rect.width,
+      rectH: win.rect.height,
     };
     event.preventDefault();
     event.stopPropagation();
@@ -126,16 +123,18 @@ export class WindowFrameComponent implements OnInit, OnDestroy {
       const dy = event.clientY - this.dragStart.y;
       let newX = this.dragStart.rectX + dx;
       let newY = this.dragStart.rectY + dy;
-      const minX = this.workArea.x;
-      const maxX = this.workArea.x + this.workArea.width - 40;
-      const minY = this.workArea.y;
-      const maxY = this.workArea.y + this.workArea.height - 40;
+      const wa = this.workArea();
+      const minX = wa.x;
+      const maxX = wa.x + wa.width - 40;
+      const minY = wa.y;
+      const maxY = wa.y + wa.height - 40;
       newX = Math.max(minX, Math.min(newX, maxX));
       newY = Math.max(minY, Math.min(newY, maxY));
+      const win = this.window();
       this.updateRect.emit({
-        id: this.window.id,
+        id: win.id,
         rect: {
-          ...this.window.rect,
+          ...win.rect,
           x: newX,
           y: newY,
         },
@@ -168,7 +167,7 @@ export class WindowFrameComponent implements OnInit, OnDestroy {
       }
 
       this.updateRect.emit({
-        id: this.window.id,
+        id: this.window().id,
         rect: { x, y, width, height },
       });
     }
@@ -181,37 +180,38 @@ export class WindowFrameComponent implements OnInit, OnDestroy {
   };
 
   onWindowClick(): void {
-    this.focus.emit(this.window.id);
+    this.focus.emit(this.window().id);
   }
 
   onClose(event: Event): void {
     event.stopPropagation();
-    this.close.emit(this.window.id);
+    this.close.emit(this.window().id);
   }
 
   onMinimize(event: Event): void {
     event.stopPropagation();
-    this.minimize.emit(this.window.id);
+    this.minimize.emit(this.window().id);
   }
 
   onHide(event: Event): void {
     event.stopPropagation();
-    this.hide.emit(this.window.id);
+    this.hide.emit(this.window().id);
   }
 
   onToggleMaximize(event: Event): void {
     event.stopPropagation();
-    this.toggleMaximize.emit(this.window.id);
+    this.toggleMaximize.emit(this.window().id);
   }
 
   get windowStyle(): Record<string, string> {
-    const r = this.window.rect;
+    const win = this.window();
+    const r = win.rect;
     return {
       left: `${r.x}px`,
       top: `${r.y}px`,
       width: `${r.width}px`,
       height: `${r.height}px`,
-      'z-index': `${this.window.zIndex}`,
+      'z-index': `${win.zIndex}`,
     };
   }
 }

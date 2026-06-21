@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- WindowManagerComponent 和 WindowFrameComponent 的 `@Input() + !` 迁移为 `input.required()` signal
 - 工作台组件（WorkbenchPage、InputPanelComponent、WindowManagerComponent、WindowFrameComponent）从 NgModule 模式迁移为 standalone 独立组件
 - 工作台路由从 `loadChildren` 改为 `loadComponent` 懒加载
 - 移除 `WorkbenchPageModule` 和 `WorkbenchPageRoutingModule`

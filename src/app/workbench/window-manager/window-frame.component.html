@@ -6,7 +6,7 @@
   (mousedown)="onWindowClick()"
 >
   <div class="title-bar" (mousedown)="onTitleMouseDown($event)">
-    <span class="title-text">{{ window.title }}</span>
+    <span class="title-text">{{ window().title }}</span>
     <div class="title-buttons">
       <button class="win-btn" (click)="onMinimize($event)" title="最小化">
         <ion-icon name="remove-outline"></ion-icon>
@@ -24,156 +24,156 @@
   </div>
 
   <div class="window-content">
-    @switch (window.chartType) {
+    @switch (window().chartType) {
       @case (chartType.Native) {
         <teanote-image
-          [inputHoroData]="horoData"
+          [inputHoroData]="horoData()"
           [inputMode]="modeEnum.Native"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></teanote-image>
       }
       @case (chartType.Event) {
         <teanote-image
-          [inputHoroData]="eventData"
+          [inputHoroData]="eventData()"
           [inputMode]="modeEnum.Event"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></teanote-image>
       }
       @case (chartType.Transit) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.Transit"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.SolarReturn) {
         <app-return
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.SolarReturn"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-return>
       }
       @case (chartType.LunarReturn) {
         <app-return
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.LunarReturn"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-return>
       }
       @case (chartType.DailyReturn) {
         <app-return
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.DailyReturn"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-return>
       }
       @case (chartType.SolarcomparNative) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.SolarcomparNative"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.NativecomparSolar) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.NativecomparSolar"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.LunarcomparNative) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.LunarcomparNative"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.NativecomparLunar) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.NativecomparLunar"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.DailycomparNative) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.DailycomparNative"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.NativecomparDaily) {
         <app-compare
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputProcessName]="processNameEnum.NativecomparDaily"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-compare>
       }
       @case (chartType.Profection) {
         <app-profection
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [embedded]="true"
         ></app-profection>
       }
       @case (chartType.MedievalProfection) {
         <app-medieval-profection
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputMode]="profectionModeEnum.Medieval"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-medieval-profection>
       }
       @case (chartType.CustomDayProfection) {
         <app-medieval-profection
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [inputMode]="profectionModeEnum.CustomDay"
-          [canvasId]="window.id"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-medieval-profection>
       }
       @case (chartType.Firdaria) {
         <app-firdaria
-          [inputHoroData]="horoData"
+          [inputHoroData]="horoData()"
           [embedded]="true"
         ></app-firdaria>
       }
       @case (chartType.Direction) {
         <app-direction
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
           [embedded]="true"
         ></app-direction>
       }
       @case (chartType.QuadrantProcess) {
         <app-quadrant-process
-          [inputHoroData]="horoData"
-          [inputProcessData]="processData"
-          [canvasId]="window.id"
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
+          [canvasId]="window().id"
           [embedded]="true"
         ></app-quadrant-process>
       }

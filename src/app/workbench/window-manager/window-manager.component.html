@@ -2,10 +2,10 @@
   @for (win of visibleWindows; track win.id) {
     <app-window-frame
       [window]="win"
-      [horoData]="horoData"
-      [eventData]="eventData"
-      [processData]="processData"
-      [workArea]="workArea"
+      [horoData]="horoData()"
+      [eventData]="eventData()"
+      [processData]="processData()"
+      [workArea]="workArea()"
       (focus)="onFocus($event)"
       (close)="onClose($event)"
       (minimize)="onMinimize($event)"
