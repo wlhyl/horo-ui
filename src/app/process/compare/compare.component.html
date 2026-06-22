@@ -55,7 +55,7 @@
         </div>
       }
       <div class="ion-text-center">
-        <canvas [id]="canvasId" width="0" height="0"></canvas>
+        <canvas #canvasRef [id]="canvasId" width="0" height="0"></canvas>
       </div>
       @if (horoscopeComparisonData) {
         <div class="horo-aspect-toggle">

@@ -63,4 +63,37 @@ describe('zoomImage', () => {
     expect(mockCanvas.setDimensions).not.toHaveBeenCalled();
     expect(mockCanvas.setZoom).not.toHaveBeenCalled();
   });
+
+  it('should zoom image to maxWidth when canvas is wider than maxWidth', async () => {
+    const platform = mockPlatform(1920); // 屏幕宽，但嵌入式容器窄
+    const maxWidth = 400;
+    const targetWidth = 390; // 400 - 10
+    const canvasWidth = 700;
+    const canvasHeight = 700;
+    const zoom = targetWidth / canvasWidth;
+    const targetHeight = canvasHeight * zoom;
+
+    mockCanvas.getWidth.and.returnValue(canvasWidth);
+    mockCanvas.getHeight.and.returnValue(canvasHeight);
+
+    await zoomImage(mockCanvas, platform, maxWidth);
+
+    expect(mockCanvas.setDimensions).toHaveBeenCalledOnceWith({
+      width: targetWidth,
+      height: targetHeight,
+    });
+    expect(mockCanvas.setZoom).toHaveBeenCalledOnceWith(zoom);
+  });
+
+  it('should not zoom image when maxWidth is wider than canvas', async () => {
+    const platform = mockPlatform(300);
+    const maxWidth = 800; // 比默认 700 大
+    mockCanvas.getWidth.and.returnValue(700);
+    mockCanvas.getHeight.and.returnValue(700);
+
+    await zoomImage(mockCanvas, platform, maxWidth);
+
+    expect(mockCanvas.setDimensions).not.toHaveBeenCalled();
+    expect(mockCanvas.setZoom).not.toHaveBeenCalled();
+  });
 });

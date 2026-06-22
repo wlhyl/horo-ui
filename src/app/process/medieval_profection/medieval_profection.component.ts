@@ -8,6 +8,8 @@ import {
   OnChanges,
   Input,
   SimpleChanges,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
@@ -52,7 +54,7 @@ import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { StaticCanvas } from 'fabric';
 import { drawHorosco } from 'src/app/utils/image/compare';
-import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { Platform } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -162,11 +164,20 @@ export class MedievalProfectionComponent
     this.processData.profection_arc_to_date_method;
 
   private canvas?: StaticCanvas;
+  @ViewChild('canvasRef') private canvasRef?: ElementRef<HTMLCanvasElement>;
 
   private destroy$ = new Subject<void>();
   private updateNativeDateSubject = new Subject<void>();
   private updateProcessDateSubject = new Subject<void>();
   private resetFiltersSubject = new Subject<void>();
+  private resizeHelper = new CanvasResizeHelper(
+    () => this.canvas,
+    () => this.canvasRef,
+    () => this.embedded,
+    this.platform,
+    this.destroy$,
+    () => this.isLoading,
+  );
 
   constructor(
     private platform: Platform,
@@ -261,6 +272,7 @@ export class MedievalProfectionComponent
 
   ngAfterViewInit(): void {
     this.canvas = this.createCanvas();
+    this.resizeHelper.setupResizeObserver();
     this.drawChart();
   }
 
@@ -271,6 +283,8 @@ export class MedievalProfectionComponent
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    this.resizeHelper.destroy();
 
     if (this.canvas) {
       this.canvas.dispose();
@@ -424,7 +438,8 @@ export class MedievalProfectionComponent
       height: this.config.horoscoImage.height,
     });
 
-    zoomImage(this.canvas, this.platform);
+    // 记录绘制后的原始 canvas 尺寸，用于 resize 时基于原始尺寸重新缩放
+    this.resizeHelper.onDraw();
   }
 
   updateNativeDate(): void {

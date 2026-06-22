@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.24.0] - 2026-06-24
+
+### Changed
+
+- 嵌入式模式下 canvas 根据容器实际宽度自适应缩放：当窗口宽度小于默认 canvas 尺寸（700px）时自动缩小以适应窗口，窗口放大时 canvas 跟随放大（最大不超过默认尺寸）
+- `zoomImage` 新增可选参数 `maxWidth`，支持自定义参考宽度，向后兼容现有调用方
+- `zoomImage` 新增可选参数 `originalSize`，支持基于原始尺寸直接计算目标尺寸，避免 resize 时先重置再缩放导致的闪烁
+- 新增 `CanvasResizeHelper` 辅助类，封装 ResizeObserver 监听、防抖重算、基于原始尺寸缩放等逻辑，消除 5 个 canvas 组件（ImageComponent、ReturnComponent、CompareComponent、MedievalProfectionComponent、QuadrantProcessComponent）中的重复代码
+- 上述 5 个组件统一通过 `CanvasResizeHelper` 管理 canvas 自适应缩放，调整窗口大小时防抖 150ms 后单次重算，消除闪烁
+
 ## [0.23.0] - 2026-06-23
 
 ### Changed

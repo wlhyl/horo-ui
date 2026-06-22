@@ -6,6 +6,8 @@ import {
   OnChanges,
   Input,
   SimpleChanges,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -38,7 +40,7 @@ import {
 import { drawAspect, drawHorosco } from 'src/app/utils/image/compare';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { DetailComponent } from './detail/detail.component';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
@@ -86,6 +88,7 @@ export class CompareComponent
     undefined;
 
   private canvas?: fabric.StaticCanvas;
+  @ViewChild('canvasRef') private canvasRef?: ElementRef<HTMLCanvasElement>;
 
   loading = false;
 
@@ -99,6 +102,14 @@ export class CompareComponent
 
   // 添加 Subject 和 destroy$ 用于防抖和取消订阅
   private destroy$ = new Subject<void>();
+  private resizeHelper = new CanvasResizeHelper(
+    () => this.canvas,
+    () => this.canvasRef,
+    () => this.embedded,
+    this.platform,
+    this.destroy$,
+    () => this.isDrawing || this.loading,
+  );
   private changeStepSubject = new Subject<{
     year: number;
     month: number;
@@ -204,6 +215,7 @@ export class CompareComponent
   ngAfterViewInit(): void {
     // 为兼容单元测试，使用这样的冗余函数
     this.canvas = this.createCanvas();
+    this.resizeHelper.setupResizeObserver();
     // 延迟到下一宏任务，避免 drawHoroscope 同步设置 loading=true
     // 导致 ExpressionChangedAfterItHasBeenCheckedError (NG0100)
     setTimeout(() => this.drawHoroscope(this.process_name));
@@ -215,6 +227,8 @@ export class CompareComponent
       this.canvas = undefined;
     }
     this.canvasCache = undefined;
+
+    this.resizeHelper.destroy();
 
     // 取消订阅防止内存泄漏
     this.destroy$.next();
@@ -268,7 +282,8 @@ export class CompareComponent
         height: this.config.horoscoImage.height,
       });
     }
-    zoomImage(this.canvas!, this.platform);
+    // 记录绘制后的原始 canvas 尺寸，用于 resize 时基于原始尺寸重新缩放
+    this.resizeHelper.onDraw();
   }
 
   get isAspect(): boolean {

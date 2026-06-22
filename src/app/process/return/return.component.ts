@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -18,7 +18,7 @@ import { Title } from '@angular/platform-browser';
 import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
-import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { DetailComponent } from './detail/detail.component';
 import { FormsModule } from '@angular/forms';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
@@ -61,8 +61,17 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   isDrawing = false; // 添加绘制状态标志
 
   private canvas?: fabric.StaticCanvas;
+  @ViewChild('canvasRef') private canvasRef?: ElementRef<HTMLCanvasElement>;
   private changeStepSubject = new Subject<void>();
   private destroy$ = new Subject<void>();
+  private resizeHelper = new CanvasResizeHelper(
+    () => this.canvas,
+    () => this.canvasRef,
+    () => this.embedded,
+    this.platform,
+    this.destroy$,
+    () => this.isDrawing || this.loading,
+  );
 
   get isAspect(): boolean {
     return this._isAspect;
@@ -187,6 +196,7 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   ngAfterViewInit(): void {
     // 为兼容单元测试，使用这样的冗余函数
     this.canvas = this.createCanvas();
+    this.resizeHelper.setupResizeObserver();
     // 延迟到下一宏任务，避免 drawHoroscope 同步设置 loading=true
     // 导致 ExpressionChangedAfterItHasBeenCheckedError (NG0100)
     setTimeout(() => this.drawHoroscope(this.process_name));
@@ -198,6 +208,8 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
       this.canvas = undefined;
     }
     this.canvasCache = undefined;
+
+    this.resizeHelper.destroy();
 
     // 取消订阅防止内存泄漏
     this.destroy$.next();
@@ -310,7 +322,8 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
         height: this.config.horoscoImage.height,
       });
     }
-    zoomImage(this.canvas!, this.platform);
+    // 记录绘制后的原始 canvas 尺寸，用于 resize 时基于原始尺寸重新缩放
+    this.resizeHelper.onDraw();
   }
 
   changeStep(step: {

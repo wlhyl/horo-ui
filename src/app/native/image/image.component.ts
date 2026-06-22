@@ -6,6 +6,8 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -34,7 +36,7 @@ import { HoroRequest } from 'src/app/type/interface/request-data';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { createOutline, archiveOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { DetailComponent } from '../detail/detail.component';
 
 @Component({
@@ -74,7 +76,17 @@ export class ImageComponent
     undefined;
 
   private canvas?: StaticCanvas;
+  @ViewChild('canvasRef') private canvasRef?: ElementRef<HTMLCanvasElement>;
   private destroy$ = new Subject<void>();
+  private resizeHelper = new CanvasResizeHelper(
+    () => this.canvas,
+    () => this.canvasRef,
+    () => this.embedded,
+    this.platform,
+    this.destroy$,
+    () => this.isDrawing || this.loading,
+  );
+
   private changeStepSubject = new Subject<{
     year: number;
     month: number;
@@ -174,6 +186,7 @@ export class ImageComponent
   ngAfterViewInit(): void {
     // 为兼容单元测试，使用这样的冗余函数
     this.canvas = this.createCanvas();
+    this.resizeHelper.setupResizeObserver();
     // 延迟到下一宏任务，避免 drawHoroscope 同步设置 loading=true
     // 导致 ExpressionChangedAfterItHasBeenCheckedError (NG0100)
     setTimeout(() => this.drawHoroscope(this.currentHoroData));
@@ -182,6 +195,8 @@ export class ImageComponent
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    this.resizeHelper.destroy();
 
     if (this.canvas) {
       this.canvas.dispose();
@@ -242,7 +257,8 @@ export class ImageComponent
         height: this.config.horoscoImage.height,
       });
     }
-    zoomImage(this.canvas!, this.platform);
+    // 绘制函数将 canvas 设为 config 尺寸（默认 700×700），缩放前先记录原始尺寸
+    this.resizeHelper.onDraw();
   }
 
   get isAspect(): boolean {

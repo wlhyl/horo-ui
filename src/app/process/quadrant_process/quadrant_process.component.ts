@@ -8,6 +8,8 @@ import {
   OnChanges,
   Input,
   SimpleChanges,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
@@ -58,7 +60,7 @@ import {
 } from 'src/app/utils/image/horo';
 import { ptolemyTerm } from 'src/app/utils/image/zodiac';
 import { Zodiac } from 'src/app/type/enum/zodiac';
-import { zoomImage } from 'src/app/utils/image/zoom-image';
+import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { Platform } from '@ionic/angular';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 import {
@@ -104,7 +106,10 @@ export class QuadrantProcessComponent
 
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   processDate: DateRequest = structuredClone(this.processData.date);
-  startDate: HoroDateTime = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
+  startDate: HoroDateTime = getCurrentDateMinusYearsUtil(
+    5,
+    this.horoData.date.tz,
+  );
   endDate: HoroDateTime = addYearsUtil(this.nativeDate, 80);
 
   geoLongD = 0;
@@ -125,10 +130,19 @@ export class QuadrantProcessComponent
   horoscoData: Horoscope | null = null;
   processLongitude: number = 0;
   private canvas?: StaticCanvas;
+  @ViewChild('canvasRef') private canvasRef?: ElementRef<HTMLCanvasElement>;
 
   private destroy$ = new Subject<void>();
   private updateNativeDateSubject = new Subject<void>();
   private updateProcessDateSubject = new Subject<void>();
+  private resizeHelper = new CanvasResizeHelper(
+    () => this.canvas,
+    () => this.canvasRef,
+    () => this.embedded,
+    this.platform,
+    this.destroy$,
+    () => this.isLoading,
+  );
 
   constructor(
     private platform: Platform,
@@ -203,6 +217,7 @@ export class QuadrantProcessComponent
 
   ngAfterViewInit(): void {
     this.canvas = this.createCanvas();
+    this.resizeHelper.setupResizeObserver();
     this.drawChart();
   }
 
@@ -213,6 +228,8 @@ export class QuadrantProcessComponent
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
+    this.resizeHelper.destroy();
 
     if (this.canvas) {
       this.canvas.dispose();
@@ -499,9 +516,8 @@ export class QuadrantProcessComponent
       { width, height },
     );
 
-    zoomImage(this.canvas, this.platform);
-
-    // this.canvas.setDimensions({ width: width + 300, height: height + 300 });
+    // 记录绘制后的原始 canvas 尺寸，用于 resize 时基于原始尺寸重新缩放
+    this.resizeHelper.onDraw();
   }
 
   updateNativeDate(): void {
