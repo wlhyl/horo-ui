@@ -31,7 +31,7 @@ const routes: Routes = [
   {
     path: Path.Process,
     loadChildren: () =>
-      import('./process/process.module').then((m) => m.ProcessPageModule),
+      import('./process/process.routes').then((m) => m.routes),
   },
   {
     path: Path.Qizheng,

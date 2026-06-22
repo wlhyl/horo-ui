@@ -13,8 +13,7 @@ export enum Path {
   NativecomparLunar = 'return/native_lunar',
   DailycomparNative = 'return/daily_native',
   NativecomparDaily = 'return/native_daily',
-  ReturnDetails = 'details',
-  ComparisonDetails = 'details',
+
   Direction = 'direction',
   QuadrantProcess = 'quadrant_process',
 }

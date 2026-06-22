@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ProcessName } from './enum/process';
 import { DirectionMethod } from './enum/direction-method';
@@ -8,12 +10,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
+import { HoroCommonModule } from '../horo-common/horo-common.module';
 
 @Component({
   selector: 'app-process',
   templateUrl: './process.page.html',
   styleUrls: ['./process.page.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule, HoroCommonModule],
 })
 export class ProcessPage implements OnInit {
   readonly houses: Array<string> = this.config.houses;

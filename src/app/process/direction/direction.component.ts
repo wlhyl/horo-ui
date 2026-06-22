@@ -9,10 +9,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { IonicModule } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/services/api/api.service';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
+import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import {
   DateRequest,
   DirectionRequest,
@@ -61,7 +64,8 @@ import {
   selector: 'app-direction',
   templateUrl: './direction.component.html',
   styleUrls: ['./direction.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule, FormsModule, HoroCommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DirectionComponent implements OnInit, OnChanges, OnDestroy {

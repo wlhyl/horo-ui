@@ -6,10 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- ReturnComponent 和 ReturnDetailComponent 从 NgModule 模式迁移为 standalone 独立组件
+- 推运模块（ProcessPage、ProfectionComponent、MedievalProfectionComponent、FirdariaComponent、DirectionComponent、QuadrantProcessComponent）从 NgModule 模式迁移为 standalone 独立组件
+- 推运路由从 `loadChildren` 改为指向独立组件导出的 `routes` 懒加载
+- WindowFrameComponent 直接导入各独立推运组件替代原 ProcessPageModule
+- 移除 `ProcessPageModule` 和 `ProcessPageRoutingModule`
 - ReturnComponent 重构为重叠标签页（与 ImageComponent 相同模式）
 - ReturnDetailComponent 改为通过 `@Input() returnData` 接收数据，不再通过 router state 传递
-- CompareComponent 和 CompareDetailComponent 从 NgModule 模式迁移为 standalone 独立组件
 - CompareComponent 重构为重叠标签页（与 ImageComponent 相同模式）
 - CompareDetailComponent 改为通过 `@Input() compareData` 接收数据，不再通过 router state 传递
 - ImageComponent 重构为重叠标签页：详情不再通过路由跳转，而是与星盘放在同一组件内的不同标签页中，默认显示星盘，点击详情标签切换到详细，此操作模式同时适用于非嵌入式和嵌入式模式

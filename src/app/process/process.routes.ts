@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { ProcessPage } from './process.page';
 
@@ -13,9 +12,8 @@ import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
 import { DirectionComponent } from './direction/direction.component';
 import { QuadrantProcessComponent } from './quadrant_process/quadrant_process.component';
-import { Path } from './enum/path';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: ProcessPage,
@@ -100,9 +98,3 @@ const routes: Routes = [
     data: { process_name: ProcessName.DailyReturn },
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class ProcessPageRoutingModule {}

@@ -10,9 +10,13 @@ import { IonicModule } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Mode } from 'src/app/native/enum';
 import { ImageComponent } from 'src/app/native/image/image.component';
-import { ProcessPageModule } from 'src/app/process/process.module';
 import { ProcessName } from 'src/app/process/enum/process';
 import { ProfectionMode } from 'src/app/process/enum/profection-mode';
+import { ProfectionComponent } from 'src/app/process/profection/profection.component';
+import { MedievalProfectionComponent } from 'src/app/process/medieval_profection/medieval_profection.component';
+import { FirdariaComponent } from 'src/app/process/firdaria/firdaria.component';
+import { DirectionComponent } from 'src/app/process/direction/direction.component';
+import { QuadrantProcessComponent } from 'src/app/process/quadrant_process/quadrant_process.component';
 import { CompareComponent } from 'src/app/process/compare/compare.component';
 import { ReturnComponent } from 'src/app/process/return/return.component';
 import {
@@ -31,7 +35,11 @@ import {
     NgStyle,
     IonicModule,
     ImageComponent,
-    ProcessPageModule,
+    ProfectionComponent,
+    MedievalProfectionComponent,
+    FirdariaComponent,
+    DirectionComponent,
+    QuadrantProcessComponent,
     CompareComponent,
     ReturnComponent,
   ],

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { IonicModule } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { HoroRequest, ProcessRequest, ProfectionRequest } from 'src/app/type/interface/request-data';
@@ -10,7 +11,8 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
   selector: 'app-profection',
   templateUrl: './profection.component.html',
   styleUrls: ['./profection.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule],
 })
 export class ProfectionComponent implements OnInit, OnChanges {
   @Input() inputHoroData?: HoroRequest;

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { IonicModule } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -11,7 +12,8 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
   selector: 'app-firdaria',
   templateUrl: './firdaria.component.html',
   styleUrls: ['./firdaria.component.scss'],
-  standalone: false,
+  standalone: true,
+  imports: [IonicModule],
 })
 export class FirdariaComponent implements OnInit, OnChanges {
   @Input() inputHoroData?: HoroRequest;
