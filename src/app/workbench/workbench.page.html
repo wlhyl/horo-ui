@@ -19,17 +19,16 @@
       [class.collapsed]="sidebarCollapsed"
       [style.width.px]="sidebarCollapsed ? null : sidebarWidth"
     >
-      @if (!sidebarCollapsed) {
-        <app-input-panel
-          [horoData]="horoData"
-          [eventData]="eventData"
-          [processData]="processData"
-          (horoDataChange)="onHoroDataChange($event)"
-          (eventDataChange)="onEventDataChange($event)"
-          (processDataChange)="onProcessDataChange($event)"
-          (openChart)="onOpenChart($event)"
-        ></app-input-panel>
-      }
+      <app-input-panel
+        [style.display]="sidebarCollapsed ? 'none' : null"
+        [horoData]="horoData"
+        [eventData]="eventData"
+        [processData]="processData"
+        (horoDataChange)="onHoroDataChange($event)"
+        (eventDataChange)="onEventDataChange($event)"
+        (processDataChange)="onProcessDataChange($event)"
+        (openChart)="onOpenChart($event)"
+      ></app-input-panel>
       <div class="sidebar-resize-handle" (mousedown)="onSidebarResizeStart($event)"></div>
       <button class="sidebar-toggle" (click)="toggleSidebar()">
         <ion-icon [name]="sidebarCollapsed ? 'chevron-forward' : 'chevron-back'"></ion-icon>

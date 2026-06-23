@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- 修复工作台输入面板折叠状态丢失的问题：隐藏侧边栏后再次显示时，出生数据、天象数据、推运数据各分区的折叠状态会被重置。将 `workbench.page.html` 中包裹 `app-input-panel` 的 `@if (!sidebarCollapsed)` 改为 `[style.display]` 绑定，避免组件被销毁重建导致内部状态丢失
+
 ## [0.24.0] - 2026-06-24
 
 ### Changed
