@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.25.0] - 2026-06-26
+
 ### Added
 
 - 新增工作台窗口快速切换功能：在 header 窗口数徽章处加下拉窗口列表，列出所有打开的窗口（按 z-index 降序排列），点击即置顶/恢复，解决多窗口重叠时难以找到下层星盘的问题
