@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.25.2] - 2026-06-26
+
+### Fixed
+
+- 修复古代星盘相位表显示错位的问题：部分相位符号未落在正确格子内，与其它相位符号重叠或显示在横排行星上方。根因是后端 `historical_horoscope.rs` 按用户录入的行星顺序计算相位，而 `p0`/`p1` 的相对位置依赖该顺序；当录入顺序与前端 `config.horoPlanets` 规范顺序不一致时，`indexOf(p0) > indexOf(p1)` 会使相位符号落到对角线上方。`horo.ts` 的 `calculateAspectText` 改用 `Math.min`/`Math.max` 保证相位符号始终位于左下三角区域，与本命盘绘制逻辑一致；同时跳过行星不在网格列表中的相位，避免错位绘制到空白区
+
 ## [0.25.1] - 2026-06-26
 
 ### Changed

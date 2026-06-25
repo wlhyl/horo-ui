@@ -231,11 +231,15 @@ export function calculateAspectText(
   for (const aspect of aspects) {
     const fontSize = width / col;
 
-    // 第一格中心的坐标，即太阳与太阳相交的格子
-    // x: width / col + width / col / 2
-    // y: height / row + height / row / 2
-    const cx = (width / col) * (1.5 + planets.indexOf(aspect.p0));
-    const cy = (height / row) * (1.5 + planets.indexOf(aspect.p1));
+    const i0 = planets.indexOf(aspect.p0);
+    const i1 = planets.indexOf(aspect.p1);
+    // 跳过不在网格行星列表中的相位
+    if (i0 < 0 || i1 < 0) continue;
+
+    // 确保相位符号位于对角线下方（左下三角区域），
+    // 无论后端返回的 p0/p1 顺序如何
+    const cx = (width / col) * (1.5 + Math.min(i0, i1));
+    const cy = (height / row) * (1.5 + Math.max(i0, i1));
 
     // Aspect symbol
     const aspectString = config.aspectFontString(aspect.aspect_value);
