@@ -108,6 +108,18 @@ export class WindowService {
   restoreWindow(id: string): void {
     this._windows = this._windows.map((w) => {
       if (w.id !== id) return w;
+      // 从最小化/隐藏状态恢复时，若之前是最大化状态（prevRect 存在），
+      // 恢复为最大化状态并保留 prevRect，以便后续点击最大化按钮能还原为正常大小
+      if (
+        (w.state === WindowState.Minimized || w.state === WindowState.Hidden) &&
+        w.prevRect
+      ) {
+        return {
+          ...w,
+          state: WindowState.Maximized,
+          zIndex: ++this._zCounter,
+        };
+      }
       if (w.state === WindowState.Maximized && w.prevRect) {
         return {
           ...w,

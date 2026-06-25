@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - 修复工作台输入面板折叠状态丢失的问题：隐藏侧边栏后再次显示时，出生数据、天象数据、推运数据各分区的折叠状态会被重置。将 `workbench.page.html` 中包裹 `app-input-panel` 的 `@if (!sidebarCollapsed)` 改为 `[style.display]` 绑定，避免组件被销毁重建导致内部状态丢失
+- 修复工作台窗口最大化→最小化→恢复后无法还原为正常大小的问题：`WindowService.restoreWindow` 原先仅处理 `Maximized` 状态，对从 `Minimized`/`Hidden` 恢复时若存在 `prevRect`（说明之前为最大化状态）会直接置为 `Normal` 并保留最大化 rect，导致后续点击最大化按钮无法还原。现改为恢复时保持 `Maximized` 状态并保留 `prevRect`，与常见桌面 OS 行为一致
 
 ## [0.24.0] - 2026-06-24
 
