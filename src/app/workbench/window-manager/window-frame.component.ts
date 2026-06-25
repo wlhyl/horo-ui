@@ -25,6 +25,7 @@ import {
   WindowState,
   WorkbenchWindow,
 } from './window-state';
+import { WindowService } from './window.service';
 
 @Component({
   selector: 'app-window-frame',
@@ -50,6 +51,8 @@ export class WindowFrameComponent implements OnDestroy {
   eventData = input.required<HoroRequest>();
   processData = input.required<ProcessRequest>();
   workArea = input.required<WindowRect>();
+
+  constructor(public windowService: WindowService) {}
 
   @Output() focus = new EventEmitter<string>();
   @Output() close = new EventEmitter<string>();
@@ -77,6 +80,10 @@ export class WindowFrameComponent implements OnDestroy {
       this.window().state === WindowState.Normal ||
       this.window().state === WindowState.Maximized
     );
+  }
+
+  get isTopWindow(): boolean {
+    return this.windowService.isTopWindow(this.window().id);
   }
 
   get isMaximized(): boolean {

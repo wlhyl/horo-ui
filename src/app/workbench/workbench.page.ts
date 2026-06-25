@@ -12,7 +12,12 @@ import {
   HoroRequest,
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
-import { ChartType, WindowRect } from './window-manager/window-state';
+import {
+  ChartType,
+  WindowRect,
+  WindowState,
+  WorkbenchWindow,
+} from './window-manager/window-state';
 import { WindowService } from './window-manager/window.service';
 import { InputPanelComponent } from './input-panel/input-panel.component';
 import { WindowManagerComponent } from './window-manager/window-manager.component';
@@ -43,6 +48,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
   sidebarCollapsed = false;
   sidebarWidth = 340;
   workareaHeight: number | null = null;
+  windowListOpen = false;
 
   private resizing = false;
   private resizeStartX = 0;
@@ -175,5 +181,69 @@ export class WorkbenchPage implements OnInit, OnDestroy {
 
   get windowCount(): number {
     return this.windowService.windows.length;
+  }
+
+  get allWindows(): ReadonlyArray<WorkbenchWindow> {
+    return [...this.windowService.windows].sort((a, b) => b.zIndex - a.zIndex);
+  }
+
+  get topWindowId(): string | null {
+    const visible = this.windowService.visibleWindows;
+    if (visible.length === 0) return null;
+    return visible.reduce((a, b) => (b.zIndex > a.zIndex ? b : a)).id;
+  }
+
+  toggleWindowList(event: Event): void {
+    event.stopPropagation();
+    this.windowListOpen = !this.windowListOpen;
+  }
+
+  closeWindowList(): void {
+    this.windowListOpen = false;
+  }
+
+  onSwitchWindow(id: string): void {
+    const win = this.windowService.windows.find((w) => w.id === id);
+    if (!win) return;
+    if (
+      win.state === WindowState.Minimized ||
+      win.state === WindowState.Hidden
+    ) {
+      this.windowService.restoreWindow(id);
+    } else {
+      this.windowService.focusWindow(id);
+    }
+    this.closeWindowList();
+  }
+
+  onListClose(id: string, event: Event): void {
+    event.stopPropagation();
+    this.windowService.closeWindow(id);
+  }
+
+  stateLabel(state: WindowState): string {
+    switch (state) {
+      case WindowState.Minimized:
+        return '最小化';
+      case WindowState.Hidden:
+        return '隐藏';
+      case WindowState.Maximized:
+        return '最大化';
+      default:
+        return '';
+    }
+  }
+
+  stateIcon(state: WindowState): string {
+    switch (state) {
+      case WindowState.Minimized:
+        return 'remove-circle-outline';
+      case WindowState.Hidden:
+        return 'eye-off-circle-outline';
+      case WindowState.Maximized:
+        return 'expand-outline';
+      default:
+        return 'square-outline';
+    }
   }
 }

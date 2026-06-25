@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- 新增工作台窗口快速切换功能：在 header 窗口数徽章处加下拉窗口列表，列出所有打开的窗口（按 z-index 降序排列），点击即置顶/恢复，解决多窗口重叠时难以找到下层星盘的问题
+
+### Removed
+
+- 移除工作台底部任务栏：最小化/隐藏窗口现在通过 header 顶部下拉窗口列表恢复，简化界面布局
+
 ### Fixed
 
 - 修复工作台输入面板折叠状态丢失的问题：隐藏侧边栏后再次显示时，出生数据、天象数据、推运数据各分区的折叠状态会被重置。将 `workbench.page.html` 中包裹 `app-input-panel` 的 `@if (!sidebarCollapsed)` 改为 `[style.display]` 绑定，避免组件被销毁重建导致内部状态丢失

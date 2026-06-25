@@ -50,20 +50,7 @@ export class WindowManagerComponent {
     this.windowService.updateWindowRect(payload.id, payload.rect);
   }
 
-  onTaskbarClick(id: string): void {
-    this.windowService.restoreWindow(id);
-  }
-
-  onTaskbarClose(id: string, event: Event): void {
-    event.stopPropagation();
-    this.windowService.closeWindow(id);
-  }
-
   get visibleWindows() {
     return this.windowService.visibleWindows;
-  }
-
-  get taskbarWindows() {
-    return this.windowService.taskbarWindows;
   }
 }

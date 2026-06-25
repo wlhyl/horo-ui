@@ -15,18 +15,3 @@
     ></app-window-frame>
   }
 </div>
-
-@if (taskbarWindows.length > 0) {
-  <div class="taskbar">
-    <div class="taskbar-items">
-      @for (win of taskbarWindows; track win.id) {
-        <div class="taskbar-item" (click)="onTaskbarClick(win.id)" [title]="win.title">
-          <span class="taskbar-label">{{ win.title }}</span>
-          <button class="taskbar-close" (click)="onTaskbarClose(win.id, $event)">
-            <ion-icon name="close-outline"></ion-icon>
-          </button>
-        </div>
-      }
-    </div>
-  </div>
-}

@@ -5,7 +5,45 @@
     </ion-buttons>
     <ion-title>{{ title }}</ion-title>
     <ion-buttons slot="end">
-      <span class="window-count">@if (windowCount > 0) { {{ windowCount }} 个窗口 }</span>
+      <div class="window-list-wrapper">
+        @if (windowCount > 0) {
+          <button class="window-list-btn" (click)="toggleWindowList($event)">
+            <ion-icon name="layers-outline"></ion-icon>
+            <span>{{ windowCount }} 个窗口</span>
+            <ion-icon name="chevron-down-outline"></ion-icon>
+          </button>
+        }
+        @if (windowListOpen) {
+          <div class="window-list-backdrop" (click)="closeWindowList()"></div>
+          <div class="window-list-dropdown">
+            <div class="window-list-header">
+              <span>窗口列表</span>
+              <button class="list-close" (click)="closeWindowList()">
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+            </div>
+            <div class="window-list-items">
+              @for (win of allWindows; track win.id) {
+                <div
+                  class="window-list-item"
+                  [class.active]="win.id === topWindowId"
+                  (click)="onSwitchWindow(win.id)"
+                  [title]="win.title"
+                >
+                  <ion-icon [name]="stateIcon(win.state)"></ion-icon>
+                  <span class="item-title">{{ win.title }}</span>
+                  @if (win.state !== 'normal') {
+                    <span class="item-state">{{ stateLabel(win.state) }}</span>
+                  }
+                  <button class="item-close" (click)="onListClose(win.id, $event)">
+                    <ion-icon name="close-outline"></ion-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
     </ion-buttons>
   </div>
 

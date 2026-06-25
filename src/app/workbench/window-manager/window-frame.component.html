@@ -1,6 +1,7 @@
 <div
   class="window-frame"
   [class.maximized]="isMaximized"
+  [class.active]="isTopWindow"
   [class.hidden]="!isVisible"
   [ngStyle]="windowStyle"
   (mousedown)="onWindowClick()"
