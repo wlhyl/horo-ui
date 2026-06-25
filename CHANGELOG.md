@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.25.1] - 2026-06-26
+
+### Changed
+
+- 调整 `angular.json` 中 `anyComponentStyle` 预算限制：警告阈值从 2kb 提升至 4kb，错误阈值从 4kb 提升至 8kb，适应工作台等组件日益增长的样式需求
+
 ## [0.25.0] - 2026-06-26
 
 ### Added
