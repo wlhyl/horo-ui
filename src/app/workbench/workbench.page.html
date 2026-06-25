@@ -5,7 +5,16 @@
     </ion-buttons>
     <ion-title>{{ title }}</ion-title>
     <ion-buttons slot="end">
-      <div class="window-list-wrapper">
+      <button
+        class="panel-toggle-btn"
+        (click)="toggleSidebar()"
+        [class.active]="!sidebarCollapsed"
+        title="显示/隐藏输入面板"
+      >
+        <ion-icon [name]="sidebarCollapsed ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        <span>面板</span>
+      </button>
+      <div class="window-list-wrapper" #windowListWrapper>
         @if (windowCount > 0) {
           <button class="window-list-btn" (click)="toggleWindowList($event)">
             <ion-icon name="layers-outline"></ion-icon>
@@ -14,7 +23,6 @@
           </button>
         }
         @if (windowListOpen) {
-          <div class="window-list-backdrop" (click)="closeWindowList()"></div>
           <div class="window-list-dropdown">
             <div class="window-list-header">
               <span>窗口列表</span>

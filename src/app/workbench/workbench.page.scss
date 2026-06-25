@@ -46,6 +46,7 @@
   align-items: center;
 }
 
+.panel-toggle-btn,
 .window-list-btn {
   display: inline-flex;
   align-items: center;
@@ -68,11 +69,13 @@
   }
 }
 
-.window-list-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  background: transparent;
+.panel-toggle-btn {
+  margin-right: 8px;
+
+  &.active {
+    background: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.2);
+    border-color: rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.35);
+  }
 }
 
 .window-list-dropdown {

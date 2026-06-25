@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -39,6 +40,9 @@ import { WindowManagerComponent } from './window-manager/window-manager.componen
 export class WorkbenchPage implements OnInit, OnDestroy {
   @ViewChild('workAreaEl', { static: true })
   workAreaRef!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('windowListWrapper')
+  windowListWrapperRef?: ElementRef<HTMLDivElement>;
 
   horoData: HoroRequest;
   eventData: HoroRequest;
@@ -200,6 +204,15 @@ export class WorkbenchPage implements OnInit, OnDestroy {
 
   closeWindowList(): void {
     this.windowListOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.windowListOpen) return;
+    const wrapper = this.windowListWrapperRef?.nativeElement;
+    if (wrapper && !wrapper.contains(event.target as Node)) {
+      this.closeWindowList();
+    }
   }
 
   onSwitchWindow(id: string): void {
