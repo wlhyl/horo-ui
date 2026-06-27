@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- 主向推运新增 Regiomontanus「极下法（黄道向运）」算法选项（对应后端 `DirectionMethod::ZodiacalUnderPole`），同步将原「极下法」选项显示名调整为「极下法（世俗向运）」
+
 ## [0.25.2] - 2026-06-26
 
 ### Fixed
