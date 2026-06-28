@@ -4,6 +4,7 @@ import { ProcessPage } from './process.page';
 
 import { ProcessName } from './enum/process';
 import { ProfectionMode } from './enum/profection-mode';
+import { DirectionMode } from './enum/direction-mode';
 
 import { ProfectionComponent } from './profection/profection.component';
 import { MedievalProfectionComponent } from './medieval_profection/medieval_profection.component';
@@ -39,6 +40,11 @@ export const routes: Routes = [
   {
     path: ProcessName.path(ProcessName.Direction),
     component: DirectionComponent,
+  },
+  {
+    path: ProcessName.path(ProcessName.SolarArc),
+    component: DirectionComponent,
+    data: { mode: DirectionMode.SolarArc },
   },
   {
     path: ProcessName.path(ProcessName.QuadrantProcess),

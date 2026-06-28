@@ -12,6 +12,7 @@ import { Mode } from 'src/app/native/enum';
 import { ImageComponent } from 'src/app/native/image/image.component';
 import { ProcessName } from 'src/app/process/enum/process';
 import { ProfectionMode } from 'src/app/process/enum/profection-mode';
+import { DirectionMode } from 'src/app/process/enum/direction-mode';
 import { ProfectionComponent } from 'src/app/process/profection/profection.component';
 import { MedievalProfectionComponent } from 'src/app/process/medieval_profection/medieval_profection.component';
 import { FirdariaComponent } from 'src/app/process/firdaria/firdaria.component';
@@ -66,6 +67,7 @@ export class WindowFrameComponent implements OnDestroy {
   readonly modeEnum = Mode;
   readonly processNameEnum = ProcessName;
   readonly profectionModeEnum = ProfectionMode;
+  readonly directionModeEnum = DirectionMode;
 
   private dragging = false;
   private resizing: string | null = null;

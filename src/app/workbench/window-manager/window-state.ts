@@ -24,6 +24,7 @@ export enum ChartType {
   NativecomparDaily = 'NativecomparDaily',
   Direction = 'Direction',
   QuadrantProcess = 'QuadrantProcess',
+  SolarArc = 'SolarArc',
 }
 
 export interface WindowRect {
@@ -62,6 +63,7 @@ const CHART_TITLES: Record<ChartType, string> = {
   [ChartType.NativecomparDaily]: '本命比每日回归',
   [ChartType.Direction]: '主向推运',
   [ChartType.QuadrantProcess]: '象限推运',
+  [ChartType.SolarArc]: '太阳弧',
 };
 
 export function chartTitle(type: ChartType): string {

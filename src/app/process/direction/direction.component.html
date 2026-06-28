@@ -43,6 +43,7 @@
           {{ showGeoInput ? '隐藏经纬度' : '显示经纬度' }}
         </ion-button>
 
+        @if (mode !== DirectionMode.SolarArc) {
         <div class="filter-group">
           <label>算法:</label>
           <ion-select [(ngModel)]="directionMethod" [disabled]="isLoading">
@@ -60,6 +61,7 @@
             }
           </ion-select>
         </div>
+        }
 
         <div class="filter-group">
           <label>宫位:</label>
@@ -172,7 +174,7 @@
       </div>
     </div>
 
-    <h2 class="center-title">主向推运表</h2>
+    <h2 class="center-title">{{ mode === DirectionMode.SolarArc ? '太阳弧推运表' : '主向推运表' }}</h2>
     <div class="table-wrapper" [class.loading]="isLoading">
       @if (isLoading) {
       <div class="loading-overlay">

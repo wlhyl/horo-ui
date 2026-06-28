@@ -18,13 +18,14 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import {
   DateRequest,
-  DirectionRequest,
   GeoRequest,
   HoroRequest,
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
+import { DirectionMode } from 'src/app/process/enum/direction-mode';
+import { ActivatedRoute } from '@angular/router';
 import {
   Direction,
   HoroDateTime,
@@ -71,12 +72,14 @@ import {
 export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   @Input() inputHoroData?: HoroRequest;
   @Input() inputProcessData?: ProcessRequest;
+  @Input() inputMode?: DirectionMode;
   @Input() embedded: boolean = false;
 
   isAlertOpen = false;
   alertButtons = ['OK'];
   message = '';
 
+  mode: DirectionMode = DirectionMode.Primary;
   title = '主向推运';
 
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
@@ -124,6 +127,9 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   // 弧转日期换算方式枚举，供模板使用
   ArcToDateMethod = ArcToDateMethod;
 
+  // 推运模式枚举，供模板使用
+  DirectionMode = DirectionMode;
+
   // 主限法算法选项
   directionMethodOptions = Object.values(DirectionMethod)
     .filter((v) => typeof v === 'string')
@@ -148,9 +154,10 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
     }));
 
   // 主限法算法选择
-  directionMethod: DirectionMethod;
+  directionMethod: DirectionMethod = this.storage.processData.direction_method;
   // 弧转日期换算方式选择
-  arcToDateMethod: ArcToDateMethod;
+  arcToDateMethod: ArcToDateMethod =
+    this.storage.processData.arc_to_date_method;
   // 宫位系统选择
   house: string = this.horoData.house;
 
@@ -164,10 +171,8 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
     public config: Horoconfig,
     private titleService: Title,
     private cdr: ChangeDetectorRef,
-  ) {
-    this.directionMethod = this.storage.processData.direction_method;
-    this.arcToDateMethod = this.storage.processData.arc_to_date_method;
-  }
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
     if (this.embedded) {
@@ -183,7 +188,13 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
         this.directionMethod = this.inputProcessData.direction_method;
         this.arcToDateMethod = this.inputProcessData.arc_to_date_method;
       }
+      if (this.inputMode) {
+        this.mode = this.inputMode;
+        this.title = this.mode === DirectionMode.SolarArc ? '太阳弧' : '主向推运';
+      }
     } else {
+      this.mode = this.route.snapshot.data?.['mode'] || DirectionMode.Primary;
+      this.title = this.mode === DirectionMode.SolarArc ? '太阳弧' : '主向推运';
       this.titleService.setTitle(this.title);
     }
 
@@ -279,18 +290,25 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   fetchDirectionData(): void {
     if (this.isLoading) return;
     if (!this.validateGeo()) return;
-    const requestData: DirectionRequest = {
-      native_date: this.nativeDate,
-      geo: this.geo,
-      method: this.directionMethod,
-      arc_to_date_method: this.arcToDateMethod,
-      house: this.house,
-    };
+
+    const request$ =
+      this.mode === DirectionMode.SolarArc
+        ? this.api.solarArc({
+            native_date: this.nativeDate,
+            geo: this.geo,
+            house: this.house,
+          })
+        : this.api.direction({
+            native_date: this.nativeDate,
+            geo: this.geo,
+            method: this.directionMethod,
+            arc_to_date_method: this.arcToDateMethod,
+            house: this.house,
+          });
 
     this.isLoading = true;
     this.cdr.markForCheck();
-    this.api
-      .direction(requestData)
+    request$
       .pipe(
         finalize(() => {
           this.isLoading = false;

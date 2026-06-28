@@ -62,6 +62,7 @@ export class ProcessPage implements OnInit {
     ProcessName.MedievalProfection,
     ProcessName.CustomDayProfection,
     ProcessName.Direction,
+    ProcessName.SolarArc,
     ProcessName.QuadrantProcess,
     ProcessName.Transit,
     ProcessName.SolarReturn,

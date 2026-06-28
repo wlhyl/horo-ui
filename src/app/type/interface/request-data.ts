@@ -110,6 +110,20 @@ export interface DirectionRequest {
 }
 
 /**
+ * 太阳弧推运
+ */
+export interface SolarArcRequest {
+  // 出生时间
+  native_date: DateRequest;
+
+  // 出生地大地经纬度
+  geo: GeoRequest;
+
+  // 宫位系统
+  house: string;
+}
+
+/**
  * 七政
  */
 export interface QiZhengRequst {

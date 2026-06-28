@@ -53,6 +53,7 @@ export class InputPanelComponent {
     ProcessName.NativecomparDaily,
     ProcessName.Direction,
     ProcessName.QuadrantProcess,
+    ProcessName.SolarArc,
   ].map((process_name) => ({
     text: ProcessName.name(process_name),
     value: process_name,
@@ -86,6 +87,7 @@ export class InputPanelComponent {
     { type: ChartType.MedievalProfection, label: '中世纪小限', group: '推运' },
     { type: ChartType.CustomDayProfection, label: '自定义日小限', group: '推运' },
     { type: ChartType.Transit, label: '行运', group: '推运' },
+    { type: ChartType.SolarArc, label: '太阳弧', group: '推运' },
     { type: ChartType.QuadrantProcess, label: '象限推运', group: '推运' },
     { type: ChartType.Profection, label: '小限', group: '推运' },
     { type: ChartType.Firdaria, label: '法达', group: '推运' },

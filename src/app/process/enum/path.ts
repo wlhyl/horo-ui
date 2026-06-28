@@ -16,4 +16,5 @@ export enum Path {
 
   Direction = 'direction',
   QuadrantProcess = 'quadrant_process',
+  SolarArc = 'solar_arc',
 }

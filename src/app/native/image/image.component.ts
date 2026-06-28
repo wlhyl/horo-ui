@@ -173,11 +173,6 @@ export class ImageComponent
       needRedraw = true;
     }
 
-    if (changes['inputMode'] && this.inputMode) {
-      this.mode = this.inputMode;
-      this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
-    }
-
     if (needRedraw && this.canvas) {
       this.drawHoroscope(this.currentHoroData);
     }

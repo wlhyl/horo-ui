@@ -170,6 +170,14 @@
           [embedded]="true"
         ></app-direction>
       }
+      @case (chartType.SolarArc) {
+        <app-direction
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
+          [inputMode]="directionModeEnum.SolarArc"
+          [embedded]="true"
+        ></app-direction>
+      }
       @case (chartType.QuadrantProcess) {
         <app-quadrant-process
           [inputHoroData]="horoData()"

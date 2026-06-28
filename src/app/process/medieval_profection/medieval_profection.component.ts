@@ -258,13 +258,6 @@ export class MedievalProfectionComponent
       needRefetch = true;
     }
 
-    if (changes['inputMode'] && this.inputMode !== undefined) {
-      this.mode = this.inputMode;
-      this.title =
-        this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
-      needRefetch = true;
-    }
-
     if (needRefetch) {
       this.fetchMedievalProfectionData();
     }

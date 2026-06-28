@@ -183,11 +183,6 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
       needRedraw = true;
     }
 
-    if (changes['inputProcessName'] && this.inputProcessName) {
-      this.process_name = this.inputProcessName;
-      needRedraw = true;
-    }
-
     if (needRedraw && this.canvas) {
       this.drawHoroscope(this.process_name);
     }
