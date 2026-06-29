@@ -1,10 +1,18 @@
-// ion-title {
-//   text-align: center;
-// }
-
-.left_col {
-  display: flex;
-  justify-content: end;
+ion-row {
   align-items: center;
 }
 
+ion-input,
+ion-select {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  min-height: inherit;
+}
+
+.sex-radio {
+  margin-right: 1rem;
+}
+
+.geo-input {
+  margin-right: 1rem;
+}

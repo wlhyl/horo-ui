@@ -42,7 +42,7 @@
         <ion-col size="7">
           <ion-radio-group [(ngModel)]="originalHoroData.sex">
             <ion-label>男：</ion-label>
-            <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+            <ion-radio [value]="true" class="sex-radio"></ion-radio>
             <ion-label>女：</ion-label>
             <ion-radio [value]="false"></ion-radio>
           </ion-radio-group>
@@ -82,7 +82,7 @@
         <ion-col size="5" class="label-col">
           <ion-label>出生地：</ion-label>
         </ion-col>
-        <ion-col>
+        <ion-col size="7">
           <horo-map [(localName)]="originalHoroData.geo_name" [(long)]="originalHoroData.geo.long"
             [(lat)]="originalHoroData.geo.lat"></horo-map>
           <horo-geo [(geoLocalName)]="originalHoroData.geo_name" [(geoLong)]="originalHoroData.geo.long"
@@ -120,7 +120,7 @@
         <ion-col size="7">
           <ion-radio-group [(ngModel)]="isNanLuoBeiJi" id="node-name-option">
             <ion-label>南罗北计：</ion-label>
-            <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+            <ion-radio [value]="true" class="sex-radio"></ion-radio>
 
             <ion-label>南计北罗：</ion-label>
             <ion-radio [value]="false"></ion-radio>
@@ -164,7 +164,7 @@
         <ion-col size="7">
           <ion-radio-group [(ngModel)]="comparisonHoroData.sex">
             <ion-label>男：</ion-label>
-            <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+            <ion-radio [value]="true" class="sex-radio"></ion-radio>
             <ion-label>女：</ion-label>
             <ion-radio [value]="false"></ion-radio>
           </ion-radio-group>
@@ -204,7 +204,7 @@
         <ion-col size="5" class="label-col">
           <ion-label>出生地：</ion-label>
         </ion-col>
-        <ion-col>
+        <ion-col size="7">
           <horo-map [(localName)]="comparisonHoroData.geo_name" [(long)]="comparisonHoroData.geo.long"
             [(lat)]="comparisonHoroData.geo.lat"></horo-map>
           <horo-geo [(geoLocalName)]="comparisonHoroData.geo_name" [(geoLong)]="comparisonHoroData.geo.long"

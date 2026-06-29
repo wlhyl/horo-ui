@@ -57,3 +57,9 @@
 ion-content {
   --padding-bottom: 60px;
 }
+
+.aspect-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

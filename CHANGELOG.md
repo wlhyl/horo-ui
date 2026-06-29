@@ -11,10 +11,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- 修复多个表单页面的布局问题：`ion-row` 脱离 `ion-grid`、左列对齐方式不统一（`left_col` 与 `ion-text-right` 混用）、行内 `style` 散落、部分 `ion-col` 缺少 `size` 属性；统一为 `ion-row` 添加 `align-items: center` 实现左右内容垂直居中；压缩 `ion-input`/`ion-select` 默认垂直内边距消除相邻行间距偏宽。涉及页面：本命盘（native）、推运（process）、七政四余（qizheng）、合盘输入（synastry-input）
+- 修正合盘与比较盘说明文字中的错别字：「坚看」改为「竖看」
 - 修复本命盘页脚存档、笔记按钮图标与文字未垂直居中对齐的问题：`.button-content` 改为 `flex-direction: row` + `align-items: center`
 
 ### Changed
 
+- 清理表单页面冗余样式：移除注释掉的死代码、删除误导性的 `left_col` 类名（实际为右对齐）、将行内 `style` 抽离为 `.sex-radio`/`.geo-input`/`.aspect-hint` 等类；清理推运比较盘与返照盘组件的冗余注释代码（`compare.component.scss` 和 `return.component.scss` 中被注释的 toggle 样式试验代码）
 - 清理工作台嵌入式组件的冗余代码：移除 `ngOnChanges` 中对静态绑定输入（`inputMode`、`inputProcessName`）的变更检测处理，涉及组件 DirectionComponent、MedievalProfectionComponent、ImageComponent、CompareComponent、ReturnComponent
 
 ## [0.25.2] - 2026-06-26

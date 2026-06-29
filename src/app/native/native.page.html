@@ -22,7 +22,7 @@
   </ion-header>
   <ion-grid>
     <ion-row>
-      <ion-col size="5" class="left_col">
+      <ion-col size="5" class="ion-text-right">
       </ion-col>
       <ion-col size="7">
         <app-archive-selector [defaultHouse]="horoData.house"
@@ -30,7 +30,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size="5" class="left_col">
+      <ion-col size="5" class="ion-text-right">
         <ion-label>姓名：</ion-label>
       </ion-col>
       <ion-col size="7">
@@ -45,7 +45,7 @@
       <ion-col size="7">
         <ion-radio-group id="horo-sex" [(ngModel)]="horoData.sex">
           <ion-label>男：</ion-label>
-          <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
+          <ion-radio [value]="true" class="sex-radio"></ion-radio>
 
           <ion-label>女：</ion-label>
           <ion-radio [value]="false"></ion-radio>
@@ -63,52 +63,51 @@
           [(second)]="horoData.date.second"></horo-date-time>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col size="5" class="ion-text-right">
+        <ion-label>时区：</ion-label>
+      </ion-col>
+      <ion-col size="7">
+        <horo-time-zone id="horo-birth-timezone" [(zone)]="horoData.date.tz"></horo-time-zone>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="5" class="ion-text-right">
+        <ion-label>夏令时：</ion-label>
+      </ion-col>
+      <ion-col size="7">
+        <ion-checkbox id="horo-birth-dst" [(ngModel)]="horoData.date.st"></ion-checkbox>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="5" class="ion-text-right">
+        <ion-label>{{ mode === modeEnum.Event ? '地点：' : '出生地：' }}</ion-label>
+      </ion-col>
+      <ion-col size="7">
+        <horo-map id="horo-map" class="geo-input" [(localName)]="horoData.geo_name" [(long)]="horoData.geo.long"
+          [(lat)]="horoData.geo.lat"></horo-map>
+
+        <horo-geo id="horo-geo" [(geoLocalName)]="horoData.geo_name" [(geoLong)]="horoData.geo.long"
+          [(geoLat)]="horoData.geo.lat"></horo-geo>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="5" class="ion-text-right">
+        <ion-label>宫位系统：</ion-label>
+      </ion-col>
+      <ion-col size="7">
+        <ion-select id="horo-house" label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="horoData.house">
+          @for (house of houses; track house) {
+          <ion-select-option [value]="house">{{house}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-col>
+    </ion-row>
   </ion-grid>
-
-
-  <ion-row>
-    <ion-col size="5" class="ion-text-right">
-      <ion-label>时区：</ion-label>
-    </ion-col>
-    <ion-col size="7">
-      <horo-time-zone id="horo-birth-timezone" [(zone)]="horoData.date.tz"></horo-time-zone>
-    </ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col size="5" class="ion-text-right">
-      <ion-label>夏令时：</ion-label>
-    </ion-col>
-    <ion-col size="7">
-      <ion-checkbox id="horo-birth-dst" [(ngModel)]="horoData.date.st"></ion-checkbox>
-    </ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col size="5" class="left_col">
-      <ion-label>{{ mode === modeEnum.Event ? '地点：' : '出生地：' }}</ion-label>
-    </ion-col>
-    <ion-col>
-      <horo-map id="horo-map" style="margin-right: 1rem;" [(localName)]="horoData.geo_name" [(long)]="horoData.geo.long"
-        [(lat)]="horoData.geo.lat"></horo-map>
-
-      <horo-geo id="horo-geo" [(geoLocalName)]="horoData.geo_name" [(geoLong)]="horoData.geo.long"
-        [(geoLat)]="horoData.geo.lat"></horo-geo>
-    </ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col size="5" class="left_col">
-      <ion-label>宫位系统：</ion-label>
-    </ion-col>
-    <ion-col size="7">
-      <ion-select id="horo-house" label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="horoData.house">
-        @for (house of houses; track house) {
-        <ion-select-option [value]="house">{{house}}</ion-select-option>
-        }
-      </ion-select>
-    </ion-col>
-  </ion-row>
 
   <ion-button id="submit-button" (click)="getHoro()" expand="block" fill="clear">提交</ion-button>
 

@@ -1,30 +1,19 @@
 .horo-aspect-toggle {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 ion-toggle::part(track),
 ion-toggle.toggle-checked::part(track) {
-    //     height: 10px;
-    //     width: 65px;
-
-    background: #ddd;
-
-    /* Required for iOS handle to overflow the height of the track */
-    // overflow: visible;
+  background: #ddd;
 }
 
 ion-toggle::part(handle) {
-    // background: #eb7769;
-    background-color: #FF7F50;
-
-    // border-radius: 4px;
-    // box-shadow: none;
+  background-color: #FF7F50;
 }
 
 ion-toggle.toggle-checked::part(handle) {
-    // background: #95c34e;
-    background-color: white;
+  background-color: white;
 }
 
 .embedded-footer {
