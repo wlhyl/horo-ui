@@ -18,6 +18,7 @@ import { MedievalProfectionComponent } from 'src/app/process/medieval_profection
 import { FirdariaComponent } from 'src/app/process/firdaria/firdaria.component';
 import { DirectionComponent } from 'src/app/process/direction/direction.component';
 import { QuadrantProcessComponent } from 'src/app/process/quadrant_process/quadrant_process.component';
+import { PromittorComponent } from 'src/app/promittor/promittor.component';
 import { CompareComponent } from 'src/app/process/compare/compare.component';
 import { ReturnComponent } from 'src/app/process/return/return.component';
 import {
@@ -42,6 +43,7 @@ import { WindowService } from './window.service';
     FirdariaComponent,
     DirectionComponent,
     QuadrantProcessComponent,
+    PromittorComponent,
     CompareComponent,
     ReturnComponent,
   ],

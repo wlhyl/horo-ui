@@ -149,6 +149,8 @@ export class Horoconfig {
   // 初始宽、高，绘制完成后会根据屏幕大小缩放
   readonly aspectImage = { width: 700, height: 700 };
   readonly horoscoImage = { width: 700, height: 700 };
+  // 承诺星辅助盘：基础星盘(r≤320) + 托勒密界环(320-350) + 承诺星环(350-380)
+  readonly promittorImage = { width: 760, height: 760 };
 
   // 合盘的初始宽、高，绘制完成后会根据屏幕大小缩放
   readonly synastryAspectImage = { width: 700 * 1.3, height: 700 * 1.3 };

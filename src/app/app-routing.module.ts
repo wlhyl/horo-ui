@@ -79,6 +79,11 @@ const routes: Routes = [
     loadComponent: () =>
       import('./workbench/workbench.page').then((m) => m.WorkbenchPage),
   },
+  {
+    path: Path.Promittor,
+    loadChildren: () =>
+      import('./promittor/promittor.routes').then((m) => m.routes),
+  },
 ];
 
 @NgModule({

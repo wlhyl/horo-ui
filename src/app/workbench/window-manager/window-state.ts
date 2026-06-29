@@ -25,6 +25,7 @@ export enum ChartType {
   Direction = 'Direction',
   QuadrantProcess = 'QuadrantProcess',
   SolarArc = 'SolarArc',
+  Promittor = 'Promittor',
 }
 
 export interface WindowRect {
@@ -64,6 +65,7 @@ const CHART_TITLES: Record<ChartType, string> = {
   [ChartType.Direction]: '主向推运',
   [ChartType.QuadrantProcess]: '象限推运',
   [ChartType.SolarArc]: '太阳弧',
+  [ChartType.Promittor]: '承诺星盘',
 };
 
 export function chartTitle(type: ChartType): string {

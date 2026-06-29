@@ -88,6 +88,7 @@ export class InputPanelComponent {
     { type: ChartType.CustomDayProfection, label: '自定义日小限', group: '推运' },
     { type: ChartType.Transit, label: '行运', group: '推运' },
     { type: ChartType.SolarArc, label: '太阳弧', group: '推运' },
+    { type: ChartType.Promittor, label: '承诺星盘', group: '推运' },
     { type: ChartType.QuadrantProcess, label: '象限推运', group: '推运' },
     { type: ChartType.Profection, label: '小限', group: '推运' },
     { type: ChartType.Firdaria, label: '法达', group: '推运' },

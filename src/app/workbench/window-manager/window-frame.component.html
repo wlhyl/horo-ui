@@ -186,6 +186,13 @@
           [embedded]="true"
         ></app-quadrant-process>
       }
+      @case (chartType.Promittor) {
+        <app-promittor
+          [inputHoroData]="horoData()"
+          [canvasId]="window().id"
+          [embedded]="true"
+        ></app-promittor>
+      }
     }
   </div>
 

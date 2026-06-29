@@ -7,9 +7,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - 新增太阳弧推运功能：复用主向推运组件，通过路由区分主限法/太阳弧（参照中世纪小限/自定义日小限模式），太阳弧模式下隐藏算法与换算下拉框；同步集成进工作台窗口
-- 主向推运新增 Regiomontanus「极下法（黄道向运）」算法选项（对应后端 `DirectionMethod::ZodiacalUnderPole`），同步将原「极下法」选项显示名调整为「极下法（世俗向运）」
+- 主向推运新增 Regiomontanus 「极下法（黄道向运）」算法选项（对应后端 `DirectionMethod::ZodiacalUnderPole`），同步将原「极下法」选项显示名调整为「极下法（世俗向运）」
+- 新增承诺星盘功能：辅助主向推运、太阳弧论断的参考图，展示承诺星（合相、左右相位、映点、反映点）在星盘中的位置；支持交互式按行星筛选，选中行星后显示其所有承诺星，未选中时显示为外圈色点；新增按托勒密界筛选功能，选中星座后自动切换为该星座五个界主星按钮，点击界主星显示该界区间内的承诺星与本命行星；行星符号与相位符号沿同一条半径分布（左相位：相位符号在内、行星符号在外；其余：行星符号在内、相位符号/ant/co 在外）；颜色区分左相位（蓝）、右相位（红）、对冲（紫）、映点（绿）、反映点（橙）；集成进 Home 页与工作台窗口
 
 ### Fixed
+
+- 修复行星避让算法 bug：当所有行星/承诺星挤在狭窄角度范围内时，`n` 默认值为 0 导致不执行任何展开，改为 `n = p.length` 确保在找不到足够远的点时展开全部。涉及文件：`horo.ts`（本命盘）、`compare.ts`（比较盘）、`qizheng.ts`（七政，含向前展开 `n` 与向后展开 `m`）、`promittor.ts`（承诺星盘）
 
 - 修复多个表单页面的布局问题：`ion-row` 脱离 `ion-grid`、左列对齐方式不统一（`left_col` 与 `ion-text-right` 混用）、行内 `style` 散落、部分 `ion-col` 缺少 `size` 属性；统一为 `ion-row` 添加 `align-items: center` 实现左右内容垂直居中；压缩 `ion-input`/`ion-select` 默认垂直内边距消除相邻行间距偏宽。涉及页面：本命盘（native）、推运（process）、七政四余（qizheng）、合盘输入（synastry-input）
 - 修正合盘与比较盘说明文字中的错别字：「坚看」改为「竖看」

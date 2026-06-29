@@ -445,7 +445,7 @@ export function drawPlanets(
   // 以下调整行星间的输出间距，保证行星间到少相距w度
   let w = is_native ? 12 : 7; // 字符间宽度，以角度表示
   for (let i = 0; i < p.length; i++) {
-    let n = 0; // 从行星i开始有n-1个行星需要调整间距
+    let n = p.length; // 从行星i开始有n-1个行星需要调整间距
     for (let j = 1; j < p.length; j++) {
       if (degNorm(p[(i + j) % p.length] - p[i]) >= w * j) {
         n = j;
@@ -472,7 +472,7 @@ export function drawPlanets(
     const d = degNorm(mid1 - mid0);
     // 顺时针调整i-1开始的行星位置
     // 需要调整m-1个
-    let m = 0;
+    let m = p.length;
     for (let j = 1; j < p.length; j++) {
       const diff = degNorm(
         // 注意：这里必需用p(i-j+1) - p(i-j),这样作减法才是逆时针的间距

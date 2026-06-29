@@ -356,7 +356,7 @@ export function calculatePlanets(
 
   // Adjust planet positions to avoid overlap
   for (let i = 0; i < p.length; i++) {
-    let n = 0;
+    let n = p.length;
     for (let j = 1; j < p.length; j++) {
       if (degNorm(p[(i + j) % p.length] - p[i]) >= w * j) {
         n = j;

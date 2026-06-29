@@ -12,4 +12,5 @@ export enum Path {
   Event = 'event',
   Historical = 'historical',
   Workbench = 'workbench',
+  Promittor = 'promittor',
 }

@@ -40,6 +40,7 @@ export interface TextObject extends DrawingElement {
   fontFamily: string;
   selectable?: boolean;
   textAlign?: 'left' | 'center';
+  fill?: string;
 }
 
 export interface CircleObject extends DrawingElement {
@@ -79,6 +80,7 @@ export function renderElements(
           fontSize: element.fontSize,
           fontFamily: element.fontFamily,
           selectable: element.selectable ?? false,
+          ...(element.fill ? { fill: element.fill } : {}),
         });
         // 根据textAlign属性决定如何对齐
         const textAlign = element.textAlign ?? 'center';
@@ -390,7 +392,7 @@ export function calculatePlanetElements(
 
   // Adjust planet positions to avoid overlap
   for (let i = 0; i < p.length; i++) {
-    let n = 0;
+    let n = p.length;
     for (let j = 1; j < p.length; j++) {
       if (degNorm(p[(i + j) % p.length] - p[i]) >= w * j) {
         n = j;

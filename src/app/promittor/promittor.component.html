@@ -1,0 +1,93 @@
+@if (!embedded) {
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+}
+
+<ion-alert
+  [isOpen]="isAlertOpen"
+  header="Alert"
+  subHeader="错误！"
+  [message]="message"
+  [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen = false"
+></ion-alert>
+
+@if (initialized) {
+<ion-content [fullscreen]="true">
+  @if (!embedded) {
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  }
+
+  <div class="promittor-container fade-in">
+    <div class="hint">
+      辅助主向推运与太阳弧论断的承诺星参考盘。选中行星后高亮其相位、映点、反映点位置。
+    </div>
+
+    <div class="zodiac-selector">
+      <ion-select
+        [value]="selectedZodiac"
+        placeholder="选择星座（按界筛选）"
+        (ionChange)="onSelectZodiac($event.detail.value)"
+        interface="popover"
+      >
+        <ion-select-option [value]="null">不选星座（按行星筛选）</ion-select-option>
+        @for (z of zodiacOptions; track z) {
+          <ion-select-option [value]="z">
+            <span [style]="'font-family: ' + config.zodiacFontFamily() + ';'">{{ config.zodiacFontString(z) }}</span>
+          </ion-select-option>
+        }
+      </ion-select>
+    </div>
+
+    <div class="planet-selector">
+      <button
+        type="button"
+        class="planet-btn"
+        [class.active]="selection.kind === 'none'"
+        (click)="onSelectPlanet(null)"
+      >全部</button>
+      @for (planet of selectablePlanets; track planet) {
+        <button
+          type="button"
+          class="planet-btn"
+          [class.active]="isPlanetBtnActive(planet)"
+          (click)="onSelectPlanet(planet)"
+        >
+          <span [style]="'font-family: ' + config.planetFontFamily(planet) + ';'">{{ config.planetFontString(planet) }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="chart-canvas-wrapper ion-text-center">
+      @if (loading) {
+        <div class="loading-overlay">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+      }
+      <canvas #canvasRef [id]="canvasId" width="0" height="0"></canvas>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="dot sinister"></span>左相位</span>
+      <span class="legend-item"><span class="dot dexter"></span>右相位</span>
+      <span class="legend-item"><span class="dot opposition"></span>对冲(紫)</span>
+      <span class="legend-item"><span class="dot antiscia"></span>映点(ant)</span>
+      <span class="legend-item"><span class="dot contraantiscia"></span>反映点(co)</span>
+    </div>
+  </div>
+</ion-content>
+} @else {
+  <div class="ion-text-center ion-padding">
+    <ion-label color="medium">承诺星盘数据未初始化</ion-label>
+  </div>
+}
