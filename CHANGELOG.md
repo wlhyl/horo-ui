@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - 新增太阳弧推运功能：复用主向推运组件，通过路由区分主限法/太阳弧（参照中世纪小限/自定义日小限模式），太阳弧模式下隐藏算法与换算下拉框；同步集成进工作台窗口
 - 主向推运新增 Regiomontanus「极下法（黄道向运）」算法选项（对应后端 `DirectionMethod::ZodiacalUnderPole`），同步将原「极下法」选项显示名调整为「极下法（世俗向运）」
 
+### Fixed
+
+- 修复本命盘页脚存档、笔记按钮图标与文字未垂直居中对齐的问题：`.button-content` 改为 `flex-direction: row` + `align-items: center`
+
 ### Changed
 
 - 清理工作台嵌入式组件的冗余代码：移除 `ngOnChanges` 中对静态绑定输入（`inputMode`、`inputProcessName`）的变更检测处理，涉及组件 DirectionComponent、MedievalProfectionComponent、ImageComponent、CompareComponent、ReturnComponent

@@ -21,6 +21,8 @@ ion-toggle.toggle-checked::part(handle) {
 }
 
 ion-button.icon-top {
+  --padding-start: 0;
+  --padding-end: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,12 +31,18 @@ ion-button.icon-top {
   text-align: center;
 }
 
-ion-button.icon-top ion-icon {
-  margin-bottom: 4px;
+.button-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-ion-button.icon-top ion-label {
-  margin-top: 4px;
+.button-content ion-icon {
+  margin-right: 4px;
+}
+
+.button-content ion-label {
+  font-size: 14px;
 }
 
 .embedded-footer {
