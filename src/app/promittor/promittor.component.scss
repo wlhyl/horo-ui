@@ -28,6 +28,8 @@
   ion-select {
     --padding-start: 0.5rem;
     font-size: 0.9rem;
+    // 选中星座时显示的是HamburgSymbols字体字母(如'a'→♈)，中文回退到默认字体
+    font-family: HamburgSymbols, sans-serif;
   }
 }
 

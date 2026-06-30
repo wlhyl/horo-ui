@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- 修复承诺星盘星座下拉列表中星座符号显示为原始字符的问题：`ion-select` 的 popover 渲染在组件 DOM 外，内联 `<span style>` 被剥离。改用 CSS 字体回退机制，通过 `interfaceOptions.cssClass` 给 popover 应用全局字体样式，HamburgSymbols 字体渲染星座字母（'a'→♈ 等），中文自动回退到 sans-serif。涉及文件：`promittor.component.html`（移除 span 包裹、添加 cssClass）、`promittor.component.scss`（ion-select 字体）、`global.scss`（popover 内 ion-radio 字体）
+
 ## [0.26.0] - 2026-07-01
 
 ### Added

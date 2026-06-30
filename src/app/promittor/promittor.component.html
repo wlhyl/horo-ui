@@ -39,12 +39,11 @@
         placeholder="选择星座（按界筛选）"
         (ionChange)="onSelectZodiac($event.detail.value)"
         interface="popover"
+        [interfaceOptions]="{ cssClass: 'zodiac-select-popover' }"
       >
         <ion-select-option [value]="null">不选星座（按行星筛选）</ion-select-option>
         @for (z of zodiacOptions; track z) {
-          <ion-select-option [value]="z">
-            <span [style]="'font-family: ' + config.zodiacFontFamily() + ';'">{{ config.zodiacFontString(z) }}</span>
-          </ion-select-option>
+          <ion-select-option [value]="z">{{ config.zodiacFontString(z) }}</ion-select-option>
         }
       </ion-select>
     </div>
