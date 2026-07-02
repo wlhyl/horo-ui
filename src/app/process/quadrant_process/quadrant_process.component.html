@@ -220,10 +220,12 @@
                 @if (getAntisciaInfo(item.promittor); as antiscia) {
                 {{ antiscia }}
                 }
-                @if (getCusp(item.promittor); as cusp) {
+                @let cusp = getCusp(item.promittor);
+                @if (cusp !== null) {
                 {{ cusp }}C
                 }
-                @if (getSign(item.promittor); as signNum) {
+                @let signNum = getSign(item.promittor);
+                @if (signNum !== null) {
                 <span [style]="'font-family: ' + config.zodiacFontFamily() + ';'">
                   {{ config.zodiacFontString(signNum) }}
                 </span>

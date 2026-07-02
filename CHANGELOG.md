@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.26.2] - 2026-07-03
+
+### Fixed
+
+- 修复推运表 promittor/significator 列中星座为白羊座（sign=0）或宫头为第 1 宫（cusp=0）时不显示的问题：模板中 `@if (getSign(...); as signNum)` / `@if (getCusp(...); as cusp)` / `@if (getSignificatorCusp(...); as cusp)` 将 0 视为 falsy 而跳过渲染。改为 `@let` + 显式 `!== null` 判断。涉及组件：DirectionComponent、MedievalProfectionComponent、QuadrantProcessComponent
+
 ## [0.26.1] - 2026-07-01
 
 ### Fixed

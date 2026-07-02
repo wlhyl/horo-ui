@@ -303,8 +303,9 @@
                   {{ config.planetFontString(planet) }}
                 </span>
                 }
-                @if (getSignificatorCusp(item.significator); as cusp) {
-                {{ cusp }}C
+                @let sigCusp = getSignificatorCusp(item.significator);
+                @if (sigCusp !== null) {
+                {{ sigCusp }}C
                 }
               </td>
               <td>
@@ -318,10 +319,12 @@
                 @if (getAntisciaInfo(item.promittor); as antiscia) {
                 {{ antiscia }}
                 }
-                @if (getCusp(item.promittor); as cusp) {
+                @let cusp = getCusp(item.promittor);
+                @if (cusp !== null) {
                 {{ cusp }}C
                 }
-                @if (getSign(item.promittor); as signNum) {
+                @let signNum = getSign(item.promittor);
+                @if (signNum !== null) {
                 <span [style]="'font-family: ' + config.zodiacFontFamily() + ';'">
                   {{ config.zodiacFontString(signNum) }}
                 </span>
