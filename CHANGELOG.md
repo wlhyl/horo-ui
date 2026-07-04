@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.26.3] - 2026-07-05
+
+### Fixed
+
+- 修复自定义日小限页面标题仍显示为「中世纪小限」的问题：`MedievalProfectionComponent` 在非 embedded 模式下通过路由访问时，`ngOnInit` 只设置了 `mode` 属性，未根据 `mode` 更新 `title` 属性
+
 ## [0.26.2] - 2026-07-03
 
 ### Fixed

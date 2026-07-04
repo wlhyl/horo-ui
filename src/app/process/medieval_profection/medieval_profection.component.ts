@@ -210,6 +210,8 @@ export class MedievalProfectionComponent
         this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
     } else {
       this.mode = this.route.snapshot.data?.['mode'] || ProfectionMode.Medieval;
+      this.title =
+        this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
       this.titleService.setTitle(this.title);
     }
 
