@@ -421,8 +421,7 @@ export class QuadrantProcessComponent
 
       let termStartLong = i * 30;
       for (const term of terms) {
-        const termEndLong =
-          term.d != 30 ? i * 30 + term.d + 1 : i * 30 + term.d;
+        const termEndLong = i * 30 + term.d;
         const angle = termEndLong + 180 - firstCuspLong;
 
         const innerRadius = r0;

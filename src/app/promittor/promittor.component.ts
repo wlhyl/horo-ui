@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { IonicModule, Platform } from '@ionic/angular';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { StaticCanvas } from 'fabric';
 
 import { ApiService } from 'src/app/services/api/api.service';
@@ -39,8 +39,6 @@ import {
   calculatePtolemyBounds,
   PromittorPoint,
   Selection,
-  getTermRange,
-  isInTermRange,
 } from 'src/app/utils/image/promittor';
 import { ptolemyTerm } from 'src/app/utils/image/zodiac';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';

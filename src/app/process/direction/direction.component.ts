@@ -101,7 +101,7 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
     PlanetName.PartOfFortune,
   ];
   selectedSignificatorCusps: number[] = [];
-  arcDirectionFilter: 'all' | 'direct' | 'converse' = 'all';
+  arcDirectionFilter: 'all' | 'direct' | 'converse' = 'direct';
   promittorTypeFilter: PromittorType[] = [];
   selectedPromittorPlanets: PlanetName[] = [];
   allSignificatorPlanets: PlanetName[] = ALL_SIGNIFICATORS;
@@ -408,7 +408,7 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
     this.endDate = addYearsUtil(this.nativeDate, 120);
     this.selectedSignificatorPlanets = [];
     this.selectedSignificatorCusps = [];
-    this.arcDirectionFilter = 'all';
+    this.arcDirectionFilter = 'direct';
     this.promittorTypeFilter = [];
     this.selectedPromittorPlanets = [];
     this.setGeoFromHoroData();

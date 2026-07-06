@@ -33,13 +33,9 @@ export function getTermRange(
   termIndex: number,
 ): { start: number; end: number } {
   const terms = ptolemyTerm(zodiac);
-  // 界边界与绘制代码一致：非末界 d+1，末界（d=30）不加
   const start =
-    termIndex === 0 ? zodiac * 30 : zodiac * 30 + terms[termIndex - 1].d + 1;
-  const end =
-    terms[termIndex].d !== 30
-      ? zodiac * 30 + terms[termIndex].d + 1
-      : zodiac * 30 + terms[termIndex].d;
+    termIndex === 0 ? zodiac * 30 : zodiac * 30 + terms[termIndex - 1].d;
+  const end = zodiac * 30 + terms[termIndex].d;
   return { start, end };
 }
 
@@ -211,8 +207,7 @@ export function calculatePtolemyBounds(
     let termStartLong = i * 30;
     for (let j = 0; j < terms.length; j++) {
       const term = terms[j];
-      const termEndLong =
-        term.d !== 30 ? i * 30 + term.d + 1 : i * 30 + term.d;
+      const termEndLong = i * 30 + term.d;
       const angle = termEndLong + 180 - firstCuspLong;
 
       const x1 = cx + rInner * cos(angle);

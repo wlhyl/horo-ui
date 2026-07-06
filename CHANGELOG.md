@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.26.4] - 2026-07-07
+
+### Fixed
+
+- 修正托勒密界边界计算错误：界端点 `i * 30 + term.d` 不应加 1。原代码 `term.d !== 30 ? i * 30 + term.d + 1 : i * 30 + term.d` 改为 `i * 30 + term.d`；`getTermRange` 中 `start`/`end` 同步去掉 `+1`。涉及文件：`promittor.ts`（`calculatePtolemyBounds`、`getTermRange`）、`quadrant_process.component.ts`
+
+### Changed
+
+- 主向推运组件默认显示正向弧：`arcDirectionFilter` 初始值与 `resetFilters` 重置值从 `'all'` 改为 `'direct'`
+
 ## [0.26.3] - 2026-07-05
 
 ### Fixed
