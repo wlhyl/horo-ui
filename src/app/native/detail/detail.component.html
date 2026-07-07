@@ -1,6 +1,50 @@
 @if (horoscopeData) {
 <div class="detail-content">
+  <ion-alert [isOpen]="isAlertOpen" header="错误" [message]="message" [buttons]="alertButtons"
+    (didDismiss)="isAlertOpen=false"></ion-alert>
   <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>行星力量</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (chartAlmuten) {
+            <p class="almuten-summary">
+              星盘主星：
+              <span [ngStyle]="{'font-family': config.planetFontFamily(chartAlmuten.planet.name)}">
+                {{ config.planetFontString(chartAlmuten.planet.name) }}
+              </span>
+              （{{ chartAlmuten.score }}分）
+            </p>
+            }
+            <ion-list>
+              @for (d of planetDignities; track d.planet.name) {
+              <ion-item>
+                <ion-label>
+                  <span [ngStyle]="{'font-family': config.planetFontFamily(d.planet.name)}">
+                    {{ config.planetFontString(d.planet.name) }}
+                  </span>
+                  ：{{ d.score }}分
+                  @if (d.rulership) { <span class="dignity-tag">庙</span> }
+                  @if (d.exaltation) { <span class="dignity-tag">旺</span> }
+                  @if (d.triplicity) { <span class="dignity-tag">三分</span> }
+                  @if (d.term) { <span class="dignity-tag">界</span> }
+                  @if (d.face) { <span class="dignity-tag">面</span> }
+                  @if (d.fall) { <span class="dignity-tag detriment-tag">陷</span> }
+                  @if (d.detriment) { <span class="dignity-tag detriment-tag">弱</span> }
+                  @if (d.cazimi) { <span class="solar-tag">日核</span> }
+                  @if (d.combust) { <span class="solar-tag">燃烧</span> }
+                  @if (d.underSunbeams) { <span class="solar-tag">太阳光束下</span> }
+                </ion-label>
+              </ion-item>
+              }
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
     <ion-row>
       <ion-col>
         <ion-card>

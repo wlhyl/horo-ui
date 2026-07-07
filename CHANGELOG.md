@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- 本命盘详情页新增「行星力量」卡片：展示7颗传统行星的先天黄道力量(庙/旺/三分/界/面/陷/弱/日核/燃烧/太阳光束下)与总分，并计算星盘主星(分数最高者)。三分主星采用 Lily 版本，界采用托勒密界，日光条件阈值为日核<0°17'、燃烧 0°17'~8°30'、太阳光束下 8°30'~17°。新增工具 `src/app/utils/planet-power/planet-power.ts`
+
 ## [0.26.4] - 2026-07-07
 
 ### Fixed

@@ -283,4 +283,127 @@ describe('DetailComponent', () => {
       expect(result[3].name).toEqual(PlanetName.IC);
     });
   });
+
+  describe('planetDignities', () => {
+    it('should return empty array when horoscopeData is null', () => {
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+
+      expect(component.planetDignities).toEqual([]);
+    });
+
+    it('should return dignities for 7 traditional planets only', () => {
+      const mockHoroscope = createMockHoroscope({
+        planets: [
+          createMockPlanet({ name: PlanetName.Sun, long: 0 }),
+          createMockPlanet({ name: PlanetName.Moon, long: 30 }),
+          createMockPlanet({ name: PlanetName.Mercury, long: 60 }),
+          createMockPlanet({ name: PlanetName.Venus, long: 90 }),
+          createMockPlanet({ name: PlanetName.Mars, long: 120 }),
+          createMockPlanet({ name: PlanetName.Jupiter, long: 150 }),
+          createMockPlanet({ name: PlanetName.Saturn, long: 180 }),
+          createMockPlanet({ name: PlanetName.NorthNode, long: 210 }),
+          createMockPlanet({ name: PlanetName.SouthNode, long: 240 }),
+        ],
+      });
+
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
+      fixture.detectChanges();
+
+      const dignities = component.planetDignities;
+      expect(dignities.length).toBe(7);
+      expect(dignities.map((d) => d.planet.name)).toEqual([
+        PlanetName.Sun,
+        PlanetName.Moon,
+        PlanetName.Mercury,
+        PlanetName.Venus,
+        PlanetName.Mars,
+        PlanetName.Jupiter,
+        PlanetName.Saturn,
+      ]);
+    });
+
+    it('should compute dignity fields correctly (Sun in Aries 0°)', () => {
+      const mockHoroscope = createMockHoroscope({
+        planets: [createMockPlanet({ name: PlanetName.Sun, long: 0 })],
+      });
+
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
+      fixture.detectChanges();
+
+      const sun = component.planetDignities[0];
+      expect(sun.exaltation).toBeTrue();
+      expect(sun.triplicity).toBeTrue();
+      expect(sun.rulership).toBeFalse();
+      expect(sun.cazimi).toBeFalse();
+      expect(sun.score).toBe(7);
+    });
+
+    it('should compute solar conditions for non-Sun planets', () => {
+      const mockHoroscope = createMockHoroscope({
+        planets: [
+          createMockPlanet({ name: PlanetName.Sun, long: 0 }),
+          createMockPlanet({ name: PlanetName.Mercury, long: 5 }),
+        ],
+      });
+
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
+      fixture.detectChanges();
+
+      const mercury = component.planetDignities.find(
+        (d) => d.planet.name === PlanetName.Mercury,
+      )!;
+      expect(mercury.combust).toBeTrue();
+    });
+
+    it('should show alert when Sun is missing', () => {
+      const mockHoroscope = createMockHoroscope({
+        planets: [createMockPlanet({ name: PlanetName.Mercury, long: 0 })],
+      });
+
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
+      fixture.detectChanges();
+
+      const dignities = component.planetDignities;
+      expect(dignities).toEqual([]);
+      expect(component.isAlertOpen).toBeTrue();
+      expect(component.message).toContain('缺少太阳');
+    });
+  });
+
+  describe('chartAlmuten', () => {
+    it('should return null when horoscopeData is null', () => {
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+
+      expect(component.chartAlmuten).toBeNull();
+    });
+
+    it('should return the planet with the highest score', () => {
+      const mockHoroscope = createMockHoroscope({
+        planets: [
+          createMockPlanet({ name: PlanetName.Sun, long: 0 }),
+          createMockPlanet({ name: PlanetName.Moon, long: 90 }),
+          createMockPlanet({ name: PlanetName.Mercury, long: 150 }),
+        ],
+      });
+
+      fixture = TestBed.createComponent(DetailComponent);
+      component = fixture.componentInstance;
+      component.horoscopeData = mockHoroscope;
+      fixture.detectChanges();
+
+      const almuten = component.chartAlmuten;
+      expect(almuten).not.toBeNull();
+      expect(almuten!.planet.name).toBe(PlanetName.Mercury);
+    });
+  });
 });

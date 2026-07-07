@@ -9,6 +9,11 @@ import {
   zodiacLong,
 } from 'src/app/utils/horo-math/horo-math';
 import { PlanetName } from 'src/app/type/enum/planet';
+import {
+  calculateAllPlanetDignities,
+  findChartAlmuten,
+  PlanetDignity,
+} from 'src/app/utils/planet-power/planet-power';
 
 @Component({
   selector: 'app-native-detail',
@@ -24,9 +29,28 @@ export class DetailComponent {
   zodiacLong = zodiacLong;
   planetName = PlanetName;
 
+  isAlertOpen = false;
+  alertButtons = ['OK'];
+  message = '';
+
   constructor(
     public config: Horoconfig,
   ) {}
+
+  get planetDignities(): PlanetDignity[] {
+    if (!this.horoscopeData) return [];
+    const result = calculateAllPlanetDignities(this.horoscopeData.planets);
+    if (!result.ok) {
+      this.message = result.error;
+      this.isAlertOpen = true;
+      return [];
+    }
+    return result.value;
+  }
+
+  get chartAlmuten(): PlanetDignity | null {
+    return findChartAlmuten(this.planetDignities);
+  }
 
   // 计算太阳视力点：ASC + 太阳黄道经度 - 火星黄道经度
   get partOfSolarVision(): number | null {
