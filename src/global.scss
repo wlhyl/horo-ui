@@ -40,6 +40,6 @@ ion-title {
 
 // ion-select的popover渲染在组件DOM之外，需在全局样式设置字体。
 // 星座选项是HamburgSymbols字体字母(如'a'→♈)，中文"不选星座"通过字体回退正常显示。
-.zodiac-select-popover ion-radio {
+.hamburg-select-popover ion-radio {
   font-family: HamburgSymbols, sans-serif;
 }

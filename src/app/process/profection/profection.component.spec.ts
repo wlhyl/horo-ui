@@ -62,6 +62,7 @@ const mockProfectionData: Profection = {
   year_house: 5,
   month_house: 9,
   day_house: 2,
+  hour_house: 6,
   date_per_house: [
     {
       year: 2023,
@@ -82,6 +83,7 @@ const mockProfectionData: Profection = {
       tz: 8,
     },
   ],
+  hour_per_house: [],
 };
 
 describe('ProfectionComponent', () => {
@@ -162,7 +164,9 @@ describe('ProfectionComponent', () => {
         year_house: 0,
         month_house: 0,
         day_house: 0,
+        hour_house: 0,
         date_per_house: [],
+        hour_per_house: [],
       };
 
       expect(component.profection).toEqual(initialProfection);

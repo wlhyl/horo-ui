@@ -35,3 +35,111 @@
   border: 1px solid #e65100;
   border-radius: 3px;
 }
+
+.temperament-error {
+  color: #ff6b6b;
+}
+
+.temperament-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th, td {
+    padding: 2px 4px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    font-weight: bold;
+    color: #666;
+  }
+
+  .name-cell {
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .sources-cell {
+    font-size: 0.7rem;
+    color: #666;
+    max-width: 120px;
+    word-break: break-all;
+  }
+
+  .quality-cell ion-checkbox {
+    --size: 18px;
+  }
+
+  .action-cell ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    min-height: 24px;
+    font-size: 1.1rem;
+    color: #999;
+  }
+}
+
+.temperament-add-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+
+  ion-select {
+    min-width: 100px;
+    font-size: 0.8rem;
+    font-family: HamburgSymbols, sans-serif;
+  }
+}
+
+.humor-summary {
+  margin-top: 12px;
+}
+
+.humor-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.humor-label {
+  width: 60px;
+  font-weight: bold;
+}
+
+.humor-bar-track {
+  flex: 1;
+  min-width: 100px;
+  height: 14px;
+  background: #f0f0f0;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.humor-bar-fill {
+  height: 100%;
+  border-radius: 7px;
+}
+
+.humor-sanguine { background: #e57373; }
+.humor-phlegmatic { background: #64b5f6; }
+.humor-choleric { background: #ffb74d; }
+.humor-melancholic { background: #9e9e9e; }
+
+.humor-score {
+  width: 110px;
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.humor-desc {
+  width: 100%;
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 2px;
+}

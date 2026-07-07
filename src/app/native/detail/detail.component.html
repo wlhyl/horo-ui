@@ -49,6 +49,98 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
+            <ion-card-title>气质</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (temperamentError) {
+            <p class="temperament-error">{{ temperamentError }}</p>
+            }
+            @if (temperamentContributors.length) {
+            <table class="temperament-table">
+              <thead>
+                <tr>
+                  <th>项目</th>
+                  <th>来源</th>
+                  <th>热</th>
+                  <th>冷</th>
+                  <th>干</th>
+                  <th>湿</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (c of temperamentContributors; track c.id) {
+                <tr>
+                  <td class="name-cell">
+                    <span [ngStyle]="{'font-family': contributorFontFamily(c)}">
+                      {{ contributorLabel(c) }}
+                    </span>
+                  </td>
+                  <td class="sources-cell">{{ c.sources.join('、') }}</td>
+                  @for (q of qualityKeys; track q) {
+                  <td class="quality-cell">
+                    <ion-checkbox [checked]="isQualitySet(c, q)" (ionChange)="onToggleQuality(c, q)"></ion-checkbox>
+                  </td>
+                  }
+                  <td class="action-cell">
+                    <ion-button fill="clear" size="small" (click)="removeContributor(c)">×</ion-button>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            <div class="temperament-add-row">
+              <ion-select
+                [value]="selectedNewPlanet"
+                placeholder="添加行星"
+                interface="popover"
+                [interfaceOptions]="{ cssClass: 'hamburg-select-popover' }"
+                (ionChange)="selectedNewPlanet = $event.detail.value"
+              >
+                @for (p of availablePlanets; track p) {
+                <ion-select-option [value]="p">
+                  {{ config.planetFontString(p) }}
+                </ion-select-option>
+                }
+              </ion-select>
+              <ion-button fill="outline" size="small" [disabled]="selectedNewPlanet === null" (click)="addPlanetContributor()">添加</ion-button>
+              <ion-select
+                [value]="selectedNewSign"
+                placeholder="添加星座"
+                interface="popover"
+                [interfaceOptions]="{ cssClass: 'hamburg-select-popover' }"
+                (ionChange)="selectedNewSign = $event.detail.value"
+              >
+                @for (s of availableSigns; track s) {
+                <ion-select-option [value]="s">
+                  {{ config.zodiacFontString(s) }}
+                </ion-select-option>
+                }
+              </ion-select>
+              <ion-button fill="outline" size="small" [disabled]="selectedNewSign === null" (click)="addSignContributor()">添加</ion-button>
+            </div>
+            <div class="humor-summary">
+              @for (h of humorDisplay; track h.key) {
+              <div class="humor-row">
+                <span class="humor-label">{{ h.label }}</span>
+                <div class="humor-bar-track">
+                  <div [class]="'humor-bar-fill humor-' + h.key" [style.width.%]="h.percent"></div>
+                </div>
+                <span class="humor-score">{{ h.score }}分 ({{ h.percent.toFixed(0) }}%)</span>
+                <small class="humor-desc">{{ h.desc }}</small>
+              </div>
+              }
+            </div>
+            <ion-button fill="outline" size="small" (click)="resetTemperament()">重置</ion-button>
+            }
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
             <ion-card-title>映点</ion-card-title>
           </ion-card-header>
           <ion-card-content>

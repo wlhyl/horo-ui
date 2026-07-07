@@ -39,7 +39,7 @@
         placeholder="选择星座（按界筛选）"
         (ionChange)="onSelectZodiac($event.detail.value)"
         interface="popover"
-        [interfaceOptions]="{ cssClass: 'zodiac-select-popover' }"
+        [interfaceOptions]="{ cssClass: 'hamburg-select-popover' }"
       >
         <ion-select-option [value]="null">不选星座（按行星筛选）</ion-select-option>
         @for (z of zodiacOptions; track z) {

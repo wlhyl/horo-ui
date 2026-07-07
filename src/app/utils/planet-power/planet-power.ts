@@ -1,7 +1,9 @@
 import { PlanetName } from '../../type/enum/planet';
 import { Planet } from '../../type/interface/response-data';
+import { DeepReadonly } from '../../type/interface/deep-readonly';
+import { Result } from '../../type/interface/result';
 import { Zodiac } from '../../type/enum/zodiac';
-import { degNorm, zodiacLong } from '../horo-math/horo-math';
+import { angularDistance, degNorm, zodiacLong } from '../horo-math/horo-math';
 import {
   detriment,
   exaltation,
@@ -51,15 +53,6 @@ export interface PlanetDignity {
   combust: boolean;
   underSunbeams: boolean;
   score: number;
-}
-
-/**
- * 计算两个黄道经度之间的最小角距（归一化到 [0, 180]）。
- * 例如：a=350°, b=10° → 返回 20°（而非 340°）
- */
-function angularDistance(a: number, b: number): number {
-  const diff = degNorm(a - b);
-  return diff > 180 ? 360 - diff : diff;
 }
 
 export function calculatePlanetDignity(
@@ -131,12 +124,8 @@ export function calculatePlanetDignity(
   };
 }
 
-export type Result<T, E> =
-  | { ok: true; value: T }
-  | { ok: false; error: E };
-
 export function calculateAllPlanetDignities(
-  planets: Planet[],
+  planets: DeepReadonly<Planet[]>,
 ): Result<PlanetDignity[], string> {
   const sun = planets.find((p) => p.name === PlanetName.Sun);
   if (!sun) {

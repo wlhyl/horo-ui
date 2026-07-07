@@ -37,6 +37,17 @@ export function degNorm(x: number): number {
 }
 
 /**
+ * 计算两个黄道经度之间的角距离（最短弧度）
+ * @param a 黄道经度 a
+ * @param b 黄道经度 b
+ * @returns 两点之间的最短角距离，范围 [0, 180]
+ */
+export function angularDistance(a: number, b: number): number {
+  const diff = degNorm(a - b);
+  return diff > 180 ? 360 - diff : diff;
+}
+
+/**
  *
  * @param degree 度数
  * @returns 返回度数的，度、分、秒，秒不作四舍五入
