@@ -68,6 +68,7 @@ const mockHoroConfig: Horoconfig = {
   },
   aspectImage: { width: 700, height: 700 },
   horoscoImage: { width: 700, height: 700 },
+  promittorImage: { width: 760, height: 760 },
   synastryAspectImage: { width: 700 * 1.3, height: 700 * 1.3 },
   synastryHoroscoImage: { width: 700 * 1.3, height: 700 * 1.3 },
   houses: [],

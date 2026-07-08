@@ -1,0 +1,63 @@
+<ion-row>
+  <ion-col>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>接纳</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        @if (receptions.length > 0) {
+        <ion-list>
+          @for (r of receptions; track $index) {
+          <ion-item>
+            <ion-label>
+              <span [style.font-family]="config.planetFontFamily(r.receiver)">{{ config.planetFontString(r.receiver) }}</span>
+              接纳
+              <span [style.font-family]="config.planetFontFamily(r.received)">{{ config.planetFontString(r.received) }}</span>
+              <span [style.font-family]="config.aspectFontFamily()" class="aspect-glyph">{{ config.aspectFontString(r.aspect.aspect_value) }}</span>
+              <span class="orb">{{ formatOrb(r.aspect.d) }}</span>
+              @for (dk of r.dignities; track dk) {
+              <span class="dignity-tag">{{ dignityLabel(dk) }}</span>
+              }
+            </ion-label>
+          </ion-item>
+          }
+        </ion-list>
+        } @else {
+        <ion-note color="medium">无接纳关系</ion-note>
+        }
+      </ion-card-content>
+    </ion-card>
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>互融</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        @if (mutualReceptions.length > 0) {
+        <ion-list>
+          @for (m of mutualReceptions; track $index) {
+          <ion-item>
+            <ion-label>
+              <span [style.font-family]="config.planetFontFamily(m.a)">{{ config.planetFontString(m.a) }}</span>
+              @for (dk of m.aDignities; track dk) {
+              <span class="dignity-tag">{{ dignityLabel(dk) }}</span>
+              }
+              <span class="mutual-arrow">↔</span>
+              <span [style.font-family]="config.planetFontFamily(m.b)">{{ config.planetFontString(m.b) }}</span>
+              @for (dk of m.bDignities; track dk) {
+              <span class="dignity-tag">{{ dignityLabel(dk) }}</span>
+              }
+            </ion-label>
+          </ion-item>
+          }
+        </ion-list>
+        } @else {
+        <ion-note color="medium">无互融关系</ion-note>
+        }
+      </ion-card-content>
+    </ion-card>
+  </ion-col>
+</ion-row>

@@ -32,13 +32,14 @@ import {
   TemperamentContributor,
   TemperamentSummary,
 } from 'src/app/utils/temperament/temperament';
+import { ReceptionComponent } from './reception/reception.component';
 
 @Component({
   selector: 'app-native-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
-  imports: [IonicModule, NgStyle],
+  imports: [IonicModule, NgStyle, ReceptionComponent],
 })
 export class DetailComponent implements OnInit, OnChanges {
   @Input() horoscopeData: Horoscope | null = null;

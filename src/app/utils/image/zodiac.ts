@@ -2,6 +2,20 @@ import { PlanetName } from 'src/app/type/enum/planet';
 import { Zodiac } from 'src/app/type/enum/zodiac';
 
 /**
+ * 七传统行星：日月水金火木土
+ * 用于行星力量计算、接纳/互融判断等传统占星场景
+ */
+export const TRADITIONAL_PLANETS: PlanetName[] = [
+  PlanetName.Sun,
+  PlanetName.Moon,
+  PlanetName.Mercury,
+  PlanetName.Venus,
+  PlanetName.Mars,
+  PlanetName.Jupiter,
+  PlanetName.Saturn,
+];
+
+/**
  * 获取星座的守护星
  * @param z 星座
  * @returns 守护星
@@ -293,4 +307,38 @@ export function egyptianTerm(z: Zodiac) {
     case Zodiac.Pisces:
       return [{p:PlanetName.Venus,d:12}, {p:PlanetName.Jupiter,d:16}, {p:PlanetName.Mercury,d:19}, {p:PlanetName.Mars,d:28}, {p:PlanetName.Saturn,d:30}]
   }
+}
+
+/**
+ * 给定星座内某度数的全部尊贵主星
+ * @param zodiac 星座
+ * @param degree 星座内度数 [0, 30)
+ */
+export interface DignityLords {
+  rulership: PlanetName;
+  exaltation: PlanetName | null;
+  triplicity: PlanetName[];
+  term: PlanetName;
+  face: PlanetName;
+}
+
+export function getDignityLordsAt(zodiac: Zodiac, degree: number): DignityLords {
+  const terms = ptolemyTerm(zodiac);
+  let term = terms[terms.length - 1].p;
+  for (let i = 0; i < terms.length; i++) {
+    const start = i === 0 ? 0 : terms[i - 1].d;
+    const end = terms[i].d;
+    if (degree >= start && degree < end) {
+      term = terms[i].p;
+      break;
+    }
+  }
+
+  return {
+    rulership: rulership(zodiac),
+    exaltation: exaltation(zodiac),
+    triplicity: tripilicityOfLily(zodiac),
+    term,
+    face: face(zodiac)[Math.floor(degree / 10)],
+  };
 }

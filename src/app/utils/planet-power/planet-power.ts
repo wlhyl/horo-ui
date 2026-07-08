@@ -3,15 +3,12 @@ import { Planet } from '../../type/interface/response-data';
 import { DeepReadonly } from '../../type/interface/deep-readonly';
 import { Result } from '../../type/interface/result';
 import { Zodiac } from '../../type/enum/zodiac';
-import { angularDistance, degNorm, zodiacLong } from '../horo-math/horo-math';
+import { angularDistance, zodiacLong } from '../horo-math/horo-math';
 import {
   detriment,
-  exaltation,
-  face,
   fall,
-  ptolemyTerm,
-  rulership,
-  tripilicityOfLily,
+  getDignityLordsAt,
+  TRADITIONAL_PLANETS,
 } from '../image/zodiac';
 
 export const DIGNITY_SCORES = {
@@ -28,16 +25,13 @@ export const CAZIMI_THRESHOLD = 17 / 60;
 export const COMBUST_THRESHOLD = 8.5;
 export const SUNBEAMS_THRESHOLD = 17;
 
-const TRADITIONAL_PLANETS: PlanetName[] = [
-  PlanetName.Sun,
-  PlanetName.Moon,
-  PlanetName.Mercury,
-  PlanetName.Venus,
-  PlanetName.Mars,
-  PlanetName.Jupiter,
-  PlanetName.Saturn,
-];
-
+/**
+ * 行星先天黄道力量：描述某行星在其所处位置的尊贵状态
+ * - 庙/旺/三分/界/面：正向力量
+ * - 陷/弱：负向力量
+ * - 日核/燃烧/太阳光束下：与太阳的关系状态
+ * - score：各项力量分数之和（正负抵扣）
+ */
 export interface PlanetDignity {
   planet: Planet;
   zodiac: Zodiac;
@@ -60,26 +54,13 @@ export function calculatePlanetDignity(
   sunLong: number,
 ): PlanetDignity {
   const { zodiac, long: zodiacDegree } = zodiacLong(planet.long);
+  const lords = getDignityLordsAt(zodiac, zodiacDegree);
 
-  const isRulership = rulership(zodiac) === planet.name;
-  const isExaltation = exaltation(zodiac) === planet.name;
-  const isTriplicity = tripilicityOfLily(zodiac).includes(planet.name);
-
-  const terms = ptolemyTerm(zodiac);
-  let isTerm = false;
-  for (let i = 0; i < terms.length; i++) {
-    const start = i === 0 ? 0 : terms[i - 1].d;
-    const end = terms[i].d;
-    if (zodiacDegree >= start && zodiacDegree < end) {
-      isTerm = terms[i].p === planet.name;
-      break;
-    }
-  }
-
-  const faceIndex = Math.floor(zodiacDegree / 10);
-  const faces = face(zodiac);
-  const isFace = faces[faceIndex] === planet.name;
-
+  const isRulership = lords.rulership === planet.name;
+  const isExaltation = lords.exaltation === planet.name;
+  const isTriplicity = lords.triplicity.includes(planet.name);
+  const isTerm = lords.term === planet.name;
+  const isFace = lords.face === planet.name;
   const isFall = fall(zodiac) === planet.name;
   const isDetriment = detriment(zodiac) === planet.name;
 

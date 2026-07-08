@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 - 本命盘详情页新增「行星力量」卡片：展示7颗传统行星的先天黄道力量(庙/旺/三分/界/面/陷/弱/日核/燃烧/太阳光束下)与总分，并计算星盘主星(分数最高者)。三分主星采用 Lily 版本，界采用托勒密界，日光条件阈值为日核<0°17'、燃烧 0°17'~8°30'、太阳光束下 8°30'~17°。新增工具 `src/app/utils/planet-power/planet-power.ts`
 - 本命盘详情页新增「气质」卡片：依据传统体液学说收集影响气质的行星与星座(1宫主星、1宫内行星、与ASC相位行星、月亮及其相位行星、太阳、星盘主星、相关星座)，按热/冷/干/湿四性质计次，计算四体液(多血质/粘液质/胆汁质/抑郁质)分数与占比。表格支持编辑四性质后实时重算并提供重置按钮。新增工具 `src/app/utils/temperament/temperament.ts`
+- 本命盘详情页新增「接纳」卡片：行星A与行星B有相位，且B位于行星A的庙/旺/三分/界/面之一，则A接纳B。接纳方A限于七传统行星(日月水金火木土)，被接纳方B可为七传统行星、福点、ASC/DSC/MC/IC。显示相位符号与容许度，以及尊贵种类标签
+- 本命盘详情页新增「互融」卡片：行星A对行星B位置有任意尊贵，且行星B对行星A位置有任意尊贵，则A、B互融。不要求有相位。A、B限于七传统行星。双向分别显示尊贵种类标签
+- 新增独立组件 `ReceptionComponent` 与工具 `src/app/utils/reception/reception.ts`，接纳/互融计算逻辑独立于 detail 组件
+
+### Changed
+
+- 重构 `planet-power.ts`：提取共享原语 `getDignityLordsAt(zodiac, degree)` 到 `image/zodiac.ts`，`calculatePlanetDignity` 改用该原语，删除内联 term 区间循环与 face 度数判定，行为等价
 
 ## [0.26.4] - 2026-07-07
 
