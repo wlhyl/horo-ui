@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - 本命盘详情页新增「接纳」卡片：行星A与行星B有相位，且B位于行星A的庙/旺/三分/界/面之一，则A接纳B。接纳方A限于七传统行星(日月水金火木土)，被接纳方B可为七传统行星、福点、ASC/DSC/MC/IC。显示相位符号与容许度，以及尊贵种类标签
 - 本命盘详情页新增「互融」卡片：行星A对行星B位置有任意尊贵，且行星B对行星A位置有任意尊贵，则A、B互融。不要求有相位。A、B限于七传统行星。双向分别显示尊贵种类标签
 - 新增独立组件 `ReceptionComponent` 与工具 `src/app/utils/reception/reception.ts`，接纳/互融计算逻辑独立于 detail 组件
+- 新增独立组件 `TemperamentComponent`，气质计算逻辑独立于 detail 组件，包含四性质表格编辑、行星/星座添加、体液占比可视化等功能
 
 ### Changed
 
