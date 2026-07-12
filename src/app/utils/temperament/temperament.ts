@@ -225,7 +225,12 @@ export function calculateTemperamentContributors(
 
   for (const p of horo.planets) {
     if (!GATHERABLE_PLANETS.includes(p.name)) continue;
-    if (hasPtolemaicAspect(p.long, ascLong, ASPECT_ORB)) {
+    const isNode = p.name === PlanetName.NorthNode || p.name === PlanetName.SouthNode;
+    if (isNode) {
+      if (angularDistance(p.long, ascLong) <= ASPECT_ORB) {
+        addPlanet(p.name, '与ASC合相');
+      }
+    } else if (hasPtolemaicAspect(p.long, ascLong, ASPECT_ORB)) {
       addPlanet(p.name, '与ASC相位');
     }
   }
