@@ -1,9 +1,6 @@
 import {
   Component,
   Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
@@ -15,43 +12,33 @@ import {
   zodiacLong,
 } from 'src/app/utils/horo-math/horo-math';
 import { PlanetName } from 'src/app/type/enum/planet';
-import {
-  calculateAllPlanetDignities,
-  findChartAlmuten,
-  PlanetDignity,
-} from 'src/app/utils/planet-power/planet-power';
 import { ReceptionComponent } from './reception/reception.component';
 import { TemperamentComponent } from './temperament/temperament.component';
+import { PlanetPowerComponent } from './planet-power/planet-power.component';
 
 @Component({
   selector: 'app-native-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
-  imports: [IonicModule, NgStyle, ReceptionComponent, TemperamentComponent],
+  imports: [
+    IonicModule,
+    NgStyle,
+    ReceptionComponent,
+    TemperamentComponent,
+    PlanetPowerComponent,
+  ],
 })
-export class DetailComponent implements OnInit, OnChanges {
+export class DetailComponent {
   @Input() horoscopeData: Horoscope | null = null;
 
   degreeToDMSFn = degreeToDMS;
   zodiacLong = zodiacLong;
   planetName = PlanetName;
 
-  isAlertOpen = false;
-  alertButtons = ['OK'];
-  message = '';
-
-  planetDignities: PlanetDignity[] = [];
-
-  private initialized = false;
-
   constructor(
     public config: Horoconfig,
   ) {}
-
-  get chartAlmuten(): PlanetDignity | null {
-    return findChartAlmuten(this.planetDignities);
-  }
 
   // 计算太阳视力点：ASC + 太阳黄道经度 - 火星黄道经度
   get partOfSolarVision(): number | null {
@@ -115,35 +102,5 @@ export class DetailComponent implements OnInit, OnChanges {
       this.horoscopeData.ic,
       ...this.horoscopeData.planets,
     ];
-  }
-
-  ngOnInit(): void {
-    this.refreshAll();
-    this.initialized = true;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.initialized && changes['horoscopeData']) {
-      this.refreshAll();
-    }
-  }
-
-  private refreshAll(): void {
-    this.refreshDignities();
-  }
-
-  private refreshDignities(): void {
-    if (!this.horoscopeData) {
-      this.planetDignities = [];
-      return;
-    }
-    const result = calculateAllPlanetDignities(this.horoscopeData.planets);
-    if (!result.ok) {
-      this.message = result.error;
-      this.isAlertOpen = true;
-      this.planetDignities = [];
-      return;
-    }
-    this.planetDignities = result.value;
   }
 }
