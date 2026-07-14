@@ -8,7 +8,6 @@ import {
 import { Horoscope, Planet } from '../../type/interface/response-data';
 import { Result } from '../../type/interface/result';
 import {
-  ASPECT_ORB,
   calculateTemperamentContributors,
   calculateTemperamentSummary,
   ContributorKind,
@@ -58,12 +57,6 @@ function findSign(
 }
 
 describe('temperament', () => {
-  describe('常量', () => {
-    it('ASC相位容许度为5度', () => {
-      expect(ASPECT_ORB).toBe(5);
-    });
-  });
-
   describe('calculateTemperamentContributors - 错误处理', () => {
     it('缺少太阳时返回错误', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
@@ -239,62 +232,40 @@ describe('temperament', () => {
       expect(mars!.sources).toContain('1宫主星');
     });
 
-    it('与ASC托勒密相位(5°)边界：恰5°入选，超5°落选', () => {
-      // ASC 0°，六合点 60°。Saturn 65°(dist=5) 入选；66°(dist=6) 落选
-      // Sun 0° Aries 为 almuten(score7)，Saturn 非 almuten
-      const inHoro = makeHoro({
+    it('与ASC相位取自aspects字段', () => {
+      const horo = makeHoro({
         asc: 0,
         sun: 0,
         moon: 180,
-        planets: [makePlanet(PlanetName.Saturn, 65)],
+        planets: [makePlanet(PlanetName.Saturn, 200)],
+        aspects: [createMockAspect({ p0: PlanetName.ASC, p1: PlanetName.Saturn })],
       });
-      const inValue = expectOk(calculateTemperamentContributors(inHoro));
-      expect(findPlanet(inValue, PlanetName.Saturn)).toBeDefined();
-
-      const outHoro = makeHoro({
-        asc: 0,
-        sun: 0,
-        moon: 180,
-        planets: [makePlanet(PlanetName.Saturn, 66)],
-      });
-      const outValue = expectOk(calculateTemperamentContributors(outHoro));
-      expect(findPlanet(outValue, PlanetName.Saturn)).toBeUndefined();
+      const value = expectOk(calculateTemperamentContributors(horo));
+      const saturn = findPlanet(value, PlanetName.Saturn)!;
+      expect(saturn).toBeDefined();
+      expect(saturn.sources).toContain('与ASC相位');
     });
 
-    it('1宫内区间[cusp0-5,cusp1-5)边界：上界排除', () => {
-      // cusps[0]=0,cusps[1]=30 → belt=[355,25)。24°入选(在belt)，25°落选
+    it('1宫内行星：使用getPlanetHouse判断', () => {
       const cusps = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-      const inValue = expectOk(
+      const value = expectOk(
         calculateTemperamentContributors(
-          makeHoro({ asc: 0, sun: 0, moon: 180, cusps, planets: [makePlanet(PlanetName.Saturn, 24)] }),
+          makeHoro({ asc: 0, sun: 0, moon: 180, cusps, planets: [makePlanet(PlanetName.Saturn, 15)] }),
         ),
       );
-      expect(findPlanet(inValue, PlanetName.Saturn)).toBeDefined();
-
-      const outValue = expectOk(
-        calculateTemperamentContributors(
-          makeHoro({ asc: 0, sun: 0, moon: 180, cusps, planets: [makePlanet(PlanetName.Saturn, 25)] }),
-        ),
-      );
-      expect(findPlanet(outValue, PlanetName.Saturn)).toBeUndefined();
+      const saturn = findPlanet(value, PlanetName.Saturn)!;
+      expect(saturn).toBeDefined();
+      expect(saturn.sources).toContain('1宫内行星');
     });
 
-    it('1宫内区间跨0°环回：358°入选，354°落选', () => {
-      // belt=[355,25)。358°在belt内；354°不在belt且距ASC 6°(无相位)
+    it('非1宫内行星(无ASC相位)落选', () => {
       const cusps = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-      const inValue = expectOk(
+      const value = expectOk(
         calculateTemperamentContributors(
-          makeHoro({ asc: 0, sun: 0, moon: 180, cusps, planets: [makePlanet(PlanetName.Saturn, 358)] }),
+          makeHoro({ asc: 0, sun: 0, moon: 180, cusps, planets: [makePlanet(PlanetName.Saturn, 45)] }),
         ),
       );
-      expect(findPlanet(inValue, PlanetName.Saturn)).toBeDefined();
-
-      const outValue = expectOk(
-        calculateTemperamentContributors(
-          makeHoro({ asc: 0, sun: 0, moon: 180, cusps, planets: [makePlanet(PlanetName.Saturn, 354)] }),
-        ),
-      );
-      expect(findPlanet(outValue, PlanetName.Saturn)).toBeUndefined();
+      expect(findPlanet(value, PlanetName.Saturn)).toBeUndefined();
     });
 
     it('与月亮相位复用 aspects 数组', () => {

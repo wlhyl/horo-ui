@@ -13,27 +13,63 @@
           <span [ngStyle]="{'font-family': config.planetFontFamily(chartAlmuten.planet.name)}">
             {{ config.planetFontString(chartAlmuten.planet.name) }}
           </span>
-          （{{ chartAlmuten.score }}分）
+          （{{ chartAlmuten.totalScore }}分）
         </p>
         }
         <ion-list>
-          @for (d of planetDignities; track d.planet.name) {
+          @for (d of planetPowers; track d.planet.name) {
           <ion-item>
             <ion-label>
               <span [ngStyle]="{'font-family': config.planetFontFamily(d.planet.name)}">
                 {{ config.planetFontString(d.planet.name) }}
               </span>
-              ：{{ d.score }}分
-              @if (d.rulership) { <span class="dignity-tag">庙</span> }
-              @if (d.exaltation) { <span class="dignity-tag">旺</span> }
-              @if (d.triplicity) { <span class="dignity-tag">三分</span> }
-              @if (d.term) { <span class="dignity-tag">界</span> }
-              @if (d.face) { <span class="dignity-tag">面</span> }
-              @if (d.fall) { <span class="dignity-tag detriment-tag">陷</span> }
-              @if (d.detriment) { <span class="dignity-tag detriment-tag">弱</span> }
-              @if (d.cazimi) { <span class="solar-tag">日核</span> }
-              @if (d.combust) { <span class="solar-tag">燃烧</span> }
-              @if (d.underSunbeams) { <span class="solar-tag">太阳光束下</span> }
+              ：{{ d.totalScore }}分
+              <div class="score-section">
+                <span class="section-label">先天 {{ d.essential.score }}</span>
+                @if (d.essential.rulership) { <span class="dignity-tag">庙{{ 5 }}</span> }
+                @if (d.essential.exaltation) { <span class="dignity-tag">旺{{ 4 }}</span> }
+                @if (d.essential.triplicity) { <span class="dignity-tag">三分{{ 3 }}</span> }
+                @if (d.essential.term) { <span class="dignity-tag">界{{ 2 }}</span> }
+                @if (d.essential.face) { <span class="dignity-tag">面{{ 1 }}</span> }
+                @if (d.essential.mutualReceptionRulership) { <span class="dignity-tag">庙互容{{ 5 }}</span> }
+                @if (d.essential.mutualReceptionExaltation) { <span class="dignity-tag">旺互容{{ 4 }}</span> }
+                @if (d.essential.fall) { <span class="dignity-tag detriment-tag">陷{{ -4 }}</span> }
+                @if (d.essential.detriment) { <span class="dignity-tag detriment-tag">弱{{ -5 }}</span> }
+                @if (d.essential.peregrine) { <span class="dignity-tag detriment-tag">游离{{ -5 }}</span> }
+              </div>
+              <div class="score-section">
+                <span class="section-label">后天 {{ d.accidental.score }}</span>
+                @if (d.accidental.house === 1 || d.accidental.house === 10) { <span class="accidental-tag">{{ d.accidental.house }}宫{{ 5 }}</span> }
+                @if (d.accidental.house === 7 || d.accidental.house === 4 || d.accidental.house === 11) { <span class="accidental-tag">{{ d.accidental.house }}宫{{ 4 }}</span> }
+                @if (d.accidental.house === 2 || d.accidental.house === 5) { <span class="accidental-tag">{{ d.accidental.house }}宫{{ 3 }}</span> }
+                @if (d.accidental.house === 9) { <span class="accidental-tag">{{ d.accidental.house }}宫{{ 2 }}</span> }
+                @if (d.accidental.house === 3) { <span class="accidental-tag">{{ d.accidental.house }}宫{{ 1 }}</span> }
+                @if (d.accidental.house === 12) { <span class="accidental-tag detriment-tag">{{ d.accidental.house }}宫{{ -5 }}</span> }
+                @if (d.accidental.house === 6 || d.accidental.house === 8) { <span class="accidental-tag detriment-tag">{{ d.accidental.house }}宫{{ -2 }}</span> }
+                @if (d.accidental.direct) { <span class="accidental-tag">顺{{ 4 }}</span> }
+                @if (d.accidental.retrograde) { <span class="accidental-tag detriment-tag">逆{{ -5 }}</span> }
+                @if (d.accidental.fast) { <span class="accidental-tag">快{{ 2 }}</span> }
+                @if (d.accidental.slow) { <span class="accidental-tag detriment-tag">慢{{ -2 }}</span> }
+                @if (d.accidental.oriental && (d.planet.name === 'Mars' || d.planet.name === 'Jupiter' || d.planet.name === 'Saturn')) { <span class="accidental-tag">东{{ 2 }}</span> }
+                @if (d.accidental.occidental && (d.planet.name === 'Mars' || d.planet.name === 'Jupiter' || d.planet.name === 'Saturn')) { <span class="accidental-tag detriment-tag">西{{ -2 }}</span> }
+                @if (d.accidental.occidental && (d.planet.name === 'Venus' || d.planet.name === 'Mercury')) { <span class="accidental-tag">西{{ 2 }}</span> }
+                @if (d.accidental.oriental && (d.planet.name === 'Venus' || d.planet.name === 'Mercury')) { <span class="accidental-tag detriment-tag">东{{ -2 }}</span> }
+                @if (d.accidental.waxing) { <span class="accidental-tag">渐圆{{ 2 }}</span> }
+                @if (d.accidental.waning) { <span class="accidental-tag detriment-tag">渐亏{{ -2 }}</span> }
+                @if (d.accidental.cazimi) { <span class="solar-tag">日核{{ 5 }}</span> }
+                @if (d.accidental.combust) { <span class="solar-tag detriment-tag">燃烧{{ -5 }}</span> }
+                @if (d.accidental.underSunbeams) { <span class="solar-tag detriment-tag">光束下{{ -4 }}</span> }
+                @if (d.accidental.freeFromSun) { <span class="accidental-tag">离日{{ 5 }}</span> }
+                @if (d.accidental.conjunctBenefic) { <span class="accidental-tag">吉星合{{ 5 }}</span> }
+                @if (d.accidental.conjunctNorthNode) { <span class="accidental-tag">北交合{{ 4 }}</span> }
+                @if (d.accidental.trineBenefic) { <span class="accidental-tag">吉星三合{{ 4 }}</span> }
+                @if (d.accidental.sextileBenefic) { <span class="accidental-tag">吉星六合{{ 3 }}</span> }
+                @if (d.accidental.conjunctMalefic) { <span class="accidental-tag detriment-tag">凶星合{{ -5 }}</span> }
+                @if (d.accidental.conjunctSouthNode) { <span class="accidental-tag detriment-tag">南交合{{ -4 }}</span> }
+                @if (d.accidental.besieged) { <span class="accidental-tag detriment-tag">包围{{ -5 }}</span> }
+                @if (d.accidental.oppositionMalefic) { <span class="accidental-tag detriment-tag">凶星冲{{ -4 }}</span> }
+                @if (d.accidental.squareMalefic) { <span class="accidental-tag detriment-tag">凶星刑{{ -3 }}</span> }
+              </div>
             </ion-label>
           </ion-item>
           }

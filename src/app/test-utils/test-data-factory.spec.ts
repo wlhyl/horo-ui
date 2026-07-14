@@ -31,6 +31,7 @@ import { LunarMansionsName } from '../type/enum/qizheng';
 import { ProcessName } from '../process/enum/process';
 import { DirectionMethod } from '../process/enum/direction-method';
 import { ArcToDateMethod } from '../process/enum/arc-to-date-method';
+import { ProfectionArcToDateMethod } from '../process/enum/profection-arc-to-date-method';
 
 /**
  * 测试数据工厂类
@@ -114,6 +115,7 @@ export class TestDataFactory {
       isSolarReturn: false,
       direction_method: DirectionMethod.SemiArc,
       arc_to_date_method: ArcToDateMethod.DegreePerYear,
+      profection_arc_to_date_method: ProfectionArcToDateMethod.TrueSolarArc,
       ...overrides,
     };
   }
@@ -405,7 +407,7 @@ export class TestDataFactory {
       return_date: this.createDefaultHoroDateTime(overrides?.return_date),
       geo: this.createDefaultGeoPosition(overrides?.geo),
       house_name: 'Placidus',
-      houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+      cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
       asc: this.createDefaultPlanet({
         ...overrides?.asc,
         name: PlanetName.ASC,

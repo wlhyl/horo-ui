@@ -2,17 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.27.0] - 2026-07-15
 
 ### Added
 
-- 本命盘详情页新增「行星力量」卡片：展示7颗传统行星的先天黄道力量(庙/旺/三分/界/面/陷/弱/日核/燃烧/太阳光束下)与总分，并计算星盘主星(分数最高者)。三分主星采用 Lily 版本，界采用托勒密界，日光条件阈值为日核<0°17'、燃烧 0°17'~8°30'、太阳光束下 8°30'~17°。新增独立组件 `PlanetPowerComponent` 与工具 `src/app/utils/planet-power/planet-power.ts`
-- 本命盘详情页新增「气质」卡片：依据传统体液学说收集影响气质的行星与星座(1宫主星、1宫内行星、与ASC相位行星、月亮及其相位行星、太阳、星盘主星、相关星座)，按热/冷/干/湿四性质计次，计算四体液(多血质/粘液质/胆汁质/抑郁质)分数与占比。表格支持编辑四性质后实时重算并提供重置按钮。南北交点在与ASC形成相位时只计入合相，不计入其他托勒密相位。新增独立组件 `TemperamentComponent` 与工具 `src/app/utils/temperament/temperament.ts`
-- 本命盘详情页新增「接纳」与「互融」卡片：接纳指行星A与行星B有相位且B位于A的庙/旺/三分/界/面之一；互融指A与B相互对对方位置有尊贵(不要求相位)。接纳方/互融双方限于七传统行星，被接纳方可为七传统行星、福点、ASC/DSC/MC/IC。显示相位符号、容许度及尊贵种类标签。新增独立组件 `ReceptionComponent` 与工具 `src/app/utils/reception/reception.ts`
+- 本命盘详情页新增「行星力量」卡片：展示 7 颗传统行星及福点的先天尊贵(庙/旺/三分/界/面/陷/弱/游离/互容)与后天力量(宫位/顺逆行/快慢/东西方/月相/日光条件/相位/包围)及总分，并计算星盘主星（7 颗传统行星中分数最高者）。三分主星采用 Lily 版本，界采用托勒密界。日光条件阈值：日核 <0°17'、燃烧 0°17'~8°30'、太阳光束下 8°30'~17°。宫位计算采用 5 度规则并在星座边界做调整。福点仅计算先天尊贵与宫位/日光条件/相位等后天力量，不计算运动相关项（顺逆行/快慢/东西方/月相），不算游离星。新增独立组件 `PlanetPowerComponent` 与工具 `src/app/utils/planet-power/planet-power.ts`
+- 本命盘详情页新增「气质」卡片：依据传统体液学说收集影响气质的行星与星座（1 宫主星、1 宫内行星、与 ASC 相位行星、月亮及其相位行星、太阳、星盘主星、相关星座），按热/冷/干/湿四性质计次，计算四体液（多血质/粘液质/胆汁质/抑郁质）分数与占比。表格支持编辑四性质后实时重算并提供重置按钮。南北交点与 ASC 形成相位时只计入合相，不计入其他托勒密相位。新增独立组件 `TemperamentComponent` 与工具 `src/app/utils/temperament/temperament.ts`
+- 本命盘详情页新增「接纳」与「互融」卡片：接纳指行星 A 与行星 B 有相位且 B 位于 A 的庙/旺/三分/界/面之一；互融指 A 与 B 相互对对方位置有尊贵（不要求相位）。接纳方/互融双方限于七传统行星，被接纳方可为七传统行星、福点、ASC/DSC/MC/IC。显示相位符号、容许度及尊贵种类标签。新增独立组件 `ReceptionComponent` 与工具 `src/app/utils/reception/reception.ts`
+- `PlanetName` 枚举添加 `isSuperior()`、`isInferior()`、`isBenefic()`、`isMalefic()` 方法
+- 新增 `Result<T, E>` 类型用于函数返回值错误传递
 
 ### Changed
 
 - 重构 `planet-power.ts`：提取共享原语 `getDignityLordsAt(zodiac, degree)` 到 `image/zodiac.ts`，`calculatePlanetDignity` 改用该原语，删除内联 term 区间循环与 face 度数判定，行为等价
+- 将行星力量卡片与气质卡片从 `DetailComponent` 抽取为独立组件 `PlanetPowerComponent` 与 `TemperamentComponent`
+- 月相判定：增光 0°<elongation≤180°，减光 elongation>180°，新月为过渡点；东西方判定：东方 elongation>180°，西方 0°<elongation<180°，合相/对冲为过渡点
+- 行星力量与气质模块统一使用 `getPlanetHouse` 判断宫位
+- `horo-math.ts` 新增 `angularDistance` 与 `inCircularRange` 工具函数
+
+### Fixed
+
+- 修正 `calculatePlanetDignity` 误含日光条件计算，仅保留先天尊贵判定
+- 修正 `test-data-factory.spec.ts` 中 `ReturnHoroscope` 接口 `houses_cusps` → `cusps` 及缺失的 `profection_arc_to_date_method`
 
 ## [0.26.4] - 2026-07-07
 

@@ -8,11 +8,11 @@ import {
 import { NgStyle } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Horoscope } from 'src/app/type/interface/response-data';
+import { PlanetName } from 'src/app/type/enum/planet';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import {
-  calculateAllPlanetDignities,
-  findChartAlmuten,
-  PlanetDignity,
+  calculateAllPlanetPowers,
+  PlanetPower,
 } from 'src/app/utils/planet-power/planet-power';
 
 @Component({
@@ -25,7 +25,7 @@ import {
 export class PlanetPowerComponent implements OnInit, OnChanges {
   @Input() horoscopeData: Horoscope | null = null;
 
-  planetDignities: PlanetDignity[] = [];
+  planetPowers: PlanetPower[] = [];
 
   isAlertOpen = false;
   alertButtons = ['OK'];
@@ -37,8 +37,14 @@ export class PlanetPowerComponent implements OnInit, OnChanges {
     public config: Horoconfig,
   ) {}
 
-  get chartAlmuten(): PlanetDignity | null {
-    return findChartAlmuten(this.planetDignities);
+  get chartAlmuten(): PlanetPower | null {
+    const planets = this.planetPowers.filter(
+      (p) => p.planet.name !== PlanetName.PartOfFortune,
+    );
+    if (planets.length === 0) return null;
+    return planets.reduce((max, current) =>
+      current.totalScore > max.totalScore ? current : max,
+    );
   }
 
   ngOnInit(): void {
@@ -54,16 +60,16 @@ export class PlanetPowerComponent implements OnInit, OnChanges {
 
   private refresh(): void {
     if (!this.horoscopeData) {
-      this.planetDignities = [];
+      this.planetPowers = [];
       return;
     }
-    const result = calculateAllPlanetDignities(this.horoscopeData.planets);
+    const result = calculateAllPlanetPowers(this.horoscopeData);
     if (!result.ok) {
       this.message = result.error;
       this.isAlertOpen = true;
-      this.planetDignities = [];
+      this.planetPowers = [];
       return;
     }
-    this.planetDignities = result.value;
+    this.planetPowers = result.value;
   }
 }

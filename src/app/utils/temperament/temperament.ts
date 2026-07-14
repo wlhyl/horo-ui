@@ -3,12 +3,13 @@ import { Zodiac } from '../../type/enum/zodiac';
 import { Horoscope, Planet } from '../../type/interface/response-data';
 import { DeepReadonly } from '../../type/interface/deep-readonly';
 import { Result } from '../../type/interface/result';
-import { angularDistance, degNorm, zodiacLong } from '../horo-math/horo-math';
+import { degNorm, zodiacLong } from '../horo-math/horo-math';
 import { rulership } from '../image/zodiac';
 import {
   calculateAllPlanetDignities,
   findChartAlmuten,
 } from '../planet-power/planet-power';
+import { getPlanetHouse } from '../planet-power/house-placement';
 
 export enum Quality {
   Hot = 'hot',
@@ -51,10 +52,6 @@ export interface TemperamentSummary {
   };
 }
 
-export const ASPECT_ORB = 5;
-export const FIRST_HOUSE_OFFSET = 5;
-export const PTOLEMAIC_ASPECTS = [0, 60, 90, 120, 180];
-
 export const GATHERABLE_PLANETS: readonly PlanetName[] = [
   PlanetName.Sun,
   PlanetName.Moon,
@@ -76,20 +73,6 @@ const PLANET_FIXED_QUALITIES: Partial<Record<PlanetName, Quality[]>> = {
   [PlanetName.NorthNode]: [Quality.Hot, Quality.Wet],
   [PlanetName.SouthNode]: [Quality.Hot, Quality.Dry, Quality.Cold],
 };
-
-/**
- * 判断两个黄道经度之间是否存在托勒密相位
- * @param a 黄道经度 a
- * @param b 黄道经度 b
- * @param orb 允许的容许度（度数）
- * @returns 若存在合相(0°)、六分相(60°)、四分相(90°)、三分相(120°)或对分相(180°)且在容许度范围内，返回 true
- */
-function hasPtolemaicAspect(a: number, b: number, orb: number): boolean {
-  return PTOLEMAIC_ASPECTS.some((aspect) => {
-    const target = degNorm(b + aspect);
-    return angularDistance(a, target) <= orb;
-  });
-}
 
 function sunQualities(sunSign: Zodiac): Quality[] {
   const group = Math.floor(sunSign / 3);
@@ -149,21 +132,6 @@ function planetQualities(
   return { ok: true, value: PLANET_FIXED_QUALITIES[name] ?? [] };
 }
 
-/**
- * 判断黄道经度是否位于圆形范围内（支持跨越 0°/360° 边界）
- * @param long 待判断的黄道经度
- * @param start 范围起点
- * @param end 范围终点
- * @returns 若经度在 [start, end) 范围内返回 true
- *          当 start <= end 时为正常区间（如 10° 到 50°）
- *          当 start > end 时为跨越边界区间（如 350° 到 20°，表示从 350° 经过 0° 到 20°）
- */
-function inCircularRange(long: number, start: number, end: number): boolean {
-  return start <= end
-    ? long >= start && long < end
-    : long >= start || long < end;
-}
-
 function toContributor(
   kind: ContributorKind,
   name: PlanetName | Zodiac,
@@ -198,13 +166,7 @@ export function calculateTemperamentContributors(
 
   const elongation = degNorm(moon.long - sun.long);
   const sunSign = zodiacLong(sun.long).zodiac;
-  const ascLong = horo.asc.long;
-  const ascSign = zodiacLong(ascLong).zodiac;
-  const rawBeltStart = degNorm(horo.cusps[0] - FIRST_HOUSE_OFFSET);
-  const beltStart = zodiacLong(rawBeltStart).zodiac === ascSign
-    ? rawBeltStart
-    : ascSign * 30;
-  const beltEnd = degNorm(horo.cusps[1] - FIRST_HOUSE_OFFSET);
+  const ascSign = zodiacLong(horo.asc.long).zodiac;
 
   const planetByName = new Map(horo.planets.map((p) => [p.name, p] as [PlanetName, Planet]));
 
@@ -218,20 +180,21 @@ export function calculateTemperamentContributors(
 
   for (const p of horo.planets) {
     if (!GATHERABLE_PLANETS.includes(p.name)) continue;
-    if (inCircularRange(p.long, beltStart, beltEnd)) {
+    const houseResult = getPlanetHouse(p.long, horo.cusps);
+    if (!houseResult.ok) {
+      return { ok: false, error: houseResult.error };
+    }
+    if (houseResult.value === 1) {
       addPlanet(p.name, '1宫内行星');
     }
   }
 
-  for (const p of horo.planets) {
-    if (!GATHERABLE_PLANETS.includes(p.name)) continue;
-    const isNode = p.name === PlanetName.NorthNode || p.name === PlanetName.SouthNode;
-    if (isNode) {
-      if (angularDistance(p.long, ascLong) <= ASPECT_ORB) {
-        addPlanet(p.name, '与ASC合相');
-      }
-    } else if (hasPtolemaicAspect(p.long, ascLong, ASPECT_ORB)) {
-      addPlanet(p.name, '与ASC相位');
+  for (const a of horo.aspects) {
+    let other: PlanetName | null = null;
+    if (a.p0 === PlanetName.ASC) other = a.p1;
+    else if (a.p1 === PlanetName.ASC) other = a.p0;
+    if (other !== null && GATHERABLE_PLANETS.includes(other)) {
+      addPlanet(other, '与ASC相位');
     }
   }
 

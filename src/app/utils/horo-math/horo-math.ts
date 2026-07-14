@@ -81,6 +81,21 @@ export function zodiacLong(long: number): { zodiac: Zodiac; long: number } {
 }
 
 /**
+ * 判断黄道经度是否位于圆形范围内（支持跨越 0°/360° 边界）
+ * @param long 待判断的黄道经度
+ * @param start 范围起点
+ * @param end 范围终点
+ * @returns 若经度在 [start, end) 范围内返回 true
+ *          当 start <= end 时为正常区间（如 10° 到 50°）
+ *          当 start > end 时为跨越边界区间（如 350° 到 20°，表示从 350° 经过 0° 到 20°）
+ */
+export function inCircularRange(long: number, start: number, end: number): boolean {
+  return start <= end
+    ? long >= start && long < end
+    : long >= start || long < end;
+}
+
+/**
  * NewtonIteration 牛顿迭代法求解方程的根
  */
 export function newtonIteration(
