@@ -262,8 +262,12 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     return this.api.solarReturn(requestData);
   }
 
-  // 计算每日回归
+  // 计算每日回归：默认基于本命，勾选日返月返时基于日返的月返
   private getDailyReturnData(): Observable<ReturnHoroscope> {
+    if (this.currentProcessData.isSolarReturn) {
+      return this.getLunarDailyReturnData();
+    }
+
     const requestData: ReturnRequest = {
       native_date: this.horoData.date,
       geo: this.processData.geo,
@@ -272,6 +276,31 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     };
 
     return this.api.dailyReturn(requestData);
+  }
+
+  // 计算月返每日回归：以月返 return_date 为 native_date 调用每日回归接口
+  // 月返由 getLunarReturnData 计算，其内部已按 isSolarReturn 处理日返基准
+  private getLunarDailyReturnData(): Observable<ReturnHoroscope> {
+    return this.getLunarReturnData().pipe(
+      switchMap((lunarReturnData) => {
+        const dailyRequest: ReturnRequest = {
+          native_date: {
+            year: lunarReturnData.return_date.year,
+            month: lunarReturnData.return_date.month,
+            day: lunarReturnData.return_date.day,
+            hour: lunarReturnData.return_date.hour,
+            minute: lunarReturnData.return_date.minute,
+            second: lunarReturnData.return_date.second,
+            tz: lunarReturnData.return_date.tz,
+            st: false,
+          },
+          geo: this.processData.geo, // 注意：这里的geo是返照盘的地理位置
+          house: this.horoData.house,
+          process_date: this.currentProcessData.date, // 这里使用当前的processData.date
+        };
+        return this.api.dailyReturn(dailyRequest);
+      }),
+    );
   }
 
   // 计算月返

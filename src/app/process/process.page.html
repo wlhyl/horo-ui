@@ -175,10 +175,11 @@
 
     @if (processData.process_name===processNameEnum.LunarReturn ||
     processData.process_name===processNameEnum.LunarcomparNative ||
-    processData.process_name===processNameEnum.NativecomparLunar) {
+    processData.process_name===processNameEnum.NativecomparLunar ||
+    processData.process_name===processNameEnum.DailyReturn) {
     <ion-row>
       <ion-col size="5" class="ion-text-right">
-        <ion-label>日返月亮：</ion-label>
+        <ion-label>{{ processData.process_name===processNameEnum.DailyReturn ? '日返月返' : '日返月亮' }}：</ion-label>
       </ion-col>
       <ion-col size="7">
         <ion-checkbox [(ngModel)]="processData.isSolarReturn"></ion-checkbox>

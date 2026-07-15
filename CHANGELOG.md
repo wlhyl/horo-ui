@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.28.0] - 2026-07-16
+
+### Added
+
+- 每日回归盘新增「日返月返」复选框：未勾选时基于本命计算（原有行为），勾选后基于日返的月返计算每日回归（先取日返 return_date 作为月返 native_date，再取月返 return_date 作为每日回归 native_date）
+
+### Changed
+
+- `getDailyReturnData()` 支持按 `isSolarReturn` 分支：勾选时走 `getLunarDailyReturnData()` 三步链式（日返→月返→每日回归），否则走原有本命逻辑
+- `process.page.html` 与 `input-panel.component.html` 中复选框显示条件加入 `DailyReturn`，标签按类型切换（每日回归显示「日返月返」，月返显示「日返月亮」）
+
 ## [0.27.0] - 2026-07-15
 
 ### Added
