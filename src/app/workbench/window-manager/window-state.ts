@@ -23,8 +23,9 @@ export enum ChartType {
   DailycomparNative = 'DailycomparNative',
   NativecomparDaily = 'NativecomparDaily',
   Direction = 'Direction',
-  QuadrantProcess = 'QuadrantProcess',
+  DailyDirection = 'DailyDirection',
   SolarArc = 'SolarArc',
+  QuadrantProcess = 'QuadrantProcess',
   Promittor = 'Promittor',
 }
 
@@ -63,8 +64,9 @@ const CHART_TITLES: Record<ChartType, string> = {
   [ChartType.DailycomparNative]: '每日回归比本命',
   [ChartType.NativecomparDaily]: '本命比每日回归',
   [ChartType.Direction]: '主向推运',
-  [ChartType.QuadrantProcess]: '象限推运',
+  [ChartType.DailyDirection]: '每日回归方向弧',
   [ChartType.SolarArc]: '太阳弧',
+  [ChartType.QuadrantProcess]: '象限推运',
   [ChartType.Promittor]: '承诺星盘',
 };
 

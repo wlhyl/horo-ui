@@ -9,6 +9,7 @@ import {
   FirdariaRequest,
   DirectionRequest,
   SolarArcRequest,
+  DailyDirectionRequest,
   QiZhengRequst,
   QuadrantProcessRequest,
   QuadrantProcessLongitudeRequest,
@@ -124,6 +125,13 @@ export class ApiService {
   public solarArc(data: SolarArcRequest): Observable<Array<Direction>> {
     return this.http.post<Array<Direction>>(
       `${this.url}/process/solar_arc`,
+      data,
+    );
+  }
+
+  public dailyDirection(data: DailyDirectionRequest): Observable<Array<Direction>> {
+    return this.http.post<Array<Direction>>(
+      `${this.url}/process/daily_directions`,
       data,
     );
   }

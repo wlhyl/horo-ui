@@ -16,8 +16,9 @@ export enum ProcessName {
   DailycomparNative = 'DailycomparNative',
   NativecomparDaily = 'NativecomparDaily',
   Direction = 'Direction',
-  QuadrantProcess = 'QuadrantProcess',
+  DailyDirection = 'DailyDirection',
   SolarArc = 'SolarArc',
+  QuadrantProcess = 'QuadrantProcess',
 }
 
 export namespace ProcessName {
@@ -37,8 +38,9 @@ export namespace ProcessName {
     [ProcessName.DailycomparNative]: '每日回归比本命',
     [ProcessName.NativecomparDaily]: '本命比每日回归',
     [ProcessName.Direction]: '主向推运',
-    [ProcessName.QuadrantProcess]: '象限推运',
+    [ProcessName.DailyDirection]: '每日回归方向弧',
     [ProcessName.SolarArc]: '太阳弧',
+    [ProcessName.QuadrantProcess]: '象限推运',
   };
 
   const pathMap: { [key in ProcessName]: Path } = {
@@ -57,8 +59,9 @@ export namespace ProcessName {
     [ProcessName.DailycomparNative]: Path.DailycomparNative,
     [ProcessName.NativecomparDaily]: Path.NativecomparDaily,
     [ProcessName.Direction]: Path.Direction,
-    [ProcessName.QuadrantProcess]: Path.QuadrantProcess,
+    [ProcessName.DailyDirection]: Path.DailyDirection,
     [ProcessName.SolarArc]: Path.SolarArc,
+    [ProcessName.QuadrantProcess]: Path.QuadrantProcess,
   };
 
   export function name(process: ProcessName): string {

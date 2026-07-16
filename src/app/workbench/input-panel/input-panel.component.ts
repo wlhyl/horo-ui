@@ -8,6 +8,7 @@ import { ProcessName } from 'src/app/process/enum/process';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
+import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
 import { ChartType } from '../window-manager/window-state';
 
 @Component({
@@ -52,8 +53,9 @@ export class InputPanelComponent {
     ProcessName.DailycomparNative,
     ProcessName.NativecomparDaily,
     ProcessName.Direction,
-    ProcessName.QuadrantProcess,
+    ProcessName.DailyDirection,
     ProcessName.SolarArc,
+    ProcessName.QuadrantProcess,
   ].map((process_name) => ({
     text: ProcessName.name(process_name),
     value: process_name,
@@ -73,6 +75,13 @@ export class InputPanelComponent {
       value: method,
     }));
 
+  readonly dailyDirectionMethodOptions = Object.values(DailyDirectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: DailyDirectionMethod.name(method),
+      value: method,
+    }));
+
   readonly profectionArcToDateMethodOptions = Object.values(ProfectionArcToDateMethod)
     .filter((v) => typeof v === 'string')
     .map((method) => ({
@@ -84,10 +93,11 @@ export class InputPanelComponent {
     { type: ChartType.Native, label: '本命盘', group: '基础' },
     { type: ChartType.Event, label: '天象盘', group: '基础' },
     { type: ChartType.Direction, label: '主向推运', group: '推运' },
+    { type: ChartType.DailyDirection, label: '每日回归方向弧', group: '推运' },
+    { type: ChartType.SolarArc, label: '太阳弧', group: '推运' },
     { type: ChartType.MedievalProfection, label: '中世纪小限', group: '推运' },
     { type: ChartType.CustomDayProfection, label: '自定义日小限', group: '推运' },
     { type: ChartType.Transit, label: '行运', group: '推运' },
-    { type: ChartType.SolarArc, label: '太阳弧', group: '推运' },
     { type: ChartType.Promittor, label: '承诺星盘', group: '推运' },
     { type: ChartType.QuadrantProcess, label: '象限推运', group: '推运' },
     { type: ChartType.Profection, label: '小限', group: '推运' },

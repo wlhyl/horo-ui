@@ -21,16 +21,20 @@ import {
   GeoRequest,
   HoroRequest,
   ProcessRequest,
+  ReturnRequest,
+  DailyDirectionRequest,
 } from 'src/app/type/interface/request-data';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import { DirectionMode } from 'src/app/process/enum/direction-mode';
+import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
 import { ActivatedRoute } from '@angular/router';
 import {
   Direction,
   HoroDateTime,
   Promittor,
   PromittorType,
+  ReturnHoroscope,
   Significator,
 } from 'src/app/type/interface/response-data';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
@@ -43,7 +47,7 @@ import {
   getSignInfo as getSignInfoUtil,
 } from 'src/app/utils/promittor/promittor';
 import { PlanetName } from 'src/app/type/enum/planet';
-import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
+import { debounceTime, finalize, Subject, takeUntil, switchMap, Observable } from 'rxjs';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
@@ -127,6 +131,9 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   // 弧转日期换算方式枚举，供模板使用
   ArcToDateMethod = ArcToDateMethod;
 
+  // 每日方向弧算法枚举，供模板使用
+  DailyDirectionMethod = DailyDirectionMethod;
+
   // 推运模式枚举，供模板使用
   DirectionMode = DirectionMode;
 
@@ -146,6 +153,14 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
       value: method,
     }));
 
+  // 每日方向弧算法选项
+  dailyDirectionMethodOptions = Object.values(DailyDirectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: DailyDirectionMethod.name(method),
+      value: method,
+    }));
+
   // 相位类型过滤选项
   promittorTypeOptions: { value: PromittorType; text: string }[] =
     PromittorType.values().map((type) => ({
@@ -158,6 +173,11 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   // 弧转日期换算方式选择
   arcToDateMethod: ArcToDateMethod =
     this.storage.processData.arc_to_date_method;
+  // 每日方向弧算法选择
+  dailyDirectionMethod: DailyDirectionMethod =
+    this.storage.processData.daily_direction_method;
+  // 每日回归返回数据（用于显示返照时间）
+  returnHoroscopeData: ReturnHoroscope | null = null;
   // 宫位系统选择
   house: string = this.horoData.house;
 
@@ -187,14 +207,15 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
       if (this.inputProcessData) {
         this.directionMethod = this.inputProcessData.direction_method;
         this.arcToDateMethod = this.inputProcessData.arc_to_date_method;
+        this.dailyDirectionMethod = this.inputProcessData.daily_direction_method;
       }
       if (this.inputMode) {
         this.mode = this.inputMode;
-        this.title = this.mode === DirectionMode.SolarArc ? '太阳弧' : '主向推运';
+        this.title = this.titleForMode(this.mode);
       }
     } else {
       this.mode = this.route.snapshot.data?.['mode'] || DirectionMode.Primary;
-      this.title = this.mode === DirectionMode.SolarArc ? '太阳弧' : '主向推运';
+      this.title = this.titleForMode(this.mode);
       this.titleService.setTitle(this.title);
     }
 
@@ -236,6 +257,10 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['inputProcessData'] && this.inputProcessData) {
       this.directionMethod = this.inputProcessData.direction_method;
       this.arcToDateMethod = this.inputProcessData.arc_to_date_method;
+      this.dailyDirectionMethod = this.inputProcessData.daily_direction_method;
+      if (this.mode === DirectionMode.DailyDirection) {
+        this.setGeoFromHoroData();
+      }
       needRefetch = true;
     }
 
@@ -250,7 +275,7 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private setGeoFromHoroData(): void {
-    const geo = this.horoData.geo;
+    const geo = this.mode === DirectionMode.DailyDirection ? this.processDataGeo : this.horoData.geo;
     const longDms = degreeToDMS(geo.long);
     this.geoLongD = Math.abs(longDms.d);
     this.geoLongM = Math.abs(longDms.m);
@@ -293,20 +318,45 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
     if (this.isLoading) return;
     if (!this.validateGeo()) return;
 
-    const request$ =
-      this.mode === DirectionMode.SolarArc
-        ? this.api.solarArc({
-            native_date: this.nativeDate,
+    let request$: Observable<Array<Direction>>;
+
+    if (this.mode === DirectionMode.DailyDirection) {
+      request$ = this.fetchDailyReturnChain().pipe(
+        switchMap((returnData) => {
+          this.returnHoroscopeData = returnData;
+          const dailyDirectionRequest: DailyDirectionRequest = {
+            native_date: {
+              year: returnData.return_date.year,
+              month: returnData.return_date.month,
+              day: returnData.return_date.day,
+              hour: returnData.return_date.hour,
+              minute: returnData.return_date.minute,
+              second: returnData.return_date.second,
+              tz: returnData.return_date.tz,
+              st: false,
+            },
             geo: this.geo,
+            method: this.dailyDirectionMethod,
             house: this.house,
-          })
-        : this.api.direction({
-            native_date: this.nativeDate,
-            geo: this.geo,
-            method: this.directionMethod,
-            arc_to_date_method: this.arcToDateMethod,
-            house: this.house,
-          });
+          };
+          return this.api.dailyDirection(dailyDirectionRequest);
+        }),
+      );
+    } else if (this.mode === DirectionMode.SolarArc) {
+      request$ = this.api.solarArc({
+        native_date: this.nativeDate,
+        geo: this.geo,
+        house: this.house,
+      });
+    } else {
+      request$ = this.api.direction({
+        native_date: this.nativeDate,
+        geo: this.geo,
+        method: this.directionMethod,
+        arc_to_date_method: this.arcToDateMethod,
+        house: this.house,
+      });
+    }
 
     this.isLoading = true;
     this.cdr.markForCheck();
@@ -328,6 +378,94 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
           this.cdr.markForCheck();
         },
       });
+  }
+
+  private titleForMode(mode: DirectionMode): string {
+    switch (mode) {
+      case DirectionMode.SolarArc:
+        return '太阳弧';
+      case DirectionMode.DailyDirection:
+        return '每日回归方向弧';
+      default:
+        return '主向推运';
+    }
+  }
+
+  private get isSolarReturn(): boolean {
+    return this.inputProcessData?.isSolarReturn ?? this.storage.processData.isSolarReturn;
+  }
+
+  private get processDataGeo(): GeoRequest {
+    return this.inputProcessData?.geo ?? this.storage.processData.geo;
+  }
+
+  private get processDataDate(): DateRequest {
+    return this.inputProcessData?.date ?? this.storage.processData.date;
+  }
+
+  // 获取每日回归链：isSolarReturn=true 时走"日返→月返→每日回归"
+  private fetchDailyReturnChain(): Observable<ReturnHoroscope> {
+    if (this.isSolarReturn) {
+      return this.getLunarDailyReturnData();
+    }
+
+    const requestData: ReturnRequest = {
+      native_date: this.horoData.date,
+      geo: this.geo,
+      house: this.horoData.house,
+      process_date: this.processDataDate,
+    };
+
+    return this.api.dailyReturn(requestData);
+  }
+
+  // 日返→月返→每日回归
+  private getLunarDailyReturnData(): Observable<ReturnHoroscope> {
+    const solarRequest: ReturnRequest = {
+      native_date: this.horoData.date,
+      geo: this.geo,
+      house: this.horoData.house,
+      process_date: this.processDataDate,
+    };
+
+    return this.api.solarReturn(solarRequest).pipe(
+      switchMap((solarReturnData) => {
+        const lunarRequest: ReturnRequest = {
+          native_date: {
+            year: solarReturnData.return_date.year,
+            month: solarReturnData.return_date.month,
+            day: solarReturnData.return_date.day,
+            hour: solarReturnData.return_date.hour,
+            minute: solarReturnData.return_date.minute,
+            second: solarReturnData.return_date.second,
+            tz: solarReturnData.return_date.tz,
+            st: false,
+          },
+          geo: this.geo,
+          house: this.horoData.house,
+          process_date: this.processDataDate,
+        };
+        return this.api.lunarReturn(lunarRequest);
+      }),
+      switchMap((lunarReturnData) => {
+        const dailyRequest: ReturnRequest = {
+          native_date: {
+            year: lunarReturnData.return_date.year,
+            month: lunarReturnData.return_date.month,
+            day: lunarReturnData.return_date.day,
+            hour: lunarReturnData.return_date.hour,
+            minute: lunarReturnData.return_date.minute,
+            second: lunarReturnData.return_date.second,
+            tz: lunarReturnData.return_date.tz,
+            st: false,
+          },
+          geo: this.geo,
+          house: this.horoData.house,
+          process_date: this.processDataDate,
+        };
+        return this.api.dailyReturn(dailyRequest);
+      }),
+    );
   }
 
   updateNativeDate(): void {

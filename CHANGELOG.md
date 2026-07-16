@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- 新增"每日回归方向弧"功能：以每日回归时间为基准（视为本命时间）计算方向弧，方向弧转时间采用固定 360°=24 小时换算（1°≈4 分钟）。复用主向推运组件，通过 `DirectionMode.DailyDirection` 区分
+- 每日回归方向弧支持两种算法：太阳弧风格（弧 = 承诺星黄经 − 显著星黄经）、黄道向运风格（主向推运 SemiArc 算法）
+- 每日回归方向弧支持「日返月返」复选框：未勾选时基于本命计算每日回归，勾选后基于日返的月返计算每日回归（先取日返 return_date 作为月返 native_date，再取月返 return_date 作为每日回归 native_date），与每日回归盘行为一致
+- 每日回归方向弧在工作台窗口管理中可独立打开，窗口标题为「每日回归方向弧」
+
 ## [0.28.0] - 2026-07-16
 
 ### Added

@@ -250,7 +250,8 @@
       @if (processData.process_name === processNameEnum.LunarReturn ||
         processData.process_name === processNameEnum.LunarcomparNative ||
         processData.process_name === processNameEnum.NativecomparLunar ||
-        processData.process_name === processNameEnum.DailyReturn) {
+        processData.process_name === processNameEnum.DailyReturn ||
+        processData.process_name === processNameEnum.DailyDirection) {
         <div class="form-row">
           <label class="form-label">{{ processData.process_name === processNameEnum.DailyReturn ? '日返月返' : '日返月亮' }}</label>
           <ion-checkbox [(ngModel)]="processData.isSolarReturn" (ionChange)="onProcessDataChange()"></ion-checkbox>
@@ -282,6 +283,23 @@
             (ionChange)="onProcessDataChange()"
           >
             @for (option of arcToDateMethodOptions; track option) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      }
+
+      @if (processData.process_name === processNameEnum.DailyDirection) {
+        <div class="form-row">
+          <label class="form-label">方向弧算法</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="processData.daily_direction_method"
+            (ionChange)="onProcessDataChange()"
+          >
+            @for (option of dailyDirectionMethodOptions; track option) {
               <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
             }
           </ion-select>

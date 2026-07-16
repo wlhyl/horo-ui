@@ -42,6 +42,11 @@ export const routes: Routes = [
     component: DirectionComponent,
   },
   {
+    path: ProcessName.path(ProcessName.DailyDirection),
+    component: DirectionComponent,
+    data: { mode: DirectionMode.DailyDirection },
+  },
+  {
     path: ProcessName.path(ProcessName.SolarArc),
     component: DirectionComponent,
     data: { mode: DirectionMode.SolarArc },

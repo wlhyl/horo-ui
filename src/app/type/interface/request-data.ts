@@ -2,6 +2,7 @@ import { ProcessName } from '../../process/enum/process';
 import { DirectionMethod } from '../../process/enum/direction-method';
 import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../../process/enum/profection-arc-to-date-method';
+import { DailyDirectionMethod } from '../../process/enum/daily-direction-method';
 import {
   HistoricalHouseCusp,
   HistoricalPlanetPosition,
@@ -49,6 +50,7 @@ export interface ProcessRequest {
   direction_method: DirectionMethod;
   arc_to_date_method: ArcToDateMethod;
   profection_arc_to_date_method: ProfectionArcToDateMethod;
+  daily_direction_method: DailyDirectionMethod;
 }
 
 export interface ProfectionRequest {
@@ -118,6 +120,23 @@ export interface SolarArcRequest {
 
   // 出生地大地经纬度
   geo: GeoRequest;
+
+  // 宫位系统
+  house: string;
+}
+
+/**
+ * 每日回归方向弧
+ */
+export interface DailyDirectionRequest {
+  // 每日回归时间（视为本命时间）
+  native_date: DateRequest;
+
+  // 大地经纬度
+  geo: GeoRequest;
+
+  // 方向弧算法
+  method: DailyDirectionMethod;
 
   // 宫位系统
   house: string;

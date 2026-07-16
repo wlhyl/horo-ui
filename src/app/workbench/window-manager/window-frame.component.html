@@ -178,6 +178,14 @@
           [embedded]="true"
         ></app-direction>
       }
+      @case (chartType.DailyDirection) {
+        <app-direction
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
+          [inputMode]="directionModeEnum.DailyDirection"
+          [embedded]="true"
+        ></app-direction>
+      }
       @case (chartType.QuadrantProcess) {
         <app-quadrant-process
           [inputHoroData]="horoData()"

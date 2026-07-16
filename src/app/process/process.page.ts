@@ -6,6 +6,7 @@ import { ProcessName } from './enum/process';
 import { DirectionMethod } from './enum/direction-method';
 import { ArcToDateMethod } from './enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from './enum/profection-arc-to-date-method';
+import { DailyDirectionMethod } from './enum/daily-direction-method';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -62,6 +63,7 @@ export class ProcessPage implements OnInit {
     ProcessName.MedievalProfection,
     ProcessName.CustomDayProfection,
     ProcessName.Direction,
+    ProcessName.DailyDirection,
     ProcessName.SolarArc,
     ProcessName.QuadrantProcess,
     ProcessName.Transit,
@@ -92,6 +94,13 @@ export class ProcessPage implements OnInit {
     .filter((v) => typeof v === 'string')
     .map((method) => ({
       text: ArcToDateMethod.name(method),
+      value: method,
+    }));
+
+  dailyDirectionMethodOptions = Object.values(DailyDirectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: DailyDirectionMethod.name(method),
       value: method,
     }));
 

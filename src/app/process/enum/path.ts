@@ -15,6 +15,7 @@ export enum Path {
   NativecomparDaily = 'return/native_daily',
 
   Direction = 'direction',
-  QuadrantProcess = 'quadrant_process',
+  DailyDirection = 'daily_direction',
   SolarArc = 'solar_arc',
+  QuadrantProcess = 'quadrant_process',
 }
