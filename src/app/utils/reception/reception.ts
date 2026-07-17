@@ -1,6 +1,6 @@
 import { PlanetName } from '../../type/enum/planet';
 import { Zodiac } from '../../type/enum/zodiac';
-import { Aspect, Horoscope } from '../../type/interface/response-data';
+import { Aspect, Horoscope, ReturnHoroscope } from '../../type/interface/response-data';
 import { DeepReadonly } from '../../type/interface/deep-readonly';
 import { zodiacLong } from '../horo-math/horo-math';
 import { getDignityLordsAt, TRADITIONAL_PLANETS } from '../image/zodiac';
@@ -85,7 +85,7 @@ export function getDignitiesOf(
 }
 
 function buildBodyLongMap(
-  horoscope: DeepReadonly<Horoscope>,
+  horoscope: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): Map<PlanetName, number> {
   const map = new Map<PlanetName, number>(horoscope.planets.map(p => [p.name, p.long] as const));
   map.set(horoscope.asc.name, horoscope.asc.long);
@@ -119,7 +119,7 @@ function considerReception(
 }
 
 export function calculateReceptions(
-  horoscope: DeepReadonly<Horoscope>,
+  horoscope: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): Reception[] {
   const longMap = buildBodyLongMap(horoscope);
 
@@ -130,7 +130,7 @@ export function calculateReceptions(
 }
 
 export function calculateMutualReceptions(
-  horoscope: DeepReadonly<Horoscope>,
+  horoscope: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): MutualReception[] {
   const longMap = buildBodyLongMap(horoscope);
   const result: MutualReception[] = [];

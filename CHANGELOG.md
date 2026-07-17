@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.29.0] - 2026-07-18
 
 ### Added
 
@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - 每日回归方向弧支持两种算法：太阳弧风格（弧 = 承诺星黄经 − 显著星黄经）、黄道向运风格（主向推运 SemiArc 算法）
 - 每日回归方向弧支持「日返月返」复选框：未勾选时基于本命计算每日回归，勾选后基于日返的月返计算每日回归（先取日返 return_date 作为月返 native_date，再取月返 return_date 作为每日回归 native_date），与每日回归盘行为一致
 - 每日回归方向弧在工作台窗口管理中可独立打开，窗口标题为「每日回归方向弧」
+
+### Changed
+
+- 返照盘详情面板复用本命盘 `app-native-detail` 组件，移除旧的 `process/return/detail` 目录。返照盘详情现包含行星力量、接纳、互容、气质、视力点、映点、反映点卡片；恒星卡片因返照盘无 `fixed_stars` 数据显示为空列表。`ReturnHoroscope` 接口新增可选 `fixed_stars?` 字段，相关工具函数与子组件输入类型改为 `Horoscope | ReturnHoroscope | null`
 
 ## [0.28.0] - 2026-07-16
 

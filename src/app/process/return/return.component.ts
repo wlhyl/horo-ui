@@ -19,7 +19,7 @@ import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
-import { DetailComponent } from './detail/detail.component';
+import { DetailComponent } from 'src/app/native/detail/detail.component';
 import { FormsModule } from '@angular/forms';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 

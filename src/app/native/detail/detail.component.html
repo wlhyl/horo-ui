@@ -133,7 +133,7 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
-              @for (star of horoscopeData.fixed_stars; track star) {
+              @for (star of horoscopeData.fixed_stars ?? []; track star) {
               <ion-item>
                 <ion-label>
                   <h2> {{ star.fixed_star }}</h2>

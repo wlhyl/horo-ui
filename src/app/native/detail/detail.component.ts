@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { Horoscope } from 'src/app/type/interface/response-data';
+import { Horoscope, ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import {
   degNorm,
@@ -30,7 +30,7 @@ import { PlanetPowerComponent } from './planet-power/planet-power.component';
   ],
 })
 export class DetailComponent {
-  @Input() horoscopeData: Horoscope | null = null;
+  @Input() horoscopeData: Horoscope | ReturnHoroscope | null = null;
 
   degreeToDMSFn = degreeToDMS;
   zodiacLong = zodiacLong;

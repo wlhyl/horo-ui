@@ -1,6 +1,6 @@
 import { PlanetName } from '../../type/enum/planet';
 import { Zodiac } from '../../type/enum/zodiac';
-import { Horoscope, Planet } from '../../type/interface/response-data';
+import { Horoscope, Planet, ReturnHoroscope } from '../../type/interface/response-data';
 import { DeepReadonly } from '../../type/interface/deep-readonly';
 import { Result } from '../../type/interface/result';
 import { degNorm, zodiacLong } from '../horo-math/horo-math';
@@ -156,7 +156,7 @@ function toContributor(
  * @returns 成功时返回贡献者列表，失败时返回错误信息（如缺少太阳或月亮）
  */
 export function calculateTemperamentContributors(
-  horo: DeepReadonly<Horoscope>,
+  horo: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): Result<TemperamentContributor[], string> {
   const sun = horo.planets.find((p) => p.name === PlanetName.Sun);
   const moon = horo.planets.find((p) => p.name === PlanetName.Moon);
@@ -255,7 +255,7 @@ export function calculateTemperamentContributors(
 export function getContributorQualities(
   kind: ContributorKind,
   name: PlanetName | Zodiac,
-  horo: DeepReadonly<Horoscope>,
+  horo: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): Result<Quality[], string> {
   if (kind === ContributorKind.Sign) return { ok: true, value: signQualities(name as Zodiac) };
   const planetName = name as PlanetName;

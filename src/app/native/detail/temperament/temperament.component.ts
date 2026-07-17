@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { Horoscope } from 'src/app/type/interface/response-data';
+import { Horoscope, ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { Zodiac } from 'src/app/type/enum/zodiac';
@@ -31,7 +31,7 @@ import {
   imports: [IonicModule, NgStyle],
 })
 export class TemperamentComponent implements OnInit, OnChanges {
-  @Input() horoscopeData: Horoscope | null = null;
+  @Input() horoscopeData: Horoscope | ReturnHoroscope | null = null;
 
   temperamentContributors: TemperamentContributor[] = [];
   temperamentError = '';

@@ -1,5 +1,5 @@
 import { PlanetName, PlanetSpeedState } from '../../type/enum/planet';
-import { Horoscope, Planet } from '../../type/interface/response-data';
+import { Horoscope, Planet, ReturnHoroscope } from '../../type/interface/response-data';
 import { DeepReadonly } from '../../type/interface/deep-readonly';
 import { Result } from '../../type/interface/result';
 import { Zodiac } from '../../type/enum/zodiac';
@@ -291,7 +291,7 @@ function isBetweenArcs(planetLong: number, a: number, b: number): boolean {
 
 function calculatePlanetAccidentalPower(
   planet: DeepReadonly<Planet>,
-  horoscope: DeepReadonly<Horoscope>,
+  horoscope: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): Result<PlanetAccidentalPower, string> {
   const isValidPlanet =
     TRADITIONAL_PLANETS.includes(planet.name) ||
@@ -492,7 +492,7 @@ export interface PlanetPower {
 }
 
 export function calculateAllPlanetPowers(
-  horoscope: DeepReadonly<Horoscope>,
+  horoscope: DeepReadonly<Horoscope | ReturnHoroscope>,
 ): Result<PlanetPower[], string> {
   const dignityResult = calculateAllPlanetDignities(horoscope.planets);
   if (!dignityResult.ok) {

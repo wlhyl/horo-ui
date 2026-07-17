@@ -221,6 +221,8 @@ export interface ReturnHoroscope {
   antiscoins: Array<Aspect>;
   // 反映点
   contraantiscias: Array<Aspect>;
+  // 恒星（返照盘通常不返回，可选）
+  fixed_stars?: Array<FixedStar>;
 }
 
 /**
