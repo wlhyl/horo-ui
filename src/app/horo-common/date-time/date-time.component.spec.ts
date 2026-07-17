@@ -99,6 +99,25 @@ describe('DateTimeComponent', () => {
       component['emit']();
       expect(component.secondChange.emit).toHaveBeenCalledWith(45);
     });
+
+    it('should emit dateChange event with complete date-time value', () => {
+      spyOn(component.dateChange, 'emit');
+      component.year = 1986;
+      component.month = 5;
+      component.day = 4;
+      component.hour = 3;
+      component.minute = 30;
+      component.second = 15;
+      component['emit']();
+      expect(component.dateChange.emit).toHaveBeenCalledWith({
+        year: 1986,
+        month: 5,
+        day: 4,
+        hour: 3,
+        minute: 30,
+        second: 15,
+      });
+    });
   });
 
   describe('ngOnChanges lifecycle hook', () => {

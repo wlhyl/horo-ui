@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule, ViewWillEnter } from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { Path, Mode } from './enum';
 import { HoroRequest } from '../type/interface/request-data';
-import { ViewWillEnter } from '@ionic/angular';
+import { isInChineseDST } from '../utils/dst/dst';
 
 @Component({
   selector: 'app-native',
@@ -52,6 +52,7 @@ export class NativePage implements OnInit, ViewWillEnter {
     private storage: HoroStorageService,
     private config: Horoconfig,
     private titleService: Title,
+    private alertController: AlertController,
   ) {
     this.mode = this.route.snapshot.data?.['mode'] || Mode.Native;
     this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
@@ -74,6 +75,24 @@ export class NativePage implements OnInit, ViewWillEnter {
       this.storage.horoData = structuredClone(this.horoData);
     }
     this.router.navigate(['./image'], { relativeTo: this.route });
+  }
+
+  async onDateChange(): Promise<void> {
+    const date = this.horoData.date;
+    if (date.tz !== 8) return;
+    if (!isInChineseDST({
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour: date.hour,
+      minute: date.minute,
+    })) return;
+    const alert = await this.alertController.create({
+      header: '夏令时提示',
+      message: `${date.year}年${date.month}月${date.day}日处于中国夏令时实施期间，请确认是否需要勾选夏令时。`,
+      buttons: ['确定'],
+    });
+    await alert.present();
   }
 
   onArchiveSelected(horoData: HoroRequest): void {

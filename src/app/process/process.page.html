@@ -54,7 +54,7 @@
       <ion-col size="7">
         <horo-date-time [(year)]="horaData.date.year" [(month)]="horaData.date.month" [(day)]="horaData.date.day"
           [(hour)]="horaData.date.hour" [(minute)]="horaData.date.minute"
-          [(second)]="horaData.date.second"></horo-date-time>
+          [(second)]="horaData.date.second" (dateChange)="onNativeDateChange()"></horo-date-time>
       </ion-col>
     </ion-row>
 

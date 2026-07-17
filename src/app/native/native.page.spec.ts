@@ -6,7 +6,7 @@ import { ActivatedRoute, Router, RouterModule, UrlTree } from '@angular/router';
 import { of } from 'rxjs';
 import { NativePage } from './native.page';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule, NavController, AlertController } from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { FormsModule } from '@angular/forms';
 import { HoroRequest } from '../type/interface/request-data';
@@ -28,6 +28,7 @@ describe('NativePage', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let configServiceSpy: jasmine.SpyObj<Horoconfig>;
   let navControllerSpy: jasmine.SpyObj<NavController>;
+  let alertControllerSpy: jasmine.SpyObj<AlertController>;
 
   const mockHoroData: HoroRequest = createMockHoroRequest();
 
@@ -59,6 +60,11 @@ describe('NativePage', () => {
     });
     navControllerSpy = jasmine.createSpyObj('NavController', ['navigateBack']);
 
+    alertControllerSpy = jasmine.createSpyObj('AlertController', ['create']);
+    alertControllerSpy.create.and.returnValue(
+      Promise.resolve({ present: jasmine.createSpy('present') } as any)
+    );
+
     // 为Router方法提供spy实现
     routerSpy.createUrlTree.and.returnValue(new UrlTree());
     routerSpy.serializeUrl.and.returnValue('url');
@@ -80,6 +86,7 @@ describe('NativePage', () => {
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Horoconfig, useValue: configServiceSpy },
         { provide: NavController, useValue: navControllerSpy },
+        { provide: AlertController, useValue: alertControllerSpy },
       ],
     }).compileComponents();
 
@@ -426,6 +433,48 @@ describe('NativePage', () => {
       fixture.detectChanges();
 
       expect(component.getHoro).toHaveBeenCalled();
+    });
+  });
+
+  describe('onDateChange DST detection', () => {
+    it('should not show alert when tz is not 8', async () => {
+      component.horoData.date = {
+        year: 1986, month: 5, day: 4, hour: 3, minute: 0, second: 0,
+        tz: 9, st: false,
+      };
+      alertControllerSpy.create.calls.reset();
+
+      await component.onDateChange();
+
+      expect(alertControllerSpy.create).not.toHaveBeenCalled();
+    });
+
+    it('should show alert when tz=8 and date is in 1986 DST range', async () => {
+      component.horoData.date = {
+        year: 1986, month: 5, day: 4, hour: 3, minute: 0, second: 0,
+        tz: 8, st: false,
+      };
+      alertControllerSpy.create.calls.reset();
+
+      await component.onDateChange();
+
+      expect(alertControllerSpy.create).toHaveBeenCalled();
+      const args = alertControllerSpy.create.calls.mostRecent()!.args[0]!;
+      expect(args.header).toBe('夏令时提示');
+      expect(args.message).toContain('夏令时');
+      expect(args.message).toContain('1986');
+    });
+
+    it('should not show alert when tz=8 but date is outside DST range (2000)', async () => {
+      component.horoData.date = {
+        year: 2000, month: 1, day: 1, hour: 12, minute: 0, second: 0,
+        tz: 8, st: false,
+      };
+      alertControllerSpy.create.calls.reset();
+
+      await component.onDateChange();
+
+      expect(alertControllerSpy.create).not.toHaveBeenCalled();
     });
   });
 });

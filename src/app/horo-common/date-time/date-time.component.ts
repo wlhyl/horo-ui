@@ -54,6 +54,17 @@ export class DateTimeComponent implements OnInit, OnChanges {
   @Output()
   secondChange = new EventEmitter<number>();
 
+  // 用户确认选择器或点击"现在"图标时触发一次，携带完整日期时间
+  @Output()
+  dateChange = new EventEmitter<{
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  }>();
+
   years = [...Array(300)].map((_, index) => 1900 + index);
 
   months = [...Array(12)].map((_, index) => 1 + index);
@@ -193,5 +204,13 @@ export class DateTimeComponent implements OnInit, OnChanges {
     this.hourChange.emit(this.hour);
     this.minuteChange.emit(this.minute);
     this.secondChange.emit(this.second);
+    this.dateChange.emit({
+      year: this.year,
+      month: this.month,
+      day: this.day,
+      hour: this.hour,
+      minute: this.minute,
+      second: this.second,
+    });
   }
 }

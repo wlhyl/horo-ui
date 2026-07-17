@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ProcessName } from './enum/process';
@@ -12,6 +12,7 @@ import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
+import { isInChineseDST } from '../utils/dst/dst';
 
 @Component({
   selector: 'app-process',
@@ -38,6 +39,7 @@ export class ProcessPage implements OnInit {
     private storage: HoroStorageService,
     private config: Horoconfig,
     private titleService: Title,
+    private alertController: AlertController,
   ) {}
 
   ngOnInit() {
@@ -55,6 +57,24 @@ export class ProcessPage implements OnInit {
     this.router.navigate([path], {
       relativeTo: this.route,
     });
+  }
+
+  async onNativeDateChange(): Promise<void> {
+    const date = this.horaData.date;
+    if (date.tz !== 8) return;
+    if (!isInChineseDST({
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour: date.hour,
+      minute: date.minute,
+    })) return;
+    const alert = await this.alertController.create({
+      header: '夏令时提示',
+      message: `${date.year}年${date.month}月${date.day}日处于中国夏令时实施期间，请确认是否需要勾选夏令时。`,
+      buttons: ['确定'],
+    });
+    await alert.present();
   }
 
   processOptions = [

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
+import { AlertController, IonicModule } from '@ionic/angular';
+import { DateRequest, HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ProcessName } from 'src/app/process/enum/process';
@@ -10,6 +10,7 @@ import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
 import { ChartType } from '../window-manager/window-state';
+import { isInChineseDST } from 'src/app/utils/dst/dst';
 
 @Component({
   selector: 'app-input-panel',
@@ -119,7 +120,7 @@ export class InputPanelComponent {
   showNativeInput = true;
   showProcessInput = true;
 
-  constructor(public config: Horoconfig) {}
+  constructor(public config: Horoconfig, private alertController: AlertController) {}
 
   onHoroDataChange(): void {
     this.horoDataChange.emit(this.horoData);
@@ -131,6 +132,31 @@ export class InputPanelComponent {
 
   onProcessDataChange(): void {
     this.processDataChange.emit(this.processData);
+  }
+
+  async onNativeDateChange(): Promise<void> {
+    await this.checkDST(this.horoData.date, '');
+  }
+
+  async onEventDateChange(): Promise<void> {
+    await this.checkDST(this.eventData.date, '天象时间：');
+  }
+
+  private async checkDST(date: DateRequest, label: string): Promise<void> {
+    if (date.tz !== 8) return;
+    if (!isInChineseDST({
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour: date.hour,
+      minute: date.minute,
+    })) return;
+    const alert = await this.alertController.create({
+      header: '夏令时提示',
+      message: `${label}${date.year}年${date.month}月${date.day}日处于中国夏令时实施期间，请确认是否需要勾选夏令时。`,
+      buttons: ['确定'],
+    });
+    await alert.present();
   }
 
   onOpenChart(type: ChartType): void {

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.29.1] - 2026-07-18
+
+### Added
+
+- 新增中国夏令时检测提示：在用户输入(确认)出生时间后，检测该时间是否处于中国夏令时实施期间(1986-1991)，若时区为中国(UTC+8)且日期在夏令时区间内，弹出 Alert 提示用户确认是否需要勾选夏令时复选框
+- `DateTimeComponent` 新增 `dateChange` 输出事件：用户确认日期选择器或点击"现在"图标时触发一次，携带完整日期时间，方便页面在单次确认时执行回调
+- 新增 `src/app/utils/dst/dst.ts` 工具函数：硬编码 1986-1991 中国夏令时区间（起始日 02:00 含，结束日 02:00 不含），提供 `isInChineseDST()` 判定函数
+
+### Changed
+
+- `NativePage`、`ProcessPage`、`InputPanelComponent` 接入夏令时检测：仅 tz=8 时检查，通过 AlertController 弹窗提示，不自动勾选 st 复选框。ProcessPage 仅检查本命时间（不检查推运时间），InputPanelComponent 检查本命时间与天象时间（不检查推运时间）
+
 ## [0.29.0] - 2026-07-18
 
 ### Added

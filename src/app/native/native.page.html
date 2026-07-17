@@ -60,7 +60,7 @@
       <ion-col size="7">
         <horo-date-time id="horo-birth-date" [(year)]="horoData.date.year" [(month)]="horoData.date.month"
           [(day)]="horoData.date.day" [(hour)]="horoData.date.hour" [(minute)]="horoData.date.minute"
-          [(second)]="horoData.date.second"></horo-date-time>
+          [(second)]="horoData.date.second" (dateChange)="onDateChange()"></horo-date-time>
       </ion-col>
     </ion-row>
 
