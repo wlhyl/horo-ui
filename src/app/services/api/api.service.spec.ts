@@ -222,7 +222,9 @@ describe('ApiService', () => {
         year_house: 1,
         month_house: 2,
         day_house: 3,
+        hour_house: 4,
         date_per_house: [],
+        hour_per_house: [],
       };
 
       service.profection(mockData).subscribe((profection) => {
@@ -293,7 +295,7 @@ describe('ApiService', () => {
 
       const mockDirections: Direction[] = [
         createMockDirection({
-          significator: WesternPlanetName.MC,
+          significator: { planet: WesternPlanetName.MC },
           promittor: { conjunction: WesternPlanetName.Sun },
           arc: 45.5,
           date: {
@@ -567,7 +569,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house_name: 'Placidus',
-        houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+        cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
         asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
@@ -700,7 +702,7 @@ describe('ApiService', () => {
           lat: 39.9042,
         },
         house_name: 'Placidus',
-        houses_cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+        cusps: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
         asc: createMockPlanet({
           name: WesternPlanetName.ASC,
           long: 0,
@@ -967,6 +969,8 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
+        chart_type: 'natal',
+        is_time_precise: false,
         location: {
           id: 1,
           name: 'Beijing',
@@ -1010,6 +1014,8 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
+        chart_type: 'natal',
+        is_time_precise: false,
         location: {
           id: 2,
           name: 'Shanghai',
@@ -1054,6 +1060,8 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
+        chart_type: 'natal',
+        is_time_precise: false,
         location: {
           name: 'Beijing',
           is_east: true,
@@ -1081,6 +1089,8 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
+        chart_type: 'natal',
+        is_time_precise: false,
         location: {
           id: 1,
           name: 'Beijing',
@@ -1124,6 +1134,8 @@ describe('ApiService', () => {
         birth_second: null,
         time_zone_offset: null,
         is_dst: null,
+        chart_type: null,
+        is_time_precise: null,
         location: null,
         description: null,
         lock: false,

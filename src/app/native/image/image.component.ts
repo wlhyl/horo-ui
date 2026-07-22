@@ -376,6 +376,8 @@ export class ImageComponent
       birth_second: this.currentHoroData.date.second,
       time_zone_offset: this.currentHoroData.date.tz,
       is_dst: this.currentHoroData.date.st,
+      chart_type: 'natal',
+      is_time_precise: false,
       location: {
         name: this.currentHoroData.geo_name,
         is_east: this.currentHoroData.geo.long >= 0,
@@ -477,6 +479,8 @@ export class ImageComponent
             this.currentHoroData.date.st === native.is_dst
               ? null
               : this.currentHoroData.date.st,
+          chart_type: null,
+          is_time_precise: null,
           location: isLocationEqual(locationRequest, native.location)
             ? null
             : locationRequest,

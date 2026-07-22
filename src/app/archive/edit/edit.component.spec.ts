@@ -24,6 +24,8 @@ describe('EditComponent', () => {
     birth_second: 0,
     time_zone_offset: 8,
     is_dst: false,
+    chart_type: 'natal',
+    is_time_precise: false,
     location: {
       id: 1,
       name: 'Beijing',
@@ -81,6 +83,8 @@ describe('EditComponent', () => {
       birth_second: 45,
       time_zone_offset: 8,
       is_dst: false,
+      chart_type: 'natal',
+      is_time_precise: false,
       location: {
         id: 0,
         name: '北京',
@@ -872,6 +876,8 @@ describe('EditComponent', () => {
           birth_second: null,
           time_zone_offset: null,
           is_dst: null,
+          chart_type: null,
+          is_time_precise: null,
           location: null,
           description: 'Updated description',
           lock: false,
@@ -906,6 +912,8 @@ describe('EditComponent', () => {
           birth_second: null,
           time_zone_offset: null,
           is_dst: null,
+          chart_type: null,
+          is_time_precise: null,
           location: null,
           description: null,
           lock: null,
@@ -1057,6 +1065,8 @@ describe('EditComponent', () => {
           birth_second: null,
           time_zone_offset: null,
           is_dst: null,
+          chart_type: null,
+          is_time_precise: null,
           location: null,
           description: 'Updated description',
           lock: null, // lock didn't change
@@ -1094,6 +1104,8 @@ describe('EditComponent', () => {
           birth_second: null,
           time_zone_offset: null,
           is_dst: null,
+          chart_type: null,
+          is_time_precise: null,
           location: null,
           description: null, // description didn't change
           lock: false,

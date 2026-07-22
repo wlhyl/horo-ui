@@ -46,6 +46,8 @@ describe('ArchivePage', () => {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
+      chart_type: 'natal',
+      is_time_precise: false,
       location: {
         id: 1,
         name: 'Beijing',

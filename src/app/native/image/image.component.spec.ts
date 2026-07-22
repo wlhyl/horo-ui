@@ -19,6 +19,7 @@ import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { HoroRequest } from 'src/app/type/interface/request-data';
+import { HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
 import { ImageComponent } from './image.component';
 import { DetailComponent } from '../detail/detail.component';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
@@ -320,7 +321,7 @@ describe('ImageComponent', () => {
   });
 
   describe('addRecord', () => {
-    const mockNativeResponse = {
+    const mockNativeResponse: HoroscopeRecord = {
       id: 123,
       name: 'Test',
       gender: true,
@@ -332,6 +333,8 @@ describe('ImageComponent', () => {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
+      chart_type: 'natal',
+      is_time_precise: false,
       location: {
         id: 1,
         name: 'Shanghai',
@@ -343,8 +346,6 @@ describe('ImageComponent', () => {
         latitude_degree: 31,
         latitude_minute: 13,
         latitude_second: 49,
-        created_at: '2023-01-01T00:00:00Z',
-        updated_at: null,
       },
       description: '',
       created_at: '2023-01-01T00:00:00Z',
@@ -464,7 +465,7 @@ describe('ImageComponent', () => {
   });
 
   describe('updateRecord', () => {
-    const mockNativeRecord = {
+    const mockNativeRecord: HoroscopeRecord = {
       id: 1,
       name: 'Test',
       gender: true,
@@ -476,6 +477,8 @@ describe('ImageComponent', () => {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
+      chart_type: 'natal',
+      is_time_precise: false,
       location: {
         id: 1,
         name: 'Shanghai',
@@ -487,8 +490,6 @@ describe('ImageComponent', () => {
         latitude_degree: 31,
         latitude_minute: 13,
         latitude_second: 48, // 31.23
-        created_at: '',
-        updated_at: '',
       },
       description: '',
       created_at: '',

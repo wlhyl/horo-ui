@@ -50,6 +50,20 @@
       </ion-radio-group>
     </ion-item>
 
+    <ion-item [disabled]="isLocked">
+      <ion-label>盘类型</ion-label>
+      <ion-radio-group [(ngModel)]="native.chart_type" name="chart_type" style="display: flex; justify-content: space-around;">
+        <ion-item lines="none" style="flex: 1;">
+          <ion-label style="white-space: nowrap;">本命盘</ion-label>
+          <ion-radio slot="start" value="natal"></ion-radio>
+        </ion-item>
+        <ion-item lines="none" style="flex: 1;">
+          <ion-label style="white-space: nowrap;">卜卦盘</ion-label>
+          <ion-radio slot="start" value="horary"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item>
+
     <ion-item (click)="showDateTimePicker = !showDateTimePicker" [disabled]="isLocked">
       <ion-label>日期和时间</ion-label>
       <ion-text>{{ formattedDateTime }}</ion-text>
@@ -89,6 +103,11 @@
     <ion-item [disabled]="isLocked">
       <ion-label>夏令时</ion-label>
       <ion-toggle [(ngModel)]="native.is_dst" name="st" slot="end"></ion-toggle>
+    </ion-item>
+
+    <ion-item [disabled]="isLocked || native.chart_type === 'horary'">
+      <ion-label>时间精准</ion-label>
+      <ion-toggle [(ngModel)]="native.is_time_precise" name="is_time_precise" slot="end"></ion-toggle>
     </ion-item>
 
     <ion-item [disabled]="isLocked">

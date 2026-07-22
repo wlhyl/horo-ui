@@ -32,6 +32,7 @@ import { ProcessName } from '../process/enum/process';
 import { DirectionMethod } from '../process/enum/direction-method';
 import { ArcToDateMethod } from '../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../process/enum/profection-arc-to-date-method';
+import { DailyDirectionMethod } from '../process/enum/daily-direction-method';
 
 /**
  * 测试数据工厂类
@@ -116,6 +117,7 @@ export class TestDataFactory {
       direction_method: DirectionMethod.SemiArc,
       arc_to_date_method: ArcToDateMethod.DegreePerYear,
       profection_arc_to_date_method: ProfectionArcToDateMethod.TrueSolarArc,
+      daily_direction_method: DailyDirectionMethod.SolarArc,
       ...overrides,
     };
   }
@@ -469,6 +471,8 @@ export class TestDataFactory {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
+      chart_type: 'natal',
+      is_time_precise: false,
       location: this.createDefaultLocationRecord(overrides?.location),
       description: 'Test record',
       created_at: '2024-01-01T00:00:00Z',

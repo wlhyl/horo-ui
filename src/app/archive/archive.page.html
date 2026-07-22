@@ -33,7 +33,12 @@
         <ion-avatar aria-hidden="true" slot="start">
           <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
         </ion-avatar>
-        <ion-label>{{native.name}}</ion-label>
+        <ion-label>
+          @if (native.chart_type === 'horary') {
+            <span class="horary-badge">H</span>
+          }
+          <span [class.is-precise]="native.is_time_precise">{{native.name}}</span>
+        </ion-label>
       </ion-item>
       <ion-item-options slot="end">
         <ion-item-option color="primary" (click)="toHoro(native, path.Native)">

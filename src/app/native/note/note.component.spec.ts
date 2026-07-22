@@ -138,6 +138,8 @@ describe('NoteComponent', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
+        chart_type: 'natal',
+        is_time_precise: false,
         location: {
           name: 'Test City',
           is_east: true,
@@ -186,6 +188,8 @@ describe('NoteComponent', () => {
         birth_second: null,
         time_zone_offset: null,
         is_dst: null,
+        chart_type: null,
+        is_time_precise: null,
         location: null,
         description: 'Updated note',
         lock: null,

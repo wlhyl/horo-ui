@@ -74,6 +74,8 @@ export class EditComponent implements OnInit {
       birth_second: now.getSeconds(),
       time_zone_offset: -now.getTimezoneOffset() / 60, // 获取当前时区
       is_dst: false, // 夏令时需要根据具体情况设置
+      chart_type: 'natal',
+      is_time_precise: false,
       location: {
         id: 0,
         name: '北京',
@@ -337,6 +339,8 @@ export class EditComponent implements OnInit {
         birth_second: null,
         time_zone_offset: null,
         is_dst: null,
+        chart_type: null,
+        is_time_precise: null,
         location: null,
         description:
           this.native.description === this.oldNative.description
@@ -385,6 +389,14 @@ export class EditComponent implements OnInit {
           this.native.is_dst === this.oldNative.is_dst
             ? null
             : this.native.is_dst,
+        chart_type:
+          this.native.chart_type === this.oldNative.chart_type
+            ? null
+            : this.native.chart_type,
+        is_time_precise:
+          this.native.is_time_precise === this.oldNative.is_time_precise
+            ? null
+            : this.native.is_time_precise,
         location: isLocationEqual(this.native.location, this.oldNative.location)
           ? null
           : this.native.location,

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.30.0] - 2026-07-22
+
+### Added
+
+- 档案库支持盘类型（chart_type）字段：新增/编辑记录时可选择本命盘（natal）或卜卦盘（horary），默认本命盘
+- 档案库支持时间精准标识（is_time_precise）字段：仅本命盘有意义，卜卦盘时禁用该开关
+- 档案列表新增视觉标识：卜卦盘名字前显示红色"H"徽标，时间精准的本命盘名字呈绿色
+- `SearchHoroscopeRecordRequest` 接口新增可选 `chart_type` 与 `is_time_precise` 过滤字段
+
+### Changed
+
+- `NoteComponent`、`ImageComponent` 新增/更新记录时携带 `chart_type` 与 `is_time_precise` 字段
+
 ## [0.29.1] - 2026-07-18
 
 ### Added

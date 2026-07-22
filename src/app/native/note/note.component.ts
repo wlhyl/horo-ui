@@ -88,6 +88,8 @@ export class NoteComponent implements OnInit {
         birth_second: this.horoData.date.second,
         time_zone_offset: this.horoData.date.tz,
         is_dst: this.horoData.date.st,
+        chart_type: 'natal',
+        is_time_precise: false,
         location: {
           name: this.horoData.geo_name,
           is_east: this.horoData.geo.long > 0,
@@ -133,6 +135,8 @@ export class NoteComponent implements OnInit {
         birth_second: null,
         time_zone_offset: null,
         is_dst: null,
+        chart_type: null,
+        is_time_precise: null,
         location: null,
         description: this.describe,
         lock: null,

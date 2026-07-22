@@ -20,7 +20,12 @@
                 <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
             </ion-avatar>
             <ion-label>
-                <h2>{{ record.name }}</h2>
+                <h2>
+                    @if (record.chart_type === 'horary') {
+                    <span class="horary-badge">H</span>
+                    }
+                    <span [class.is-precise]="record.is_time_precise">{{ record.name }}</span>
+                </h2>
                 <p>
                     {{ record.birth_year }}/{{ record.birth_month }}/{{
                     record.birth_day

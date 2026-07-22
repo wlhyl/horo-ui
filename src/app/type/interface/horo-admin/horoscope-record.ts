@@ -1,5 +1,8 @@
 import { LocationRecord, LocationRecordRequest } from './location-record';
 
+// 盘类型：本命盘（natal）或卜卦盘（horary）
+export type ChartType = 'natal' | 'horary';
+
 /**
  * 后台对应的结构体是：Horoscope
  */
@@ -15,6 +18,10 @@ export interface HoroscopeRecord {
   birth_second: number;
   time_zone_offset: number;
   is_dst: boolean;
+  // 盘类型
+  chart_type: ChartType;
+  // 时间是否精准（仅本命盘有意义），true=已校对，false=未校对
+  is_time_precise: boolean;
 
   location: LocationRecord;
 
@@ -50,6 +57,11 @@ export interface HoroscopeRecordRequest {
   // 出生时的夏令时，有夏令时：true，无夏令时： false
   is_dst: boolean;
 
+  // 盘类型：本命盘（natal）或卜卦盘（horary）
+  chart_type: ChartType;
+  // 时间是否精准（仅本命盘有意义），true=已校对，false=未校对
+  is_time_precise: boolean;
+
   location: LocationRecordRequest;
 
   // 说明文字
@@ -82,6 +94,10 @@ export interface UpdateHoroscopeRecordRequest {
   time_zone_offset: number | null;
   // 出生时的夏令时，有夏令时：true，无夏令时：false
   is_dst: boolean | null;
+  // 盘类型：本命盘（natal）或卜卦盘（horary）
+  chart_type: ChartType | null;
+  // 时间是否精准（仅本命盘有意义），true=已校对，false=未校对
+  is_time_precise: boolean | null;
   // 地理位置信息
   location: LocationRecordRequest | null;
   // 说明文字
@@ -111,4 +127,8 @@ export interface SearchHoroscopeRecordRequest {
   minute?: number;
   // 秒（用于时间搜索）
   second?: number;
+  // 盘类型：本命盘（natal）或卜卦盘（horary）
+  chart_type?: ChartType;
+  // 时间是否精准（仅本命盘有意义），true=已校对，false=未校对
+  is_time_precise?: boolean;
 }
