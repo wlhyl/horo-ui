@@ -9,6 +9,7 @@ import { IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { delay, of, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -21,11 +22,13 @@ import {
   createMockGeoRequest,
   createMockDirection,
 } from 'src/app/test-utils/test-data-factory.spec';
-import { DateTimeComponent } from 'src/app/horo-common/date-time/date-time.component';
+import { getCurrentDateMinusYears } from 'src/app/utils/direction-utils/direction-utils';
 
 import { DirectionComponent } from './direction.component';
 import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
+import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
+import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 
 describe('DirectionComponent', () => {
   let component: DirectionComponent;
@@ -53,6 +56,7 @@ describe('DirectionComponent', () => {
   const mockHoroData = {
     date: mockDateRequest,
     geo: mockGeoRequest,
+    house: 'Alcabitus',
   };
 
   const mockDirectionData: Direction[] = [
@@ -96,7 +100,9 @@ describe('DirectionComponent', () => {
       'aspectFontString',
       'zodiacFontFamily',
       'zodiacFontString',
-    ]);
+    ], {
+      houses: ['Alcabitus', 'Placidus'],
+    });
 
     const horoStorageSpy = jasmine.createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
@@ -108,17 +114,19 @@ describe('DirectionComponent', () => {
         isSolarReturn: false,
         direction_method: DirectionMethod.SemiArc,
         arc_to_date_method: ArcToDateMethod.DegreePerYear,
+        profection_arc_to_date_method: ProfectionArcToDateMethod.TrueSolarArc,
+        daily_direction_method: DailyDirectionMethod.SolarArc,
       },
     });
 
     await TestBed.configureTestingModule({
-      declarations: [DirectionComponent, DateTimeComponent],
-      imports: [IonicModule.forRoot(), FormsModule],
+      imports: [DirectionComponent, IonicModule.forRoot(), FormsModule],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         { provide: Title, useValue: titleServiceSpy },
         { provide: HoroStorageService, useValue: horoStorageSpy },
         { provide: Horoconfig, useValue: horoconfigSpy },
+        { provide: ActivatedRoute, useValue: { snapshot: { data: {} } } },
       ],
     }).compileComponents();
 
@@ -142,7 +150,9 @@ describe('DirectionComponent', () => {
       apiServiceSpy.direction.and.returnValue(of([]));
       fixture.detectChanges();
       expect(component.nativeDate).toEqual(mockDateRequest);
-      expect(component.startDate).toEqual(mockDateRequest);
+      expect(component.startDate).toEqual(
+        getCurrentDateMinusYears(5, mockDateRequest.tz),
+      );
       expect(component.endDate).toEqual({
         year: mockDateRequest.year + 120,
         month: mockDateRequest.month,
@@ -179,14 +189,14 @@ describe('DirectionComponent', () => {
 
     it('should handle API error and show alert', () => {
       const errorResponse = {
-        message: 'API Error',
-        error: { message: 'Internal Server Error' },
+        status: 500,
+        error: 'Internal Server Error',
       };
       apiServiceSpy.direction.and.returnValue(throwError(() => errorResponse));
       fixture.detectChanges();
 
       expect(component.directionData).toEqual([]);
-      expect(component.message).toBe('API Error Internal Server Error');
+      expect(component.message).toBe('Internal Server Error');
       expect(component.isAlertOpen).toBeTrue();
     });
   });
@@ -430,6 +440,7 @@ describe('DirectionComponent', () => {
     });
     it('should return all data when no filters applied', () => {
       fixture.detectChanges();
+      component.arcDirectionFilter = 'all';
       expect(component.filteredDirectionData.length).toBe(2);
     });
     it('should filter by significator', () => {
@@ -488,94 +499,6 @@ describe('DirectionComponent', () => {
       expect(result.length).toBe(1);
       expect(result[0].significator).toEqual({ planet: PlanetName.MC });
       expect(result[0].date.year).toBe(2045);
-    });
-  });
-
-  describe('checkDateRange', () => {
-    beforeEach(() => {
-      apiServiceSpy.direction.and.returnValue(of([]));
-      fixture.detectChanges();
-    });
-
-    it('should return true for date within range', () => {
-      component.startDate = {
-        year: 2020,
-        month: 1,
-        day: 1,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-      component.endDate = {
-        year: 2030,
-        month: 12,
-        day: 31,
-        hour: 23,
-        minute: 59,
-        second: 59,
-        tz: 8,
-      };
-
-      const date = {
-        year: 2025,
-        month: 6,
-        day: 15,
-        hour: 12,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-
-      expect((component as any).checkDateRange(date)).toBeTrue();
-    });
-
-    it('should return false for date before start date', () => {
-      component.startDate = {
-        year: 2025,
-        month: 1,
-        day: 1,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-
-      const date = {
-        year: 2020,
-        month: 6,
-        day: 15,
-        hour: 12,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-
-      expect((component as any).checkDateRange(date)).toBeFalse();
-    });
-
-    it('should return false for date after end date', () => {
-      component.endDate = {
-        year: 2025,
-        month: 12,
-        day: 31,
-        hour: 23,
-        minute: 59,
-        second: 59,
-        tz: 8,
-      };
-
-      const date = {
-        year: 2030,
-        month: 6,
-        day: 15,
-        hour: 12,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-
-      expect((component as any).checkDateRange(date)).toBeFalse();
     });
   });
 
@@ -668,52 +591,6 @@ describe('DirectionComponent', () => {
 
       expect(apiServiceSpy.direction).toHaveBeenCalled();
     }));
-  });
-
-  describe('onNativeDateChange', () => {
-    it('should update nativeDate field', () => {
-      component.nativeDate = createMockDateRequest();
-
-      (component as any).onNativeDateChange('year', 1995);
-
-      expect(component.nativeDate.year).toBe(1995);
-    });
-  });
-
-  describe('onStartDateChange', () => {
-    it('should update startDate field', () => {
-      component.startDate = {
-        year: 2020,
-        month: 1,
-        day: 1,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-
-      (component as any).onStartDateChange('year', 2025);
-
-      expect(component.startDate.year).toBe(2025);
-    });
-  });
-
-  describe('onEndDateChange', () => {
-    it('should update endDate field', () => {
-      component.endDate = {
-        year: 2030,
-        month: 1,
-        day: 1,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        tz: 8,
-      };
-
-      (component as any).onEndDateChange('year', 2040);
-
-      expect(component.endDate.year).toBe(2040);
-    });
   });
 
   describe('resetFilters', () => {
@@ -951,6 +828,7 @@ describe('DirectionComponent', () => {
 
       expect(component.startDate).toEqual(component.nativeDate);
       expect(component.endDate.year).toBe(component.nativeDate.year + 120);
+      flush();
     }));
 
     it('should not reset filters if isLoading is already true', fakeAsync(() => {
