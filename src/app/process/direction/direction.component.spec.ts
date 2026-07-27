@@ -527,7 +527,7 @@ describe('DirectionComponent', () => {
         tz: 8,
       };
 
-      expect(component.checkDateRange(date)).toBeTrue();
+      expect((component as any).checkDateRange(date)).toBeTrue();
     });
 
     it('should return false for date before start date', () => {
@@ -551,7 +551,7 @@ describe('DirectionComponent', () => {
         tz: 8,
       };
 
-      expect(component.checkDateRange(date)).toBeFalse();
+      expect((component as any).checkDateRange(date)).toBeFalse();
     });
 
     it('should return false for date after end date', () => {
@@ -575,7 +575,7 @@ describe('DirectionComponent', () => {
         tz: 8,
       };
 
-      expect(component.checkDateRange(date)).toBeFalse();
+      expect((component as any).checkDateRange(date)).toBeFalse();
     });
   });
 
@@ -674,7 +674,7 @@ describe('DirectionComponent', () => {
     it('should update nativeDate field', () => {
       component.nativeDate = createMockDateRequest();
 
-      component.onNativeDateChange('year', 1995);
+      (component as any).onNativeDateChange('year', 1995);
 
       expect(component.nativeDate.year).toBe(1995);
     });
@@ -692,7 +692,7 @@ describe('DirectionComponent', () => {
         tz: 8,
       };
 
-      component.onStartDateChange('year', 2025);
+      (component as any).onStartDateChange('year', 2025);
 
       expect(component.startDate.year).toBe(2025);
     });
@@ -710,7 +710,7 @@ describe('DirectionComponent', () => {
         tz: 8,
       };
 
-      component.onEndDateChange('year', 2040);
+      (component as any).onEndDateChange('year', 2040);
 
       expect(component.endDate.year).toBe(2040);
     });

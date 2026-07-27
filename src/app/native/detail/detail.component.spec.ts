@@ -289,7 +289,7 @@ describe('DetailComponent', () => {
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
-      expect(component.planetDignities).toEqual([]);
+      expect((component as any).planetDignities).toEqual([]);
     });
 
     it('should return dignities for 7 traditional planets only', () => {
@@ -312,9 +312,9 @@ describe('DetailComponent', () => {
       component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
-      const dignities = component.planetDignities;
+      const dignities = (component as any).planetDignities;
       expect(dignities.length).toBe(7);
-      expect(dignities.map((d) => d.planet.name)).toEqual([
+      expect(dignities.map((d: any) => d.planet.name)).toEqual([
         PlanetName.Sun,
         PlanetName.Moon,
         PlanetName.Mercury,
@@ -335,7 +335,7 @@ describe('DetailComponent', () => {
       component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
-      const sun = component.planetDignities[0];
+      const sun = (component as any).planetDignities[0];
       expect(sun.exaltation).toBeTrue();
       expect(sun.triplicity).toBeTrue();
       expect(sun.rulership).toBeFalse();
@@ -356,8 +356,8 @@ describe('DetailComponent', () => {
       component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
-      const mercury = component.planetDignities.find(
-        (d) => d.planet.name === PlanetName.Mercury,
+      const mercury = (component as any).planetDignities.find(
+        (d: any) => d.planet.name === PlanetName.Mercury,
       )!;
       expect(mercury.combust).toBeTrue();
     });
@@ -372,10 +372,10 @@ describe('DetailComponent', () => {
       component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
-      const dignities = component.planetDignities;
+      const dignities = (component as any).planetDignities;
       expect(dignities).toEqual([]);
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.message).toContain('缺少太阳');
+      expect((component as any).isAlertOpen).toBeTrue();
+      expect((component as any).message).toContain('缺少太阳');
     });
   });
 
@@ -384,7 +384,7 @@ describe('DetailComponent', () => {
       fixture = TestBed.createComponent(DetailComponent);
       component = fixture.componentInstance;
 
-      expect(component.chartAlmuten).toBeNull();
+      expect((component as any).chartAlmuten).toBeNull();
     });
 
     it('should return the planet with the highest score', () => {
@@ -401,7 +401,7 @@ describe('DetailComponent', () => {
       component.horoscopeData = mockHoroscope;
       fixture.detectChanges();
 
-      const almuten = component.chartAlmuten;
+      const almuten = (component as any).chartAlmuten;
       expect(almuten).not.toBeNull();
       expect(almuten!.planet.name).toBe(PlanetName.Mercury);
     });
