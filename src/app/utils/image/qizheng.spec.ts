@@ -11,6 +11,9 @@ describe('Qizheng Horo Image Functions', () => {
   let config: QizhengConfigService;
   let fabricjsObjects: fabric.Object[];
 
+  const isCloseTo = (actual: number | undefined, expected: number) =>
+    actual !== undefined && Math.abs(actual - expected) < 1e-9;
+
   beforeEach(() => {
     // 设置测试环境
     TestBed.configureTestingModule({
@@ -171,8 +174,8 @@ describe('Qizheng Horo Image Functions', () => {
           (o): o is fabric.FabricText =>
             o.type === 'text' &&
             (o as fabric.FabricText).text === pos.text &&
-            o.left === pos.left &&
-            o.top === pos.top
+            isCloseTo(o.left, pos.left) &&
+            isCloseTo(o.top, pos.top)
         )
       )
       .flat();
@@ -207,8 +210,8 @@ describe('Qizheng Horo Image Functions', () => {
           (o): o is fabric.FabricText =>
             o.type === 'text' &&
             (o as fabric.FabricText).text === house.text &&
-            o.left === house.left &&
-            o.top === house.top
+            isCloseTo(o.left, house.left) &&
+            isCloseTo(o.top, house.top)
         )
       )
       .flat();
@@ -224,8 +227,8 @@ describe('Qizheng Horo Image Functions', () => {
       const houseObject = houseTextObjects.find(
         (o) =>
           o.text === houseInfo.text &&
-          o.left === houseInfo.left &&
-          o.top === houseInfo.top
+          isCloseTo(o.left, houseInfo.left) &&
+          isCloseTo(o.top, houseInfo.top)
       );
 
       expect(houseObject).toBeTruthy();
@@ -295,8 +298,8 @@ describe('Qizheng Horo Image Functions', () => {
           (o): o is fabric.FabricText =>
             o.type === 'text' &&
             (o as fabric.FabricText).text === star.text &&
-            o.left === star.left &&
-            o.top === star.top
+            isCloseTo(o.left, star.left) &&
+            isCloseTo(o.top, star.top)
         )
       )
       .flat();
@@ -313,8 +316,8 @@ describe('Qizheng Horo Image Functions', () => {
       const starObject = distanceStarObjects.find(
         (o) =>
           o.text === starInfo.text &&
-          o.left === starInfo.left &&
-          o.top === starInfo.top
+          isCloseTo(o.left, starInfo.left) &&
+          isCloseTo(o.top, starInfo.top)
       );
 
       expect(starObject).toBeTruthy();
@@ -363,8 +366,8 @@ describe('Qizheng Horo Image Functions', () => {
           (o): o is fabric.FabricText =>
             o.type === 'text' &&
             (o as fabric.FabricText).text === planet.text &&
-            o.left === planet.left &&
-            o.top === planet.top
+            isCloseTo(o.left, planet.left) &&
+            isCloseTo(o.top, planet.top)
         )
       )
       .flat();
@@ -376,8 +379,8 @@ describe('Qizheng Horo Image Functions', () => {
       const planetObject = planetObjects.find(
         (o) =>
           o.text === planetInfo.text &&
-          o.left === planetInfo.left &&
-          o.top === planetInfo.top
+          isCloseTo(o.left, planetInfo.left) &&
+          isCloseTo(o.top, planetInfo.top)
       );
 
       expect(planetObject).toBeTruthy();
@@ -426,8 +429,8 @@ describe('Qizheng Horo Image Functions', () => {
           (o): o is fabric.FabricText =>
             o.type === 'text' &&
             (o as fabric.FabricText).text === planet.text &&
-            o.left === planet.left &&
-            o.top === planet.top
+            isCloseTo(o.left, planet.left) &&
+            isCloseTo(o.top, planet.top)
         )
       )
       .flat();
@@ -439,8 +442,8 @@ describe('Qizheng Horo Image Functions', () => {
       const planetObject = planetObjects.find(
         (o) =>
           o.text === planetInfo.text &&
-          o.left === planetInfo.left &&
-          o.top === planetInfo.top
+          isCloseTo(o.left, planetInfo.left) &&
+          isCloseTo(o.top, planetInfo.top)
       );
 
       expect(planetObject).toBeTruthy();
