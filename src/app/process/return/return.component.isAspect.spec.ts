@@ -11,6 +11,12 @@ describe('isAspect property', () => {
   let component: ReturnComponent;
 
   let drawSpy: jasmine.Spy;
+  let canvas: {
+    dispose: jasmine.Spy;
+    toJSON: jasmine.Spy;
+    loadFromJSON: jasmine.Spy;
+    renderAll: jasmine.Spy;
+  };
 
   beforeEach(() => {
     const mockActivatedRoute = {
@@ -18,8 +24,8 @@ describe('isAspect property', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
+        ReturnComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
@@ -33,122 +39,101 @@ describe('isAspect property', () => {
     const fixture = TestBed.createComponent(ReturnComponent);
     component = fixture.componentInstance;
 
-    const canvas = ((component as any).canvas = {
+    canvas = (component as any).canvas = {
       dispose: jasmine.createSpy('dispose'),
       toJSON: jasmine.createSpy('toJSON'),
       loadFromJSON: jasmine.createSpy('loadFromJSON'),
       renderAll: jasmine.createSpy('renderAll'),
-    });
+    };
     canvas.loadFromJSON.and.returnValue(Promise.resolve(canvas));
 
     drawSpy = spyOn(component as any, 'draw').and.stub();
   });
 
-  //   it('should create', () => {
-  //     expect(component).toBeTruthy();
-  //   });
-
-  it('should have an initial value of false and allow getting and setting', () => {
-    // 初始值应该是false
-    expect(component.isAspect).toBe(false);
-
-    // 设置为 true
-    component.isAspect = true;
-    expect(component.isAspect).toBe(true);
-
-    // 设置回 false
-    component.isAspect = false;
+  it('should have an initial value of false', () => {
     expect(component.isAspect).toBe(false);
   });
 
-  it('should not redraw when the same value is set', () => {
-    component.isAspect = true;
-    drawSpy.calls.reset(); // 重置 spy
+  it('should have no side effects when the same value is set', () => {
+    component.isAspect = false;
 
-    // 再次设置为 true
-    component.isAspect = true;
+    expect(component.isAspect).toBe(false);
+    expect(canvas.toJSON).not.toHaveBeenCalled();
+    expect(canvas.loadFromJSON).not.toHaveBeenCalled();
     expect(drawSpy).not.toHaveBeenCalled();
   });
 
-  it('should redraw when the value changes and not drawing/loading', () => {
-    component.isDrawing = false;
-    component.loading = false;
-    component['canvasCache'] = undefined;
-    component['returnHoroscopeData'] = {} as ReturnHoroscope;
+  it('should change value, save the canvas, and redraw when data is available', () => {
+    const returnHoroscopeData = {} as ReturnHoroscope;
+    const canvasJson = { version: 'current', objects: [] };
+    component['returnHoroscopeData'] = returnHoroscopeData;
+    canvas.toJSON.and.returnValue(canvasJson);
 
     component.isAspect = true;
+
     expect(component.isAspect).toBe(true);
-    expect(drawSpy).toHaveBeenCalled();
-
-    drawSpy.calls.reset();
-    component['canvasCache'] = undefined;
-
-    component.isAspect = false;
-    expect(component.isAspect).toBe(false);
-    expect(drawSpy).toHaveBeenCalled();
+    expect(canvas.toJSON).toHaveBeenCalledTimes(1);
+    expect(component['canvasCache']).toEqual(canvasJson as any);
+    expect(drawSpy).toHaveBeenCalledOnceWith(returnHoroscopeData);
+    expect(canvas.loadFromJSON).not.toHaveBeenCalled();
   });
 
-  it('should not change value or redraw if drawing is in progress', () => {
-    component.isAspect = false;
+  it('should have no side effects when drawing is in progress', () => {
+    const canvasCache = { version: 'cached', objects: [] };
+    component['canvasCache'] = canvasCache;
     component.isDrawing = true;
 
     component.isAspect = true;
 
     expect(component.isAspect).toBe(false);
+    expect(component['canvasCache']).toBe(canvasCache);
+    expect(canvas.toJSON).not.toHaveBeenCalled();
+    expect(canvas.loadFromJSON).not.toHaveBeenCalled();
     expect(drawSpy).not.toHaveBeenCalled();
   });
 
-  it('should not change value or redraw if loading is in progress', () => {
-    component.isAspect = false;
+  it('should have no side effects when loading is in progress', () => {
+    const canvasCache = { version: 'cached', objects: [] };
+    component['canvasCache'] = canvasCache;
     component.loading = true;
 
     component.isAspect = true;
 
     expect(component.isAspect).toBe(false);
+    expect(component['canvasCache']).toBe(canvasCache);
+    expect(canvas.toJSON).not.toHaveBeenCalled();
+    expect(canvas.loadFromJSON).not.toHaveBeenCalled();
     expect(drawSpy).not.toHaveBeenCalled();
   });
 
-  it('should use canvas cache when available', fakeAsync(() => {
-    // 设置初始状态
-    component.isDrawing = false;
-    component.loading = false;
-    const expectedCanvasCache = { version: 'test', objects: [] };
-    component['canvasCache'] = expectedCanvasCache;
-    component['returnHoroscopeData'] = {} as ReturnHoroscope;
+  it('should swap canvas state with the cache when one is available', fakeAsync(() => {
+    const cachedCanvasJson = { version: 'cached', objects: [] };
+    const currentCanvasJson = { version: 'current', objects: [] };
+    component['canvasCache'] = cachedCanvasJson;
+    canvas.toJSON.and.returnValue(currentCanvasJson);
 
-    const canvas = (component as any).canvas;
-    const loadFromJSONSpy = canvas.loadFromJSON;
-    const renderAllSpy = canvas.renderAll;
-
-    drawSpy.calls.reset();
-
-    // 改变 isAspect 值
     component.isAspect = true;
-    tick(); // 等待异步操作完成
+    tick();
 
-    // 验证使用了缓存而不是重新绘制
-    expect(loadFromJSONSpy).toHaveBeenCalledWith(expectedCanvasCache);
-    expect(renderAllSpy).toHaveBeenCalled();
+    expect(component.isAspect).toBe(true);
+    expect(canvas.toJSON).toHaveBeenCalledTimes(1);
+    expect(component['canvasCache']).toEqual(currentCanvasJson as any);
+    expect(canvas.loadFromJSON).toHaveBeenCalledOnceWith(cachedCanvasJson);
+    expect(canvas.renderAll).toHaveBeenCalledTimes(1);
     expect(drawSpy).not.toHaveBeenCalled();
   }));
 
-  it('should save canvas to cache when changing isAspect value', () => {
-    component.isDrawing = false;
-    component.loading = false;
+  it('should show an alert when neither cache nor return data is available', () => {
     component['canvasCache'] = undefined;
-    component['returnHoroscopeData'] = {} as ReturnHoroscope;
+    component['returnHoroscopeData'] = null;
 
-    const expectedCanvasJson = { version: 'test', objects: [] };
-    const canvas = (component as any).canvas;
-    const toJSONSpy = canvas.toJSON.and.returnValue(expectedCanvasJson);
-    drawSpy.calls.reset();
-
-    // 改变 isAspect 值
     component.isAspect = true;
 
-    // 验证保存了当前画布状态到缓存
-    expect(toJSONSpy).toHaveBeenCalled();
-    expect(component['canvasCache']).toEqual(expectedCanvasJson as any);
-    expect(drawSpy).toHaveBeenCalled();
+    expect(component.isAspect).toBe(true);
+    expect(component.isAlertOpen).toBeTrue();
+    expect(component.message).toBe('应用异常，返照盘数据丢失!');
+    expect(canvas.toJSON).toHaveBeenCalledTimes(1);
+    expect(canvas.loadFromJSON).not.toHaveBeenCalled();
+    expect(drawSpy).not.toHaveBeenCalled();
   });
 });
