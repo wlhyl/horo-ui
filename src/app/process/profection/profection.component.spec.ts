@@ -102,8 +102,7 @@ describe('ProfectionComponent', () => {
     mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
 
     TestBed.configureTestingModule({
-      declarations: [ProfectionComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [ProfectionComponent, IonicModule.forRoot()],
       providers: [
         { provide: ApiService, useValue: mockApiService },
         { provide: HoroStorageService, useValue: mockHoroStorageService },

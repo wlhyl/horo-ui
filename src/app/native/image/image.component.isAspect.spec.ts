@@ -25,8 +25,8 @@ describe('isAspect property', () => {
     mockAuthService = jasmine.createSpyObj('AuthService', ['isAuth']);
 
     await TestBed.configureTestingModule({
-      declarations: [ImageComponent],
       imports: [
+        ImageComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),

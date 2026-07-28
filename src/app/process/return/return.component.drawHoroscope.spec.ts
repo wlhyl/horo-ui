@@ -37,8 +37,8 @@ describe('ReturnComponent', () => {
     });
 
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
+        ReturnComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
