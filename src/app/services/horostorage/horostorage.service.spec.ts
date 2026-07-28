@@ -175,7 +175,7 @@ describe('HoroStorageService', () => {
         },
         geo_name: '北京',
         geo: { long: 116 + 25 / 60.0, lat: 39 + 54 / 60.0 },
-        house: 'Alcabitus',
+        house: 'Regiomontanus',
         sex: true,
         name: '',
       };

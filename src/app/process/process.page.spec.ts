@@ -78,7 +78,7 @@ describe('ProcessPage', () => {
     url: of([]),
   };
 
-  beforeEach(() => {
+  beforeEach(async () => {
     horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [''], {
       horoData: mockHoroData,
       processData: mockProcessData,
@@ -101,12 +101,12 @@ describe('ProcessPage', () => {
 
     TestBed.configureTestingModule({
       imports: [
+        ProcessPage,
         IonicModule.forRoot(),
         FormsModule,
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],
-      declarations: [ProcessPage],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -118,7 +118,8 @@ describe('ProcessPage', () => {
         // 正确提供NavController服务
         { provide: NavController, useValue: navControllerSpy },
       ],
-    }).compileComponents();
+    });
+    await TestBed.compileComponents();
 
     fixture = TestBed.createComponent(ProcessPage);
     component = fixture.componentInstance;
@@ -334,18 +335,30 @@ describe('ProcessPage', () => {
 
   describe('processOptions', () => {
     it('should contain all process options with correct text and value', () => {
-      const expectedOptions = [
-        { text: '法达', value: ProcessName.Firdaria },
-        { text: '小限', value: ProcessName.Profection },
-        { text: '主向推运', value: ProcessName.Direction },
-        { text: '行运', value: ProcessName.Transit },
-        { text: '日返', value: ProcessName.SolarReturn },
-        { text: '月返', value: ProcessName.LunarReturn },
-        { text: '日返比本命', value: ProcessName.SolarcomparNative },
-        { text: '本命比日返', value: ProcessName.NativecomparSolar },
-        { text: '月返比本命', value: ProcessName.LunarcomparNative },
-        { text: '本命比月返', value: ProcessName.NativecomparLunar },
+      const expectedProcessNames = [
+        ProcessName.Firdaria,
+        ProcessName.Profection,
+        ProcessName.MedievalProfection,
+        ProcessName.CustomDayProfection,
+        ProcessName.Direction,
+        ProcessName.DailyDirection,
+        ProcessName.SolarArc,
+        ProcessName.QuadrantProcess,
+        ProcessName.Transit,
+        ProcessName.SolarReturn,
+        ProcessName.LunarReturn,
+        ProcessName.DailyReturn,
+        ProcessName.SolarcomparNative,
+        ProcessName.NativecomparSolar,
+        ProcessName.LunarcomparNative,
+        ProcessName.NativecomparLunar,
+        ProcessName.DailycomparNative,
+        ProcessName.NativecomparDaily,
       ];
+      const expectedOptions = expectedProcessNames.map((processName) => ({
+        text: ProcessName.name(processName),
+        value: processName,
+      }));
 
       expect(component.processOptions).toEqual(expectedOptions);
     });

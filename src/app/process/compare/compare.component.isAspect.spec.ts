@@ -31,8 +31,8 @@ describe('isAspect property', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [CompareComponent],
       imports: [
+        CompareComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),

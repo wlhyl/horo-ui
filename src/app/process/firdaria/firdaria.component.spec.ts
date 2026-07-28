@@ -54,8 +54,7 @@ describe('FirdariaComponent', () => {
     });
 
     TestBed.configureTestingModule({
-      declarations: [FirdariaComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [FirdariaComponent, IonicModule.forRoot()],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         { provide: Title, useValue: titleServiceSpy },

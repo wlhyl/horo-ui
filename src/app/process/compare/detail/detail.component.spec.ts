@@ -1,13 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import { DetailComponent } from './detail.component';
 import {
   HoroscopeComparison,
   Planet,
 } from 'src/app/type/interface/response-data';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { createMockHoroscopeComparison } from 'src/app/test-utils/test-data-factory.spec';
 
 const mockPlanet: Planet = {
@@ -57,66 +55,36 @@ const mockCompareData: HoroscopeComparison = createMockHoroscopeComparison({
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
 
   beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    const navControllerSpy = jasmine.createSpyObj('NavController', ['']);
-
     await TestBed.configureTestingModule({
-      declarations: [DetailComponent],
-      imports: [IonicModule.forRoot()],
-      providers: [
-        { provide: Router, useValue: routerSpy },
-        { provide: Title, useValue: titleServiceSpy },
-        { provide: NavController, useValue: navControllerSpy },
-      ],
+      imports: [IonicModule.forRoot(), DetailComponent],
     }).compileComponents();
-  });
 
-  it('should create the component and set the title', () => {
-    routerSpy.currentNavigation.and.returnValue(null);
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
-    expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('比较盘详情');
   });
 
-  it('should set compareData from router state', () => {
-    routerSpy.currentNavigation.and.returnValue({
-      extras: {
-        state: {
-          data: mockCompareData,
-        },
-      },
-    } as any);
-
-    fixture = TestBed.createComponent(DetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-
-    expect(component.compareData).toEqual(mockCompareData);
-  });
-
-  it('should have null compareData if router state is missing', () => {
-    routerSpy.currentNavigation.and.returnValue({
-      extras: {},
-    } as any);
-
-    fixture = TestBed.createComponent(DetailComponent);
-    component = fixture.componentInstance;
+  it('should have null compareData by default', () => {
     fixture.detectChanges();
 
     expect(component.compareData).toBeNull();
   });
 
-  it('should have null compareData if navigation is null', () => {
-    routerSpy.currentNavigation.and.returnValue(null);
+  it('should set compareData from input', () => {
+    fixture.componentRef.setInput('compareData', mockCompareData);
+    fixture.detectChanges();
 
-    fixture = TestBed.createComponent(DetailComponent);
-    component = fixture.componentInstance;
+    expect(component.compareData).toEqual(mockCompareData);
+  });
+
+  it('should accept null compareData input', () => {
+    fixture.componentRef.setInput('compareData', mockCompareData);
+    fixture.componentRef.setInput('compareData', null);
     fixture.detectChanges();
 
     expect(component.compareData).toBeNull();
