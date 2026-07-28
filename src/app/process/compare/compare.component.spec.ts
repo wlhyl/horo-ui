@@ -1,4 +1,10 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { IonicModule, NavController, Platform } from '@ionic/angular';
@@ -64,8 +70,8 @@ describe('CompareComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [CompareComponent],
       imports: [
+        CompareComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
@@ -86,11 +92,14 @@ describe('CompareComponent', () => {
     fixture = TestBed.createComponent(CompareComponent);
     component = fixture.componentInstance;
 
-    spyOn(component as any, 'createCanvas').and.returnValue({
-      dispose: jasmine.createSpy('dispose'),
-      toJSON: () => ({}),
-      loadFromJSON: (data: any) =>
-        Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
+    spyOn(component as any, 'createCanvas').and.callFake(() => {
+      (component as any).canvas = {
+        dispose: jasmine.createSpy('dispose'),
+        toJSON: () => ({}),
+        loadFromJSON: (data: any) =>
+          Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
+      };
+      return (component as any).canvas;
     });
   });
 
@@ -110,14 +119,16 @@ describe('CompareComponent', () => {
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('行运');
     });
 
-    it('should initialize canvas on ngAfterViewInit', () => {
+    it('should initialize canvas on ngAfterViewInit', fakeAsync(() => {
       component.ngAfterViewInit();
+      tick();
       expect((component as any).createCanvas).toHaveBeenCalled();
       expect(drawHoroscopeSpy).toHaveBeenCalledWith(ProcessName.Transit);
-    });
+    }));
 
-    it('should dispose canvas on ngOnDestroy', () => {
+    it('should dispose canvas on ngOnDestroy', fakeAsync(() => {
       component.ngAfterViewInit();
+      tick();
       const canvas = (component as any).canvas;
       const disposeSpy = canvas.dispose;
 
@@ -125,7 +136,7 @@ describe('CompareComponent', () => {
 
       expect(disposeSpy).toHaveBeenCalled();
       expect((component as any).canvas).toBeUndefined();
-    });
+    }));
 
     it('should complete destroy$ subject on ngOnDestroy', () => {
       // 创建spy来监听unsubscribe和complete方法
@@ -165,8 +176,8 @@ describe('CompareComponent', () => {
         component as any,
         'getHoroscopeComparisonData'
       ).and.returnValue(of(mockHoroscopeComparisonData));
-      // Manually trigger ngAfterViewInit to initialize canvas for testing
-      component.ngAfterViewInit();
+      component.isDrawing = false;
+      component.loading = false;
       drawSpy.calls.reset();
       getHoroscopeComparisonDataSpy.calls.reset();
     });
