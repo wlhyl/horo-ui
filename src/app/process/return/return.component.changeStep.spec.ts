@@ -17,8 +17,8 @@ describe('ReturnComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
+        ReturnComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
@@ -31,6 +31,7 @@ describe('ReturnComponent', () => {
 
     const fixture = TestBed.createComponent(ReturnComponent);
     component = fixture.componentInstance;
+    component.ngOnInit();
   });
 
   describe('changeStep', () => {
