@@ -149,7 +149,7 @@ describe('temperament', () => {
         sun: 0,
         moon: 180,
         asc: 0,
-        planets: [makePlanet(PlanetName.Saturn, 65)],
+        planets: [makePlanet(PlanetName.Saturn, 15)],
       });
       const value = expectOk(calculateTemperamentContributors(horo));
       const saturn = findPlanet(value, PlanetName.Saturn)!;
@@ -164,7 +164,7 @@ describe('temperament', () => {
         sun: 0,
         moon: 180,
         asc: 0,
-        planets: [makePlanet(PlanetName.Jupiter, 65)],
+        planets: [makePlanet(PlanetName.Jupiter, 15)],
       });
       const value = expectOk(calculateTemperamentContributors(horo));
       const jupiter = findPlanet(value, PlanetName.Jupiter)!;
@@ -177,7 +177,7 @@ describe('temperament', () => {
         sun: 0,
         moon: 180,
         asc: 0,
-        planets: [makePlanet(PlanetName.SouthNode, 65)],
+        planets: [makePlanet(PlanetName.SouthNode, 15)],
       });
       const value = expectOk(calculateTemperamentContributors(horo));
       const south = findPlanet(value, PlanetName.SouthNode)!;
