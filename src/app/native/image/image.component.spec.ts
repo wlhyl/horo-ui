@@ -57,7 +57,11 @@ describe('ImageComponent', () => {
       'updateNative',
     ]);
     mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
+    mockRouter = jasmine.createSpyObj(
+      'Router',
+      ['navigate', 'createUrlTree'],
+      { url: '/native' },
+    );
     mockAuthService = jasmine.createSpyObj('AuthService', ['isAuth']);
     mockAlertController = jasmine.createSpyObj('AlertController', ['create']);
     mockNavController = jasmine.createSpyObj('NavController', ['back']);
@@ -81,8 +85,8 @@ describe('ImageComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      declarations: [ImageComponent, DetailComponent],
       imports: [
+        ImageComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
@@ -104,6 +108,8 @@ describe('ImageComponent', () => {
 
     fixture = TestBed.createComponent(ImageComponent);
     component = fixture.componentInstance;
+    component.currentHoroData = structuredClone(mockCurrentHoroData);
+    component.currentHoroData = structuredClone(mockHoroData);
 
     // 监视 createCanvas 方法并返回一个模拟的 canvas 对象
     spyOn(component as any, 'createCanvas').and.returnValue({
@@ -130,14 +136,16 @@ describe('ImageComponent', () => {
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('本命星盘');
     });
 
-    it('should initialize canvas on ngAfterViewInit', () => {
+    it('should initialize canvas on ngAfterViewInit', fakeAsync(() => {
       component.ngAfterViewInit();
+      tick();
       expect(component['canvas']).toBeDefined();
-      expect(drawHoroscopeSpy).toHaveBeenCalledWith(mockHoroData);
-    });
+      expect(drawHoroscopeSpy).toHaveBeenCalledWith(mockCurrentHoroData);
+    }));
 
-    it('should dispose canvas and complete subscriptions on ngOnDestroy', () => {
+    it('should dispose canvas and complete subscriptions on ngOnDestroy', fakeAsync(() => {
       component.ngAfterViewInit();
+      tick();
       const canvas = (component as any).canvas;
       const disposeSpy = canvas.dispose;
       const destroySpy = spyOn(component['destroy$'], 'complete');
@@ -147,7 +155,7 @@ describe('ImageComponent', () => {
       expect(disposeSpy).toHaveBeenCalled();
       expect(component['canvas']).toBeUndefined();
       expect(destroySpy).toHaveBeenCalled();
-    });
+    }));
   });
 
   describe('drawHoroscope', () => {
@@ -156,13 +164,7 @@ describe('ImageComponent', () => {
     beforeEach(() => {
       mockApiService.getNativeHoroscope.and.returnValue(of(mockHoroscopeData));
       component.currentHoroData = mockCurrentHoroData;
-      // 监视 draw 方法以避免实际执行
-      drawSpy = spyOn(component as any, 'draw').and.callFake(() => {});
-
-      // 由于 createCanvas 已被监视，ngAfterViewInit 不会创建新的 canvas
-      // 我们需要手动触发它以进行测试
-      component.ngAfterViewInit();
-      drawSpy.calls.reset();
+      drawSpy = spyOn(component as any, 'draw').and.stub();
       mockApiService.getNativeHoroscope.calls.reset();
     });
 
@@ -291,7 +293,7 @@ describe('ImageComponent', () => {
 
   describe('onArchive', () => {
     it('should call addRecord when horoData.id is 0', async () => {
-      (component as any).horoData = { ...mockHoroData, id: 0 };
+      component.currentHoroData = { ...mockHoroData, id: 0 };
       const addRecordSpy = spyOn<any>(component, 'addRecord');
 
       await component.onArchive();
@@ -300,7 +302,7 @@ describe('ImageComponent', () => {
     });
 
     it('should show alert when horoData.id is not 0', async () => {
-      (component as any).horoData = { ...mockHoroData, id: 1 };
+      component.currentHoroData = { ...mockHoroData, id: 1 };
       const alert = jasmine.createSpyObj('HTMLIonAlertElement', ['present']);
       mockAlertController.create.and.returnValue(Promise.resolve(alert));
 
@@ -389,23 +391,21 @@ describe('ImageComponent', () => {
 
     it('should update storage on successful API call', () => {
       mockApiService.addNative.and.returnValue(of(mockNativeResponse));
-      spyOn(component as any, 'handleError');
 
-      (component as any).addRecord();
+      component.addRecord();
 
       expect(mockHoroStorageService.horoData!.id).toBe(mockNativeResponse.id);
       expect(component.isSaveOpen).toBe(true);
-      expect((component as any).handleError).not.toHaveBeenCalled();
     });
 
     it('should call handleError on API error', () => {
       const error = new Error('API Error');
       mockApiService.addNative.and.returnValue(throwError(() => error));
-      const handleErrorSpy = spyOn(component as any, 'handleError');
-
       (component as any).addRecord();
 
-      expect(handleErrorSpy).toHaveBeenCalledWith('新增档案错误', error);
+      expect(component.message).toContain('新增档案错误');
+      expect(component.message).toContain('API Error');
+      expect(component.isAlertOpen).toBe(true);
       expect(component.isSaveOpen).toBe(false);
     });
 
@@ -416,7 +416,7 @@ describe('ImageComponent', () => {
       };
 
       mockHoroStorageService.horoData = testHoroData;
-      (component as any).horoData = { ...testHoroData } as HoroRequest;
+      component.currentHoroData = structuredClone(testHoroData);
       mockApiService.addNative.and.returnValue(of(mockNativeResponse));
 
       (component as any).addRecord();
@@ -443,7 +443,7 @@ describe('ImageComponent', () => {
       };
 
       mockHoroStorageService.horoData = testHoroData;
-      (component as any).horoData = { ...testHoroData } as HoroRequest;
+      component.currentHoroData = structuredClone(testHoroData);
       mockApiService.addNative.and.returnValue(of(mockNativeResponse));
 
       (component as any).addRecord();
@@ -499,7 +499,7 @@ describe('ImageComponent', () => {
 
     beforeEach(() => {
       // 重置 horoData，使用 structuredClone 进行深拷贝以隔离测试
-      component['horoData'] = structuredClone(mockHoroData);
+      component.currentHoroData = structuredClone(mockHoroData);
       mockApiService.getNativeById.and.returnValue(
         of(structuredClone(mockNativeRecord)),
       );
@@ -522,7 +522,7 @@ describe('ImageComponent', () => {
         name: 'New Name',
         date: { ...mockHoroData.date, year: 2001 },
       };
-      component['horoData'] = changedHoroData;
+      component.currentHoroData = changedHoroData;
 
       component.updateRecord();
 
@@ -552,35 +552,30 @@ describe('ImageComponent', () => {
     });
 
     it('should handle error from getNativeById', () => {
-      const error = { error: { message: 'Get Error' } };
+      const error = { error: { error: 'Get Error' } };
       mockApiService.getNativeById.and.returnValue(throwError(() => error));
-      const handleErrorSpy = spyOn(
-        component as any,
-        'handleError',
-      ).and.callThrough();
-
       component.updateRecord();
 
       expect(mockApiService.getNativeById).toHaveBeenCalledWith(1);
-      expect(handleErrorSpy).toHaveBeenCalledWith('获取档案错误', error);
+      expect(component.message).toContain('获取档案错误');
+      expect(component.message).toContain('Get Error');
+      expect(component.isAlertOpen).toBe(true);
       expect(mockApiService.updateNative).not.toHaveBeenCalled();
     });
 
     it('should handle error from updateNative', () => {
-      const error = { error: { message: 'Update Error' } };
+      const error = { error: { error: 'Update Error' } };
       mockApiService.updateNative.and.returnValue(throwError(() => error));
-      const handleErrorSpy = spyOn(
-        component as any,
-        'handleError',
-      ).and.callThrough();
       const changedHoroData = { ...mockHoroData, id: 1, name: 'New Name' };
-      component['horoData'] = changedHoroData;
+      component.currentHoroData = changedHoroData;
 
       component.updateRecord();
 
       expect(mockApiService.getNativeById).toHaveBeenCalledWith(1);
       expect(mockApiService.updateNative).toHaveBeenCalled();
-      expect(handleErrorSpy).toHaveBeenCalledWith('更新档案错误', error);
+      expect(component.message).toContain('更新档案错误');
+      expect(component.message).toContain('Update Error');
+      expect(component.isAlertOpen).toBe(true);
       expect(component.isSaveOpen).toBe(false);
     });
 
