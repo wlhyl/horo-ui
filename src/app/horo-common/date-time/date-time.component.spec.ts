@@ -34,9 +34,9 @@ describe('DateTimeComponent', () => {
   });
 
   it('should initialize arrays correctly', () => {
-    expect(component.years.length).toBe(200);
+    expect(component.years.length).toBe(300);
     expect(component.years[0]).toBe(1900);
-    expect(component.years[199]).toBe(2099);
+    expect(component.years[299]).toBe(2199);
 
     expect(component.months.length).toBe(12);
     expect(component.months[0]).toBe(1);
