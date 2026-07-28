@@ -21,12 +21,12 @@ describe('ReturnComponent Constructor', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -36,6 +36,7 @@ describe('ReturnComponent Constructor', () => {
 
     const fixture = TestBed.createComponent(ReturnComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -62,12 +63,12 @@ describe('ReturnComponent with LunarReturn', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -77,6 +78,7 @@ describe('ReturnComponent with LunarReturn', () => {
 
     const fixture = TestBed.createComponent(ReturnComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should set process_name to LunarReturn when activated route data has LunarReturn', () => {
@@ -85,7 +87,7 @@ describe('ReturnComponent with LunarReturn', () => {
 });
 
 describe('ReturnComponent with invalid process_name', () => {
-  it('should alert and log error when process_name is invalid', () => {
+  it('should set message and open alert when process_name is invalid', () => {
     const mockInvalidActivatedRoute = {
       snapshot: {
         data: {
@@ -94,16 +96,13 @@ describe('ReturnComponent with invalid process_name', () => {
       },
     };
 
-    const alertSpy = spyOn(window, 'alert');
-    const consoleSpy = spyOn(console, 'error');
-
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -111,13 +110,15 @@ describe('ReturnComponent with invalid process_name', () => {
       ],
     });
 
-    TestBed.createComponent(ReturnComponent);
+    const fixture = TestBed.createComponent(ReturnComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
-    expect(alertSpy).toHaveBeenCalledWith('无此种返照盘：InvalidProcess');
-    expect(consoleSpy).toHaveBeenCalledWith('无此种返照盘：InvalidProcess');
+    expect(component.message).toBe('无此种返照盘：InvalidProcess');
+    expect(component.isAlertOpen).toBe(true);
   });
 
-  it('should alert and log error when process_name is null', () => {
+  it('should set message and open alert when process_name is null', () => {
     const mockNullActivatedRoute = {
       snapshot: {
         data: {
@@ -126,16 +127,13 @@ describe('ReturnComponent with invalid process_name', () => {
       },
     };
 
-    const alertSpy = spyOn(window, 'alert');
-    const consoleSpy = spyOn(console, 'error');
-
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -143,31 +141,28 @@ describe('ReturnComponent with invalid process_name', () => {
       ],
     });
 
-    TestBed.createComponent(ReturnComponent);
+    const fixture = TestBed.createComponent(ReturnComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
-    expect(alertSpy).toHaveBeenCalledWith('配置错误，没有正确配置返照盘类型');
-    expect(consoleSpy).toHaveBeenCalledWith(
-      '配置错误，路由没有正确配置返照盘类型'
-    );
+    expect(component.message).toBe('配置错误，路由没有正确配置返照盘类型');
+    expect(component.isAlertOpen).toBe(true);
   });
 
-  it('should alert and log error when process_name is undefined', () => {
+  it('should set message and open alert when process_name is undefined', () => {
     const mockUndefinedActivatedRoute = {
       snapshot: {
         data: {},
       },
     };
 
-    const alertSpy = spyOn(window, 'alert');
-    const consoleSpy = spyOn(console, 'error');
-
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -175,15 +170,15 @@ describe('ReturnComponent with invalid process_name', () => {
       ],
     });
 
-    TestBed.createComponent(ReturnComponent);
+    const fixture = TestBed.createComponent(ReturnComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
-    expect(alertSpy).toHaveBeenCalledWith('配置错误，没有正确配置返照盘类型');
-    expect(consoleSpy).toHaveBeenCalledWith(
-      '配置错误，路由没有正确配置返照盘类型'
-    );
+    expect(component.message).toBe('配置错误，路由没有正确配置返照盘类型');
+    expect(component.isAlertOpen).toBe(true);
   });
 
-  it('should alert and log error when process_name is number', () => {
+  it('should set message and open alert when process_name is number', () => {
     const mockNumberActivatedRoute = {
       snapshot: {
         data: {
@@ -192,16 +187,13 @@ describe('ReturnComponent with invalid process_name', () => {
       },
     };
 
-    const alertSpy = spyOn(window, 'alert');
-    const consoleSpy = spyOn(console, 'error');
-
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -210,12 +202,14 @@ describe('ReturnComponent with invalid process_name', () => {
     });
 
     const fixture = TestBed.createComponent(ReturnComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
-    expect(alertSpy).toHaveBeenCalledWith('无此种返照盘：123');
-    expect(consoleSpy).toHaveBeenCalledWith('无此种返照盘：123');
+    expect(component.message).toBe('无此种返照盘：123');
+    expect(component.isAlertOpen).toBe(true);
   });
 
-  it('should alert and log error when process_name is object', () => {
+  it('should set message and open alert when process_name is object', () => {
     const mockObjectActivatedRoute = {
       snapshot: {
         data: {
@@ -224,16 +218,13 @@ describe('ReturnComponent with invalid process_name', () => {
       },
     };
 
-    const alertSpy = spyOn(window, 'alert');
-    const consoleSpy = spyOn(console, 'error');
-
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
+        ReturnComponent,
       ],
       providers: [
         { provide: ApiService, useValue: {} },
@@ -241,9 +232,11 @@ describe('ReturnComponent with invalid process_name', () => {
       ],
     });
 
-    TestBed.createComponent(ReturnComponent);
+    const fixture = TestBed.createComponent(ReturnComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
 
-    expect(alertSpy).toHaveBeenCalledWith('无此种返照盘：[object Object]');
-    expect(consoleSpy).toHaveBeenCalledWith('无此种返照盘：[object Object]');
+    expect(component.message).toBe('无此种返照盘：[object Object]');
+    expect(component.isAlertOpen).toBe(true);
   });
 });
