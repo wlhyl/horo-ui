@@ -70,8 +70,8 @@ describe('NativePage', () => {
     routerSpy.serializeUrl.and.returnValue('url');
 
     TestBed.configureTestingModule({
-      declarations: [NativePage],
       imports: [
+        NativePage,
         IonicModule.forRoot(),
         HoroCommonModule,
         FormsModule,
