@@ -1,8 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 import { NoteComponent } from './note.component';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -19,8 +18,9 @@ describe('NoteComponent', () => {
   let component: NoteComponent;
   let fixture: ComponentFixture<NoteComponent>;
   let mockApiService: jasmine.SpyObj<ApiService>;
-  let mockHoroStorageService: { horoData: any };
+  let mockHoroStorageService: { horoData: any; eventData: any };
   let mockTitleService: jasmine.SpyObj<Title>;
+  let mockRouter: Pick<Router, 'url'>;
 
   const initialHoroData: HoroRequest = createMockHoroRequest({
     id: 0,
@@ -54,15 +54,21 @@ describe('NoteComponent', () => {
 
     mockHoroStorageService = {
       horoData: structuredClone(initialHoroData),
+      eventData: structuredClone(initialHoroData),
     };
+    mockRouter = { url: '/native/note' };
+
+    TestBed.overrideComponent(NoteComponent, {
+      set: { template: '', imports: [] },
+    });
 
     await TestBed.configureTestingModule({
-      declarations: [NoteComponent],
-      imports: [IonicModule.forRoot(), FormsModule],
+      imports: [NoteComponent],
       providers: [
         { provide: ApiService, useValue: mockApiService },
         { provide: HoroStorageService, useValue: mockHoroStorageService },
         { provide: Title, useValue: mockTitleService },
+        { provide: Router, useValue: mockRouter },
       ],
     }).compileComponents();
 
