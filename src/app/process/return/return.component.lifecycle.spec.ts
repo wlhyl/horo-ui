@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
@@ -13,7 +13,6 @@ describe('ReturnComponent Lifecycle Hooks', () => {
   let component: ReturnComponent;
   let mockTitleService: jasmine.SpyObj<Title>;
   let drawHoroscopeSpy: jasmine.Spy;
-  let changeStepSubjectSpy: jasmine.Spy;
 
   beforeEach(() => {
     mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
@@ -26,8 +25,8 @@ describe('ReturnComponent Lifecycle Hooks', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ReturnComponent],
       imports: [
+        ReturnComponent,
         IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
@@ -44,10 +43,6 @@ describe('ReturnComponent Lifecycle Hooks', () => {
     component = fixture.componentInstance;
 
     drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
-    changeStepSubjectSpy = spyOn(
-      (component as any).changeStepSubject,
-      'unsubscribe'
-    ).and.stub();
 
     spyOn(component as any, 'createCanvas').and.returnValue({
       dispose: jasmine.createSpy('dispose'),
@@ -66,21 +61,28 @@ describe('ReturnComponent Lifecycle Hooks', () => {
     expect(mockTitleService.setTitle).toHaveBeenCalledWith('日返');
   });
 
-  it('should initialize canvas on ngAfterViewInit', () => {
+  it('should initialize canvas on ngAfterViewInit', fakeAsync(() => {
     component.ngAfterViewInit();
+    // ngAfterViewInit 通过 setTimeout 调用 drawHoroscope，需 flush 定时器
+    tick();
     expect((component as any).createCanvas).toHaveBeenCalled();
     expect(drawHoroscopeSpy).toHaveBeenCalledWith(ProcessName.SolarReturn);
-  });
+  }));
 
-  it('should dispose canvas on ngOnDestroy', () => {
+  it('should dispose canvas on ngOnDestroy', fakeAsync(() => {
     component.ngAfterViewInit();
+    tick();
     const canvas = (component as any).canvas;
     const disposeSpy = canvas.dispose;
+    const destroyCompleteSpy = spyOn(
+      (component as any).destroy$,
+      'complete'
+    ).and.callThrough();
 
     component.ngOnDestroy();
 
     expect(disposeSpy).toHaveBeenCalled();
     expect((component as any).canvas).toBeUndefined();
-    expect(changeStepSubjectSpy).toHaveBeenCalled();
-  });
+    expect(destroyCompleteSpy).toHaveBeenCalled();
+  }));
 });

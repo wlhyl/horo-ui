@@ -3,7 +3,6 @@ import {
   TestBed,
   fakeAsync,
   tick,
-  waitForAsync,
 } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
