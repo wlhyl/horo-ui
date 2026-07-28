@@ -4,6 +4,7 @@
  * 在异步测试中，setTimeout容易污染异步
  */
 
+import { EventEmitter } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -36,6 +37,7 @@ describe('getNatives', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
   let ionContentSpy: jasmine.SpyObj<IonContent>;
+  let ngZoneOnStable: EventEmitter<void>;
 
   const mockHoroscopeRecords: HoroscopeRecord[] = [
     {
@@ -97,6 +99,7 @@ describe('getNatives', () => {
       {}
     );
     ionContentSpy = jasmine.createSpyObj('IonContent', ['getScrollElement']);
+    ngZoneOnStable = new EventEmitter<void>();
 
     await TestBed.configureTestingModule({
       declarations: [ArchivePage],
@@ -117,6 +120,9 @@ describe('getNatives', () => {
 
     fixture = TestBed.createComponent(ArchivePage);
     component = fixture.componentInstance;
+    Object.defineProperty(component['ngZone'], 'onStable', {
+      value: ngZoneOnStable,
+    });
 
     // 第一次调用会触发angular的部分生命周期函数，如OnInit
     fixture.detectChanges();
@@ -264,7 +270,7 @@ describe('getNatives', () => {
     expect(component.natives.data.length).toBe(1);
 
     // trigger ngZone.onStable
-    fixture.detectChanges();
+    ngZoneOnStable.next();
 
     // Should have called getNatives twice (initial + additional)
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
@@ -287,7 +293,7 @@ describe('getNatives', () => {
 
     // 再次触发onStable，由于ionContentSpy.getScrollElement会返回scrollElementFilled，
     // scrollHeight > clientHeight，因此不会再调用getNatives
-    fixture.detectChanges();
+    ngZoneOnStable.next();
     tick();
 
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(2);
@@ -346,7 +352,7 @@ describe('getNatives', () => {
     expect(component.natives.data.length).toBe(1);
 
     // trigger ngZone.onStable
-    fixture.detectChanges();
+    ngZoneOnStable.next();
 
     // Should not have called getScrollElement (ngZone.onStable might not be triggered in tests)
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);

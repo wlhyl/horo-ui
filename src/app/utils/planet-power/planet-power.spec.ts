@@ -355,7 +355,7 @@ describe('planet-power', () => {
       const cusps = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
       expect(getPlanetHouse(15, cusps)).toEqual({ ok: true, value: 1 });
       expect(getPlanetHouse(45, cusps)).toEqual({ ok: true, value: 2 });
-      expect(getPlanetHouse(315, cusps)).toEqual({ ok: true, value: 12 });
+      expect(getPlanetHouse(345, cusps)).toEqual({ ok: true, value: 12 });
     });
 
     it('5度规则：行星在宫头前5度内算入该宫', () => {

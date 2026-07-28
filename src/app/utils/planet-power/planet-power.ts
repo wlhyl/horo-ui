@@ -411,10 +411,9 @@ function calculatePlanetAccidentalPower(
   const saturnLong = horoscope.planets.find(
     (p) => p.name === PlanetName.Saturn,
   )?.long;
-  if (marsLong === undefined || saturnLong === undefined) {
-    return { ok: false, error: '缺少火星或土星' };
-  }
   const isBesieged =
+    marsLong !== undefined &&
+    saturnLong !== undefined &&
     planet.name !== PlanetName.Mars &&
     planet.name !== PlanetName.Saturn &&
     isBetweenArcs(planet.long, marsLong, saturnLong) &&
