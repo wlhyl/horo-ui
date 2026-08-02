@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.31.0] - 2026-08-03
 
 ### Added
 
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - 次限盘宫位计算统一使用本命盘出生地
 - 推运页面 `@for` 列表的 `track` 表达式统一改为按 primitive 字段（`option.value`）跟踪，避免对象引用变化导致不必要的 DOM 重建
+- `ImageComponent`、`CompareComponent`、`ReturnComponent` 的 `ngOnChanges` 增加 `initialized` 守卫，避免首次初始化时重复赋值
 
 ## [0.30.0] - 2026-07-22
 

@@ -169,6 +169,8 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.embedded) return;
+    // 首次初始化由 ngOnInit 处理，避免重复 fetch
+    if (!this.initialized) return;
 
     let needRedraw = false;
 
