@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- 新增次限推运功能，支持「1天=1年」与「1度=1年」两种算法，默认使用「1度=1年」
+- 新增次限推运星盘页面及工作台窗口，展示太阳回归时间和实际次限计算时间
+- 新增次限与本命盘比较盘：本命盘绘制在内圈，次限盘绘制在外圈
+- 次限推运支持传统推运页面与 Workbench 输入面板入口
+
+### Changed
+
+- 次限盘宫位计算统一使用本命盘出生地
+- 推运页面 `@for` 列表的 `track` 表达式统一改为按 primitive 字段（`option.value`）跟踪，避免对象引用变化导致不必要的 DOM 重建
+
 ## [0.30.0] - 2026-07-22
 
 ### Added

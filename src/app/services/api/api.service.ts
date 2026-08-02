@@ -15,6 +15,7 @@ import {
   QuadrantProcessLongitudeRequest,
   MedievalProfectionRequest,
   HistoricalHoroRequest,
+  SecondaryProgressionRequest,
 } from 'src/app/type/interface/request-data';
 import {
   FirdariaPeriod,
@@ -26,6 +27,7 @@ import {
   QuadrantProcess,
   MedievalProfection,
   HistoricalHoroResponse,
+  SecondaryProgression,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { environment } from 'src/environments/environment';
@@ -162,9 +164,17 @@ export class ApiService {
     );
   }
 
+  public secondaryProgression(
+    data: SecondaryProgressionRequest,
+  ): Observable<SecondaryProgression> {
+    return this.http.post<SecondaryProgression>(
+      `${this.url}/process/secondary_progression`,
+      data,
+    );
+  }
+
   /**
-   *
-   * @returns 获取比较盘
+   * 获取比较盘
    */
   public compare(
     data: HoroscopeComparisonRequest,

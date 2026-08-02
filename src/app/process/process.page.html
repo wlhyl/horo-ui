@@ -120,7 +120,7 @@
             </ion-toolbar>
             <ion-picker>
               <ion-picker-column [value]="currentProcess" (ionChange)="onIonChange($event)">
-                @for (option of processOptions; track option) {
+                @for (option of processOptions; track option.value) {
                 <ion-picker-column-option [value]="option.value">{{ option.text }}
                 </ion-picker-column-option>
                 }
@@ -173,6 +173,15 @@
       </ion-col>
     </ion-row>
 
+    @if (processData.process_name===processNameEnum.SecondaryProgression || processData.process_name===processNameEnum.SecondaryProgressionComparNative) {
+    <ion-row>
+      <ion-col size="5" class="ion-text-right"><ion-label>次限算法：</ion-label></ion-col>
+      <ion-col size="7"><ion-select label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="processData.secondary_progression_method">
+        @for (option of secondaryProgressionMethodOptions; track option.value) {<ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>}
+      </ion-select><ion-note>次限宫位固定使用出生地</ion-note></ion-col>
+    </ion-row>
+    }
+
     @if (processData.process_name===processNameEnum.LunarReturn ||
     processData.process_name===processNameEnum.LunarcomparNative ||
     processData.process_name===processNameEnum.NativecomparLunar ||
@@ -196,7 +205,7 @@
       <ion-col size="7">
         <ion-select label-placement="fixed" okText="确定" cancelText="取消"
                     [(ngModel)]="processData.direction_method">
-          @for (option of directionMethodOptions; track option) {
+          @for (option of directionMethodOptions; track option.value) {
           <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
           }
         </ion-select>
@@ -209,7 +218,7 @@
       <ion-col size="7">
         <ion-select label-placement="fixed" okText="确定" cancelText="取消"
                     [(ngModel)]="processData.arc_to_date_method">
-          @for (option of arcToDateMethodOptions; track option) {
+          @for (option of arcToDateMethodOptions; track option.value) {
           <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
           }
         </ion-select>
@@ -225,7 +234,7 @@
       <ion-col size="7">
         <ion-select label-placement="fixed" okText="确定" cancelText="取消"
                     [(ngModel)]="processData.daily_direction_method">
-          @for (option of dailyDirectionMethodOptions; track option) {
+          @for (option of dailyDirectionMethodOptions; track option.value) {
           <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
           }
         </ion-select>
@@ -241,7 +250,7 @@
       <ion-col size="7">
         <ion-select label-placement="fixed" okText="确定" cancelText="取消"
                     [(ngModel)]="processData.profection_arc_to_date_method">
-          @for (option of profectionArcToDateMethodOptions; track option) {
+          @for (option of profectionArcToDateMethodOptions; track option.value) {
           <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
           }
         </ion-select>

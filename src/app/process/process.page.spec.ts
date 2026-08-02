@@ -354,6 +354,8 @@ describe('ProcessPage', () => {
         ProcessName.NativecomparLunar,
         ProcessName.DailycomparNative,
         ProcessName.NativecomparDaily,
+        ProcessName.SecondaryProgression,
+        ProcessName.SecondaryProgressionComparNative,
       ];
       const expectedOptions = expectedProcessNames.map((processName) => ({
         text: ProcessName.name(processName),

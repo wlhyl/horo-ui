@@ -1,0 +1,23 @@
+@if (!embedded) {
+<ion-header><ion-toolbar><ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons><ion-title>{{ title }}</ion-title></ion-toolbar></ion-header>
+}
+<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons" (didDismiss)="isAlertOpen=false"></ion-alert>
+@if (initialized) {
+<ion-content [fullscreen]="true">
+  <div class="ion-text-center"><h2>推运时间：{{ currentProcessData.date.year }}年{{ currentProcessData.date.month }}月{{ currentProcessData.date.day }}日</h2></div>
+  @if (secondaryProgressionData) {
+    <div class="ion-text-center"><p>太阳回归时间：{{ secondaryProgressionData.solar_return_date.year }}年{{ secondaryProgressionData.solar_return_date.month }}月{{ secondaryProgressionData.solar_return_date.day }}日</p><p>次限时间：{{ secondaryProgressionData.progression_date.year }}年{{ secondaryProgressionData.progression_date.month }}月{{ secondaryProgressionData.progression_date.day }}日</p></div>
+  }
+  <div class="folder-tabs"><div class="folder-tab" [class.active]="selectedTab === 'horoscope'" (click)="selectedTab='horoscope'">星盘</div><div class="folder-tab" [class.active]="selectedTab === 'detail'" (click)="selectedTab='detail'">详情</div></div>
+  <div class="folder-content">
+    <div [class.tab-hidden]="selectedTab !== 'horoscope'">
+      @if (loading) {<div class="ion-text-center"><ion-label>获取星盘</ion-label><ion-spinner name="bubbles"></ion-spinner></div>}
+      <div class="ion-text-center"><canvas #canvasRef [id]="canvasId" width="0" height="0"></canvas></div>
+      @if (secondaryProgressionData) {<div class="horo-aspect-toggle"><ion-label class="ion-text-right">星盘</ion-label><ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle><ion-label>相位</ion-label></div>}
+    </div>
+    @if (selectedTab === 'detail' && secondaryProgressionData) {<app-native-detail [horoscopeData]="secondaryProgressionData.horoscope"></app-native-detail>}
+  </div>
+  @if (embedded) {<div class="embedded-footer"><horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change></div>}
+</ion-content>
+@if (!embedded) {<ion-footer><ion-toolbar><horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change></ion-toolbar></ion-footer>}
+} @else {<div class="ion-text-center ion-padding"><ion-label color="medium">次限推运数据未初始化</ion-label></div>}

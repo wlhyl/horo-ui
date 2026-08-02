@@ -27,6 +27,8 @@ export enum ChartType {
   SolarArc = 'SolarArc',
   QuadrantProcess = 'QuadrantProcess',
   Promittor = 'Promittor',
+  SecondaryProgression = 'SecondaryProgression',
+  SecondaryProgressionComparNative = 'SecondaryProgressionComparNative',
 }
 
 export interface WindowRect {
@@ -68,6 +70,8 @@ const CHART_TITLES: Record<ChartType, string> = {
   [ChartType.SolarArc]: '太阳弧',
   [ChartType.QuadrantProcess]: '象限推运',
   [ChartType.Promittor]: '承诺星盘',
+  [ChartType.SecondaryProgression]: '次限推运',
+  [ChartType.SecondaryProgressionComparNative]: '次限比本命',
 };
 
 export function chartTitle(type: ChartType): string {

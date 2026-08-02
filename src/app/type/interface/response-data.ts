@@ -128,6 +128,14 @@ export interface Profection {
   hour_per_house: Array<HoroDateTime>;
 }
 
+export interface SecondaryProgression {
+  native_date: HoroDateTime;
+  process_date: HoroDateTime;
+  solar_return_date: HoroDateTime;
+  progression_date: HoroDateTime;
+  horoscope: Horoscope;
+}
+
 /**
  * 比较星盘的返回数据
  * 可用于Transit

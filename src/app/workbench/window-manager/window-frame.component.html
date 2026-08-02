@@ -132,6 +132,12 @@
           [embedded]="true"
         ></app-compare>
       }
+      @case (chartType.SecondaryProgression) {
+        <app-secondary-progression [inputHoroData]="horoData()" [inputProcessData]="processData()" [canvasId]="window().id" [embedded]="true"></app-secondary-progression>
+      }
+      @case (chartType.SecondaryProgressionComparNative) {
+        <app-compare [inputHoroData]="horoData()" [inputProcessData]="processData()" [inputProcessName]="processNameEnum.SecondaryProgressionComparNative" [canvasId]="window().id" [embedded]="true"></app-compare>
+      }
       @case (chartType.Profection) {
         <app-profection
           [inputHoroData]="horoData()"

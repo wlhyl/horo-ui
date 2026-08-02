@@ -3,6 +3,7 @@ import { DirectionMethod } from '../../process/enum/direction-method';
 import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../../process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from '../../process/enum/daily-direction-method';
+import { SecondaryProgressionMethod } from '../../process/enum/secondary-progression-method';
 import {
   HistoricalHouseCusp,
   HistoricalPlanetPosition,
@@ -51,6 +52,15 @@ export interface ProcessRequest {
   arc_to_date_method: ArcToDateMethod;
   profection_arc_to_date_method: ProfectionArcToDateMethod;
   daily_direction_method: DailyDirectionMethod;
+  secondary_progression_method: SecondaryProgressionMethod;
+}
+
+export interface SecondaryProgressionRequest {
+  native_date: DateRequest;
+  process_date: DateRequest;
+  geo: GeoRequest;
+  method: SecondaryProgressionMethod;
+  house: string;
 }
 
 export interface ProfectionRequest {

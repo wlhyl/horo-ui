@@ -18,6 +18,7 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import {
   HoroscopeComparison,
   ReturnHoroscope,
+  SecondaryProgression,
 } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { Platform } from '@ionic/angular';
@@ -27,6 +28,7 @@ import {
   HoroscopeComparisonRequest,
   ProcessRequest,
   ReturnRequest,
+  SecondaryProgressionRequest,
 } from 'src/app/type/interface/request-data';
 import {
   finalize,
@@ -165,6 +167,7 @@ export class CompareComponent
         case ProcessName.NativecomparLunar:
         case ProcessName.DailycomparNative:
         case ProcessName.NativecomparDaily:
+        case ProcessName.SecondaryProgressionComparNative:
           this.process_name = process_name;
           break;
         default:
@@ -374,6 +377,8 @@ export class CompareComponent
     switch (process_name) {
       case ProcessName.Transit:
         return this.getTransitData();
+      case ProcessName.SecondaryProgressionComparNative:
+        return this.getSecondaryProgressionComparData();
       case ProcessName.SolarcomparNative:
       case ProcessName.NativecomparSolar:
       case ProcessName.LunarcomparNative:
@@ -386,6 +391,25 @@ export class CompareComponent
         this.isAlertOpen = true;
         throw new Error(this.message);
     }
+  }
+
+  private getSecondaryProgressionComparData(): Observable<HoroscopeComparison> {
+    const request: SecondaryProgressionRequest = {
+      native_date: this.horoData.date,
+      process_date: this.currentProcessData.date,
+      geo: this.horoData.geo,
+      method: this.currentProcessData.secondary_progression_method,
+      house: this.horoData.house,
+    };
+    return this.api.secondaryProgression(request).pipe(
+      switchMap((data: SecondaryProgression) => this.api.compare({
+        original_date: this.horoData.date,
+        comparison_date: { ...data.progression_date, st: false },
+        original_geo: this.horoData.geo,
+        comparison_geo: this.horoData.geo,
+        house: this.horoData.house,
+      })),
+    );
   }
 
   private getTransitData(): Observable<HoroscopeComparison> {

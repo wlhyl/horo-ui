@@ -9,6 +9,7 @@ import { DirectionMethod } from 'src/app/process/enum/direction-method';
 import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
+import { SecondaryProgressionMethod } from 'src/app/process/enum/secondary-progression-method';
 import { ChartType } from '../window-manager/window-state';
 import { isInChineseDST } from 'src/app/utils/dst/dst';
 
@@ -57,10 +58,16 @@ export class InputPanelComponent {
     ProcessName.DailyDirection,
     ProcessName.SolarArc,
     ProcessName.QuadrantProcess,
+    ProcessName.SecondaryProgression,
+    ProcessName.SecondaryProgressionComparNative,
   ].map((process_name) => ({
     text: ProcessName.name(process_name),
     value: process_name,
   }));
+
+  readonly secondaryProgressionMethodOptions = Object.values(SecondaryProgressionMethod)
+    .filter((v): v is SecondaryProgressionMethod => typeof v === 'string')
+    .map((method) => ({ text: SecondaryProgressionMethod.name(method), value: method }));
 
   readonly directionMethodOptions = Object.values(DirectionMethod)
     .filter((v) => typeof v === 'string')
@@ -112,6 +119,8 @@ export class InputPanelComponent {
     { type: ChartType.NativecomparLunar, label: '本命比月返', group: '比较' },
     { type: ChartType.DailycomparNative, label: '每日回归比本命', group: '比较' },
     { type: ChartType.NativecomparDaily, label: '本命比每日回归', group: '比较' },
+    { type: ChartType.SecondaryProgression, label: '次限推运', group: '推运' },
+    { type: ChartType.SecondaryProgressionComparNative, label: '次限比本命', group: '比较' },
   ];
 
   readonly chartGroups: string[] = ['基础', '推运', '返照', '比较'];

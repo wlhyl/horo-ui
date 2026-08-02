@@ -5,7 +5,7 @@ export enum ProcessName {
   MedievalProfection = 'MedievalProfection',
   CustomDayProfection = 'CustomDayProfection',
   Transit = 'Transit',
-  Firdaria = 'firdaria',
+  Firdaria = 'Firdaria',
   SolarReturn = 'SolarReturn',
   LunarReturn = 'LunarReturn',
   DailyReturn = 'DailyReturn',
@@ -19,6 +19,8 @@ export enum ProcessName {
   DailyDirection = 'DailyDirection',
   SolarArc = 'SolarArc',
   QuadrantProcess = 'QuadrantProcess',
+  SecondaryProgression = 'SecondaryProgression',
+  SecondaryProgressionComparNative = 'SecondaryProgressionComparNative',
 }
 
 export namespace ProcessName {
@@ -41,6 +43,8 @@ export namespace ProcessName {
     [ProcessName.DailyDirection]: '每日回归方向弧',
     [ProcessName.SolarArc]: '太阳弧',
     [ProcessName.QuadrantProcess]: '象限推运',
+    [ProcessName.SecondaryProgression]: '次限推运',
+    [ProcessName.SecondaryProgressionComparNative]: '次限比本命',
   };
 
   const pathMap: { [key in ProcessName]: Path } = {
@@ -62,6 +66,8 @@ export namespace ProcessName {
     [ProcessName.DailyDirection]: Path.DailyDirection,
     [ProcessName.SolarArc]: Path.SolarArc,
     [ProcessName.QuadrantProcess]: Path.QuadrantProcess,
+    [ProcessName.SecondaryProgression]: Path.SecondaryProgression,
+    [ProcessName.SecondaryProgressionComparNative]: Path.SecondaryProgressionComparNative,
   };
 
   export function name(process: ProcessName): string {

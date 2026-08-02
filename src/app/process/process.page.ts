@@ -7,6 +7,7 @@ import { DirectionMethod } from './enum/direction-method';
 import { ArcToDateMethod } from './enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from './enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from './enum/daily-direction-method';
+import { SecondaryProgressionMethod } from './enum/secondary-progression-method';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -96,12 +97,21 @@ export class ProcessPage implements OnInit {
     ProcessName.NativecomparLunar,
     ProcessName.DailycomparNative,
     ProcessName.NativecomparDaily,
+    ProcessName.SecondaryProgression,
+    ProcessName.SecondaryProgressionComparNative,
   ].map((process_name) => {
     return {
       text: ProcessName.name(process_name),
       value: process_name,
     };
   });
+
+  secondaryProgressionMethodOptions = Object.values(SecondaryProgressionMethod)
+    .filter((v): v is SecondaryProgressionMethod => typeof v === 'string')
+    .map((method) => ({
+    text: SecondaryProgressionMethod.name(method),
+    value: method,
+  }));
 
   directionMethodOptions = Object.values(DirectionMethod)
     .filter((v) => typeof v === 'string')

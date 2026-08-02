@@ -21,6 +21,7 @@ import { QuadrantProcessComponent } from 'src/app/process/quadrant_process/quadr
 import { PromittorComponent } from 'src/app/promittor/promittor.component';
 import { CompareComponent } from 'src/app/process/compare/compare.component';
 import { ReturnComponent } from 'src/app/process/return/return.component';
+import { SecondaryProgressionComponent } from 'src/app/process/secondary-progression/secondary-progression.component';
 import {
   ChartType,
   WindowRect,
@@ -46,6 +47,7 @@ import { WindowService } from './window.service';
     PromittorComponent,
     CompareComponent,
     ReturnComponent,
+    SecondaryProgressionComponent,
   ],
 })
 export class WindowFrameComponent implements OnDestroy {

@@ -13,6 +13,7 @@ import { CompareComponent } from './compare/compare.component';
 import { FirdariaComponent } from './firdaria/firdaria.component';
 import { DirectionComponent } from './direction/direction.component';
 import { QuadrantProcessComponent } from './quadrant_process/quadrant_process.component';
+import { SecondaryProgressionComponent } from './secondary-progression/secondary-progression.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,15 @@ export const routes: Routes = [
   {
     path: ProcessName.path(ProcessName.QuadrantProcess),
     component: QuadrantProcessComponent,
+  },
+  {
+    path: ProcessName.path(ProcessName.SecondaryProgression),
+    component: SecondaryProgressionComponent,
+  },
+  {
+    path: ProcessName.path(ProcessName.SecondaryProgressionComparNative),
+    component: CompareComponent,
+    data: { process_name: ProcessName.SecondaryProgressionComparNative },
   },
   {
     path: ProcessName.path(ProcessName.Transit),
