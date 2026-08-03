@@ -178,7 +178,7 @@
       <ion-col size="5" class="ion-text-right"><ion-label>次限算法：</ion-label></ion-col>
       <ion-col size="7"><ion-select label-placement="fixed" okText="确定" cancelText="取消" [(ngModel)]="processData.secondary_progression_method">
         @for (option of secondaryProgressionMethodOptions; track option.value) {<ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>}
-      </ion-select><ion-note>次限宫位固定使用出生地</ion-note></ion-col>
+      </ion-select><ion-note>次限宫位固定使用居住地</ion-note></ion-col>
     </ion-row>
     }
 

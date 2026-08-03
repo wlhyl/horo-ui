@@ -255,7 +255,7 @@
           <ion-select [(ngModel)]="processData.secondary_progression_method" (ionChange)="onProcessDataChange()">
             @for (option of secondaryProgressionMethodOptions; track option.value) {<ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>}
           </ion-select>
-          <ion-note>宫位固定使用出生地</ion-note>
+          <ion-note>宫位固定使用居住地</ion-note>
         </div>
       }
 

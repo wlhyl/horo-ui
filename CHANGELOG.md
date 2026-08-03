@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.1] - 2026-08-04
+
+### Changed
+
+- 更新次限推运页面与工作台输入面板的提示文案：次限宫位计算由「固定使用出生地」改为「固定使用居住地」，与 0.32.0 起次限推运实际使用推运所在地经纬度的行为一致
+
 ## [0.32.0] - 2026-08-04
 
 ### Changed
