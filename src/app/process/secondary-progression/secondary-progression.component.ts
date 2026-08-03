@@ -164,7 +164,7 @@ export class SecondaryProgressionComponent
     const request: SecondaryProgressionRequest = {
       native_date: this.horoData.date,
       process_date: this.currentProcessData.date,
-      geo: this.horoData.geo,
+      geo: this.processData.geo, // 注意这里的geo是推运所在地的地理位置
       method: this.currentProcessData.secondary_progression_method,
       house: this.horoData.house,
     };

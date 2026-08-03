@@ -399,7 +399,7 @@ export class CompareComponent
     const request: SecondaryProgressionRequest = {
       native_date: this.horoData.date,
       process_date: this.currentProcessData.date,
-      geo: this.horoData.geo,
+      geo: this.processData.geo, // 注意：这里的geo是推运所在地的地理位置
       method: this.currentProcessData.secondary_progression_method,
       house: this.horoData.house,
     };
@@ -407,8 +407,8 @@ export class CompareComponent
       switchMap((data: SecondaryProgression) => this.api.compare({
         original_date: this.horoData.date,
         comparison_date: { ...data.progression_date, st: false },
-        original_geo: this.horoData.geo,
-        comparison_geo: this.horoData.geo,
+        original_geo: this.horoData.geo,      // 本命出生地
+        comparison_geo: this.processData.geo, // 次限推运所在地
         house: this.horoData.house,
       })),
     );

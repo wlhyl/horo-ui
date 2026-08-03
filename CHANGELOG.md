@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.0] - 2026-08-04
+
+### Changed
+
+- 次限推运（含次限与本命比较盘）的星盘计算改用推运所在地的大地经纬度，与日返/月返/每日回等返照盘保持一致。此前使用本命出生地经纬度，现已改为从 `processData.geo` 读取推运所在地
+
 ## [0.31.0] - 2026-08-03
 
 ### Added
