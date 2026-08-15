@@ -1,8 +1,11 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   OnDestroy,
   Output,
+  computed,
   input,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
@@ -35,6 +38,7 @@ import { WindowService } from './window.service';
   templateUrl: './window-frame.component.html',
   styleUrls: ['./window-frame.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgStyle,
     IonicModule,
@@ -55,9 +59,11 @@ export class WindowFrameComponent implements OnDestroy {
   horoData = input.required<HoroRequest>();
   eventData = input.required<HoroRequest>();
   processData = input.required<ProcessRequest>();
-  workArea = input.required<WindowRect>();
 
-  constructor(public windowService: WindowService) {}
+  constructor(
+    public windowService: WindowService,
+    private host: ElementRef<HTMLElement>,
+  ) {}
 
   @Output() focus = new EventEmitter<string>();
   @Output() close = new EventEmitter<string>();
@@ -76,6 +82,8 @@ export class WindowFrameComponent implements OnDestroy {
   private dragging = false;
   private resizing: string | null = null;
   private dragStart = { x: 0, y: 0, rectX: 0, rectY: 0, rectW: 0, rectH: 0 };
+  // 拖拽/调整大小时的工作区快照，避免每次 mousemove 触发布局读取
+  private dragBounds: WindowRect = { x: 0, y: 0, width: 0, height: 0 };
 
   ngOnDestroy(): void {
     this.detachDragListeners();
@@ -88,9 +96,9 @@ export class WindowFrameComponent implements OnDestroy {
     );
   }
 
-  get isTopWindow(): boolean {
-    return this.windowService.isTopWindow(this.window().id);
-  }
+  readonly isTopWindow = computed(
+    () => this.windowService.topWindowId() === this.window().id,
+  )
 
   get isMaximized(): boolean {
     return this.window().state === WindowState.Maximized;
@@ -102,6 +110,7 @@ export class WindowFrameComponent implements OnDestroy {
     const win = this.window();
     this.focus.emit(win.id);
     this.dragging = true;
+    this.dragBounds = this.getDragBounds();
     this.dragStart = {
       x: event.clientX,
       y: event.clientY,
@@ -119,6 +128,7 @@ export class WindowFrameComponent implements OnDestroy {
     const win = this.window();
     this.focus.emit(win.id);
     this.resizing = handle;
+    this.dragBounds = this.getDragBounds();
     this.dragStart = {
       x: event.clientX,
       y: event.clientY,
@@ -130,6 +140,20 @@ export class WindowFrameComponent implements OnDestroy {
     event.preventDefault();
     event.stopPropagation();
     this.attachDragListeners();
+  }
+
+  // 窗口以 .window-manager（占满工作区）为定位容器，读取其尺寸作为拖拽边界
+  private getDragBounds(): WindowRect {
+    const parent = this.host.nativeElement.parentElement;
+    if (!parent) {
+      return { x: 0, y: 0, width: 800, height: 600 };
+    }
+    return {
+      x: 0,
+      y: 0,
+      width: parent.clientWidth,
+      height: parent.clientHeight,
+    };
   }
 
   private attachDragListeners(): void {
@@ -148,7 +172,7 @@ export class WindowFrameComponent implements OnDestroy {
       const dy = event.clientY - this.dragStart.y;
       let newX = this.dragStart.rectX + dx;
       let newY = this.dragStart.rectY + dy;
-      const wa = this.workArea();
+      const wa = this.dragBounds;
       const minX = wa.x;
       const maxX = wa.x + wa.width - 40;
       const minY = wa.y;

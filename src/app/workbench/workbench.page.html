@@ -8,21 +8,21 @@
       <button
         class="panel-toggle-btn"
         (click)="toggleSidebar()"
-        [class.active]="!sidebarCollapsed"
+        [class.active]="!sidebarCollapsed()"
         title="显示/隐藏输入面板"
       >
-        <ion-icon [name]="sidebarCollapsed ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        <ion-icon [name]="sidebarCollapsed() ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
         <span>面板</span>
       </button>
       <div class="window-list-wrapper" #windowListWrapper>
-        @if (windowCount > 0) {
+        @if (windowCount() > 0) {
           <button class="window-list-btn" (click)="toggleWindowList($event)">
             <ion-icon name="layers-outline"></ion-icon>
-            <span>{{ windowCount }} 个窗口</span>
+            <span>{{ windowCount() }} 个窗口</span>
             <ion-icon name="chevron-down-outline"></ion-icon>
           </button>
         }
-        @if (windowListOpen) {
+        @if (windowListOpen()) {
           <div class="window-list-dropdown">
             <div class="window-list-header">
               <span>窗口列表</span>
@@ -31,10 +31,10 @@
               </button>
             </div>
             <div class="window-list-items">
-              @for (win of allWindows; track win.id) {
+              @for (win of allWindows(); track win.id) {
                 <div
                   class="window-list-item"
-                  [class.active]="win.id === topWindowId"
+                  [class.active]="win.id === topWindowId()"
                   (click)="onSwitchWindow(win.id)"
                   [title]="win.title"
                 >
@@ -57,16 +57,16 @@
 
   <div
     class="workbench-body"
-    [style.height.px]="workareaHeight"
-    [class.flex-fill]="workareaHeight === null"
+    [style.height.px]="workareaHeight()"
+    [class.flex-fill]="workareaHeight() === null"
   >
     <div
       class="sidebar"
-      [class.collapsed]="sidebarCollapsed"
-      [style.width.px]="sidebarCollapsed ? null : sidebarWidth"
+      [class.collapsed]="sidebarCollapsed()"
+      [style.width.px]="sidebarCollapsed() ? null : sidebarWidth()"
     >
       <app-input-panel
-        [style.display]="sidebarCollapsed ? 'none' : null"
+        [style.display]="sidebarCollapsed() ? 'none' : null"
         [horoData]="horoData"
         [eventData]="eventData"
         [processData]="processData"
@@ -77,12 +77,12 @@
       ></app-input-panel>
       <div class="sidebar-resize-handle" (mousedown)="onSidebarResizeStart($event)"></div>
       <button class="sidebar-toggle" (click)="toggleSidebar()">
-        <ion-icon [name]="sidebarCollapsed ? 'chevron-forward' : 'chevron-back'"></ion-icon>
+        <ion-icon [name]="sidebarCollapsed() ? 'chevron-forward' : 'chevron-back'"></ion-icon>
       </button>
     </div>
 
     <div class="work-area" #workAreaEl>
-      @if (windowCount === 0) {
+      @if (windowCount() === 0) {
         <div class="empty-state">
           <ion-icon name="apps-outline"></ion-icon>
           <p>从左侧面板选择星盘类型添加到工作台</p>
@@ -92,7 +92,6 @@
         [horoData]="horoData"
         [eventData]="eventData"
         [processData]="processData"
-        [workArea]="workArea"
       ></app-window-manager>
     </div>
   </div>

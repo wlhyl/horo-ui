@@ -1,10 +1,13 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
+  computed,
+  signal,
 } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
@@ -17,7 +20,6 @@ import {
   ChartType,
   WindowRect,
   WindowState,
-  WorkbenchWindow,
 } from './window-manager/window-state';
 import { WindowService } from './window-manager/window.service';
 import { InputPanelComponent } from './input-panel/input-panel.component';
@@ -28,6 +30,7 @@ import { WindowManagerComponent } from './window-manager/window-manager.componen
   templateUrl: './workbench.page.html',
   styleUrls: ['./workbench.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     IonicModule,
     InputPanelComponent,
@@ -49,10 +52,16 @@ export class WorkbenchPage implements OnInit, OnDestroy {
   processData: ProcessRequest;
 
   title = '工作台';
-  sidebarCollapsed = false;
-  sidebarWidth = 340;
-  workareaHeight: number | null = null;
-  windowListOpen = false;
+  readonly sidebarCollapsed = signal(false);
+  readonly sidebarWidth = signal(340);
+  readonly workareaHeight = signal<number | null>(null);
+  readonly windowListOpen = signal(false);
+
+  readonly windowCount = computed(() => this.windowService.windows().length);
+  readonly allWindows = computed(() =>
+    [...this.windowService.windows()].sort((a, b) => b.zIndex - a.zIndex),
+  );
+  readonly topWindowId = computed(() => this.windowService.topWindowId());
 
   private resizing = false;
   private resizeStartX = 0;
@@ -86,14 +95,14 @@ export class WorkbenchPage implements OnInit, OnDestroy {
   }
 
   toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
+    this.sidebarCollapsed.update((v) => !v);
   }
 
   onSidebarResizeStart(event: MouseEvent): void {
-    if (this.sidebarCollapsed) return;
+    if (this.sidebarCollapsed()) return;
     this.resizing = true;
     this.resizeStartX = event.clientX;
-    this.resizeStartWidth = this.sidebarWidth;
+    this.resizeStartWidth = this.sidebarWidth();
     event.preventDefault();
     document.addEventListener('mousemove', this.onSidebarResizeMove);
     document.addEventListener('mouseup', this.onSidebarResizeEnd);
@@ -107,7 +116,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
       WorkbenchPage.SIDEBAR_MIN_WIDTH,
       Math.min(this.resizeStartWidth + dx, maxWidth),
     );
-    this.sidebarWidth = newWidth;
+    this.sidebarWidth.set(newWidth);
   };
 
   private onSidebarResizeEnd = (): void => {
@@ -124,7 +133,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
     event.preventDefault();
     document.addEventListener('mousemove', this.onWorkareaResizeMove);
     document.addEventListener('mouseup', this.onWorkareaResizeEnd);
-  }
+  };
 
   private onWorkareaResizeMove = (event: MouseEvent): void => {
     if (!this.heightResizing) return;
@@ -133,7 +142,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
       WorkbenchPage.WORKAREA_MIN_HEIGHT,
       this.heightResizeStartHeight + dy,
     );
-    this.workareaHeight = newHeight;
+    this.workareaHeight.set(newHeight);
   };
 
   private onWorkareaResizeEnd = (): void => {
@@ -143,6 +152,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
   };
 
   onHoroDataChange(data: HoroRequest): void {
+    // storage 会 deepFreeze 存入对象，页面副本需保持可变（输入面板直接修改字段），因此各自 clone
     this.horoData = structuredClone(data);
     this.storage.horoData = structuredClone(data);
   }
@@ -179,36 +189,18 @@ export class WorkbenchPage implements OnInit, OnDestroy {
     };
   }
 
-  get workArea(): WindowRect {
-    return this.getWorkArea();
-  }
-
-  get windowCount(): number {
-    return this.windowService.windows.length;
-  }
-
-  get allWindows(): ReadonlyArray<WorkbenchWindow> {
-    return [...this.windowService.windows].sort((a, b) => b.zIndex - a.zIndex);
-  }
-
-  get topWindowId(): string | null {
-    const visible = this.windowService.visibleWindows;
-    if (visible.length === 0) return null;
-    return visible.reduce((a, b) => (b.zIndex > a.zIndex ? b : a)).id;
-  }
-
   toggleWindowList(event: Event): void {
     event.stopPropagation();
-    this.windowListOpen = !this.windowListOpen;
+    this.windowListOpen.update((v) => !v);
   }
 
   closeWindowList(): void {
-    this.windowListOpen = false;
+    this.windowListOpen.set(false);
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (!this.windowListOpen) return;
+    if (!this.windowListOpen()) return;
     const wrapper = this.windowListWrapperRef?.nativeElement;
     if (wrapper && !wrapper.contains(event.target as Node)) {
       this.closeWindowList();
@@ -216,7 +208,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
   }
 
   onSwitchWindow(id: string): void {
-    const win = this.windowService.windows.find((w) => w.id === id);
+    const win = this.windowService.windows().find((w) => w.id === id);
     if (!win) return;
     if (
       win.state === WindowState.Minimized ||

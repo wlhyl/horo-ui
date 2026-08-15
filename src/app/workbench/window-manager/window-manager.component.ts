@@ -1,5 +1,7 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  ElementRef,
   input,
 } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
@@ -13,6 +15,7 @@ import { WindowService } from './window.service';
   templateUrl: './window-manager.component.html',
   styleUrls: ['./window-manager.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     WindowFrameComponent,
     IonicModule,
@@ -22,9 +25,11 @@ export class WindowManagerComponent {
   horoData = input.required<HoroRequest>();
   eventData = input.required<HoroRequest>();
   processData = input.required<ProcessRequest>();
-  workArea = input.required<WindowRect>();
 
-  constructor(public windowService: WindowService) {}
+  constructor(
+    public windowService: WindowService,
+    private host: ElementRef<HTMLElement>,
+  ) {}
 
   onFocus(id: string): void {
     this.windowService.focusWindow(id);
@@ -43,14 +48,21 @@ export class WindowManagerComponent {
   }
 
   onToggleMaximize(id: string): void {
-    this.windowService.toggleMaximize(id, this.workArea());
+    this.windowService.toggleMaximize(id, this.getWorkArea());
   }
 
   onUpdateRect(payload: { id: string; rect: WindowRect }): void {
     this.windowService.updateWindowRect(payload.id, payload.rect);
   }
 
-  get visibleWindows() {
-    return this.windowService.visibleWindows;
+  // 事件发生时才读取布局尺寸，避免每次变更检测都强制同步布局
+  private getWorkArea(): WindowRect {
+    const el = this.host.nativeElement;
+    return {
+      x: 0,
+      y: 0,
+      width: el.clientWidth,
+      height: el.clientHeight,
+    };
   }
 }

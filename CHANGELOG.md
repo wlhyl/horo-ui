@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.32.2] - 2026-08-15
+
+### Changed
+
+- 工作台性能优化：工作台页面、窗口管理器、窗口框架组件启用 OnPush 变更检测，`WindowService` 窗口状态 signal 化（`visibleWindows`/`topWindowId` 改为 `computed` 派生），拖拽/调整窗口时仅重渲染被拖拽窗口，不再触发全应用变更检测
+- 移除工作区尺寸的模板绑定，改为事件发生时（打开窗口、最大化、拖拽开始）读取一次布局尺寸，消除拖拽过程中的布局抖动
+- 最小化/隐藏的窗口不再从 DOM 销毁，改为 `display: none` 隐藏，恢复时不再重新请求 API 与重建星盘 canvas，并保留滚动与交互状态
+
 ## [0.32.1] - 2026-08-04
 
 ### Changed
