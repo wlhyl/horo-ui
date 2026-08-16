@@ -6,6 +6,8 @@ import {
   OnInit,
   OnChanges,
   Input,
+  Output,
+  EventEmitter,
   SimpleChanges,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -84,7 +86,37 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   message = '';
 
   mode: DirectionMode = DirectionMode.Primary;
-  title = '主向推运';
+
+  // workbench 窗口标题变化事件（选中象征星后标题附加象征星）
+  @Output() titleChange = new EventEmitter<string>();
+
+  get title(): string {
+    return this.titleForMode(this.mode);
+  }
+
+  // 主向推运与每日回归方向弧模式下，恰好选中一个象征星时标题附加该象征星
+  get windowTitle(): string {
+    const base = this.titleForMode(this.mode);
+    if (
+      this.mode !== DirectionMode.Primary &&
+      this.mode !== DirectionMode.DailyDirection
+    ) {
+      return base;
+    }
+    const total =
+      this.selectedSignificatorPlanets.length +
+      this.selectedSignificatorCusps.length;
+    if (total !== 1) return base;
+    const text =
+      this.selectedSignificatorPlanets.length === 1
+        ? this.getSignificatorDisplayText(this.selectedSignificatorPlanets[0])
+        : `${this.selectedSignificatorCusps[0]}C`;
+    return `${base}-${text}`;
+  }
+
+  private emitTitleChange(): void {
+    this.titleChange.emit(this.windowTitle);
+  }
 
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
 
@@ -97,14 +129,30 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   startDate: HoroDateTime = getCurrentDateMinusYearsUtil(5, this.horoData.date.tz);
   endDate: HoroDateTime = addYearsUtil(this.horoData.date, 120);
-  selectedSignificatorPlanets: PlanetName[] = [
+  private _selectedSignificatorPlanets: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
     PlanetName.Sun,
     PlanetName.Moon,
     PlanetName.PartOfFortune,
   ];
-  selectedSignificatorCusps: number[] = [];
+  private _selectedSignificatorCusps: number[] = [];
+
+  get selectedSignificatorPlanets(): PlanetName[] {
+    return this._selectedSignificatorPlanets;
+  }
+  set selectedSignificatorPlanets(value: PlanetName[]) {
+    this._selectedSignificatorPlanets = value;
+    this.emitTitleChange();
+  }
+
+  get selectedSignificatorCusps(): number[] {
+    return this._selectedSignificatorCusps;
+  }
+  set selectedSignificatorCusps(value: number[]) {
+    this._selectedSignificatorCusps = value;
+    this.emitTitleChange();
+  }
   arcDirectionFilter: 'all' | 'direct' | 'converse' = 'direct';
   promittorTypeFilter: PromittorType[] = [];
   selectedPromittorPlanets: PlanetName[] = [];
@@ -211,11 +259,9 @@ export class DirectionComponent implements OnInit, OnChanges, OnDestroy {
       }
       if (this.inputMode) {
         this.mode = this.inputMode;
-        this.title = this.titleForMode(this.mode);
       }
     } else {
       this.mode = this.route.snapshot.data?.['mode'] || DirectionMode.Primary;
-      this.title = this.titleForMode(this.mode);
       this.titleService.setTitle(this.title);
     }
 

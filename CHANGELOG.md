@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.33.0] - 2026-08-16
+
+### Added
+
+- 工作台窗口标题动态显示选中的象征星：主向推运、每日回归方向弧、中世纪小限、自定义日小限窗口中恰好选中一个象征星（行星或宫头）时，窗口标题栏与右侧窗口下拉列表显示如「主向推运-☉」「中世纪小限-3C」，选中 0 个或多个时恢复基础标题
+- `DirectionComponent`、`MedievalProfectionComponent` 新增 `titleChange` 输出事件，象征星选择变化时向工作台上报当前窗口标题；`WindowService` 新增 `updateWindowTitle` 方法同步更新窗口标题
+
 ## [0.32.2] - 2026-08-15
 
 ### Changed

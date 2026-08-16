@@ -96,6 +96,11 @@ export class WindowFrameComponent implements OnDestroy {
     );
   }
 
+  // 内嵌组件（推运/小限等）标题变化时同步更新窗口标题
+  onWindowTitleChange(title: string): void {
+    this.windowService.updateWindowTitle(this.window().id, title);
+  }
+
   readonly isTopWindow = computed(
     () => this.windowService.topWindowId() === this.window().id,
   )

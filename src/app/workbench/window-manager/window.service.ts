@@ -179,6 +179,14 @@ export class WindowService {
     );
   }
 
+  updateWindowTitle(id: string, title: string): void {
+    this._windows.update((wins) =>
+      wins.map((w) =>
+        w.id === id && w.title !== title ? { ...w, title } : w,
+      ),
+    );
+  }
+
   closeAll(): void {
     this._windows.set([]);
     this._cascadeIndex = 0;

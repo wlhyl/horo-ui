@@ -7,6 +7,8 @@ import {
   OnInit,
   OnChanges,
   Input,
+  Output,
+  EventEmitter,
   SimpleChanges,
   ViewChild,
   ElementRef,
@@ -94,8 +96,34 @@ export class MedievalProfectionComponent
   message = '';
 
   mode: ProfectionMode = ProfectionMode.Medieval;
-  title = '中世纪小限';
   viewMode: ViewMode = 'chart';
+
+  // workbench 窗口标题变化事件（选中象征星后标题附加象征星）
+  @Output() titleChange = new EventEmitter<string>();
+
+  get title(): string {
+    return this.mode === ProfectionMode.CustomDay
+      ? '自定义日小限'
+      : '中世纪小限';
+  }
+
+  // 恰好选中一个象征星时标题附加该象征星
+  get windowTitle(): string {
+    const base = this.title;
+    const total =
+      this.selectedSignificatorPlanets.length +
+      this.selectedSignificatorCusps.length;
+    if (total !== 1) return base;
+    const text =
+      this.selectedSignificatorPlanets.length === 1
+        ? this.getSignificatorDisplayText(this.selectedSignificatorPlanets[0])
+        : `${this.selectedSignificatorCusps[0]}C`;
+    return `${base}-${text}`;
+  }
+
+  private emitTitleChange(): void {
+    this.titleChange.emit(this.windowTitle);
+  }
 
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
   processData: DeepReadonly<ProcessRequest> = this.storage.processData;
@@ -109,14 +137,30 @@ export class MedievalProfectionComponent
   nativeDate: DateRequest = structuredClone(this.horoData.date);
   processDate: DateRequest = structuredClone(this.processData.date);
 
-  selectedSignificatorPlanets: PlanetName[] = [
+  private _selectedSignificatorPlanets: PlanetName[] = [
     PlanetName.ASC,
     PlanetName.MC,
     PlanetName.Sun,
     PlanetName.Moon,
     PlanetName.PartOfFortune,
   ];
-  selectedSignificatorCusps: number[] = [];
+  private _selectedSignificatorCusps: number[] = [];
+
+  get selectedSignificatorPlanets(): PlanetName[] {
+    return this._selectedSignificatorPlanets;
+  }
+  set selectedSignificatorPlanets(value: PlanetName[]) {
+    this._selectedSignificatorPlanets = value;
+    this.emitTitleChange();
+  }
+
+  get selectedSignificatorCusps(): number[] {
+    return this._selectedSignificatorCusps;
+  }
+  set selectedSignificatorCusps(value: number[]) {
+    this._selectedSignificatorCusps = value;
+    this.emitTitleChange();
+  }
   promittorTypeFilter: PromittorType[] = [];
   selectedPromittorPlanets: PlanetName[] = [];
 
@@ -206,12 +250,8 @@ export class MedievalProfectionComponent
       this.arcToDateMethod =
         this.inputProcessData.profection_arc_to_date_method;
       this.mode = this.inputMode;
-      this.title =
-        this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
     } else {
       this.mode = this.route.snapshot.data?.['mode'] || ProfectionMode.Medieval;
-      this.title =
-        this.mode === ProfectionMode.CustomDay ? '自定义日小限' : '中世纪小限';
       this.titleService.setTitle(this.title);
     }
 

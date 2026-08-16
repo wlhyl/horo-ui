@@ -152,6 +152,7 @@
           [inputMode]="profectionModeEnum.Medieval"
           [canvasId]="window().id"
           [embedded]="true"
+          (titleChange)="onWindowTitleChange($event)"
         ></app-medieval-profection>
       }
       @case (chartType.CustomDayProfection) {
@@ -161,6 +162,7 @@
           [inputMode]="profectionModeEnum.CustomDay"
           [canvasId]="window().id"
           [embedded]="true"
+          (titleChange)="onWindowTitleChange($event)"
         ></app-medieval-profection>
       }
       @case (chartType.Firdaria) {
@@ -174,6 +176,7 @@
           [inputHoroData]="horoData()"
           [inputProcessData]="processData()"
           [embedded]="true"
+          (titleChange)="onWindowTitleChange($event)"
         ></app-direction>
       }
       @case (chartType.SolarArc) {
@@ -190,6 +193,7 @@
           [inputProcessData]="processData()"
           [inputMode]="directionModeEnum.DailyDirection"
           [embedded]="true"
+          (titleChange)="onWindowTitleChange($event)"
         ></app-direction>
       }
       @case (chartType.QuadrantProcess) {
