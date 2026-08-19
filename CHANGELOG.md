@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.33.1] - 2026-08-19
+
+### Fixed
+
+- 修复档案编辑页姓名长度限制滞后于后端的问题：编辑组件与输入框 `maxlength` 仍限制为 1-30 字符，与 horo-storage-api 0.7.1 起将姓名长度放宽到 64 字符的变更不一致，现统一为 1-64 字符
+
 ## [0.33.0] - 2026-08-16
 
 ### Added

@@ -74,7 +74,7 @@ export interface HoroscopeRecordRequest {
  * 后台对应的结构体是：UpdateHoroscopeRequest
  */
 export interface UpdateHoroscopeRecordRequest {
-  // 姓名，长度1-30个字符
+  // 姓名，长度1-64个字符
   name: string | null;
   // 性别
   gender: boolean | null;

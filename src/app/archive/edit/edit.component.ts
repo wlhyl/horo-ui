@@ -297,8 +297,8 @@ export class EditComponent implements OnInit {
       return;
     }
 
-    if (requestData.name.length < 1 || requestData.name.length > 30) {
-      this.message = '姓名长度为1-30个字符';
+    if (requestData.name.length < 1 || requestData.name.length > 64) {
+      this.message = '姓名长度为1-64个字符';
       this.isAlertOpen = true;
       this.isSaving = false;
       return;
@@ -433,10 +433,10 @@ export class EditComponent implements OnInit {
       }
     }
 
-    // min = 1, max = 30
+    // min = 1, max = 64
     if (requestData.name !== null && !this.isLocked) {
-      if (requestData.name.length < 1 || requestData.name.length > 30) {
-        this.message = '姓名长度为1-30个字符';
+      if (requestData.name.length < 1 || requestData.name.length > 64) {
+        this.message = '姓名长度为1-64个字符';
         this.isAlertOpen = true;
         this.isSaving = false;
         return;

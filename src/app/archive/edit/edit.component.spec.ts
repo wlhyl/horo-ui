@@ -770,21 +770,21 @@ describe('EditComponent', () => {
 
       // Verify alert is shown
       expect(component.isAlertOpen).toBeTrue();
-      expect(component.message).toBe('姓名长度为1-30个字符');
+      expect(component.message).toBe('姓名长度为1-64个字符');
       expect(component.isSaving).toBeFalse();
     });
 
     it('should show alert when name is too long', () => {
       // Set up component with a long name
       component.native = structuredClone(mockHoroscopeRecord);
-      component.native.name = 'a'.repeat(31);
+      component.native.name = 'a'.repeat(65);
 
       // Trigger add functionality through onSubmit
       (component as any).add();
 
       // Verify alert is shown
       expect(component.isAlertOpen).toBeTrue();
-      expect(component.message).toBe('姓名长度为1-30个字符');
+      expect(component.message).toBe('姓名长度为1-64个字符');
       expect(component.isSaving).toBeFalse();
     });
 
@@ -969,15 +969,15 @@ describe('EditComponent', () => {
     it('should show error for invalid name length (too short)', () => {
       component.native.name = '';
       (component as any).update();
-      expect(component.message).toBe('姓名长度为1-30个字符');
+      expect(component.message).toBe('姓名长度为1-64个字符');
       expect(component.isAlertOpen).toBeTrue();
       expect(component.isSaving).toBeFalse();
     });
 
     it('should show error for invalid name length (too long)', () => {
-      component.native.name = 'a'.repeat(31);
+      component.native.name = 'a'.repeat(65);
       (component as any).update();
-      expect(component.message).toBe('姓名长度为1-30个字符');
+      expect(component.message).toBe('姓名长度为1-64个字符');
       expect(component.isAlertOpen).toBeTrue();
       expect(component.isSaving).toBeFalse();
     });
@@ -986,7 +986,7 @@ describe('EditComponent', () => {
       // Set up locked record with invalid name
       component.native.lock = true;
       component.oldNative.lock = true;
-      component.native.name = 'a'.repeat(31); // Invalid name length
+      component.native.name = 'a'.repeat(65); // Invalid name length
 
       // Modify description to trigger update
       component.native.description = 'Updated description';
@@ -998,7 +998,7 @@ describe('EditComponent', () => {
       tick();
 
       // Should not show name validation error when locked
-      expect(component.message).not.toBe('姓名长度为1-30个字符');
+      expect(component.message).not.toBe('姓名长度为1-64个字符');
       // Should proceed with update since description was changed
       expect(apiServiceSpy.updateNative).toHaveBeenCalled();
     }));
