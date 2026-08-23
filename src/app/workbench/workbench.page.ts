@@ -10,6 +10,20 @@ import {
   signal,
 } from '@angular/core';
 import { IonBackButton, IonButtons, IonIcon, IonTitle } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import {
+  appsOutline,
+  chevronBack,
+  chevronDownOutline,
+  chevronForward,
+  closeOutline,
+  expandOutline,
+  eyeOffOutline,
+  eyeOutline,
+  layersOutline,
+  removeCircleOutline,
+  squareOutline,
+} from 'ionicons/icons';
 import { Title } from '@angular/platform-browser';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
@@ -81,6 +95,19 @@ export class WorkbenchPage implements OnInit, OnDestroy {
     private titleService: Title,
     public windowService: WindowService,
   ) {
+    addIcons({
+      appsOutline,
+      chevronBack,
+      chevronDownOutline,
+      chevronForward,
+      closeOutline,
+      expandOutline,
+      eyeOffOutline,
+      eyeOutline,
+      layersOutline,
+      removeCircleOutline,
+      squareOutline,
+    });
     this.horoData = structuredClone(this.storage.horoData);
     this.eventData = structuredClone(this.storage.eventData);
     this.processData = structuredClone(this.storage.processData);
@@ -247,7 +274,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
       case WindowState.Minimized:
         return 'remove-circle-outline';
       case WindowState.Hidden:
-        return 'eye-off-circle-outline';
+        return 'eye-off-outline';
       case WindowState.Maximized:
         return 'expand-outline';
       default:

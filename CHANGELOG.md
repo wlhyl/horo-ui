@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.35.0] - 2026-08-24
 
 ### Changed
 
@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - 修复 4 个测试文件缺少 `provideIonicAngular()` 导致的 `No provider found for _ModalController` 失败（native/process/qizheng/synastry-input 页面测试）
 - 修复档案库页面测试因 `ngZone.onStable` 自动加载链触发的浏览器断连挂起：eager 组件下 zone 在 `tick` 内稳定，未 mock 的 `getScrollElement` 抛错损坏 Zone 任务状态，现返回已解决的 Promise
+- 修复工作台图标不显示：窗口关闭/最小化/最大化/隐藏按钮及 header 窗口下拉列表等图标因未通过 `addIcons` 注册而无法渲染（ion-icon CDN 懒加载不可达），现于工作台页面、窗口框架、输入面板组件本地注册全部所需图标；隐藏窗口状态图标 `eye-off-circle-outline` 在 ionicons 8 中不存在，改为 `eye-off-outline`
 
 ## [0.34.0] - 2026-08-23
 

@@ -12,6 +12,8 @@ import {
   IonSelect,
   IonSelectOption,
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { chevronDown, chevronUp } from 'ionicons/icons';
 import { DateRequest, HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
@@ -149,7 +151,9 @@ export class InputPanelComponent {
   showNativeInput = true;
   showProcessInput = true;
 
-  constructor(public config: Horoconfig, private alertController: AlertController) {}
+  constructor(public config: Horoconfig, private alertController: AlertController) {
+    addIcons({ chevronDown, chevronUp });
+  }
 
   onHoroDataChange(): void {
     this.horoDataChange.emit(this.horoData);

@@ -10,6 +10,14 @@ import {
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { IonIcon } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import {
+  closeOutline,
+  contractOutline,
+  expandOutline,
+  eyeOffOutline,
+  removeOutline,
+} from 'ionicons/icons';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Mode } from 'src/app/native/enum';
 import { ImageComponent } from 'src/app/native/image/image.component';
@@ -63,7 +71,15 @@ export class WindowFrameComponent implements OnDestroy {
   constructor(
     public windowService: WindowService,
     private host: ElementRef<HTMLElement>,
-  ) {}
+  ) {
+    addIcons({
+      closeOutline,
+      contractOutline,
+      expandOutline,
+      eyeOffOutline,
+      removeOutline,
+    });
+  }
 
   @Output() focus = new EventEmitter<string>();
   @Output() close = new EventEmitter<string>();
