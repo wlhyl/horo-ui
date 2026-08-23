@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy, signal } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { navigateOutline } from 'ionicons/icons';
 import { finalize } from 'rxjs';
@@ -9,7 +9,7 @@ import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-respo
   selector: 'horo-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class MapComponent implements OnInit {
@@ -29,13 +29,13 @@ export class MapComponent implements OnInit {
   @Output()
   latChange = new EventEmitter<number>();
 
-  query = {
-    errorMessage: '',
-    error: false,
-    loading: false,
-  };
+  // 查询状态用 signal：modal 内容经 ngTemplateOutlet 挂在 ion-modal(OnPush) 下，
+  // markForCheck 无法传播到该 embedded view，signal 写入才能触发其刷新
+  queryLoading = signal(false);
+  queryError = signal(false);
+  queryErrorMessage = signal('');
 
-  locations: LongLatResponse[] = [];
+  locations = signal<LongLatResponse[]>([]);
   selectedLocation: LongLatResponse | null = null;
 
   constructor(private api: ApiService) {
@@ -57,38 +57,38 @@ export class MapComponent implements OnInit {
   }
   open(): void {
     this.isModalOpen = true;
-    this.locations = [];
+    this.locations.set([]);
     this.selectedLocation = null;
-    this.query.errorMessage = '';
+    this.queryErrorMessage.set('');
   }
 
   queryGeo() {
     if (!this.localName) {
       return;
     }
-    this.query.loading = true;
-    this.query.error = false;
-    this.locations = [];
+    this.queryLoading.set(true);
+    this.queryError.set(false);
+    this.locations.set([]);
     this.selectedLocation = null;
 
     this.api
       .getLongLat(this.localName)
       .pipe(
         finalize(() => {
-          this.query.loading = false;
+          this.queryLoading.set(false);
         })
       )
       .subscribe({
         next: (res) => {
-          this.locations = res;
+          this.locations.set(res);
           if (res.length === 0) {
-            this.query.error = true;
-            this.query.errorMessage = '未查询到任何结果';
+            this.queryError.set(true);
+            this.queryErrorMessage.set('未查询到任何结果');
           }
         },
         error: (error) => {
-          this.query.error = true;
-          this.query.errorMessage = error.error?.error || '未知错误';
+          this.queryError.set(true);
+          this.queryErrorMessage.set(error.error?.error || '未知错误');
         },
       });
   }

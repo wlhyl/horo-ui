@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.35.3] - 2026-08-24
+
+### Fixed
+
+- 修复地理位置搜索结果不显示（嵌入与独立模式均存在）：modal 内容经 `ngTemplateOutlet` 挂在 ion-modal(OnPush) 下的 embedded view 中，`markForCheck` 只标记祖先链无法传播到该视图；地图组件查询状态（loading/error/结果列表）改为 signal，signal 写入经 `markAncestorsForTraversal` 打通遍历路径并直接标记 embedded view 的 reactive consumer，回调后立即刷新
+
+### Changed
+
+- 地图组件变更检测策略由 Eager 改为 OnPush：查询状态已 signal 化、普通字段均为事件驱动，刷新来源全部兼容 OnPush，同时避免父页面 zone tick 全量刷新时连带检测地图组件
+
 ## [0.35.2] - 2026-08-24
 
 ### Fixed
