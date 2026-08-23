@@ -45,6 +45,12 @@ ion-button.icon-top {
   font-size: 14px;
 }
 
+.footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .embedded-footer {
   padding: 4px 8px;
   border-top: 1px solid var(--ion-color-light-shade, #d7d8da);

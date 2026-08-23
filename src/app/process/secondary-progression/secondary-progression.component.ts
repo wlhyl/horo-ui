@@ -8,7 +8,8 @@ import {
   OnInit,
   SimpleChanges,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   IonAlert,
@@ -110,6 +111,7 @@ export class SecondaryProgressionComponent
     private storage: HoroStorageService,
     public config: Horoconfig,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -176,6 +178,7 @@ export class SecondaryProgressionComponent
       return;
     this.isDrawing = true;
     this.loading = true;
+    this.cdr.markForCheck();
     const request: SecondaryProgressionRequest = {
       native_date: this.horoData.date,
       process_date: this.currentProcessData.date,
@@ -189,6 +192,7 @@ export class SecondaryProgressionComponent
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
+          this.cdr.markForCheck();
         }),
         takeUntil(this.destroy$),
       )
@@ -196,12 +200,14 @@ export class SecondaryProgressionComponent
         next: (data) => {
           this.secondaryProgressionData = data;
           this.isAlertOpen = false;
+          this.cdr.markForCheck();
           this.draw(data);
         },
         error: (error) => {
           this.message =
             error.error?.message || error.message || '获取次限推运失败';
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -265,6 +271,7 @@ export class SecondaryProgressionComponent
       minute: date.getMinutes(),
       second: date.getSeconds(),
     };
+    this.cdr.markForCheck();
     this.load();
   }
 }

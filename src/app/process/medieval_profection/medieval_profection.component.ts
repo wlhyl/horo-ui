@@ -73,6 +73,8 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { StaticCanvas } from 'fabric';
 import { drawHorosco } from 'src/app/utils/image/compare';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
+import { addIcons } from 'ionicons';
+import { list } from 'ionicons/icons';
 import { ActivatedRoute } from '@angular/router';
 import {
   ALL_SIGNIFICATORS,
@@ -246,7 +248,9 @@ export class MedievalProfectionComponent
     private titleService: Title,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
-  ) {}
+  ) {
+    addIcons({ list });
+  }
 
   ngOnInit() {
     if (this.embedded) {

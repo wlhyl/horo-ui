@@ -5,6 +5,8 @@ import { HoroRequest } from 'src/app/type/interface/request-data';
 import { Path } from '../enum/path';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
+import { addIcons } from 'ionicons';
+import { swapVerticalOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-synastry-input',
@@ -27,7 +29,9 @@ export class SynastryInputComponent implements OnInit {
     private titleService: Title,
     private config: Horoconfig,
     private storage: HoroStorageService
-  ) { }
+  ) {
+    addIcons({ swapVerticalOutline });
+  }
 
   ngOnInit() {
     this.titleService.setTitle('合盘信息输入');

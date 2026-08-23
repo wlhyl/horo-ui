@@ -8,7 +8,8 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -136,6 +137,7 @@ export class ImageComponent
     private route: ActivatedRoute,
     private authService: AuthService,
     private alertController: AlertController,
+    private cdr: ChangeDetectorRef,
   ) {
     addIcons({ createOutline, archiveOutline });
   }
@@ -233,6 +235,7 @@ export class ImageComponent
     this.isDrawing = true; // 开始绘制
     this.loading = true;
     this.canvasCache = undefined;
+    this.cdr.markForCheck();
 
     this.api
       .getNativeHoroscope(horoData)
@@ -240,12 +243,14 @@ export class ImageComponent
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (data) => {
           this.horoscoData = data;
           this.isAlertOpen = false;
+          this.cdr.markForCheck();
           this.draw();
         },
         error: (error) => {
@@ -256,6 +261,7 @@ export class ImageComponent
             ' ' +
             (error.error?.message || error.error || '未知错误详情');
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -347,6 +353,7 @@ export class ImageComponent
     this.currentHoroData.date.hour = date.getHours();
     this.currentHoroData.date.minute = date.getMinutes();
     this.currentHoroData.date.second = date.getSeconds();
+    this.cdr.markForCheck();
 
     this.drawHoroscope(this.currentHoroData);
   }
@@ -430,10 +437,12 @@ export class ImageComponent
             : this.storage.horoData;
         this.currentHoroData = structuredClone(this.horoData);
         this.isSaveOpen = true;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.message = `新增档案错误：${getApiErrorMessage(error)}`;
         this.isAlertOpen = true;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -459,6 +468,7 @@ export class ImageComponent
         if (native.lock) {
           this.message = '记录已锁定，无法修改';
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
           return;
         }
         const nativeRequest: UpdateHoroscopeRecordRequest = {
@@ -513,6 +523,7 @@ export class ImageComponent
 
         if (Object.values(nativeRequest).every((value) => value === null)) {
           this.isSaveOpen = true;
+          this.cdr.markForCheck();
           return;
         }
 
@@ -530,16 +541,19 @@ export class ImageComponent
                   ? this.storage.eventData
                   : this.storage.horoData;
               this.isSaveOpen = true;
+              this.cdr.markForCheck();
             },
             error: (error) => {
               this.message = `更新档案错误：${getApiErrorMessage(error)}`;
               this.isAlertOpen = true;
+              this.cdr.markForCheck();
             },
           });
       },
       error: (error) => {
         this.message = `获取档案错误：${getApiErrorMessage(error)}`;
         this.isAlertOpen = true;
+        this.cdr.markForCheck();
       },
     });
   }

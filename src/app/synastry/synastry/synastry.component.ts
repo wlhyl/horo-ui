@@ -15,6 +15,8 @@ import { HoroRequest } from 'src/app/type/interface/request-data';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Path } from '../enum/path';
+import { addIcons } from 'ionicons';
+import { peopleOutline, swapHorizontalOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-synastry',
@@ -81,7 +83,9 @@ export class SynastryComponent implements OnInit, AfterViewInit, OnDestroy {
     private storage: HoroStorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    addIcons({ peopleOutline, swapHorizontalOutline });
+  }
 
   ngOnInit() {
     this.titleService.setTitle('合盘');

@@ -8,7 +8,8 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -152,6 +153,7 @@ export class CompareComponent
     private api: ApiService,
     private storage: HoroStorageService,
     public config: Horoconfig,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -263,18 +265,21 @@ export class CompareComponent
     this.isDrawing = true;
     this.loading = true;
     this.canvasCache = undefined;
+    this.cdr.markForCheck();
 
     this.getHoroscopeComparisonData(process_name)
       .pipe(
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (data: HoroscopeComparison) => {
           this.horoscopeComparisonData = data;
           this.isAlertOpen = false;
+          this.cdr.markForCheck();
           this.draw(this.horoscopeComparisonData!);
         },
         error: (error: any) => {
@@ -282,6 +287,7 @@ export class CompareComponent
             error.error?.message || error.message || '未知错误';
           this.message = `获取星盘数据失败: ${errorMessage}`;
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -377,6 +383,7 @@ export class CompareComponent
     this.currentProcessData.date.hour = date.getHours();
     this.currentProcessData.date.minute = date.getMinutes();
     this.currentProcessData.date.second = date.getSeconds();
+    this.cdr.markForCheck();
 
     this.drawHoroscope(this.process_name);
   }

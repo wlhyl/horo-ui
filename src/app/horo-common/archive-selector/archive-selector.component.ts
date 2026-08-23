@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { listOutline } from 'ionicons/icons';
 import { ArchiveSelectionModalComponent } from '../archive-selection-modal/archive-selection-modal.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { HoroRequest } from 'src/app/type/interface/request-data';
@@ -20,7 +22,9 @@ export class ArchiveSelectorComponent {
     private modalController: ModalController,
     private alertController: AlertController,
     private authService: AuthService
-  ) {}
+  ) {
+    addIcons({ listOutline });
+  }
 
   async selectFromArchive(): Promise<void> {
     if (!this.authService.isAuth) {

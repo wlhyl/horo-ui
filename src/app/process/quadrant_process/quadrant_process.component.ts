@@ -77,6 +77,8 @@ import {
 import { ptolemyTerm } from 'src/app/utils/image/zodiac';
 import { Zodiac } from 'src/app/type/enum/zodiac';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
+import { addIcons } from 'ionicons';
+import { list } from 'ionicons/icons';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 import {
   formatDate as formatDateUtil,
@@ -166,7 +168,9 @@ export class QuadrantProcessComponent
     public config: Horoconfig,
     private titleService: Title,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+    addIcons({ list });
+  }
 
   ngOnInit() {
     if (this.embedded) {

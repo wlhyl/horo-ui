@@ -30,6 +30,8 @@ import { Title } from '@angular/platform-browser';
 import { Path, Mode } from './enum';
 import { HoroRequest } from '../type/interface/request-data';
 import { isInChineseDST } from '../utils/dst/dst';
+import { addIcons } from 'ionicons';
+import { bookOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-native',
@@ -76,6 +78,7 @@ export class NativePage implements OnInit, ViewWillEnter {
     private titleService: Title,
     private alertController: AlertController,
   ) {
+    addIcons({ bookOutline });
     this.mode = this.route.snapshot.data?.['mode'] || Mode.Native;
     this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
   }

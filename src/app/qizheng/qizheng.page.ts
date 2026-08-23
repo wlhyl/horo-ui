@@ -4,6 +4,8 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Path } from './path';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
+import { addIcons } from 'ionicons';
+import { bookOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-qizheng',
@@ -25,7 +27,9 @@ export class QizhengPage implements OnInit {
     private titleService: Title,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) {
+    addIcons({ bookOutline });
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title);

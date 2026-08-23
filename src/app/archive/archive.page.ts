@@ -14,6 +14,8 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { HoroRequest } from '../type/interface/request-data';
 import { Path } from '../type/enum/path';
 import { Path as SubPath } from './enum';
+import { addIcons } from 'ionicons';
+import { addOutline, reloadOutline, listOutline, trash } from 'ionicons/icons';
 
 @Component({
   selector: 'app-archive',
@@ -50,7 +52,9 @@ export class ArchivePage implements OnInit, ViewWillEnter {
     private api: ApiService,
     private storage: HoroStorageService,
     private ngZone: NgZone
-  ) {}
+  ) {
+    addIcons({ addOutline, reloadOutline, listOutline, trash });
+  }
 
   ionViewWillEnter(): void {
     this.page = 0; // 重置页码

@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { listOutline } from 'ionicons/icons';
 import { HistoricalArchiveSelectionModalComponent } from '../historical-archive-selection-modal/historical-archive-selection-modal.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { HistoricalHoroscopeRecord } from 'src/app/type/interface/horo-admin/historical-horoscope';
@@ -19,7 +21,9 @@ export class HistoricalArchiveSelectorComponent {
     private modalController: ModalController,
     private alertController: AlertController,
     private authService: AuthService,
-  ) {}
+  ) {
+    addIcons({ listOutline });
+  }
 
   async selectFromArchive(): Promise<void> {
     if (!this.authService.isAuth) {

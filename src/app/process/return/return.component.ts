@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -136,6 +136,7 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     private storage: HoroStorageService,
     public config: Horoconfig,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -236,24 +237,28 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     this.isDrawing = true; // 开始绘制
     this.loading = true;
     this.canvasCache = undefined;
+    this.cdr.markForCheck();
 
     this.getReturnData(process_name)
       .pipe(
         finalize(() => {
           this.isDrawing = false; // 结束绘制
           this.loading = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (data) => {
           this.returnHoroscopeData = data;
           this.isAlertOpen = false;
+          this.cdr.markForCheck();
           this.draw(this.returnHoroscopeData);
         },
         error: (error: any) => {
           const message = error.message + ' ' + (error.error?.message || '');
           this.message = message;
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }

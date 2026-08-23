@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   IonAlert,
@@ -64,6 +64,7 @@ export class ProfectionComponent implements OnInit, OnChanges {
     private api: ApiService,
     private storage: HoroStorageService,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -109,11 +110,15 @@ export class ProfectionComponent implements OnInit, OnChanges {
       process_date: this.processData.date,
     };
     this.api.profection(profectionData).subscribe({
-      next: (response) => (this.profection = response),
+      next: (response) => {
+        this.profection = response;
+        this.cdr.markForCheck();
+      },
       error: (error) => {
         const message = error.message + ' ' + error.error.message;
         this.message = message;
         this.isAlertOpen = true;
+        this.cdr.markForCheck();
       },
     });
   }

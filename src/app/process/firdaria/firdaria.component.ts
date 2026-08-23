@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   IonAlert,
@@ -47,6 +47,7 @@ export class FirdariaComponent implements OnInit, OnChanges {
     private storage: HoroStorageService,
     public config: Horoconfig,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -81,11 +82,15 @@ export class FirdariaComponent implements OnInit, OnChanges {
     };
 
     this.api.firdaria(requestData).subscribe({
-      next: (respone) => (this.firdariaData = respone),
+      next: (respone) => {
+        this.firdariaData = respone;
+        this.cdr.markForCheck();
+      },
       error: (error) => {
         const message = error.message + ' ' + error.error.message;
         this.message = message;
         this.isAlertOpen = true;
+        this.cdr.markForCheck();
       },
     });
   }

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.35.2] - 2026-08-24
+
+### Fixed
+
+- 修复生产环境控制台两类报错：`index.html` 补充 `<meta name="mobile-web-app-capable">`（apple 前缀版本已弃用）；补注册 10 个组件遗漏的 ion-icon（archive 页面与两个档案选择器的 `list-outline` 等），消除 `Invalid base URL` 与 `Could not load icon` 报错
+- 修复工作台嵌入的星盘组件初始不渲染问题：compare/return/secondary-progression/native image/profection/firdaria 组件在 HTTP 回调中赋值后未调用 `markForCheck`，OnPush 窗口链（工作台页面→窗口管理器→窗口框架）下整棵子树被跳过刷新，导致星盘/相位切换等 UI 不显示，点击 tab 触发模板事件后才出现
+- 修复本命星盘页 footer 中存档/笔记按钮与左侧"1年"步进按钮未垂直居中：右侧操作列改为 flex 垂直居中
+
 ## [0.35.1] - 2026-08-24
 
 ### Changed

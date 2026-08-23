@@ -12,6 +12,8 @@ import { drawQizhengSynastry } from 'src/app/utils/image/qizheng-synastry';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
 import { swapNodeNames } from 'src/app/utils/qizheng-utils/qizheng-utils';
+import { addIcons } from 'ionicons';
+import { swapHorizontalOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-qizheng-synastry',
@@ -41,7 +43,9 @@ export class QizhengSynastryComponent
     private tip: TipService,
     private titleService: Title,
     private platform: Platform,
-  ) {}
+  ) {
+    addIcons({ swapHorizontalOutline });
+  }
 
   ngOnInit() {
     this.titleService.setTitle('七政四余合盘');
