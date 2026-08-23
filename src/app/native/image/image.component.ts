@@ -10,14 +10,32 @@ import {
   ElementRef,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import {
+  AlertController,
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonLabel,
+  IonRow,
+  IonSpinner,
+  IonTitle,
+  IonToggle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { ApiService } from 'src/app/services/api/api.service';
 import { finalize, Subject, debounceTime, takeUntil } from 'rxjs';
-import { Platform, AlertController } from '@ionic/angular';
 import { StaticCanvas } from 'fabric';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/horo';
 import { Title } from '@angular/platform-browser';
@@ -45,7 +63,7 @@ import { DetailComponent } from '../detail/detail.component';
   templateUrl: 'image.component.html',
   styleUrls: ['image.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
+  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class ImageComponent
   implements OnInit, AfterViewInit, OnDestroy, OnChanges

@@ -2,7 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { CleanPageRoutingModule } from './clean-routing.module';
 
@@ -12,7 +20,13 @@ import { CleanPage } from './clean.page';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
     CleanPageRoutingModule
   ],
   declarations: [CleanPage]

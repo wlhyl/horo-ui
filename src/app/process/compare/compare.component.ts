@@ -21,7 +21,23 @@ import {
   SecondaryProgression,
 } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
-import { Platform } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonLabel,
+  IonRow,
+  IonSpinner,
+  IonTitle,
+  IonToggle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import * as fabric from 'fabric';
 import {
   HoroRequest,
@@ -44,7 +60,6 @@ import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { DetailComponent } from './detail/detail.component';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 
@@ -62,7 +77,7 @@ enum ComparisonType {
   templateUrl: './compare.component.html',
   styleUrls: ['./compare.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
+  imports: [IonAlert, IonBackButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class CompareComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy

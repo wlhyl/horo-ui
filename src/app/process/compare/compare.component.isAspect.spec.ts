@@ -4,7 +4,6 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CompareComponent } from './compare.component';
@@ -33,7 +32,6 @@ describe('isAspect property', () => {
     await TestBed.configureTestingModule({
       imports: [
         CompareComponent,
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],

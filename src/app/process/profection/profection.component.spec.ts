@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -102,7 +101,7 @@ describe('ProfectionComponent', () => {
     mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
 
     TestBed.configureTestingModule({
-      imports: [ProfectionComponent, IonicModule.forRoot()],
+      imports: [ProfectionComponent, ],
       providers: [
         { provide: ApiService, useValue: mockApiService },
         { provide: HoroStorageService, useValue: mockHoroStorageService },

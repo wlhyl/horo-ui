@@ -2,7 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonInput,
+  IonInputPasswordToggle,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { UserPageRoutingModule } from './user-routing.module';
 
@@ -12,7 +24,17 @@ import { UserPage } from './user.page';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonGrid,
+    IonHeader,
+    IonInput,
+    IonInputPasswordToggle,
+    IonRow,
+    IonTitle,
+    IonToolbar,
     UserPageRoutingModule
   ],
   declarations: [UserPage]

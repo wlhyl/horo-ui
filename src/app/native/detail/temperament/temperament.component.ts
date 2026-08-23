@@ -6,7 +6,18 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCheckbox,
+  IonCol,
+  IonRow,
+  IonSelect,
+  IonSelectOption,
+} from '@ionic/angular';
 import { Horoscope, ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { PlanetName } from 'src/app/type/enum/planet';
@@ -28,7 +39,7 @@ import {
   templateUrl: './temperament.component.html',
   styleUrls: ['./temperament.component.scss'],
   standalone: true,
-  imports: [IonicModule, NgStyle],
+  imports: [IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCheckbox, IonCol, IonRow, IonSelect, IonSelectOption, NgStyle],
 })
 export class TemperamentComponent implements OnInit, OnChanges {
   @Input() horoscopeData: Horoscope | ReturnHoroscope | null = null;

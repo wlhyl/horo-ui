@@ -1,7 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+  IonSpinner,
+  IonTitle,
+  IonToggle,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 
@@ -14,7 +37,28 @@ import { DetailComponent } from './detail/detail.component';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonAlert,
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCol,
+    IonContent,
+    IonFooter,
+    IonGrid,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonRow,
+    IonSpinner,
+    IonTitle,
+    IonToggle,
+    IonToolbar,
     HistoricalPageRoutingModule,
     HoroCommonModule,
   ],

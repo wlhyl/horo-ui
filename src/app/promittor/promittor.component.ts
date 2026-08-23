@@ -12,7 +12,20 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { IonicModule, Platform } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { finalize, Subject } from 'rxjs';
 import { StaticCanvas } from 'fabric';
 
@@ -48,7 +61,7 @@ import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
   templateUrl: './promittor.component.html',
   styleUrls: ['./promittor.component.scss'],
   standalone: true,
-  imports: [IonicModule, HoroCommonModule],
+  imports: [IonAlert, IonBackButton, IonButtons, IonContent, IonHeader, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar, HoroCommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PromittorComponent

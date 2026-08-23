@@ -6,7 +6,7 @@ import { ActivatedRoute, Router, RouterModule, UrlTree } from '@angular/router';
 import { of } from 'rxjs';
 import { NativePage } from './native.page';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
-import { IonicModule, NavController, AlertController } from '@ionic/angular';
+import { AlertController, NavController, provideIonicAngular } from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { FormsModule } from '@angular/forms';
 import { HoroRequest } from '../type/interface/request-data';
@@ -72,12 +72,12 @@ describe('NativePage', () => {
     TestBed.configureTestingModule({
       imports: [
         NativePage,
-        IonicModule.forRoot(),
         HoroCommonModule,
         FormsModule,
         RouterModule.forRoot([]),
       ],
       providers: [
+        provideIonicAngular(),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },

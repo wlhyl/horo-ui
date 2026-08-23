@@ -5,7 +5,6 @@ import {
   Planet,
 } from 'src/app/type/interface/response-data';
 import { PlanetName, PlanetSpeedState } from 'src/app/type/enum/planet';
-import { IonicModule } from '@ionic/angular';
 import { createMockHoroscopeComparison } from 'src/app/test-utils/test-data-factory.spec';
 
 const mockPlanet: Planet = {
@@ -58,7 +57,7 @@ describe('DetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), DetailComponent],
+      imports: [DetailComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailComponent);

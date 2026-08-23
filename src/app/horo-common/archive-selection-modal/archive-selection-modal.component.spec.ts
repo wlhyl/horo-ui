@@ -5,14 +5,33 @@ import {
   tick,
   discardPeriodicTasks,
 } from '@angular/core/testing';
-import { ModalController, InfiniteScrollCustomEvent } from '@ionic/angular';
+import {
+  InfiniteScrollCustomEvent,
+  IonAlert,
+  IonAvatar,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonSearchbar,
+  IonSpinner,
+  IonText,
+  IonTitle,
+  IonToolbar,
+  ModalController,
+} from '@ionic/angular';
 import { delay, of, throwError } from 'rxjs';
 import { ArchiveSelectionModalComponent } from './archive-selection-modal.component';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
 import { PageResponser } from 'src/app/type/interface/page';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
 import {
   createMockHoroscopeRecord,
   createMockLocationRecord,
@@ -98,7 +117,7 @@ describe('ArchiveSelectionModalComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [ArchiveSelectionModalComponent],
-      imports: [FormsModule, IonicModule],
+      imports: [FormsModule, IonAlert, IonAvatar, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonSearchbar, IonSpinner, IonText, IonTitle, IonToolbar],
       providers: [
         { provide: ModalController, useValue: mockModalController },
         { provide: ApiService, useValue: mockApiService },

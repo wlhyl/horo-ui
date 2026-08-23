@@ -1,5 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonButton,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonRadio,
+  IonRadioGroup,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
@@ -21,7 +37,7 @@ describe('MapComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [MapComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [IonButton, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonModal, IonRadio, IonRadioGroup, IonSpinner, IonTitle, IonToolbar],
       providers: [{ provide: ApiService, useValue: apiServiceSpy }],
     }).compileComponents();
 

@@ -1,5 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonButton,
+  IonButtons,
+  IonLabel,
+  IonModal,
+  IonPicker,
+  IonPickerColumn,
+  IonPickerColumnOption,
+  IonToolbar,
+} from '@ionic/angular';
 import { SimpleChanges } from '@angular/core';
 
 import { TimeZoneComponent } from './time-zone.component';
@@ -11,7 +20,7 @@ describe('TimeZoneComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TimeZoneComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [IonButton, IonButtons, IonLabel, IonModal, IonPicker, IonPickerColumn, IonPickerColumnOption, IonToolbar],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TimeZoneComponent);

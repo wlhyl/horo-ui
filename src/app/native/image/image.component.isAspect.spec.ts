@@ -4,7 +4,6 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ImageComponent } from './image.component';
@@ -27,7 +26,6 @@ describe('isAspect property', () => {
     await TestBed.configureTestingModule({
       imports: [
         ImageComponent,
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],

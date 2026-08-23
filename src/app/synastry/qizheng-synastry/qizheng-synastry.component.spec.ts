@@ -10,7 +10,19 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { TipService } from 'src/app/services/qizheng/tip.service';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonLabel,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { delay, of, throwError } from 'rxjs';
 import {
   createMockHoroRequest,
@@ -62,7 +74,7 @@ describe('QizhengSynastryComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [QizhengSynastryComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonLabel, IonSpinner, IonTitle, IonToolbar],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },

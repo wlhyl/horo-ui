@@ -13,7 +13,23 @@ import {
 import { Subject, Observable, of } from 'rxjs';
 import { debounceTime, switchMap, finalize, map, takeUntil } from 'rxjs/operators';
 import { drawAspect, drawReturnHorosco } from 'src/app/utils/image/horo';
-import { Platform, IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonLabel,
+  IonRow,
+  IonSpinner,
+  IonTitle,
+  IonToggle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { ProcessName } from 'src/app/process/enum/process';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
@@ -28,7 +44,7 @@ import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
   templateUrl: './return.component.html',
   styleUrls: ['./return.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
+  imports: [IonAlert, IonBackButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() inputHoroData?: HoroRequest;

@@ -5,7 +5,26 @@ import { of } from 'rxjs';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { QizhengPage } from './qizheng.page';
 import { Path } from './path';
-import { IonicModule, NavController } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCheckbox,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+  NavController,
+  provideIonicAngular,
+} from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { FormsModule } from '@angular/forms';
 import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
@@ -62,12 +81,28 @@ describe('QizhengPage', () => {
     await TestBed.configureTestingModule({
       declarations: [QizhengPage],
       imports: [
-        IonicModule.forRoot(),
+        IonBackButton,
+        IonButton,
+        IonButtons,
+        IonCheckbox,
+        IonCol,
+        IonContent,
+        IonGrid,
+        IonHeader,
+        IonIcon,
+        IonInput,
+        IonLabel,
+        IonRadio,
+        IonRadioGroup,
+        IonRow,
+        IonTitle,
+        IonToolbar,
         HoroCommonModule,
         FormsModule,
         RouterModule.forRoot([]),
       ],
       providers: [
+        provideIonicAngular(),
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },

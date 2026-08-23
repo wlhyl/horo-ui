@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### Changed
+
+- 升级 `@ionic/angular` 至 v9：依赖从 ^8.8.12 升级到 ^9.0.0，全部模块与组件的导入路径由 `@ionic/angular` 迁移至 `@ionic/angular/lazy`
+- `.browserslistrc` 将 Safari/iOS 最低版本提升至 16（Ionic 9 要求）
+- 移除已弃用的 `IonicModule`（ts(6385)）：全部模块与组件改为从 `@ionic/angular` 导入独立组件（`IonContent`、`IonButton` 等），`AppModule` 以 `provideIonicAngular()` 替代 `IonicModule.forRoot()`
+
+### Fixed
+
+- 修复 4 个测试文件缺少 `provideIonicAngular()` 导致的 `No provider found for _ModalController` 失败（native/process/qizheng/synastry-input 页面测试）
+- 修复档案库页面测试因 `ngZone.onStable` 自动加载链触发的浏览器断连挂起：eager 组件下 zone 在 `tick` 内稳定，未 mock 的 `getScrollElement` 抛错损坏 Zone 任务状态，现返回已解决的 Promise
+
 ## [0.34.0] - 2026-08-23
 
 ### Added

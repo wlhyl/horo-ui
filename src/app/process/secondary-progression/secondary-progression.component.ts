@@ -9,7 +9,20 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { IonicModule, Platform } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonLabel,
+  IonSpinner,
+  IonTitle,
+  IonToggle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import * as fabric from 'fabric';
@@ -35,7 +48,7 @@ import { DetailComponent } from 'src/app/native/detail/detail.component';
   templateUrl: './secondary-progression.component.html',
   styleUrls: ['./secondary-progression.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule, DetailComponent],
+  imports: [IonAlert, IonBackButton, IonButtons, IonContent, IonFooter, IonHeader, IonLabel, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class SecondaryProgressionComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy

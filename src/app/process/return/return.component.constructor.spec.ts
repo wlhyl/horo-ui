@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
 import { ProcessName } from '../enum/process';
@@ -22,7 +21,6 @@ describe('ReturnComponent Constructor', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
@@ -64,7 +62,6 @@ describe('ReturnComponent with LunarReturn', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
@@ -98,7 +95,6 @@ describe('ReturnComponent with invalid process_name', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
@@ -129,7 +125,6 @@ describe('ReturnComponent with invalid process_name', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
@@ -158,7 +153,6 @@ describe('ReturnComponent with invalid process_name', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
@@ -189,7 +183,6 @@ describe('ReturnComponent with invalid process_name', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,
@@ -220,7 +213,6 @@ describe('ReturnComponent with invalid process_name', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,

@@ -9,7 +9,7 @@ import {
   input,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonIcon } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Mode } from 'src/app/native/enum';
 import { ImageComponent } from 'src/app/native/image/image.component';
@@ -41,7 +41,7 @@ import { WindowService } from './window.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgStyle,
-    IonicModule,
+    IonIcon,
     ImageComponent,
     ProfectionComponent,
     MedievalProfectionComponent,

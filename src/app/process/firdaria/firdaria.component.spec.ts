@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -54,7 +53,7 @@ describe('FirdariaComponent', () => {
     });
 
     TestBed.configureTestingModule({
-      imports: [FirdariaComponent, IonicModule.forRoot()],
+      imports: [FirdariaComponent, ],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         { provide: Title, useValue: titleServiceSpy },

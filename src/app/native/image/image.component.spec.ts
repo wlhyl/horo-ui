@@ -7,12 +7,7 @@ import {
 } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  IonicModule,
-  Platform,
-  AlertController,
-  NavController,
-} from '@ionic/angular';
+import { AlertController, NavController, Platform } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
@@ -85,7 +80,6 @@ describe('ImageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         ImageComponent,
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,

@@ -9,7 +9,7 @@ import {
   computed,
   signal,
 } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonBackButton, IonButtons, IonIcon, IonTitle } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
@@ -32,7 +32,10 @@ import { WindowManagerComponent } from './window-manager/window-manager.componen
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    IonicModule,
+    IonBackButton,
+    IonButtons,
+    IonIcon,
+    IonTitle,
     InputPanelComponent,
     WindowManagerComponent,
   ],

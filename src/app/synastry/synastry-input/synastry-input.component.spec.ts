@@ -13,7 +13,28 @@ import {
   createMockDateRequest,
   createMockGeoRequest,
 } from '../../test-utils/test-data-factory.spec';
-import { IonicModule, NavController } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCheckbox,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+  NavController,
+  provideIonicAngular,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HoroCommonModule } from '../../horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
@@ -111,13 +132,31 @@ describe('SynastryInputComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        IonicModule.forRoot(),
+        IonBackButton,
+        IonButton,
+        IonButtons,
+        IonCheckbox,
+        IonCol,
+        IonContent,
+        IonGrid,
+        IonHeader,
+        IonIcon,
+        IonInput,
+        IonLabel,
+        IonRadio,
+        IonRadioGroup,
+        IonRow,
+        IonSelect,
+        IonSelectOption,
+        IonTitle,
+        IonToolbar,
         FormsModule,
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],
       declarations: [SynastryInputComponent],
       providers: [
+        provideIonicAngular(),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: Router, useValue: routerSpy },

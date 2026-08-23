@@ -1,6 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
 import { ProcessName } from '../enum/process';
@@ -27,7 +26,6 @@ describe('ReturnComponent Lifecycle Hooks', () => {
     TestBed.configureTestingModule({
       imports: [
         ReturnComponent,
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,

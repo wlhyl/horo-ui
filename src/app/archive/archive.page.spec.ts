@@ -17,8 +17,24 @@ import { Path as SubPath } from './enum';
 import { Path } from '../type/enum/path';
 import {
   InfiniteScrollCustomEvent,
+  IonAlert,
+  IonAvatar,
+  IonBackButton,
+  IonButtons,
   IonContent,
-  IonicModule,
+  IonHeader,
+  IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
+  IonList,
+  IonSearchbar,
+  IonTitle,
+  IonToolbar,
   NavController,
 } from '@ionic/angular';
 import { createMockHoroRequest } from '../test-utils/test-data-factory.spec';
@@ -93,11 +109,35 @@ describe('ArchivePage', () => {
       {}
     );
     ionContentSpy = jasmine.createSpyObj('IonContent', ['getScrollElement']);
+    // 内容已填满（scrollHeight > clientHeight），避免initialLoad自动加载链在测试中被触发
+    ionContentSpy.getScrollElement.and.returnValue(
+      Promise.resolve({
+        scrollHeight: 500,
+        clientHeight: 200,
+      } as HTMLElement)
+    );
 
     await TestBed.configureTestingModule({
       declarations: [ArchivePage],
       imports: [
-        IonicModule.forRoot(),
+        IonAlert,
+        IonAvatar,
+        IonBackButton,
+        IonButtons,
+        IonContent,
+        IonHeader,
+        IonIcon,
+        IonInfiniteScroll,
+        IonInfiniteScrollContent,
+        IonItem,
+        IonItemOption,
+        IonItemOptions,
+        IonItemSliding,
+        IonLabel,
+        IonList,
+        IonSearchbar,
+        IonTitle,
+        IonToolbar,
         // 用于防止ionion-title中routerlink报错
         RouterModule.forRoot([]),
       ],

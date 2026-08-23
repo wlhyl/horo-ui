@@ -4,7 +4,6 @@ import {
   ElementRef,
   input,
 } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { WindowRect } from './window-state';
 import { WindowFrameComponent } from './window-frame.component';
@@ -18,7 +17,6 @@ import { WindowService } from './window.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     WindowFrameComponent,
-    IonicModule,
   ],
 })
 export class WindowManagerComponent {

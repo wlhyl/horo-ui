@@ -1,6 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { CleanPage } from './clean.page';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 
@@ -16,7 +24,7 @@ describe('CleanPage', () => {
 
     await TestBed.configureTestingModule({
       declarations: [CleanPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar],
       providers: [
         { provide: Title, useValue: titleServiceSpy },
         { provide: HoroStorageService, useValue: storageServiceSpy }

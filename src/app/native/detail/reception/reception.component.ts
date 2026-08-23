@@ -5,7 +5,18 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote,
+  IonRow,
+} from '@ionic/angular';
 import { Horoscope, ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
@@ -22,7 +33,7 @@ import {
   templateUrl: './reception.component.html',
   styleUrls: ['./reception.component.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonItem, IonLabel, IonList, IonNote, IonRow],
 })
 export class ReceptionComponent implements OnInit, OnChanges {
   @Input() horoscopeData: Horoscope | ReturnHoroscope | null = null;

@@ -1,7 +1,38 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonAvatar,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonPicker,
+  IonPickerColumn,
+  IonPickerColumnOption,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
+  IonSearchbar,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
+  IonText,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 // 数据双向绑定
 import { FormsModule } from '@angular/forms';
@@ -29,7 +60,7 @@ import { HistoricalArchiveSelectorComponent } from './historical-archive-selecto
     HistoricalArchiveSelectionModalComponent,
     HistoricalArchiveSelectorComponent,
   ],
-  imports: [CommonModule, IonicModule, FormsModule],
+  imports: [CommonModule, IonAlert, IonAvatar, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonInput, IonItem, IonLabel, IonList, IonModal, IonPicker, IonPickerColumn, IonPickerColumnOption, IonRadio, IonRadioGroup, IonRow, IonSearchbar, IonSelect, IonSelectOption, IonSpinner, IonText, IonTitle, IonToolbar, FormsModule],
   exports: [
     FormsModule,
     DateTimeComponent,

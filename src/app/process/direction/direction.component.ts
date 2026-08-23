@@ -11,7 +11,21 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/services/api/api.service';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
@@ -72,7 +86,7 @@ import {
   templateUrl: './direction.component.html',
   styleUrls: ['./direction.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule],
+  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DirectionComponent implements OnInit, OnChanges, OnDestroy {

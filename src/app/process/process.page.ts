@@ -1,5 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, IonicModule } from '@ionic/angular';
+import {
+  AlertController,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCheckbox,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonInput,
+  IonLabel,
+  IonModal,
+  IonNote,
+  IonPicker,
+  IonPickerColumn,
+  IonPickerColumnOption,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ProcessName } from './enum/process';
@@ -20,7 +44,7 @@ import { isInChineseDST } from '../utils/dst/dst';
   templateUrl: './process.page.html',
   styleUrls: ['./process.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule],
+  imports: [IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonLabel, IonModal, IonNote, IonPicker, IonPickerColumn, IonPickerColumnOption, IonRadio, IonRadioGroup, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
 })
 export class ProcessPage implements OnInit {
   readonly houses: Array<string> = this.config.houses;

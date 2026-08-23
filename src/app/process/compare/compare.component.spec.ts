@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
-import { IonicModule, NavController, Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -71,7 +71,6 @@ describe('CompareComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         CompareComponent,
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
         FormsModule,

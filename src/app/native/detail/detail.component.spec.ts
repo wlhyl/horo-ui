@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailComponent } from './detail.component';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { PlanetName } from 'src/app/type/enum/planet';
-import { IonicModule } from '@ionic/angular';
 import {
   createMockHoroscope,
   createMockPlanet,
@@ -33,7 +32,7 @@ describe('DetailComponent', () => {
     horoConfigSpy.aspectFontString.and.returnValue('☐');
 
     await TestBed.configureTestingModule({
-      imports: [DetailComponent, IonicModule.forRoot()],
+      imports: [DetailComponent, ],
       providers: [{ provide: Horoconfig, useValue: horoConfigSpy }],
     }).compileComponents();
   });

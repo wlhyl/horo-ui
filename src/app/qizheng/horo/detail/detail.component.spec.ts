@@ -1,7 +1,26 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-import { IonicModule, NavController } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+  NavController,
+} from '@ionic/angular';
 
 import { QizhengHoroDetailComponent } from './detail.component';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
@@ -136,7 +155,7 @@ describe('QizhengHoroDetailComponent', () => {
 
     await await TestBed.configureTestingModule({
       declarations: [QizhengHoroDetailComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTitle, IonToolbar],
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: Title, useValue: titleServiceSpy },

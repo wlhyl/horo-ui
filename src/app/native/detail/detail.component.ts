@@ -3,7 +3,18 @@ import {
   Input,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonGrid,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+} from '@ionic/angular';
 import { Horoscope, ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import {
@@ -22,7 +33,16 @@ import { PlanetPowerComponent } from './planet-power/planet-power.component';
   styleUrls: ['./detail.component.scss'],
   standalone: true,
   imports: [
-    IonicModule,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCol,
+    IonGrid,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonRow,
     NgStyle,
     ReceptionComponent,
     TemperamentComponent,

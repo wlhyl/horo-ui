@@ -1,6 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonLabel,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { AuthService } from '../services/auth/auth.service';
 import { Path } from '../type/enum/path';
 import { HomePage } from './home.page';
@@ -19,7 +26,7 @@ describe('HomePage', () => {
 
     await TestBed.configureTestingModule({
       declarations: [HomePage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonContent, IonHeader, IonIcon, IonLabel, IonTitle, IonToolbar],
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: AuthService, useValue: authServiceSpy },
@@ -140,7 +147,7 @@ describe('HomePage with authenticated user', () => {
 
     await TestBed.configureTestingModule({
       declarations: [HomePage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonContent, IonHeader, IonIcon, IonLabel, IonTitle, IonToolbar],
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: AuthService, useValue: authServiceSpy },

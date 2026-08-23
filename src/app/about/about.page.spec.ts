@@ -1,6 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { AboutPage } from './about.page';
 
 describe('AboutPage', () => {
@@ -13,7 +24,7 @@ describe('AboutPage', () => {
 
     await TestBed.configureTestingModule({
       declarations: [AboutPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar],
       providers: [{ provide: Title, useValue: titleServiceSpy }],
     }).compileComponents();
 

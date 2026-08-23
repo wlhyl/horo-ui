@@ -5,7 +5,7 @@ import {RouteReuseStrategy} from "@angular/router";
 // 数据双向绑定
 // import { FormsModule } from '@angular/forms';
 
-import {IonicModule, IonicRouteStrategy} from "@ionic/angular";
+import {IonApp, IonRouterOutlet, IonicRouteStrategy, provideIonicAngular} from "@ionic/angular";
 
 // http访问
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
@@ -22,9 +22,11 @@ import {authInterceptor} from "./interceptor/auth/auth.interceptor";
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonApp,
+    IonRouterOutlet,
     AppRoutingModule], providers: [
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+    provideIonicAngular(),
     provideAppInitializer(() => appInit(inject(Horoconfig), inject(ApiService))()),
     provideHttpClient(withInterceptors([authInterceptor])),
   ]

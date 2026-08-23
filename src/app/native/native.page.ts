@@ -1,7 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AlertController, IonicModule, ViewWillEnter } from '@ionic/angular';
+import {
+  AlertController,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCheckbox,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonRadio,
+  IonRadioGroup,
+  IonRow,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+  ViewWillEnter,
+} from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { Horoconfig } from '../services/config/horo-config.service';
@@ -15,7 +36,7 @@ import { isInChineseDST } from '../utils/dst/dst';
   templateUrl: './native.page.html',
   styleUrls: ['./native.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule, RouterLink],
+  imports: [IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonLabel, IonRadio, IonRadioGroup, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar, FormsModule, HoroCommonModule, RouterLink],
 })
 export class NativePage implements OnInit, ViewWillEnter {
   readonly houses: ReadonlyArray<string> = this.config.houses;

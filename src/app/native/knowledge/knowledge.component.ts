@@ -1,12 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 @Component({
   selector: 'app-native-knowledge',
   templateUrl: './knowledge.component.html',
   styleUrls: ['./knowledge.component.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonTitle, IonToolbar],
 })
 export class KnowledgeComponent implements OnInit {
   constructor() {}

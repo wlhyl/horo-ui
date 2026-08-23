@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
 import { ReturnComponent } from './return.component';
@@ -26,7 +25,6 @@ describe('isAspect property', () => {
     TestBed.configureTestingModule({
       imports: [
         ReturnComponent,
-        IonicModule.forRoot(),
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],

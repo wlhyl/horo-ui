@@ -12,7 +12,23 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/services/api/api.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
@@ -61,7 +77,6 @@ import {
 import { ptolemyTerm } from 'src/app/utils/image/zodiac';
 import { Zodiac } from 'src/app/type/enum/zodiac';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
-import { Platform } from '@ionic/angular';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
 import {
   formatDate as formatDateUtil,
@@ -77,7 +92,7 @@ type ViewMode = 'chart' | 'table';
   templateUrl: './quadrant_process.component.html',
   styleUrls: ['./quadrant_process.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule],
+  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QuadrantProcessComponent

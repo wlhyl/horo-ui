@@ -1,6 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AlertController, IonicModule } from '@ionic/angular';
+import {
+  AlertController,
+  IonCheckbox,
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonNote,
+  IonRadio,
+  IonRadioGroup,
+  IonSelect,
+  IonSelectOption,
+} from '@ionic/angular';
 import { DateRequest, HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
@@ -19,7 +30,15 @@ import { isInChineseDST } from 'src/app/utils/dst/dst';
   styleUrls: ['./input-panel.component.scss'],
   standalone: true,
   imports: [
-    IonicModule,
+    IonCheckbox,
+    IonIcon,
+    IonInput,
+    IonLabel,
+    IonNote,
+    IonRadio,
+    IonRadioGroup,
+    IonSelect,
+    IonSelectOption,
     FormsModule,
     HoroCommonModule,
   ],

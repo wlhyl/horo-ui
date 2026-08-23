@@ -2,7 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { AboutPageRoutingModule } from './about-routing.module';
 
@@ -12,7 +23,16 @@ import { AboutPage } from './about.page';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+    IonBackButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonTitle,
+    IonToolbar,
     AboutPageRoutingModule
   ],
   declarations: [AboutPage]

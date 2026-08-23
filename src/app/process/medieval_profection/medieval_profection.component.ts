@@ -14,7 +14,23 @@ import {
   ElementRef,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/services/api/api.service';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
@@ -57,7 +73,6 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { StaticCanvas } from 'fabric';
 import { drawHorosco } from 'src/app/utils/image/compare';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
-import { Platform } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import {
   ALL_SIGNIFICATORS,
@@ -79,7 +94,7 @@ type ViewMode = 'chart' | 'table';
   templateUrl: './medieval_profection.component.html',
   styleUrls: ['./medieval_profection.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, HoroCommonModule],
+  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedievalProfectionComponent

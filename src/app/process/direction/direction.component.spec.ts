@@ -5,7 +5,6 @@ import {
   flush,
   tick,
 } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { delay, of, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -120,7 +119,7 @@ describe('DirectionComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [DirectionComponent, IonicModule.forRoot(), FormsModule],
+      imports: [DirectionComponent,  FormsModule],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         { provide: Title, useValue: titleServiceSpy },

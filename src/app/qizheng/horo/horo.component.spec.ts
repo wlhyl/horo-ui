@@ -1,7 +1,25 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule, Platform, NavController } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonLabel,
+  IonRow,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+  NavController,
+  Platform,
+} from '@ionic/angular';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
@@ -232,7 +250,21 @@ describe('HoroComponent', () => {
     TestBed.configureTestingModule({
       declarations: [HoroComponent],
       imports: [
-        IonicModule.forRoot(),
+        IonAlert,
+        IonBackButton,
+        IonButton,
+        IonButtons,
+        IonCol,
+        IonContent,
+        IonFooter,
+        IonGrid,
+        IonHeader,
+        IonIcon,
+        IonLabel,
+        IonRow,
+        IonSpinner,
+        IonTitle,
+        IonToolbar,
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],

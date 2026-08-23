@@ -6,7 +6,18 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+} from '@ionic/angular';
 import { Horoscope, ReturnHoroscope } from 'src/app/type/interface/response-data';
 import { PlanetName } from 'src/app/type/enum/planet';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
@@ -20,7 +31,7 @@ import {
   templateUrl: './planet-power.component.html',
   styleUrls: ['./planet-power.component.scss'],
   standalone: true,
-  imports: [IonicModule, NgStyle],
+  imports: [IonAlert, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonItem, IonLabel, IonList, IonRow, NgStyle],
 })
 export class PlanetPowerComponent implements OnInit, OnChanges {
   @Input() horoscopeData: Horoscope | ReturnHoroscope | null = null;

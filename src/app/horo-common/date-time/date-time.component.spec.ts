@@ -1,5 +1,15 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonButton,
+  IonButtons,
+  IonIcon,
+  IonLabel,
+  IonModal,
+  IonPicker,
+  IonPickerColumn,
+  IonPickerColumnOption,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { DateTimeComponent } from './date-time.component';
 import { SimpleChanges } from '@angular/core';
@@ -11,7 +21,7 @@ describe('DateTimeComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DateTimeComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [IonButton, IonButtons, IonIcon, IonLabel, IonModal, IonPicker, IonPickerColumn, IonPickerColumnOption, IonToolbar],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DateTimeComponent);

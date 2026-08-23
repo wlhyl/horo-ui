@@ -1,5 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 import { GeoComponent } from './geo.component';
 import { EW, NS } from './enum';
@@ -11,7 +25,7 @@ describe('GeoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [GeoComponent],
-      imports: [IonicModule.forRoot()],
+      imports: [IonAlert, IonButton, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonModal, IonSelect, IonSelectOption, IonTitle, IonToolbar],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GeoComponent);

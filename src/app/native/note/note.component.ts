@@ -1,6 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonRow,
+  IonSpinner,
+  IonTextarea,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -21,7 +37,7 @@ import { Path } from 'src/app/type/enum/path';
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule],
+  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonItem, IonLabel, IonRow, IonSpinner, IonTextarea, IonTitle, IonToolbar, FormsModule],
 })
 export class NoteComponent implements OnInit {
   title = '笔记';

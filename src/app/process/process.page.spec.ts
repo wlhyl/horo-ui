@@ -8,7 +8,7 @@ import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { ProcessName } from './enum/process';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, NavController } from '@ionic/angular';
+import { NavController, provideIonicAngular } from '@ionic/angular';
 import { HoroCommonModule } from '../horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
 import { of } from 'rxjs';
@@ -102,12 +102,12 @@ describe('ProcessPage', () => {
     TestBed.configureTestingModule({
       imports: [
         ProcessPage,
-        IonicModule.forRoot(),
         FormsModule,
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],
       providers: [
+        provideIonicAngular(),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: Router, useValue: routerSpy },
