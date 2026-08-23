@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.35.1] - 2026-08-24
+
+### Changed
+
+- Dockerfile 构建基础镜像 `node` 从 24.13.0 升级到 24.18.0
+
 ## [0.35.0] - 2026-08-24
 
 ### Changed
