@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -20,6 +20,7 @@ import { Path } from '../enum/path';
   selector: 'app-synastry',
   templateUrl: './synastry.component.html',
   styleUrls: ['./synastry.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SynastryComponent implements OnInit, AfterViewInit, OnDestroy {

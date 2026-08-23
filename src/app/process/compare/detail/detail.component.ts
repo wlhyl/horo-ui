@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
   IonCard,
   IonCardContent,
@@ -21,6 +21,7 @@ import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonGrid, IonItem, IonLabel, IonList, IonRow, NgStyle],
 })
 export class DetailComponent {

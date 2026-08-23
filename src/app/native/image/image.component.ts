@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -63,6 +64,7 @@ import { DetailComponent } from '../detail/detail.component';
   templateUrl: 'image.component.html',
   styleUrls: ['image.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class ImageComponent

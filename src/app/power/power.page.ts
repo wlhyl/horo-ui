@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Zodiac } from '../type/enum/zodiac';
@@ -18,6 +18,7 @@ import {
     selector: 'app-power',
     templateUrl: './power.page.html',
     styleUrls: ['./power.page.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PowerPage implements OnInit {

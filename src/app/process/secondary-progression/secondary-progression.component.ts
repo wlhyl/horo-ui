@@ -8,6 +8,7 @@ import {
   OnInit,
   SimpleChanges,
   ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   IonAlert,
@@ -48,6 +49,7 @@ import { DetailComponent } from 'src/app/native/detail/detail.component';
   templateUrl: './secondary-progression.component.html',
   styleUrls: ['./secondary-progression.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButtons, IonContent, IonFooter, IonHeader, IonLabel, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class SecondaryProgressionComponent

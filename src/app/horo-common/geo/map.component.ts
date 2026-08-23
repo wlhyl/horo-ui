@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { navigateOutline } from 'ionicons/icons';
 import { finalize } from 'rxjs';
@@ -9,6 +9,7 @@ import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-respo
   selector: 'horo-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MapComponent implements OnInit {

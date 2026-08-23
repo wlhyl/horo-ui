@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Horoscope, HistoricalHoroResponse } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService, HistoricalStorageData } from 'src/app/services/horostorage/horostorage.service';
@@ -24,6 +24,7 @@ import { addIcons } from 'ionicons';
   selector: 'app-historical-image',
   templateUrl: 'image.component.html',
   styleUrls: ['image.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ImageComponent implements AfterViewInit, OnDestroy {

@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import {
@@ -32,6 +33,7 @@ import { PlanetPowerComponent } from './planet-power/planet-power.component';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonCard,
     IonCardContent,

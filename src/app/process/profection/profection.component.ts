@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   IonAlert,
@@ -29,6 +29,7 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
   templateUrl: './profection.component.html',
   styleUrls: ['./profection.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonRow, IonTitle, IonToolbar],
 })
 export class ProfectionComponent implements OnInit, OnChanges {

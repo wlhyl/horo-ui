@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 
@@ -6,6 +6,7 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
   selector: 'app-clean',
   templateUrl: './clean.page.html',
   styleUrls: ['./clean.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CleanPage implements OnInit {

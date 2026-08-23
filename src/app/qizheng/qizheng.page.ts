@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { HoroRequest, ProcessRequest } from '../type/interface/request-data';
   selector: 'app-qizheng',
   templateUrl: './qizheng.page.html',
   styleUrls: ['./qizheng.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class QizhengPage implements OnInit {

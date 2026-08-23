@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   AlertController,
@@ -29,6 +29,7 @@ import { isInChineseDST } from 'src/app/utils/dst/dst';
   templateUrl: './input-panel.component.html',
   styleUrls: ['./input-panel.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     IonCheckbox,
     IonIcon,

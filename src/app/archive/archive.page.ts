@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   InfiniteScrollCustomEvent,
@@ -19,6 +19,7 @@ import { Path as SubPath } from './enum';
   selector: 'app-archive',
   templateUrl: './archive.page.html',
   styleUrls: ['./archive.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ArchivePage implements OnInit, ViewWillEnter {

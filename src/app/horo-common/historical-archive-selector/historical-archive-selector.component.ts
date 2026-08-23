@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { HistoricalArchiveSelectionModalComponent } from '../historical-archive-selection-modal/historical-archive-selection-modal.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -9,6 +9,7 @@ import { HistoricalStorageData } from 'src/app/services/horostorage/horostorage.
   selector: 'app-historical-archive-selector',
   templateUrl: './historical-archive-selector.component.html',
   styleUrls: ['./historical-archive-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HistoricalArchiveSelectorComponent {

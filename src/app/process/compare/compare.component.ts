@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -77,6 +78,7 @@ enum ComparisonType {
   templateUrl: './compare.component.html',
   styleUrls: ['./compare.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class CompareComponent

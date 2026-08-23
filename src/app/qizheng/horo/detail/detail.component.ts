@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Horoscope } from 'src/app/type/interface/response-qizheng';
 import { Router } from '@angular/router';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
@@ -14,6 +14,7 @@ import {
   selector: 'app-qizheng-horo-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class QizhengHoroDetailComponent implements OnInit {

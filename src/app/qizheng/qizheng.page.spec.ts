@@ -39,6 +39,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr
 } from '@angular/common/http';
 import {
   createMockHoroRequest,
@@ -103,7 +104,7 @@ describe('QizhengPage', () => {
       ],
       providers: [
         provideIonicAngular(),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting(),
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },
         { provide: Title, useValue: titleServiceSpy },

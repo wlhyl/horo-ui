@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import {
   ModalController,
   IonContent,
@@ -19,6 +19,7 @@ import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
   selector: 'app-historical-archive-selection-modal',
   templateUrl: './historical-archive-selection-modal.component.html',
   styleUrls: ['./historical-archive-selection-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestroy {

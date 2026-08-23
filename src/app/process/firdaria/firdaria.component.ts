@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   IonAlert,
@@ -22,6 +22,7 @@ import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
   templateUrl: './firdaria.component.html',
   styleUrls: ['./firdaria.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButtons, IonContent, IonHeader, IonLabel, IonTitle, IonToolbar],
 })
 export class FirdariaComponent implements OnInit, OnChanges {

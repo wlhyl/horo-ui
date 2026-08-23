@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import {
   ModalController,
   IonContent,
@@ -16,6 +16,7 @@ import { finalize, Subject, debounceTime, takeUntil } from 'rxjs';
   selector: 'app-archive-selection-modal',
   templateUrl: './archive-selection-modal.component.html',
   styleUrls: ['./archive-selection-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {

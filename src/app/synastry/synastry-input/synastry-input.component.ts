@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { HoroRequest } from 'src/app/type/interface/request-data';
@@ -10,6 +10,7 @@ import { HoroStorageService } from 'src/app/services/horostorage/horostorage.ser
   selector: 'app-synastry-input',
   templateUrl: './synastry-input.component.html',
   styleUrls: ['./synastry-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SynastryInputComponent implements OnInit {

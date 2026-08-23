@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -26,6 +26,7 @@ import { swapNodeNames } from 'src/app/utils/qizheng-utils/qizheng-utils';
   selector: 'app-horo',
   templateUrl: './horo.component.html',
   styleUrls: ['./horo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {

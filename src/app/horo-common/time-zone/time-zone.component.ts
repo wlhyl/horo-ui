@@ -5,12 +5,14 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 @Component({
   selector: 'horo-time-zone',
   templateUrl: './time-zone.component.html',
   styleUrls: ['./time-zone.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TimeZoneComponent implements OnChanges {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ArchiveSelectionModalComponent } from '../archive-selection-modal/archive-selection-modal.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -9,6 +9,7 @@ import { HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-rec
   selector: 'app-archive-selector',
   templateUrl: './archive-selector.component.html',
   styleUrls: ['./archive-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ArchiveSelectorComponent {

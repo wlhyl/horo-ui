@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   AlertController,
   IonBackButton,
@@ -44,6 +44,7 @@ import { isInChineseDST } from '../utils/dst/dst';
   templateUrl: './process.page.html',
   styleUrls: ['./process.page.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonGrid, IonHeader, IonInput, IonLabel, IonModal, IonNote, IonPicker, IonPickerColumn, IonPickerColumnOption, IonRadio, IonRadioGroup, IonRow, IonSelect, IonSelectOption, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
 })
 export class ProcessPage implements OnInit {

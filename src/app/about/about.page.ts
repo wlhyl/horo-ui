@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { addIcons } from 'ionicons';
 import { caretForwardOutline } from 'ionicons/icons';
@@ -7,6 +7,7 @@ import { caretForwardOutline } from 'ionicons/icons';
   selector: 'app-about',
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AboutPage implements OnInit {

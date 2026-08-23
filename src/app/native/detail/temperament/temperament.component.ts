@@ -4,6 +4,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import {
@@ -39,6 +40,7 @@ import {
   templateUrl: './temperament.component.html',
   styleUrls: ['./temperament.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCheckbox, IonCol, IonRow, IonSelect, IonSelectOption, NgStyle],
 })
 export class TemperamentComponent implements OnInit, OnChanges {

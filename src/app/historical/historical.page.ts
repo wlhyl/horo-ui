@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HoroStorageService, HistoricalStorageData } from '../services/horostorage/horostorage.service';
 import { DeepReadonly } from '../type/interface/deep-readonly';
@@ -10,6 +10,7 @@ import { ViewWillEnter } from '@ionic/angular';
   selector: 'app-historical',
   templateUrl: './historical.page.html',
   styleUrls: ['./historical.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class HistoricalPage implements OnInit, ViewWillEnter {

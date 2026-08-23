@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Horoscope } from 'src/app/type/interface/response-data';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
   selector: 'app-historical-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DetailComponent implements OnInit {

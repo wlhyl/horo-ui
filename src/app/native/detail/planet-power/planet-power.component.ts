@@ -4,6 +4,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import {
@@ -31,6 +32,7 @@ import {
   templateUrl: './planet-power.component.html',
   styleUrls: ['./planet-power.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonItem, IonLabel, IonList, IonRow, NgStyle],
 })
 export class PlanetPowerComponent implements OnInit, OnChanges {

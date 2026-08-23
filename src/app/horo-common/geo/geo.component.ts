@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { degreeToDMS } from '../../utils/horo-math/horo-math';
 import { EW, NS } from './enum';
 
@@ -6,6 +6,7 @@ import { EW, NS } from './enum';
   selector: 'horo-geo',
   templateUrl: './geo.component.html',
   styleUrls: ['./geo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class GeoComponent implements OnInit {

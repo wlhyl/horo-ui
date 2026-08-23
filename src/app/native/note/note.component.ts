@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonAlert,
@@ -37,6 +37,7 @@ import { Path } from 'src/app/type/enum/path';
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonItem, IonLabel, IonRow, IonSpinner, IonTextarea, IonTitle, IonToolbar, FormsModule],
 })
 export class NoteComponent implements OnInit {

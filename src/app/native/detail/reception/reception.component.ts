@@ -4,6 +4,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   IonCard,
@@ -33,6 +34,7 @@ import {
   templateUrl: './reception.component.html',
   styleUrls: ['./reception.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonItem, IonLabel, IonList, IonNote, IonRow],
 })
 export class ReceptionComponent implements OnInit, OnChanges {

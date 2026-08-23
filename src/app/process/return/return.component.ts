@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, OnChanges, Input, SimpleChanges, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -44,6 +44,7 @@ import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
   templateUrl: './return.component.html',
   styleUrls: ['./return.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IonAlert, IonBackButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
 })
 export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {

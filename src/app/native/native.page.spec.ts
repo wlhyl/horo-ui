@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule, UrlTree } from '@angular/router';
@@ -78,7 +78,7 @@ describe('NativePage', () => {
       ],
       providers: [
         provideIonicAngular(),
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         { provide: HoroStorageService, useValue: horoStorageServiceSpy },
         { provide: Title, useValue: titleServiceSpy },

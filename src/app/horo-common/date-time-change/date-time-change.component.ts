@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
@@ -6,6 +6,7 @@ import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
   selector: 'horo-date-time-change',
   templateUrl: './date-time-change.component.html',
   styleUrls: ['./date-time-change.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DateTimeChangeComponent implements OnInit {
