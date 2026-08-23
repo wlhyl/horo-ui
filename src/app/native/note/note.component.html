@@ -10,18 +10,18 @@
 <ion-content>
   <ion-grid>
     <ion-row class="ion-justify-content-center ion-align-items-center" style="height: 100%;">
-      @if (isLoading) {
+      @if (isLoading()) {
         <ion-col size="auto" class="ion-text-center">
           <ion-spinner name="bubbles"></ion-spinner>
           <ion-label>加载中...</ion-label>
         </ion-col>
       }
-      @if (!isLoading) {
+      @if (!isLoading()) {
         <ion-col size="auto">
           <form (ngSubmit)="onSubmit()">
             <ion-item>
               <ion-label position="stacked" class="note-label">笔记</ion-label>
-              <ion-textarea [(ngModel)]="describe" name="describe" rows="10" cols="30"></ion-textarea>
+              <ion-textarea [ngModel]="describe()" (ngModelChange)="describe.set($event)" name="describe" rows="10" cols="30"></ion-textarea>
             </ion-item>
             <ion-button expand="full" type="submit">{{ isDescribeChanged() ? '未保存' : '已保存' }}</ion-button>
           </form>
@@ -31,5 +31,5 @@
   </ion-grid>
 </ion-content>
 
-<ion-alert [isOpen]="isAlertOpen" header="通知" subHeader="" [message]="message" [buttons]="alertButtons"
-(didDismiss)="isAlertOpen=false"></ion-alert>
+<ion-alert [isOpen]="isAlertOpen()" header="通知" subHeader="" [message]="message()" [buttons]="alertButtons"
+(didDismiss)="isAlertOpen.set(false)"></ion-alert>

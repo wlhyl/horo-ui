@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonAlert,
@@ -37,22 +37,22 @@ import { Path } from 'src/app/type/enum/path';
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.scss'],
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonItem, IonLabel, IonRow, IonSpinner, IonTextarea, IonTitle, IonToolbar, FormsModule],
 })
 export class NoteComponent implements OnInit {
   title = '笔记';
 
-  isAlertOpen = false;
+  isAlertOpen = signal(false);
   alertButtons = ['OK'];
-  message = '';
-  isLoading = true;
+  message = signal('');
+  isLoading = signal(true);
 
   mode: string;
   horoData: DeepReadonly<HoroRequest>;
 
-  describe: string = '';
-  initialDescribe: string | null = null;
+  describe = signal('');
+  initialDescribe = signal<string | null>(null);
 
   constructor(
     private titleService: Title,
@@ -71,20 +71,20 @@ export class NoteComponent implements OnInit {
 
   private loadNativeData() {
     if (this.horoData.id == 0) {
-      this.isLoading = false;
+      this.isLoading.set(false);
       return;
     }
 
     this.api.getNativeById(this.horoData.id).subscribe({
       next: (data) => {
-        this.describe = data.description;
-        this.initialDescribe = data.description;
-        this.isLoading = false;
+        this.describe.set(data.description);
+        this.initialDescribe.set(data.description);
+        this.isLoading.set(false);
       },
       error: (error) => {
-        this.message = '加载数据时出错: ' + error.message;
-        this.isAlertOpen = true;
-        this.isLoading = false;
+        this.message.set('加载数据时出错: ' + error.message);
+        this.isAlertOpen.set(true);
+        this.isLoading.set(false);
         console.error('Error loading native data', error);
       },
     });
@@ -119,7 +119,7 @@ export class NoteComponent implements OnInit {
           latitude_minute: lat.m,
           latitude_second: lat.s,
         },
-        description: this.describe,
+        description: this.describe(),
         lock: false,
       };
 
@@ -132,13 +132,13 @@ export class NoteComponent implements OnInit {
             this.storage.horoData = updatedData;
           }
           this.horoData = updatedData;
-          this.initialDescribe = this.describe;
-          this.message = '已新增记录';
-          this.isAlertOpen = true;
+          this.initialDescribe.set(this.describe());
+          this.message.set('已新增记录');
+          this.isAlertOpen.set(true);
         },
         error: (error) => {
-          this.message = '保存数据时出错: ' + error.message;
-          this.isAlertOpen = true;
+          this.message.set('保存数据时出错: ' + error.message);
+          this.isAlertOpen.set(true);
         },
       });
     } else {
@@ -156,24 +156,24 @@ export class NoteComponent implements OnInit {
         chart_type: null,
         is_time_precise: null,
         location: null,
-        description: this.describe,
+        description: this.describe(),
         lock: null,
       };
       this.api.updateNative(this.horoData.id, native).subscribe({
         next: () => {
-          this.initialDescribe = this.describe;
-          this.message = '已更新记录';
-          this.isAlertOpen = true;
+          this.initialDescribe.set(this.describe());
+          this.message.set('已更新记录');
+          this.isAlertOpen.set(true);
         },
         error: (error) => {
-          this.message = '保存数据时出错: ' + error.message;
-          this.isAlertOpen = true;
+          this.message.set('保存数据时出错: ' + error.message);
+          this.isAlertOpen.set(true);
         },
       });
     }
   }
 
   isDescribeChanged(): boolean {
-    return this.describe !== this.initialDescribe;
+    return this.describe() !== this.initialDescribe();
   }
 }

@@ -11,6 +11,8 @@ import {
   SearchHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
 import { finalize, Subject, debounceTime, takeUntil } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { closeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-archive-selection-modal',
@@ -49,7 +51,9 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
   constructor(
     private modalController: ModalController,
     private api: ApiService,
-  ) {}
+  ) {
+    addIcons({ closeOutline });
+  }
 
   ngOnInit() {
     this.loadRecords();

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.35.4] - 2026-08-24
+
+### Fixed
+
+- 修复笔记页面内容从后台获取后不显示：路由页面挂在 ion-router-outlet 的 OnPush 视图之下且无输入变化，zone tick 到此即断，普通字段异步赋值无法触发刷新；笔记组件状态（加载中/笔记内容/提示弹窗）改为 signal，写入时自动标记视图刷新，回调后立即显示
+- 修复"选择档案记录"对话框关闭按钮图标不显示：archive-selection-modal 组件补注册遗漏的 `close-outline` 图标
+
 ## [0.35.3] - 2026-08-24
 
 ### Fixed
