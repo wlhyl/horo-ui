@@ -55,11 +55,11 @@
       <ion-radio-group [(ngModel)]="native.chart_type" name="chart_type" style="display: flex; justify-content: space-around;">
         <ion-item lines="none" style="flex: 1;">
           <ion-label style="white-space: nowrap;">本命盘</ion-label>
-          <ion-radio slot="start" value="natal"></ion-radio>
+          <ion-radio slot="start" [value]="chartType.Natal"></ion-radio>
         </ion-item>
         <ion-item lines="none" style="flex: 1;">
           <ion-label style="white-space: nowrap;">卜卦盘</ion-label>
-          <ion-radio slot="start" value="horary"></ion-radio>
+          <ion-radio slot="start" [value]="chartType.Horary"></ion-radio>
         </ion-item>
       </ion-radio-group>
     </ion-item>
@@ -105,7 +105,7 @@
       <ion-toggle [(ngModel)]="native.is_dst" name="st" slot="end"></ion-toggle>
     </ion-item>
 
-    <ion-item [disabled]="isLocked || native.chart_type === 'horary'">
+    <ion-item [disabled]="isLocked || native.chart_type === chartType.Horary">
       <ion-label>时间精准</ion-label>
       <ion-toggle [(ngModel)]="native.is_time_precise" name="is_time_precise" slot="end"></ion-toggle>
     </ion-item>

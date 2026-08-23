@@ -25,6 +25,7 @@ import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
 import { AuthService } from 'src/app/services/auth/auth.service'; // 导入 AuthService
 import { Router, ActivatedRoute } from '@angular/router'; // 导入 Router 和 ActivatedRoute
 import {
+  ChartType,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
@@ -378,7 +379,7 @@ export class ImageComponent
       birth_second: this.currentHoroData.date.second,
       time_zone_offset: this.currentHoroData.date.tz,
       is_dst: this.currentHoroData.date.st,
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: {
         name: this.currentHoroData.geo_name,

@@ -18,10 +18,8 @@ import { ApiService } from 'src/app/services/api/api.service';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { HoroRequest } from 'src/app/type/interface/request-data';
-import { HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
+import { ChartType, HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
 import { ImageComponent } from './image.component';
-import { DetailComponent } from '../detail/detail.component';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -335,7 +333,7 @@ describe('ImageComponent', () => {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: {
         id: 1,
@@ -477,7 +475,7 @@ describe('ImageComponent', () => {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: {
         id: 1,

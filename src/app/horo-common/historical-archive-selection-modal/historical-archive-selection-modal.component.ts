@@ -8,7 +8,10 @@ import { ApiService } from 'src/app/services/api/api.service';
 import {
   HistoricalHoroscopeRecord,
 } from 'src/app/type/interface/horo-admin/historical-horoscope';
-import { SearchHoroscopeRecordRequest } from 'src/app/type/interface/horo-admin/horoscope-record';
+import {
+  ChartType,
+  SearchHoroscopeRecordRequest,
+} from 'src/app/type/interface/horo-admin/horoscope-record';
 import { finalize, Subject, debounceTime, takeUntil } from 'rxjs';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 
@@ -24,6 +27,8 @@ export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestr
   records: HistoricalHoroscopeRecord[] = [];
   searchQuery: string = '';
   loading: boolean = false;
+
+  readonly chartType = ChartType;
 
   isAlertOpen = false;
   alertMessage = '';

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
+  ChartType,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
@@ -88,7 +89,7 @@ export class NoteComponent implements OnInit {
         birth_second: this.horoData.date.second,
         time_zone_offset: this.horoData.date.tz,
         is_dst: this.horoData.date.st,
-        chart_type: 'natal',
+        chart_type: ChartType.Natal,
         is_time_precise: false,
         location: {
           name: this.horoData.geo_name,

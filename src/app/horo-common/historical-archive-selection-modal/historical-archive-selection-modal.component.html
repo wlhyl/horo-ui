@@ -17,7 +17,12 @@
         @for (record of records; track record.id) {
         <ion-item [button]="true" (click)="selectRecord(record)">
             <ion-label>
-                <h2>{{ record.name }}</h2>
+                <h2>
+                    @if (record.chart_type === chartType.Horary) {
+                    <span class="horary-badge">H</span>
+                    }
+                    {{ record.name }}
+                </h2>
                 <p>{{ record.description }}</p>
                 @if (record.year) {
                     <p>{{ record.year }}年{{ record.month ?? '?' }}月{{ record.day ?? '?' }}日</p>

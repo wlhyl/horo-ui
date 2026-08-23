@@ -7,6 +7,7 @@ import { NoteComponent } from './note.component';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import {
+  ChartType,
   HoroscopeRecord,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
@@ -144,7 +145,7 @@ describe('NoteComponent', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
-        chart_type: 'natal',
+        chart_type: ChartType.Natal,
         is_time_precise: false,
         location: {
           name: 'Test City',

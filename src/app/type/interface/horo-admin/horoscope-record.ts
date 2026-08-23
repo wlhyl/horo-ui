@@ -1,7 +1,10 @@
 import { LocationRecord, LocationRecordRequest } from './location-record';
 
 // 盘类型：本命盘（natal）或卜卦盘（horary）
-export type ChartType = 'natal' | 'horary';
+export enum ChartType {
+  Natal = 'natal',
+  Horary = 'horary',
+}
 
 /**
  * 后台对应的结构体是：Horoscope

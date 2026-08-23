@@ -1,5 +1,6 @@
 import { PlanetName } from '../../enum/planet';
 import { LocationRecord } from './location-record';
+import { ChartType } from './horoscope-record';
 
 /**
  * 古代星盘宫头
@@ -48,6 +49,7 @@ export interface HistoricalHoroscopeRecord {
   time_zone_offset: number | null;
   is_dst: boolean | null;
   house_system: string | null;
+  chart_type: ChartType;
   house_cusps: HistoricalHouseCusp[];
   planet_positions: HistoricalPlanetPosition[];
   created_at: string;

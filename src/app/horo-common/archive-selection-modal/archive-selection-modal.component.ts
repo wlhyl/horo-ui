@@ -6,6 +6,7 @@ import {
 } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
 import {
+  ChartType,
   HoroscopeRecord,
   SearchHoroscopeRecordRequest,
 } from 'src/app/type/interface/horo-admin/horoscope-record';
@@ -23,6 +24,8 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
   natives: HoroscopeRecord[] = [];
   searchQuery: string = '';
   loading: boolean = false;
+
+  readonly chartType = ChartType;
 
   isAlertOpen = false;
   alertMessage = '';

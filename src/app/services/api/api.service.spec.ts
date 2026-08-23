@@ -14,6 +14,7 @@ import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-q
 import { UpdateUserRequest } from '../../type/interface/user';
 import { PageResponser } from '../../type/interface/page';
 import {
+  ChartType,
   HoroscopeRecord,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
@@ -969,7 +970,7 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
-        chart_type: 'natal',
+        chart_type: ChartType.Natal,
         is_time_precise: false,
         location: {
           id: 1,
@@ -1014,7 +1015,7 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
-        chart_type: 'natal',
+        chart_type: ChartType.Natal,
         is_time_precise: false,
         location: {
           id: 2,
@@ -1060,7 +1061,7 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
-        chart_type: 'natal',
+        chart_type: ChartType.Natal,
         is_time_precise: false,
         location: {
           name: 'Beijing',
@@ -1089,7 +1090,7 @@ describe('ApiService', () => {
         birth_second: 0,
         time_zone_offset: 8,
         is_dst: false,
-        chart_type: 'natal',
+        chart_type: ChartType.Natal,
         is_time_precise: false,
         location: {
           id: 1,

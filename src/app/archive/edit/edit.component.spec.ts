@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { of, delay, throwError } from 'rxjs';
-import { HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
+import { ChartType, HoroscopeRecord } from 'src/app/type/interface/horo-admin/horoscope-record';
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -24,7 +24,7 @@ describe('EditComponent', () => {
     birth_second: 0,
     time_zone_offset: 8,
     is_dst: false,
-    chart_type: 'natal',
+    chart_type: ChartType.Natal,
     is_time_precise: false,
     location: {
       id: 1,
@@ -83,7 +83,7 @@ describe('EditComponent', () => {
       birth_second: 45,
       time_zone_offset: 8,
       is_dst: false,
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: {
         id: 0,

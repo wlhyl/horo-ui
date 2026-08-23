@@ -11,7 +11,7 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { delay, of, throwError } from 'rxjs';
 import { PageResponser } from '../type/interface/page';
-import { HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
+import { ChartType, HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
 import { HoroRequest } from '../type/interface/request-data';
 import { Path as SubPath } from './enum';
 import { Path } from '../type/enum/path';
@@ -46,7 +46,7 @@ describe('ArchivePage', () => {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: {
         id: 1,

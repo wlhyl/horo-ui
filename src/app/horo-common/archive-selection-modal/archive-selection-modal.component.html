@@ -21,7 +21,7 @@
             </ion-avatar>
             <ion-label>
                 <h2>
-                    @if (record.chart_type === 'horary') {
+                    @if (record.chart_type === chartType.Horary) {
                     <span class="horary-badge">H</span>
                     }
                     <span [class.is-precise]="record.is_time_precise">{{ record.name }}</span>

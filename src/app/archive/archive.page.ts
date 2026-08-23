@@ -8,7 +8,7 @@ import {
 import { finalize, take } from 'rxjs/operators';
 import { ApiService } from '../services/api/api.service';
 import { PageResponser } from '../type/interface/page';
-import { HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
+import { HoroscopeRecord, ChartType } from '../type/interface/horo-admin/horoscope-record';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 import { HoroRequest } from '../type/interface/request-data';
@@ -27,6 +27,8 @@ export class ArchivePage implements OnInit, ViewWillEnter {
   title = '档案库';
 
   path = Path;
+
+  readonly chartType = ChartType;
 
   isAlertOpen = false;
   alertButtons = ['OK'];

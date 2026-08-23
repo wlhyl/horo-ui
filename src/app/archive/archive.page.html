@@ -34,7 +34,7 @@
           <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
         </ion-avatar>
         <ion-label>
-          @if (native.chart_type === 'horary') {
+          @if (native.chart_type === chartType.Horary) {
             <span class="horary-badge">H</span>
           }
           <span [class.is-precise]="native.is_time_precise">{{native.name}}</span>

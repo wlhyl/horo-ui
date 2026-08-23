@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.34.0] - 2026-08-23
+
+### Added
+
+- 古代星盘档案选择弹窗支持盘类型标识：卜卦盘记录名字前显示红色"H"徽标，与本命档案选择弹窗保持一致；`HistoricalHoroscopeRecord` 接口同步新增 `chart_type` 字段（对接 horo-storage-api 0.10.0 历史天宫图盘类型支持）
+
 ## [0.33.1] - 2026-08-19
 
 ### Fixed

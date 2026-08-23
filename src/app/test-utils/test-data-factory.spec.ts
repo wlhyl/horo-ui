@@ -23,7 +23,7 @@ import {
   Promittor,
   Significator,
 } from '../type/interface/response-data';
-import { HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
+import { ChartType, HoroscopeRecord } from '../type/interface/horo-admin/horoscope-record';
 import { LocationRecord } from '../type/interface/horo-admin/location-record';
 import { PlanetName, PlanetSpeedState } from '../type/enum/planet';
 import { FixedStarName } from '../type/enum/fixed-star';
@@ -473,7 +473,7 @@ export class TestDataFactory {
       birth_second: 0,
       time_zone_offset: 8,
       is_dst: false,
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: this.createDefaultLocationRecord(overrides?.location),
       description: 'Test record',

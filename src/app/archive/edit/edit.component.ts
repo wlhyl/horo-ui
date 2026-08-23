@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import {
+  ChartType,
   HoroscopeRecord,
   HoroscopeRecordRequest,
   UpdateHoroscopeRecordRequest,
@@ -24,6 +25,8 @@ export class EditComponent implements OnInit {
 
   native: HoroscopeRecord;
   oldNative: HoroscopeRecord;
+
+  readonly chartType = ChartType;
 
   showDateTimePicker = false;
   showTimeZonePicker = false;
@@ -74,7 +77,7 @@ export class EditComponent implements OnInit {
       birth_second: now.getSeconds(),
       time_zone_offset: -now.getTimezoneOffset() / 60, // 获取当前时区
       is_dst: false, // 夏令时需要根据具体情况设置
-      chart_type: 'natal',
+      chart_type: ChartType.Natal,
       is_time_precise: false,
       location: {
         id: 0,
