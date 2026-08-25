@@ -41,10 +41,8 @@
         </ion-col>
         <ion-col size="7">
           <ion-radio-group [(ngModel)]="originalHoroData.sex">
-            <ion-label>男：</ion-label>
-            <ion-radio [value]="true" class="sex-radio"></ion-radio>
-            <ion-label>女：</ion-label>
-            <ion-radio [value]="false"></ion-radio>
+            <ion-radio [value]="true" label-placement="end" class="sex-radio">男</ion-radio>
+            <ion-radio [value]="false" label-placement="end">女</ion-radio>
           </ion-radio-group>
         </ion-col>
       </ion-row>
@@ -119,11 +117,8 @@
         </ion-col>
         <ion-col size="7">
           <ion-radio-group [(ngModel)]="isNanLuoBeiJi" id="node-name-option">
-            <ion-label>南罗北计：</ion-label>
-            <ion-radio [value]="true" class="sex-radio"></ion-radio>
-
-            <ion-label>南计北罗：</ion-label>
-            <ion-radio [value]="false"></ion-radio>
+            <ion-radio [value]="true" label-placement="end" class="sex-radio">南罗北计</ion-radio>
+            <ion-radio [value]="false" label-placement="end">南计北罗</ion-radio>
           </ion-radio-group>
         </ion-col>
       </ion-row>
@@ -163,10 +158,8 @@
         </ion-col>
         <ion-col size="7">
           <ion-radio-group [(ngModel)]="comparisonHoroData.sex">
-            <ion-label>男：</ion-label>
-            <ion-radio [value]="true" class="sex-radio"></ion-radio>
-            <ion-label>女：</ion-label>
-            <ion-radio [value]="false"></ion-radio>
+            <ion-radio [value]="true" label-placement="end" class="sex-radio">男</ion-radio>
+            <ion-radio [value]="false" label-placement="end">女</ion-radio>
           </ion-radio-group>
         </ion-col>
       </ion-row>

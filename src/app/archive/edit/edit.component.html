@@ -40,12 +40,10 @@
       <ion-label>性别</ion-label>
       <ion-radio-group [(ngModel)]="native.gender" name="sex" style="display: flex; justify-content: space-around;">
         <ion-item lines="none" style="flex: 1;">
-          <ion-label>男</ion-label>
-          <ion-radio slot="start" [value]="true"></ion-radio>
+          <ion-radio slot="start" [value]="true" label-placement="end">男</ion-radio>
         </ion-item>
         <ion-item lines="none" style="flex: 1;">
-          <ion-label>女</ion-label>
-          <ion-radio slot="start" [value]="false"></ion-radio>
+          <ion-radio slot="start" [value]="false" label-placement="end">女</ion-radio>
         </ion-item>
       </ion-radio-group>
     </ion-item>
@@ -54,12 +52,10 @@
       <ion-label>盘类型</ion-label>
       <ion-radio-group [(ngModel)]="native.chart_type" name="chart_type" style="display: flex; justify-content: space-around;">
         <ion-item lines="none" style="flex: 1;">
-          <ion-label style="white-space: nowrap;">本命盘</ion-label>
-          <ion-radio slot="start" [value]="chartType.Natal"></ion-radio>
+          <ion-radio slot="start" [value]="chartType.Natal" label-placement="end" style="white-space: nowrap;">本命盘</ion-radio>
         </ion-item>
         <ion-item lines="none" style="flex: 1;">
-          <ion-label style="white-space: nowrap;">卜卦盘</ion-label>
-          <ion-radio slot="start" [value]="chartType.Horary"></ion-radio>
+          <ion-radio slot="start" [value]="chartType.Horary" label-placement="end" style="white-space: nowrap;">卜卦盘</ion-radio>
         </ion-item>
       </ion-radio-group>
     </ion-item>

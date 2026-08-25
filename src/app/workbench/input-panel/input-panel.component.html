@@ -20,10 +20,8 @@
       <div class="form-row">
         <label class="form-label">性别</label>
         <ion-radio-group [(ngModel)]="horoData.sex" (ionChange)="onHoroDataChange()">
-          <ion-label>男</ion-label>
-          <ion-radio [value]="true" style="margin-right:1rem;"></ion-radio>
-          <ion-label>女</ion-label>
-          <ion-radio [value]="false"></ion-radio>
+          <ion-radio [value]="true" label-placement="end" style="margin-right:1rem;">男</ion-radio>
+          <ion-radio [value]="false" label-placement="end">女</ion-radio>
         </ion-radio-group>
       </div>
 

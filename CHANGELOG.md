@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- 统一项目中所有 `ion-radio` 的文本布局为 `label-placement="end"`：原本分离的 `<ion-label>` + `<ion-radio>` 组合改为将文本直接置于 `<ion-radio>` 内部并显式指定 `label-placement="end"`，与 native 页面写法保持一致。涉及 synastry-input、process、input-panel、qizheng、map、archive edit 共 6 个模板、10 组 radio
+
 ## [0.35.4] - 2026-08-24
 
 ### Fixed
