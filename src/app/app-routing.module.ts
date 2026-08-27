@@ -50,8 +50,8 @@ const routes: Routes = [
   },
   {
     path: Path.User,
-    loadChildren: () =>
-      import('./user/user.module').then((m) => m.UserPageModule),
+    loadComponent: () =>
+      import('./user/user.page').then((m) => m.UserPage),
   },
   {
     path: Path.Archive,

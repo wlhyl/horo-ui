@@ -18,7 +18,7 @@
   </ion-header>
 
   <ion-grid class="user">
-    @if (!authService.isAuth) {
+    @if (!isAuth()) {
     <ion-row>
       <ion-input label="用户：" [(ngModel)]="user"></ion-input>
     </ion-row>
@@ -34,9 +34,8 @@
     }
     <ion-button expand="full" fill="clear" (click)="login()">登录</ion-button>
     }
-    <!-- </ion-grid> -->
 
-    @if (authService.isAuth) {
+    @if (isAuth()) {
     <ng-container class="user">
       <ion-row><strong>已登录</strong></ion-row>
       <ion-row><strong>用户：{{ user}}</strong></ion-row>
