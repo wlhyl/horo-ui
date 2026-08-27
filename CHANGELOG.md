@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.35.6] - 2026-08-28
+
+### Fixed
+
+- 修复地图组件单选项文字右对齐、未紧跟单选按钮：`ion-radio` 内部对 host 应用 `justify-content: space-between`（shadow DOM 样式，外部 CSS 无法覆盖），改用原生属性 `justify="start"`，与 `label-placement="end"` 组合实现按钮在左、文字紧贴其后左对齐
+
 ## [0.35.5] - 2026-08-27
 
 ### Fixed

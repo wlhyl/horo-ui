@@ -31,7 +31,7 @@
         <ion-radio-group [(ngModel)]="selectedLocation">
           @for (loc of locations(); track loc) {
           <ion-item>
-            <ion-radio [value]="loc" label-placement="end">{{ loc.name }}</ion-radio>
+            <ion-radio [value]="loc" label-placement="end" justify="start">{{ loc.name }}</ion-radio>
           </ion-item>
           }
         </ion-radio-group>
