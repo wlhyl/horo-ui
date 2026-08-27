@@ -1,13 +1,31 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { HoroStorageService } from '../services/horostorage/horostorage.service';
 
 @Component({
   selector: 'app-clean',
   templateUrl: './clean.page.html',
   styleUrls: ['./clean.page.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class CleanPage implements OnInit {
   title = '清除缓存';

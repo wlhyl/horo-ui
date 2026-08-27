@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - 统一项目中所有 `ion-radio` 的文本布局为 `label-placement="end"`：原本分离的 `<ion-label>` + `<ion-radio>` 组合改为将文本直接置于 `<ion-radio>` 内部并显式指定 `label-placement="end"`，与 native 页面写法保持一致。涉及 synastry-input、process、input-panel、qizheng、map、archive edit 共 6 个模板、10 组 radio
 - 行星力量表页面改为独立组件：`PowerPage` 由 `standalone: false` 改为 `standalone: true` 并内联所需依赖（CommonModule、FormsModule 及模板用到的 Ionic 组件）；删除 `power.module.ts` 与 `power-routing.module.ts`，路由改为 `loadComponent` 直接懒加载
+- 清除缓存页面改为独立组件：`CleanPage` 由 `standalone: false` 改为 `standalone: true` 并内联模板用到的 Ionic 组件（模板未使用 CommonModule/FormsModule 指令，故不再引入）；删除 `clean.module.ts` 与 `clean-routing.module.ts`，路由改为 `loadComponent` 直接懒加载
 
 ## [0.35.4] - 2026-08-24
 

@@ -40,8 +40,8 @@ const routes: Routes = [
   },
   {
     path: Path.Clean,
-    loadChildren: () =>
-      import('./clean/clean.module').then((m) => m.CleanPageModule),
+    loadComponent: () =>
+      import('./clean/clean.page').then((m) => m.CleanPage),
   },
   {
     path: Path.Power,
