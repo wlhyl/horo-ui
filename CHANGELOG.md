@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.35.5] - 2026-08-27
+
 ### Fixed
 
-- 升级 `@ionic/angular` `^9.0.0` → `^9.0.1`：同步 Ionic 官方对 `ion-radio` 处理布尔类型值的修复
+- 修复笔记页在无记录（horoData.id == 0）时一直显示加载中：`isLoading` 初始值 `true`，而该分支早退时才置 `false`，信号初始值改为 `false` 避免依赖早退写入
 - 修复用户页登录成功后仍显示登录表单：`authService.isAuth` 是读 localStorage 的普通 getter，登录 HTTP 回调中的普通赋值不会标记 OnPush 视图刷新；改用本地 `isAuth` signal，并在 `ionViewWillEnter` 中重新同步以处理页面缓存期间 token 过期
+- 升级 `@ionic/angular` `^9.0.0` → `^9.0.1`：同步 Ionic 官方对 `ion-radio` 处理布尔类型值的修复
 
 ### Changed
 
@@ -16,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - 清除缓存页面改为独立组件：`CleanPage` 由 `standalone: false` 改为 `standalone: true` 并内联模板用到的 Ionic 组件（模板未使用 CommonModule/FormsModule 指令，故不再引入）；删除 `clean.module.ts` 与 `clean-routing.module.ts`，路由改为 `loadComponent` 直接懒加载
 - 说明页面改为独立组件：`AboutPage` 由 `standalone: false` 改为 `standalone: true` 并内联模板用到的 Ionic 组件；删除 `about.module.ts` 与 `about-routing.module.ts`，路由改为 `loadComponent` 直接懒加载
 - 用户页面改为独立组件：`UserPage` 由 `standalone: false` 改为 `standalone: true` 并内联 FormsModule 与模板用到的 Ionic 组件；删除 `user.module.ts` 与 `user-routing.module.ts`，路由改为 `loadComponent` 直接懒加载
+- 主页变更检测策略由 Eager 改为 OnPush：模板中 `@if (authService.isAuth)` 依赖的档案库入口为普通 getter，OnPush 下登录/注销后该入口不会刷新；导航跳转经 router 事件驱动，`navigate()` 由模板 `(click)` 事件触发刷新，不受影响
 
 ## [0.35.4] - 2026-08-24
 

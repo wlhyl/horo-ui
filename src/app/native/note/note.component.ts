@@ -46,7 +46,7 @@ export class NoteComponent implements OnInit {
   isAlertOpen = signal(false);
   alertButtons = ['OK'];
   message = signal('');
-  isLoading = signal(true);
+  isLoading = signal(false);
 
   mode: string;
   horoData: DeepReadonly<HoroRequest>;
