@@ -45,8 +45,8 @@ const routes: Routes = [
   },
   {
     path: Path.Power,
-    loadChildren: () =>
-      import('./power/power.module').then((m) => m.PowerPageModule),
+    loadComponent: () =>
+      import('./power/power.page').then((m) => m.PowerPage),
   },
   {
     path: Path.User,

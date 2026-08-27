@@ -1,5 +1,18 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
+import {
+  IonBackButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonLabel,
+  IonSegment,
+  IonSegmentButton,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Zodiac } from '../type/enum/zodiac';
 import {
@@ -18,8 +31,21 @@ import {
     selector: 'app-power',
     templateUrl: './power.page.html',
     styleUrls: ['./power.page.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+      CommonModule,
+      FormsModule,
+      IonBackButton,
+      IonButtons,
+      IonContent,
+      IonHeader,
+      IonLabel,
+      IonSegment,
+      IonSegmentButton,
+      IonTitle,
+      IonToolbar,
+    ],
 })
 export class PowerPage implements OnInit {
   title = '行星力量表';
