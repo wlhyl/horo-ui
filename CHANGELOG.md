@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.35.7] - 2026-08-28
+
+### Fixed
+
+- 修复时区选择器无法选中 0 时区：`onDidDismiss` 中对 `event.detail.data` 的 truthy 判断将值 `0` 误判为取消，改为 `!== null` 精确区分确认与取消
+- 修复古代星盘页面星盘已显示但"获取星盘"加载动画不消失：Angular v22 升级后进入 zoneless 变更检测，HTTP 回调中普通属性赋值不再触发视图刷新；组件改为 OnPush，加载中/星盘数据/错误弹窗状态改用 signal
+
 ## [0.35.6] - 2026-08-28
 
 ### Fixed

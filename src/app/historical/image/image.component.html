@@ -17,7 +17,7 @@
     </ion-toolbar>
   </ion-header>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="ion-text-center">
       <ion-label>获取星盘</ion-label>
       <ion-spinner name="bubbles"></ion-spinner>
@@ -26,10 +26,10 @@
   <div class="ion-text-center">
     <canvas id="historical-canvas" width="0" height="0"></canvas>
   </div>
-  @if (horoscoData) {
+  @if (horoscoData()) {
     <div class="horo-aspect-toggle ion-justify-content-center">
       <ion-label>星盘</ion-label>
-      <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading"></ion-toggle>
+      <ion-toggle [(ngModel)]="isAspect" [disabled]="isDrawing || loading()"></ion-toggle>
       <ion-label>相位</ion-label>
     </div>
   }
@@ -48,5 +48,5 @@
   </ion-toolbar>
 </ion-footer>
 
-<ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-(didDismiss)="isAlertOpen=false"></ion-alert>
+<ion-alert [isOpen]="isAlertOpen()" header="Alert" subHeader="错误！" [message]="message()" [buttons]="alertButtons"
+(didDismiss)="isAlertOpen.set(false)"></ion-alert>

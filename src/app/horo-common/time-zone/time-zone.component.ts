@@ -49,7 +49,7 @@ export class TimeZoneComponent implements OnChanges {
     // 点击确认时：event的值是 currentValue
     // 点击取消时：event的值是 null
 
-    if (event.detail.data) {
+    if (event.detail.data !== null) {
       this.zone = event.detail.data;
       this.zoneChange.emit(this.zone);
     } else {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ChangeDetectionStrategy, signal } from '@angular/core';
 import { Horoscope, HistoricalHoroResponse } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService, HistoricalStorageData } from 'src/app/services/horostorage/horostorage.service';
@@ -24,23 +24,23 @@ import { addIcons } from 'ionicons';
   selector: 'app-historical-image',
   templateUrl: 'image.component.html',
   styleUrls: ['image.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class ImageComponent implements AfterViewInit, OnDestroy {
   readonly historicalData = this.storage.historicalData;
   readonly title = '古代星盘';
-  loading = false;
+  loading = signal(false);
   isDrawing = false;
 
-  public horoscoData: Horoscope | null = null;
+  public horoscoData = signal<Horoscope | null>(null);
   private canvasCache: { version: string; objects: Object[] } | undefined = undefined;
   private canvas?: StaticCanvas;
   private destroy$ = new Subject<void>();
 
-  isAlertOpen = false;
+  isAlertOpen = signal(false);
   alertButtons = ['OK'];
-  message = '';
+  message = signal('');
 
   private _isAspect = false;
 
@@ -75,10 +75,10 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
   }
 
   private drawHoroscope(data: DeepReadonly<HistoricalStorageData>) {
-    if (this.isDrawing || this.loading) return;
+    if (this.isDrawing || this.loading()) return;
 
     this.isDrawing = true;
-    this.loading = true;
+    this.loading.set(true);
     this.canvasCache = undefined;
 
     const request: HistoricalHoroRequest = {
@@ -91,32 +91,33 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.isDrawing = false;
-          this.loading = false;
+          this.loading.set(false);
         }),
       )
       .subscribe({
         next: (response: HistoricalHoroResponse) => {
-          this.horoscoData = adaptHistoricalToHoroscope(response, data.house_system, data.planet_positions);
-          this.isAlertOpen = false;
+          this.horoscoData.set(adaptHistoricalToHoroscope(response, data.house_system, data.planet_positions));
+          this.isAlertOpen.set(false);
           this.draw();
         },
         error: (error) => {
-          this.message = getApiErrorMessage(error);
-          this.isAlertOpen = true;
+          this.message.set(getApiErrorMessage(error));
+          this.isAlertOpen.set(true);
         },
       });
   }
 
   private draw() {
-    if (this.horoscoData === null) return;
+    const horosco = this.horoscoData();
+    if (horosco === null) return;
 
     if (this.isAspect) {
-      drawAspect(this.horoscoData.aspects, this.canvas!, this.config, {
+      drawAspect(horosco.aspects, this.canvas!, this.config, {
         width: this.config.aspectImage.width,
         height: this.config.aspectImage.height,
       });
     } else {
-      drawHorosco(this.horoscoData, this.canvas!, this.config, {
+      drawHorosco(horosco, this.canvas!, this.config, {
         width: this.config.horoscoImage.width,
         height: this.config.horoscoImage.height,
       });
@@ -130,7 +131,7 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
 
   set isAspect(value: boolean) {
     if (this.isAspect === value) return;
-    if (this.isDrawing || this.loading) return;
+    if (this.isDrawing || this.loading()) return;
 
     this._isAspect = value;
     let tempCache = this.canvasCache;
@@ -144,10 +145,11 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
   }
 
   onDetail() {
-    if (this.horoscoData) {
+    const horosco = this.horoscoData();
+    if (horosco) {
       this.router.navigate([subPath.Detail], {
         relativeTo: this.route,
-        state: { data: this.horoscoData },
+        state: { data: horosco },
       });
     }
   }
