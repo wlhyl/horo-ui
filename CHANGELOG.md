@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.35.8] - 2026-08-29
+
+### Fixed
+
+- 修复七政星盘页面星盘已显示但"获取星盘"加载动画不消失：组件改为 OnPush 后，HTTP 回调中 `loading`/`isAlertOpen`/`message` 普通属性赋值不再触发视图刷新；改用 signal 状态管理
+
+### Changed
+
+- 七政四余模块改为独立组件：`QizhengPage`、`HoroComponent`、`QizhengHoroDetailComponent`、`KnowledgeComponent` 由 `standalone: false` 改为 `standalone: true` 并内联各自模板所需依赖（含 HoroCommonModule）；删除 `qizheng.module.ts` 与 `qizheng-routing.module.ts`，新建 `qizheng.routes.ts`，路由改为 `loadChildren` 直接懒加载
+- 七政星盘获取数据失败的错误提示改用 `getApiErrorMessage` 统一处理，与 direction 等组件的错误处理惯例保持一致
+
 ## [0.35.7] - 2026-08-28
 
 ### Fixed
