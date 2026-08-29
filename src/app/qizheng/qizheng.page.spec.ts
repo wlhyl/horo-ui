@@ -80,8 +80,8 @@ describe('QizhengPage', () => {
     );
 
     await TestBed.configureTestingModule({
-      declarations: [QizhengPage],
       imports: [
+        QizhengPage,
         IonBackButton,
         IonButton,
         IonButtons,

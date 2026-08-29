@@ -248,8 +248,8 @@ describe('HoroComponent', () => {
     mockActivatedRoute = {};
 
     TestBed.configureTestingModule({
-      declarations: [HoroComponent],
       imports: [
+        HoroComponent,
         IonAlert,
         IonBackButton,
         IonButton,

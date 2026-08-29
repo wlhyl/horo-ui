@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: Path.Qizheng,
     loadChildren: () =>
-      import('./qizheng/qizheng.module').then((m) => m.QizhengPageModule),
+      import('./qizheng/qizheng.routes').then((m) => m.routes),
   },
   {
     path: Path.Clean,

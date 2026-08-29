@@ -9,13 +9,51 @@ import {
   planetsBadConfigs,
   planetsGoodConfigs,
 } from 'src/app/utils/qizheng-planet-power/qizheng-planet-power';
+import {
+  IonBackButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 @Component({
   selector: 'app-qizheng-horo-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false,
+  standalone: true,
+  imports: [
+    IonBackButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCol,
+    IonContent,
+    IonGrid,
+    IonHeader,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonRow,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class QizhengHoroDetailComponent implements OnInit {
   title = '星盘详情';

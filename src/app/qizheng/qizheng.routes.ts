@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { Path } from './path';
 
@@ -8,7 +7,7 @@ import { HoroComponent } from './horo/horo.component';
 import { QizhengHoroDetailComponent } from './horo/detail/detail.component';
 import { KnowledgeComponent } from './knowledge/knowledge.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: Path.Input,
     component: QizhengPage,
@@ -26,9 +25,3 @@ const routes: Routes = [
     component: KnowledgeComponent,
   },
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class QizhengPageRoutingModule {}

@@ -154,8 +154,7 @@ describe('QizhengHoroDetailComponent', () => {
     titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
 
     await await TestBed.configureTestingModule({
-      declarations: [QizhengHoroDetailComponent],
-      imports: [IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTitle, IonToolbar],
+      imports: [QizhengHoroDetailComponent, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTitle, IonToolbar],
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: Title, useValue: titleServiceSpy },

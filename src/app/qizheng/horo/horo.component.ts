@@ -22,13 +22,49 @@ import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { swapNodeNames } from 'src/app/utils/qizheng-utils/qizheng-utils';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
+import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
+import {
+  IonAlert,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonCol,
+  IonContent,
+  IonFooter,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonLabel,
+  IonRow,
+  IonSpinner,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/angular';
 
 @Component({
   selector: 'app-horo',
   templateUrl: './horo.component.html',
   styleUrls: ['./horo.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: false,
+  standalone: true,
+  imports: [
+    HoroCommonModule,
+    IonAlert,
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonFooter,
+    IonGrid,
+    IonHeader,
+    IonIcon,
+    IonLabel,
+    IonRow,
+    IonSpinner,
+    IonTitle,
+    IonToolbar,
+  ],
 })
 export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   horoData: DeepReadonly<HoroRequest> = this.storage.horoData;
