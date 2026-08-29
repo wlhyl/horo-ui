@@ -348,16 +348,16 @@ describe('HoroComponent', () => {
       component.horoscopeData = null;
       // 重置状态标志以确保drawHoroscope能够正常执行
       component.isDrawing = false;
-      component.loading = false;
+      component.loading.set(false);
 
       (component as any).drawHoroscope();
 
       expect(mockApiService.qizheng).toHaveBeenCalled();
       expect(component.horoscopeData).toEqual(mockHoroscopeData as any);
 
-      expect(component.isAlertOpen).toBe(false);
+      expect(component.isAlertOpen()).toBe(false);
       expect(component.isDrawing).toBe(false);
-      expect(component.loading).toBe(false);
+      expect(component.loading()).toBe(false);
       expect(drawSpy).toHaveBeenCalled();
     });
 
@@ -371,28 +371,28 @@ describe('HoroComponent', () => {
       component.horoscopeData = null;
       // 重置状态标志以确保drawHoroscope能够正常执行
       component.isDrawing = false;
-      component.loading = false;
+      component.loading.set(false);
 
       (component as any).drawHoroscope();
 
       expect(mockApiService.qizheng).toHaveBeenCalled();
       expect(component.horoscopeData).toBeNull();
       expect(drawSpy).not.toHaveBeenCalled();
-      expect(component.isAlertOpen).toBe(true);
+      expect(component.isAlertOpen()).toBe(true);
       expect(component.isDrawing).toBe(false);
-      expect(component.loading).toBe(false);
-      expect(component.message).toContain('API Error');
+      expect(component.loading()).toBe(false);
+      expect(component.message()).toContain('API Error');
     });
 
     it('should not draw if already drawing or loading', () => {
       // 设置初始状态
       component.isDrawing = true;
-      component.loading = false;
+      component.loading.set(false);
       (component as any).drawHoroscope();
       expect(mockApiService.qizheng).not.toHaveBeenCalled();
 
       component.isDrawing = false;
-      component.loading = true;
+      component.loading.set(true);
       (component as any).drawHoroscope();
       expect(mockApiService.qizheng).not.toHaveBeenCalled();
     });

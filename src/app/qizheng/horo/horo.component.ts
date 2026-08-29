@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -21,12 +21,13 @@ import { addIcons } from 'ionicons';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { swapNodeNames } from 'src/app/utils/qizheng-utils/qizheng-utils';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 
 @Component({
   selector: 'app-horo',
   templateUrl: './horo.component.html',
   styleUrls: ['./horo.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
 export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -49,12 +50,12 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
     second: number;
   }>();
 
-  loading = false;
+  loading = signal(false);
   isDrawing = false; // 添加绘制状态标志
 
-  isAlertOpen = false;
+  isAlertOpen = signal(false);
   alertButtons = ['OK'];
-  message = '';
+  message = signal('');
 
   constructor(
     private api: ApiService,
@@ -102,11 +103,11 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private drawHoroscope() {
-    if (this.isDrawing || this.loading) return; // 如果正在绘制或加载则返回
+    if (this.isDrawing || this.loading()) return; // 如果正在绘制或加载则返回
 
     this.isDrawing = true; // 开始绘制
-    this.loading = true;
-    this.isAlertOpen = false; // 确保在开始请求时关闭错误提示
+    this.loading.set(true);
+    this.isAlertOpen.set(false); // 确保在开始请求时关闭错误提示
 
     const requestData: QiZhengRequst = {
       native_date: this.horoData.date,
@@ -119,7 +120,7 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.isDrawing = false;
-          this.loading = false;
+          this.loading.set(false);
         }),
       )
       .subscribe({
@@ -128,16 +129,13 @@ export class HoroComponent implements OnInit, AfterViewInit, OnDestroy {
             swapNodeNames(data);
           }
           this.horoscopeData = data;
-          this.isAlertOpen = false;
+          this.isAlertOpen.set(false);
           this.draw();
         },
         error: (err) => {
           this.horoscopeData = null;
-          this.message =
-            (err.message ?? '未知错误') +
-            ' ' +
-            (err.error?.error ?? '未知错误详情');
-          this.isAlertOpen = true;
+          this.message.set(getApiErrorMessage(err));
+          this.isAlertOpen.set(true);
         },
       });
   }

@@ -14,8 +14,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-alert [isOpen]="isAlertOpen" header="Alert" subHeader="错误！" [message]="message" [buttons]="alertButtons"
-  (didDismiss)="isAlertOpen=false"></ion-alert>
+  <ion-alert [isOpen]="isAlertOpen()" header="Alert" subHeader="错误！" [message]="message()" [buttons]="alertButtons"
+  (didDismiss)="isAlertOpen.set(false)"></ion-alert>
 
   <div class="ion-text-center">
     <h2>出生时间：{{ horoData.date.year }}年{{ horoData.date.month.toString().padStart(2, '0') }}月{{
@@ -31,7 +31,7 @@
     currentProcessData.date.second.toString().padStart(2, '0') }}</h2>
   </div>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="ion-text-center">
       <ion-label>获取星盘</ion-label>
       <ion-spinner name="bubbles"></ion-spinner>
