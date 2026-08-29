@@ -16,6 +16,7 @@ import {
   timeOutline,
   appsOutline,
   compassOutline,
+  gitBranchOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
@@ -46,6 +47,7 @@ export class HomePage {
       timeOutline,
       appsOutline,
       compassOutline,
+      gitBranchOutline,
     });
   }
   navigate(url: string) {

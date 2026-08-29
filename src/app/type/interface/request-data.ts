@@ -4,6 +4,7 @@ import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../../process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from '../../process/enum/daily-direction-method';
 import { SecondaryProgressionMethod } from '../../process/enum/secondary-progression-method';
+import { PlanetName } from '../enum/planet';
 import {
   HistoricalHouseCusp,
   HistoricalPlanetPosition,
@@ -37,6 +38,24 @@ export interface HoroRequest {
   house: string;
   name: string;
   sex: boolean;
+}
+
+/**
+ * 衍生盘请求数据（horo-api）
+ * 以指定行星的斜升为基准计算衍生盘
+ */
+export interface DerivedHoroRequest {
+  // 出生时间
+  date: DateRequest;
+
+  // 出生地大地经纬度
+  geo: GeoRequest;
+
+  // 宫位系统，Alcabitus：阿卡比特
+  house: string;
+
+  // 衍生盘的基准行星
+  planet_name: PlanetName;
 }
 
 /**

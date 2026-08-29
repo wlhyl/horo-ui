@@ -70,9 +70,11 @@
         [horoData]="horoData"
         [eventData]="eventData"
         [processData]="processData"
+        [derivedPlanetName]="derivedPlanetName"
         (horoDataChange)="onHoroDataChange($event)"
         (eventDataChange)="onEventDataChange($event)"
         (processDataChange)="onProcessDataChange($event)"
+        (derivedPlanetNameChange)="onDerivedPlanetNameChange($event)"
         (openChart)="onOpenChart($event)"
       ></app-input-panel>
       <div class="sidebar-resize-handle" (mousedown)="onSidebarResizeStart($event)"></div>

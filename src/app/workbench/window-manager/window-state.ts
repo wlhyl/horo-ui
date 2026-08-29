@@ -1,3 +1,5 @@
+import { PlanetName } from 'src/app/type/enum/planet';
+
 export enum WindowState {
   Normal = 'normal',
   Minimized = 'minimized',
@@ -8,6 +10,7 @@ export enum WindowState {
 export enum ChartType {
   Native = 'Native',
   Event = 'Event',
+  Derived = 'Derived',
   Profection = 'Profection',
   MedievalProfection = 'MedievalProfection',
   CustomDayProfection = 'CustomDayProfection',
@@ -46,11 +49,14 @@ export interface WorkbenchWindow {
   rect: WindowRect;
   zIndex: number;
   prevRect?: WindowRect;
+  // 衍生盘窗口的基准行星（打开时快照，窗口间相互独立）
+  derivedPlanetName?: PlanetName;
 }
 
 const CHART_TITLES: Record<ChartType, string> = {
   [ChartType.Native]: '本命盘',
   [ChartType.Event]: '天象盘',
+  [ChartType.Derived]: '衍生盘',
   [ChartType.Profection]: '小限',
   [ChartType.MedievalProfection]: '中世纪小限',
   [ChartType.CustomDayProfection]: '自定义日小限',
@@ -76,6 +82,21 @@ const CHART_TITLES: Record<ChartType, string> = {
 
 export function chartTitle(type: ChartType): string {
   return CHART_TITLES[type] || '未知';
+}
+
+/** 衍生盘基准行星的中文名 */
+const DERIVED_PLANET_TITLES: Partial<Record<PlanetName, string>> = {
+  [PlanetName.Sun]: '太阳',
+  [PlanetName.Moon]: '月亮',
+  [PlanetName.Mercury]: '水星',
+  [PlanetName.Venus]: '金星',
+  [PlanetName.Mars]: '火星',
+  [PlanetName.Jupiter]: '木星',
+  [PlanetName.Saturn]: '土星',
+};
+
+export function derivedChartTitle(planet: PlanetName): string {
+  return `衍生盘·${DERIVED_PLANET_TITLES[planet] ?? planet}`;
 }
 
 let idCounter = 0;

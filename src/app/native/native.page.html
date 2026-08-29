@@ -105,6 +105,24 @@
         </ion-select>
       </ion-col>
     </ion-row>
+
+    @if (mode === modeEnum.Derived) {
+    <ion-row>
+      <ion-col size="5" class="ion-text-right">
+        <ion-label>基准行星：</ion-label>
+      </ion-col>
+      <ion-col size="7">
+        <ion-select id="derived-planet" label-placement="fixed" okText="确定" cancelText="取消"
+          [(ngModel)]="derivedPlanetName" interface="popover"
+          [interfaceOptions]="{ cssClass: 'hamburg-select-popover' }"
+          [style.font-family]="'HamburgSymbols, sans-serif'">
+          @for (planet of planets; track planet) {
+          <ion-select-option [value]="planet">{{ config.planetFontString(planet) }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    }
   </ion-grid>
 
   <ion-button id="submit-button" (click)="getHoro()" expand="block" fill="clear">提交</ion-button>

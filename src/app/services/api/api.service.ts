@@ -16,6 +16,7 @@ import {
   MedievalProfectionRequest,
   HistoricalHoroRequest,
   SecondaryProgressionRequest,
+  DerivedHoroRequest,
 } from 'src/app/type/interface/request-data';
 import {
   FirdariaPeriod,
@@ -28,6 +29,7 @@ import {
   MedievalProfection,
   HistoricalHoroResponse,
   SecondaryProgression,
+  DerivedHoroscope,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { environment } from 'src/environments/environment';
@@ -40,9 +42,7 @@ import {
   SearchHoroscopeRecordRequest,
 } from '../../type/interface/horo-admin/horoscope-record';
 import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
-import {
-  HistoricalHoroscopeRecord,
-} from 'src/app/type/interface/horo-admin/historical-horoscope';
+import { HistoricalHoroscopeRecord } from 'src/app/type/interface/horo-admin/historical-horoscope';
 
 @Injectable({
   providedIn: 'root',
@@ -67,6 +67,16 @@ export class ApiService {
    */
   public getNativeHoroscope(data: HoroRequest): Observable<Horoscope> {
     return this.http.post<Horoscope>(`${this.url}/horo/native`, data);
+  }
+
+  /**
+   *
+   * @returns 获取衍生盘
+   */
+  public getDerivedHoroscope(
+    data: DerivedHoroRequest,
+  ): Observable<DerivedHoroscope> {
+    return this.http.post<DerivedHoroscope>(`${this.url}/horo/derived`, data);
   }
 
   /**
@@ -131,7 +141,9 @@ export class ApiService {
     );
   }
 
-  public dailyDirection(data: DailyDirectionRequest): Observable<Array<Direction>> {
+  public dailyDirection(
+    data: DailyDirectionRequest,
+  ): Observable<Array<Direction>> {
     return this.http.post<Array<Direction>>(
       `${this.url}/process/daily_directions`,
       data,

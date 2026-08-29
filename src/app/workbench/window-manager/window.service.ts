@@ -9,8 +9,10 @@ import {
   WindowState,
   WorkbenchWindow,
   chartTitle,
+  derivedChartTitle,
   generateWindowId,
 } from './window-state';
+import { PlanetName } from 'src/app/type/enum/planet';
 
 const DEFAULT_WIDTH = 460;
 const DEFAULT_HEIGHT = 560;
@@ -47,6 +49,7 @@ export class WindowService {
   openWindow(
     chartType: ChartType,
     workArea: { width: number; height: number },
+    options?: { derivedPlanetName?: PlanetName },
   ): WorkbenchWindow {
     const offset = (this._cascadeIndex % 8) * CASCADE_OFFSET;
     const rect: WindowRect = {
@@ -62,13 +65,21 @@ export class WindowService {
       rect.y = Math.max(10, workArea.height - rect.height - 10);
     }
 
+    const derivedPlanetName =
+      chartType === ChartType.Derived
+        ? (options?.derivedPlanetName ?? PlanetName.Sun)
+        : undefined;
     const win: WorkbenchWindow = {
       id: generateWindowId(),
-      title: chartTitle(chartType),
+      title:
+        chartType === ChartType.Derived && derivedPlanetName
+          ? derivedChartTitle(derivedPlanetName)
+          : chartTitle(chartType),
       chartType,
       state: WindowState.Normal,
       rect,
       zIndex: ++this._zCounter,
+      derivedPlanetName,
     };
     this._windows.update((wins) => [...wins, win]);
     this._cascadeIndex++;

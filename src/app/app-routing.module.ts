@@ -29,6 +29,12 @@ const routes: Routes = [
     data: { mode: Mode.Event },
   },
   {
+    path: Path.Derived,
+    loadChildren: () =>
+      import('./native/native.routes').then((m) => m.routes),
+    data: { mode: Mode.Derived },
+  },
+  {
     path: Path.Process,
     loadChildren: () =>
       import('./process/process.routes').then((m) => m.routes),

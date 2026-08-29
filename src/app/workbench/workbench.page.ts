@@ -30,6 +30,7 @@ import {
   HoroRequest,
   ProcessRequest,
 } from 'src/app/type/interface/request-data';
+import { PlanetName } from 'src/app/type/enum/planet';
 import {
   ChartType,
   WindowRect,
@@ -67,6 +68,8 @@ export class WorkbenchPage implements OnInit, OnDestroy {
   horoData: HoroRequest;
   eventData: HoroRequest;
   processData: ProcessRequest;
+  // 衍生盘的基准行星
+  derivedPlanetName: PlanetName;
 
   title = '工作台';
   readonly sidebarCollapsed = signal(false);
@@ -111,6 +114,7 @@ export class WorkbenchPage implements OnInit, OnDestroy {
     this.horoData = structuredClone(this.storage.horoData);
     this.eventData = structuredClone(this.storage.eventData);
     this.processData = structuredClone(this.storage.processData);
+    this.derivedPlanetName = this.storage.derivedPlanetName;
   }
 
   ngOnInit(): void {
@@ -197,12 +201,21 @@ export class WorkbenchPage implements OnInit, OnDestroy {
     this.storage.processData = structuredClone(data);
   }
 
+  onDerivedPlanetNameChange(planet: PlanetName): void {
+    this.derivedPlanetName = planet;
+    this.storage.derivedPlanetName = planet;
+  }
+
   onOpenChart(type: ChartType): void {
     const area = this.getWorkArea();
-    this.windowService.openWindow(type, {
-      width: area.width,
-      height: area.height,
-    });
+    this.windowService.openWindow(
+      type,
+      {
+        width: area.width,
+        height: area.height,
+      },
+      { derivedPlanetName: this.derivedPlanetName },
+    );
   }
 
   getWorkArea(): WindowRect {

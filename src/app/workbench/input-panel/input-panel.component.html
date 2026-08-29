@@ -96,6 +96,36 @@
   </div>
 
   <div class="panel-section">
+    <div class="section-header" (click)="showDerivedInput = !showDerivedInput">
+      <ion-label class="section-title">衍生盘数据</ion-label>
+      <ion-icon [name]="showDerivedInput ? 'chevron-up' : 'chevron-down'"></ion-icon>
+    </div>
+
+    @if (showDerivedInput) {
+      <div class="section-body">
+        <div class="form-row">
+          <label class="form-label">基准行星</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="derivedPlanetName"
+            (ionChange)="onDerivedPlanetNameChange()"
+            interface="popover"
+            [interfaceOptions]="{ cssClass: 'hamburg-select-popover' }"
+            [style.font-family]="'HamburgSymbols, sans-serif'"
+          >
+            @for (planet of derivedPlanets; track planet) {
+              <ion-select-option [value]="planet">{{ config.planetFontString(planet) }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+        <ion-note>衍生盘以出生数据为基准，基准行星取其斜升作为中天；切换行星只影响新打开的衍生盘窗口</ion-note>
+      </div>
+    }
+  </div>
+
+  <div class="panel-section">
     <div class="section-header" (click)="showEventInput = !showEventInput">
       <ion-label class="section-title">天象数据</ion-label>
       <ion-icon [name]="showEventInput ? 'chevron-up' : 'chevron-down'"></ion-icon>

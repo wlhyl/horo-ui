@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.36.0] - 2026-08-30
+
+### Added
+
+- 新增衍生盘功能（复用 native 模块，扩展 `Mode.Derived`）：以出生数据为基准，选择基准行星（七颗传统行星）以其斜升为基准计算衍生盘，调用 `/api/horo/derived` 接口
+- home 页新增衍生盘入口（位于推运之后）；衍生盘页面表单增加基准行星选择器，绘图注释区跳过衍生盘不存在的日主星/时主星，隐藏存档/笔记按钮
+- 工作台集成衍生盘：输入面板新增基准行星选择器，支持同时打开基于不同行星的衍生盘窗口（打开时快照行星，标题显示"衍生盘·行星名"）
+- `HoroStorageService` 新增 `derivedPlanetName` 持久化存储，衍生盘页面与工作台共享基准行星选择
+
 ## [0.35.8] - 2026-08-29
 
 ### Fixed

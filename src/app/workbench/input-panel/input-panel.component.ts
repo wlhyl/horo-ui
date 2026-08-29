@@ -15,6 +15,7 @@ import {
 import { addIcons } from 'ionicons';
 import { chevronDown, chevronUp } from 'ionicons/icons';
 import { DateRequest, HoroRequest, ProcessRequest } from 'src/app/type/interface/request-data';
+import { PlanetName } from 'src/app/type/enum/planet';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ProcessName } from 'src/app/process/enum/process';
@@ -50,10 +51,13 @@ export class InputPanelComponent {
   @Input() horoData!: HoroRequest;
   @Input() eventData!: HoroRequest;
   @Input() processData!: ProcessRequest;
+  // 衍生盘的基准行星
+  @Input() derivedPlanetName!: PlanetName;
 
   @Output() horoDataChange = new EventEmitter<HoroRequest>();
   @Output() eventDataChange = new EventEmitter<HoroRequest>();
   @Output() processDataChange = new EventEmitter<ProcessRequest>();
+  @Output() derivedPlanetNameChange = new EventEmitter<PlanetName>();
   @Output() openChart = new EventEmitter<ChartType>();
 
   readonly chartType = ChartType;
@@ -122,6 +126,7 @@ export class InputPanelComponent {
   readonly chartButtons: { type: ChartType; label: string; group: string }[] = [
     { type: ChartType.Native, label: '本命盘', group: '基础' },
     { type: ChartType.Event, label: '天象盘', group: '基础' },
+    { type: ChartType.Derived, label: '衍生盘', group: '基础' },
     { type: ChartType.Direction, label: '主向推运', group: '推运' },
     { type: ChartType.DailyDirection, label: '每日回归方向弧', group: '推运' },
     { type: ChartType.SolarArc, label: '太阳弧', group: '推运' },
@@ -150,6 +155,18 @@ export class InputPanelComponent {
   showEventInput = false;
   showNativeInput = true;
   showProcessInput = true;
+  showDerivedInput = false;
+
+  // 衍生盘可选的基准行星：七颗传统行星
+  readonly derivedPlanets: ReadonlyArray<PlanetName> = [
+    PlanetName.Sun,
+    PlanetName.Moon,
+    PlanetName.Mercury,
+    PlanetName.Venus,
+    PlanetName.Mars,
+    PlanetName.Jupiter,
+    PlanetName.Saturn,
+  ];
 
   constructor(public config: Horoconfig, private alertController: AlertController) {
     addIcons({ chevronDown, chevronUp });
@@ -165,6 +182,10 @@ export class InputPanelComponent {
 
   onProcessDataChange(): void {
     this.processDataChange.emit(this.processData);
+  }
+
+  onDerivedPlanetNameChange(): void {
+    this.derivedPlanetNameChange.emit(this.derivedPlanetName);
   }
 
   async onNativeDateChange(): Promise<void> {

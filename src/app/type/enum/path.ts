@@ -13,4 +13,5 @@ export enum Path {
   Historical = 'historical',
   Workbench = 'workbench',
   Promittor = 'promittor',
+  Derived = 'derived',
 }

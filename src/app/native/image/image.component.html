@@ -29,6 +29,12 @@
       currentHoroData.date.hour }}:{{
       currentHoroData.date.minute }}:{{
       currentHoroData.date.second }}</h2>
+    @if (mode === modeEnum.Derived) {
+    <div>
+      <ion-label>基准行星：</ion-label>
+      <span [style]="'font-family: ' + config.planetFontFamily(derivedPlanetName) + ';'">{{ config.planetFontString(derivedPlanetName) }}</span>
+    </div>
+    }
   </div>
 
   <!-- 重叠标签 -->
@@ -82,7 +88,7 @@
         </ion-col>
         <ion-col size="5" size-sm="3" class="footer-actions">
           <ion-buttons>
-            @if (isAuth) {
+            @if (isAuth && mode !== modeEnum.Derived) {
             <ion-button fill="clear" (click)="onArchive()" class="icon-top">
               <div class="button-content">
                 <ion-icon name="archive-outline"></ion-icon>
@@ -90,7 +96,7 @@
               </div>
             </ion-button>
             }
-            @if (isAuth) {
+            @if (isAuth && mode !== modeEnum.Derived) {
             <ion-button fill="clear" (click)="onNote()" class="icon-top">
               <div class="button-content">
                 <ion-icon name="create-outline"></ion-icon>

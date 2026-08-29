@@ -7,4 +7,5 @@ export enum Path {
 export enum Mode {
   Native = 'native',
   Event = 'event',
+  Derived = 'derived',
 }

@@ -540,47 +540,51 @@ export function calculateNotesElements(
   addNote(horosco.house_name, config.textFont);
   addNote(horosco.is_diurnal ? '白天盘' : '夜间盘', config.textFont);
 
-  // "日主星: [SYMBOL]"
-  elements.push({
-    type: 'text',
-    text: '日主星:',
-    left: 0,
-    textAlign: 'left',
-    top: currentY,
-    fontSize: fontSize,
-    fontFamily: config.textFont,
-  });
-  elements.push({
-    type: 'text',
-    text: config.planetFontString(horosco.planetary_day),
-    left: 80, // Hardcoded offset
-    textAlign: 'left',
-    top: currentY,
-    fontSize: fontSize,
-    fontFamily: config.planetFontFamily(horosco.planetary_day),
-  });
-  currentY += lineHeight;
+  // "日主星: [SYMBOL]"（衍生盘不含日主星、时主星，跳过绘制）
+  if (horosco.planetary_day !== undefined) {
+    elements.push({
+      type: 'text',
+      text: '日主星:',
+      left: 0,
+      textAlign: 'left',
+      top: currentY,
+      fontSize: fontSize,
+      fontFamily: config.textFont,
+    });
+    elements.push({
+      type: 'text',
+      text: config.planetFontString(horosco.planetary_day),
+      left: 80, // Hardcoded offset
+      textAlign: 'left',
+      top: currentY,
+      fontSize: fontSize,
+      fontFamily: config.planetFontFamily(horosco.planetary_day),
+    });
+    currentY += lineHeight;
+  }
 
   // "时主星: [SYMBOL]"
-  elements.push({
-    type: 'text',
-    text: '时主星:',
-    left: 0,
-    textAlign: 'left',
-    top: currentY,
-    fontSize: fontSize,
-    fontFamily: config.textFont,
-  });
-  elements.push({
-    type: 'text',
-    text: config.planetFontString(horosco.planetary_hours),
-    left: 80, // Hardcoded offset
-    textAlign: 'left',
-    top: currentY,
-    fontSize: fontSize,
-    fontFamily: config.planetFontFamily(horosco.planetary_hours),
-  });
-  currentY += lineHeight;
+  if (horosco.planetary_hours !== undefined) {
+    elements.push({
+      type: 'text',
+      text: '时主星:',
+      left: 0,
+      textAlign: 'left',
+      top: currentY,
+      fontSize: fontSize,
+      fontFamily: config.textFont,
+    });
+    elements.push({
+      type: 'text',
+      text: config.planetFontString(horosco.planetary_hours),
+      left: 80, // Hardcoded offset
+      textAlign: 'left',
+      top: currentY,
+      fontSize: fontSize,
+      fontFamily: config.planetFontFamily(horosco.planetary_hours),
+    });
+    currentY += lineHeight;
+  }
 
   return elements;
 }

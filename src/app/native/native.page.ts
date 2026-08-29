@@ -29,6 +29,7 @@ import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
 import { Path, Mode } from './enum';
 import { HoroRequest } from '../type/interface/request-data';
+import { PlanetName } from '../type/enum/planet';
 import { isInChineseDST } from '../utils/dst/dst';
 import { addIcons } from 'ionicons';
 import { bookOutline } from 'ionicons/icons';
@@ -70,17 +71,36 @@ export class NativePage implements OnInit, ViewWillEnter {
   mode = Mode.Native;
   title: string;
 
+  // 衍生盘的基准行星（仅 Derived 模式使用）
+  derivedPlanetName: PlanetName = PlanetName.Sun;
+
+  // 衍生盘可选的基准行星：七颗传统行星
+  readonly planets: ReadonlyArray<PlanetName> = [
+    PlanetName.Sun,
+    PlanetName.Moon,
+    PlanetName.Mercury,
+    PlanetName.Venus,
+    PlanetName.Mars,
+    PlanetName.Jupiter,
+    PlanetName.Saturn,
+  ];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private storage: HoroStorageService,
-    private config: Horoconfig,
+    public config: Horoconfig,
     private titleService: Title,
     private alertController: AlertController,
   ) {
     addIcons({ bookOutline });
     this.mode = this.route.snapshot.data?.['mode'] || Mode.Native;
-    this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+    this.title =
+      this.mode === Mode.Event
+        ? '天象盘'
+        : this.mode === Mode.Derived
+          ? '衍生盘'
+          : '本命星盘';
   }
 
   ngOnInit() {
@@ -88,9 +108,14 @@ export class NativePage implements OnInit, ViewWillEnter {
   }
 
   ionViewWillEnter(): void {
-    this.horoData = structuredClone(
-      this.mode === Mode.Event ? this.storage.eventData : this.storage.horoData,
-    );
+    if (this.mode === Mode.Event) {
+      this.horoData = structuredClone(this.storage.eventData);
+    } else {
+      this.horoData = structuredClone(this.storage.horoData);
+    }
+    if (this.mode === Mode.Derived) {
+      this.derivedPlanetName = this.storage.derivedPlanetName;
+    }
   }
 
   getHoro() {
@@ -98,6 +123,9 @@ export class NativePage implements OnInit, ViewWillEnter {
       this.storage.eventData = structuredClone(this.horoData);
     } else {
       this.storage.horoData = structuredClone(this.horoData);
+    }
+    if (this.mode === Mode.Derived) {
+      this.storage.derivedPlanetName = this.derivedPlanetName;
     }
     this.router.navigate(['./image'], { relativeTo: this.route });
   }

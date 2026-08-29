@@ -102,8 +102,9 @@ export interface Horoscope {
   part_of_fortune: Planet;
 
   is_diurnal: boolean;
-  planetary_day: PlanetName;
-  planetary_hours: PlanetName;
+  // 日主星、时主星（衍生盘不含此数据）
+  planetary_day?: PlanetName;
+  planetary_hours?: PlanetName;
   aspects: Array<Aspect>;
   // 映点
   antiscoins: Array<Aspect>;
@@ -111,6 +112,16 @@ export interface Horoscope {
   contraantiscias: Array<Aspect>;
   // 恒星
   fixed_stars: Array<FixedStar>;
+}
+
+/**
+ * 衍生盘的返回数据
+ * 以指定行星的斜升(OA)为基准计算的星盘，
+ * 行星、恒星数据直接复用本命盘，不含日主星、时主星
+ */
+export interface DerivedHoroscope extends Horoscope {
+  // 衍生盘的基准行星
+  planet_name: PlanetName;
 }
 
 export interface Profection {

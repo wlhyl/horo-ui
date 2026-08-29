@@ -42,6 +42,15 @@
           [embedded]="true"
         ></teanote-image>
       }
+      @case (chartType.Derived) {
+        <teanote-image
+          [inputHoroData]="horoData()"
+          [inputMode]="modeEnum.Derived"
+          [inputDerivedPlanetName]="window().derivedPlanetName"
+          [canvasId]="window().id"
+          [embedded]="true"
+        ></teanote-image>
+      }
       @case (chartType.Transit) {
         <app-compare
           [inputHoroData]="horoData()"

@@ -33,6 +33,7 @@ export class HoroStorageService {
   private _processData!: ProcessRequest;
   private _synastryData!: HoroRequest;
   private _eventData!: HoroRequest;
+  private _derivedPlanetName!: PlanetName;
   private _isNanLuoBeiJi!: boolean;
   private _historicalData!: HistoricalStorageData;
 
@@ -41,6 +42,7 @@ export class HoroStorageService {
     this._initHoroData();
     this._initSynastryData();
     this._initEventData();
+    this._initDerivedData();
     this._initIsNanLuoBeiJi();
     this._initHistoricalData();
   }
@@ -81,6 +83,15 @@ export class HoroStorageService {
     localStorage.setItem('event_data', JSON.stringify(data));
   }
 
+  public get derivedPlanetName(): PlanetName {
+    return this._derivedPlanetName;
+  }
+
+  public set derivedPlanetName(planet: PlanetName) {
+    this._derivedPlanetName = planet;
+    localStorage.setItem('derived_planet_name', JSON.stringify(planet));
+  }
+
   public get isNanLuoBeiJi(): boolean {
     return this._isNanLuoBeiJi;
   }
@@ -104,12 +115,14 @@ export class HoroStorageService {
     localStorage.removeItem('process_data');
     localStorage.removeItem('synastry_data');
     localStorage.removeItem('event_data');
+    localStorage.removeItem('derived_planet_name');
     localStorage.removeItem('node_name_option');
     localStorage.removeItem('historical_data');
     this._initHoroData();
     this._initProcessData();
     this._initSynastryData();
     this._initEventData();
+    this._initDerivedData();
     this._initIsNanLuoBeiJi();
     this._initHistoricalData();
   }
@@ -239,6 +252,11 @@ export class HoroStorageService {
       };
       this._eventData = deepFreeze(eventData);
     }
+  }
+
+  private _initDerivedData() {
+    const planet = this._getParsedItem<PlanetName>('derived_planet_name');
+    this._derivedPlanetName = planet ?? PlanetName.Sun;
   }
 
   private nowDate() {

@@ -34,6 +34,7 @@ import {
 } from '@ionic/angular';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { Horoscope } from 'src/app/type/interface/response-data';
+import { PlanetName } from 'src/app/type/enum/planet';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -73,12 +74,18 @@ export class ImageComponent
 {
   @Input() inputHoroData?: HoroRequest;
   @Input() inputMode?: Mode;
+  // 衍生盘的基准行星（embedded + Derived 模式下由工作台传入）
+  @Input() inputDerivedPlanetName?: PlanetName;
   @Input() canvasId: string = 'canvas';
   @Input() embedded: boolean = false;
 
   mode!: string;
+  modeEnum = Mode;
   private horoData!: DeepReadonly<HoroRequest>;
   currentHoroData!: HoroRequest;
+
+  // 衍生盘的基准行星（仅 Derived 模式使用）
+  derivedPlanetName: PlanetName = PlanetName.Sun;
 
   // 是否完成初始化（embedded 模式下输入缺失时为 false，阻止模板渲染未赋值的 ! 变量）
   initialized = false;
@@ -147,7 +154,7 @@ export class ImageComponent
     if (this.embedded) {
       if (this.inputMode) {
         this.mode = this.inputMode;
-        this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
+        this.title = this.getTitle(this.mode);
       } else {
         this.message = '嵌入模式缺少输入参数：inputMode';
         this.isAlertOpen = true;
@@ -161,16 +168,27 @@ export class ImageComponent
         this.isAlertOpen = true;
         return;
       }
+      if (this.inputDerivedPlanetName) {
+        this.derivedPlanetName = this.inputDerivedPlanetName;
+      }
     } else {
       // 嵌入式模式下，会初始化为本命星盘
-      this.mode = this.router.url.startsWith('/' + Path.Event)
-        ? Mode.Event
-        : Mode.Native;
-      this.title = this.mode === Mode.Event ? '天象盘' : '本命星盘';
-      this.horoData =
-        this.mode === Mode.Event
-          ? this.storage.eventData
-          : this.storage.horoData;
+      if (this.router.url.startsWith('/' + Path.Event)) {
+        this.mode = Mode.Event;
+      } else if (this.router.url.startsWith('/' + Path.Derived)) {
+        this.mode = Mode.Derived;
+      } else {
+        this.mode = Mode.Native;
+      }
+      this.title = this.getTitle(this.mode);
+      if (this.mode === Mode.Event) {
+        this.horoData = this.storage.eventData;
+      } else {
+        this.horoData = this.storage.horoData;
+      }
+      if (this.mode === Mode.Derived) {
+        this.derivedPlanetName = this.storage.derivedPlanetName;
+      }
       this.currentHoroData = structuredClone(this.horoData);
       this.titleService.setTitle(this.title);
     }
@@ -195,6 +213,15 @@ export class ImageComponent
     if (changes['inputHoroData'] && this.inputHoroData) {
       this.horoData = this.inputHoroData;
       this.currentHoroData = structuredClone(this.inputHoroData);
+      needRedraw = true;
+    }
+
+    if (
+      changes['inputDerivedPlanetName'] &&
+      this.inputDerivedPlanetName &&
+      this.inputDerivedPlanetName !== this.derivedPlanetName
+    ) {
+      this.derivedPlanetName = this.inputDerivedPlanetName;
       needRedraw = true;
     }
 
@@ -229,6 +256,12 @@ export class ImageComponent
     return new StaticCanvas(this.canvasId);
   }
 
+  private getTitle(mode: string): string {
+    if (mode === Mode.Event) return '天象盘';
+    if (mode === Mode.Derived) return '衍生盘';
+    return '本命星盘';
+  }
+
   private drawHoroscope(horoData: DeepReadonly<HoroRequest>) {
     if (this.isDrawing || this.loading) return; // 如果正在绘制或加载则返回
 
@@ -237,8 +270,17 @@ export class ImageComponent
     this.canvasCache = undefined;
     this.cdr.markForCheck();
 
-    this.api
-      .getNativeHoroscope(horoData)
+    const request$ =
+      this.mode === Mode.Derived
+        ? this.api.getDerivedHoroscope({
+            date: horoData.date,
+            geo: horoData.geo,
+            house: horoData.house,
+            planet_name: this.derivedPlanetName,
+          })
+        : this.api.getNativeHoroscope(horoData);
+
+    request$
       .pipe(
         finalize(() => {
           this.isDrawing = false;
