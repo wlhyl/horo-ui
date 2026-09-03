@@ -1,6 +1,7 @@
 export enum Path {
   Profection = 'profection',
   MedievalProfection = 'medieval_profection',
+  CustomMonthProfection = 'custom_month_profection',
   CustomDayProfection = 'custom_day_profection',
   Transit = 'transit',
   Firdaria = 'firdaria',

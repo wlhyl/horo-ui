@@ -30,6 +30,11 @@ export const routes: Routes = [
     data: { mode: ProfectionMode.Medieval },
   },
   {
+    path: ProcessName.path(ProcessName.CustomMonthProfection),
+    component: MedievalProfectionComponent,
+    data: { mode: ProfectionMode.CustomMonth },
+  },
+  {
     path: ProcessName.path(ProcessName.CustomDayProfection),
     component: MedievalProfectionComponent,
     data: { mode: ProfectionMode.CustomDay },

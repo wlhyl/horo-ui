@@ -107,6 +107,7 @@ export class ProcessPage implements OnInit {
     ProcessName.Firdaria,
     ProcessName.Profection,
     ProcessName.MedievalProfection,
+    ProcessName.CustomMonthProfection,
     ProcessName.CustomDayProfection,
     ProcessName.Direction,
     ProcessName.DailyDirection,

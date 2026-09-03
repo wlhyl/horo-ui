@@ -118,6 +118,19 @@ export class ApiService {
 
   /**
    *
+   * @returns 获取自定义月小限
+   */
+  public customMonthProfection(
+    data: ReturnRequest,
+  ): Observable<MedievalProfection> {
+    return this.http.post<MedievalProfection>(
+      `${this.url}/process/profection/custom/month`,
+      data,
+    );
+  }
+
+  /**
+   *
    * @returns 获取法达
    */
   public firdaria(data: FirdariaRequest): Observable<Array<FirdariaPeriod>> {

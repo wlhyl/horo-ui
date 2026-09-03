@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.37.0] - 2026-09-03
+
+### Added
+
+- 新增自定义月小限功能：对接后端 `/api/process/profection/custom/month` 接口（请求体与日小限同型，返回中世纪小限盘数据），复用 `MedievalProfectionComponent` 扩展 `ProfectionMode.CustomMonth` 模式
+- 推运页面与工作台新增"自定义月小限"入口：`ProcessName`/`Path`/`ChartType` 枚举扩展，新增 `custom_month_profection` 路由与工作台窗口嵌入分支，窗口标题支持"自定义月小限"
+
 ## [0.36.0] - 2026-08-30
 
 ### Added

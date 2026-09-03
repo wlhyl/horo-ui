@@ -119,9 +119,9 @@ export class MedievalProfectionComponent
   @Output() titleChange = new EventEmitter<string>();
 
   get title(): string {
-    return this.mode === ProfectionMode.CustomDay
-      ? '自定义日小限'
-      : '中世纪小限';
+    if (this.mode === ProfectionMode.CustomDay) return '自定义日小限';
+    if (this.mode === ProfectionMode.CustomMonth) return '自定义月小限';
+    return '中世纪小限';
   }
 
   // 恰好选中一个象征星时标题附加该象征星
@@ -395,15 +395,21 @@ export class MedievalProfectionComponent
     this.isLoading = true;
     this.cdr.markForCheck();
 
-    if (this.mode === ProfectionMode.CustomDay) {
+    if (
+      this.mode === ProfectionMode.CustomDay ||
+      this.mode === ProfectionMode.CustomMonth
+    ) {
       const requestData: ReturnRequest = {
         native_date: this.nativeDate,
         process_date: this.processDate,
         geo: this.geo,
         house: this.house,
       };
-      this.api
-        .customDayProfection(requestData)
+      const request$ =
+        this.mode === ProfectionMode.CustomDay
+          ? this.api.customDayProfection(requestData)
+          : this.api.customMonthProfection(requestData);
+      request$
         .pipe(
           finalize(() => {
             this.isLoading = false;

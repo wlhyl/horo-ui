@@ -164,6 +164,16 @@
           (titleChange)="onWindowTitleChange($event)"
         ></app-medieval-profection>
       }
+      @case (chartType.CustomMonthProfection) {
+        <app-medieval-profection
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
+          [inputMode]="profectionModeEnum.CustomMonth"
+          [canvasId]="window().id"
+          [embedded]="true"
+          (titleChange)="onWindowTitleChange($event)"
+        ></app-medieval-profection>
+      }
       @case (chartType.CustomDayProfection) {
         <app-medieval-profection
           [inputHoroData]="horoData()"

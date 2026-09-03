@@ -3,6 +3,7 @@ import { Path } from './path';
 export enum ProcessName {
   Profection = 'Profection',
   MedievalProfection = 'MedievalProfection',
+  CustomMonthProfection = 'CustomMonthProfection',
   CustomDayProfection = 'CustomDayProfection',
   Transit = 'Transit',
   Firdaria = 'Firdaria',
@@ -28,6 +29,7 @@ export namespace ProcessName {
     [ProcessName.Profection]: '小限',
     [ProcessName.MedievalProfection]: '中世纪小限',
     [ProcessName.CustomDayProfection]: '自定义日小限',
+    [ProcessName.CustomMonthProfection]: '自定义月小限',
     [ProcessName.Transit]: '行运',
     [ProcessName.Firdaria]: '法达',
     [ProcessName.SolarReturn]: '日返',
@@ -50,6 +52,7 @@ export namespace ProcessName {
   const pathMap: { [key in ProcessName]: Path } = {
     [ProcessName.Profection]: Path.Profection,
     [ProcessName.MedievalProfection]: Path.MedievalProfection,
+    [ProcessName.CustomMonthProfection]: Path.CustomMonthProfection,
     [ProcessName.CustomDayProfection]: Path.CustomDayProfection,
     [ProcessName.Transit]: Path.Transit,
     [ProcessName.Firdaria]: Path.Firdaria,

@@ -68,6 +68,7 @@ export class InputPanelComponent {
   readonly processOptions = [
     ProcessName.Profection,
     ProcessName.MedievalProfection,
+    ProcessName.CustomMonthProfection,
     ProcessName.CustomDayProfection,
     ProcessName.Transit,
     ProcessName.Firdaria,
@@ -131,6 +132,7 @@ export class InputPanelComponent {
     { type: ChartType.DailyDirection, label: '每日回归方向弧', group: '推运' },
     { type: ChartType.SolarArc, label: '太阳弧', group: '推运' },
     { type: ChartType.MedievalProfection, label: '中世纪小限', group: '推运' },
+    { type: ChartType.CustomMonthProfection, label: '自定义月小限', group: '推运' },
     { type: ChartType.CustomDayProfection, label: '自定义日小限', group: '推运' },
     { type: ChartType.Transit, label: '行运', group: '推运' },
     { type: ChartType.Promittor, label: '承诺星盘', group: '推运' },
