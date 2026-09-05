@@ -67,7 +67,8 @@ import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 export class PromittorComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
-  @Input({ required: true }) inputHoroData!: HoroRequest;
+  @Input() inputHoroData?: HoroRequest;
+  @Input() inputHoroscope?: Horoscope | null;
   @Input() canvasId: string = 'canvas';
   @Input() embedded: boolean = false;
 
@@ -134,7 +135,20 @@ export class PromittorComponent
   ) {}
 
   ngOnInit() {
+    if (this.inputHoroscope) {
+      // 直接使用外部传入的星盘数据（如古代星盘适配后的数据），无需请求 API
+      this.applyHoroscope(this.inputHoroscope);
+      this.initialized = true;
+      return;
+    }
+
     if (this.embedded) {
+      // embedded 调用方必须传入 inputHoroData，缺失时提示用户
+      if (!this.inputHoroData) {
+        this.message = '缺少星盘数据';
+        this.isAlertOpen = true;
+        return;
+      }
       this.horoData = this.inputHoroData;
     } else {
       this.horoData = this.storage.horoData;
@@ -154,6 +168,11 @@ export class PromittorComponent
       this.horoData = this.inputHoroData;
       this.fetchHoroscope();
     }
+  }
+
+  private applyHoroscope(data: Horoscope) {
+    this.horoscoData = data;
+    this.promittors = calculatePromittors(data.planets, data.part_of_fortune);
   }
 
   ngAfterViewInit(): void {

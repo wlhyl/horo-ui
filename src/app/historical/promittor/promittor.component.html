@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+@if (horoscoData) {
+<div class="promittor-content">
+  <app-promittor
+    [inputHoroscope]="horoscoData"
+    [canvasId]="'historical-promittor-canvas'"
+    [embedded]="true"
+  ></app-promittor>
+</div>
+} @else {
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-content>
+            <p>没有可显示的数据。</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+}

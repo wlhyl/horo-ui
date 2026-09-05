@@ -27,11 +27,13 @@ import {
 } from '@ionic/angular';
 
 import { HoroCommonModule } from '../horo-common/horo-common.module';
+import { PromittorComponent } from '../promittor/promittor.component';
 
 import { HistoricalPageRoutingModule } from './historical-routing.module';
 import { HistoricalPage } from './historical.page';
 import { ImageComponent } from './image/image.component';
 import { DetailComponent } from './detail/detail.component';
+import { HistoricalPromittorComponent } from './promittor/promittor.component';
 
 @NgModule({
   imports: [
@@ -61,11 +63,13 @@ import { DetailComponent } from './detail/detail.component';
     IonToolbar,
     HistoricalPageRoutingModule,
     HoroCommonModule,
+    PromittorComponent,
   ],
   declarations: [
     HistoricalPage,
     ImageComponent,
     DetailComponent,
+    HistoricalPromittorComponent,
   ],
 })
 export class HistoricalPageModule {}

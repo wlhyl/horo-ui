@@ -16,6 +16,7 @@ import { HistoricalHoroRequest } from 'src/app/type/interface/request-data';
 import { zoomImage } from 'src/app/utils/image/zoom-image';
 import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import {
+  compassOutline,
   informationCircleOutline,
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -53,7 +54,7 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    addIcons({ informationCircleOutline });
+    addIcons({ compassOutline, informationCircleOutline });
   }
 
   ngOnInit() {
@@ -148,6 +149,16 @@ export class ImageComponent implements AfterViewInit, OnDestroy {
     const horosco = this.horoscoData();
     if (horosco) {
       this.router.navigate([subPath.Detail], {
+        relativeTo: this.route,
+        state: { data: horosco },
+      });
+    }
+  }
+
+  onPromittor() {
+    const horosco = this.horoscoData();
+    if (horosco) {
+      this.router.navigate([subPath.Promittor], {
         relativeTo: this.route,
         state: { data: horosco },
       });

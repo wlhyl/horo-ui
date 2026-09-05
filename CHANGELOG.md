@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.38.0] - 2026-09-07
+
+### Added
+
+- 古代星盘新增承诺星盘功能：绘制页底部新增"承诺星盘"入口，跳转至新增的 `historical/image/promittor` 子页面复用 `PromittorComponent` 渲染，通过 router state 传递适配后的星盘数据（与详情页跳转模式一致），无数据时显示"没有可显示的数据。"
+- `PromittorComponent` 新增可选输入 `inputHoroscope`：支持直接传入已计算的星盘数据（如古代星盘适配后的 `Horoscope`），跳过 API 请求与加载状态；`inputHoroData` 改为可选，不影响本命页与工作台原有嵌入用法
+
 ## [0.37.0] - 2026-09-03
 
 ### Added
