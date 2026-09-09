@@ -140,6 +140,15 @@
       <div class="profection-date-info">
         <span>小限时间: {{ formatDate(medievalProfectionData.horoscope.profection_date) }}</span>
       </div>
+      <div class="cusp-degrees">
+        @for (cusp of cuspPositions; track cusp.house) {
+        <span class="cusp-item">
+          <span class="cusp-house">{{ cusp.house }}C</span>
+          <span class="cusp-zodiac" [style.font-family]="config.zodiacFontFamily()">{{ config.zodiacFontString(cusp.zodiac) }}</span>
+          <span class="cusp-dms">{{ cusp.d }}°{{ cusp.m }}′</span>
+        </span>
+        }
+      </div>
       }
 
       <div class="ion-text-center chart-canvas-wrapper">

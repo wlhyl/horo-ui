@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.39.0] - 2026-09-10
 
 ### Added
 
+- 中世纪小限盘新增宫头度数显示：小限时间下方按宫位展示 12 宫头的小限黄道位置（宫位号、星座符号、度分），`HoroscopeProfection` 接口补充 `profection_cusps` 字段
 - 新增自定义月返日小限功能：对接后端 `/api/process/profection/custom/lunar-day` 接口（基于月返盘与每日回归盘计算日小限，返回中世纪小限盘数据），复用 `MedievalProfectionComponent` 扩展 `ProfectionMode.CustomLunarDay` 模式
 - 自定义月返日小限支持"日小限算法"选择（太阳基准：推进速率均匀平滑 / 月亮基准：随月亮真实速度波动）：输入面板与组件内选择器（`CustomLunarDayProfectionMethod`），默认太阳基准
 - 推运页面与工作台新增"自定义月返日小限"入口：`ProcessName`/`Path`/`ChartType` 枚举扩展，新增 `lunar_day_profection` 路由与工作台窗口嵌入分支，窗口标题支持"自定义月返日小限"

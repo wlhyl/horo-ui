@@ -304,6 +304,8 @@ export interface HoroscopeProfection {
   geo: GeoPosition;
   house_name: string;
   cusps: Array<number>;
+  // 小限12宫头黄经度数
+  profection_cusps: Array<number>;
   asc: Planet;
   profection_asc: Planet;
   mc: Planet;

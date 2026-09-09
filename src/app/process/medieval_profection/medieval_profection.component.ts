@@ -55,7 +55,7 @@ import {
   PromittorType,
   Significator,
 } from 'src/app/type/interface/response-data';
-import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
+import { degreeToDMS, zodiacLong } from 'src/app/utils/horo-math/horo-math';
 import {
   getAntisciaInfo as getAntisciaInfoUtil,
   getCuspInfo as getCuspInfoUtil,
@@ -608,6 +608,16 @@ export class MedievalProfectionComponent
 
   getSign(promittor: Promittor): number | null {
     return getSignInfoUtil(promittor);
+  }
+
+  // 小限盘各宫头的黄道位置（宫位号、星座、度、分，分补零对齐）
+  get cuspPositions(): { house: number; zodiac: number; d: number; m: string }[] {
+    if (!this.medievalProfectionData) return [];
+    return this.medievalProfectionData.horoscope.profection_cusps.map((long, i) => {
+      const zl = zodiacLong(long);
+      const dms = degreeToDMS(zl.long);
+      return { house: i + 1, zodiac: zl.zodiac, d: dms.d, m: dms.m.toString().padStart(2, '0') };
+    });
   }
 
   get filteredDirectionData(): Direction[] {

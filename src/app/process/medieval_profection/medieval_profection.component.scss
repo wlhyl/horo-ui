@@ -35,9 +35,33 @@ ion-content {
 
 .profection-date-info {
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
   padding: 0.5rem 0;
   color: #333;
+}
+
+.cusp-degrees {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  justify-content: center;
+  gap: 0.2rem 1rem;
+  padding: 0.25rem 0;
+  font-size: 1.1rem;
+  text-align: center;
+  color: #333;
+}
+
+.cusp-item {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.2rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.cusp-house {
+  color: #555;
 }
 
 .center-title {
@@ -185,6 +209,12 @@ ion-content {
 
   .center-title {
     font-size: 1.1rem;
+  }
+
+  .cusp-degrees {
+    font-size: 1rem;
+    grid-template-columns: repeat(3, auto);
+    column-gap: 0.75rem;
   }
 
   .chart-canvas-wrapper {
