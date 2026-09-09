@@ -40,6 +40,11 @@ export const routes: Routes = [
     data: { mode: ProfectionMode.CustomDay },
   },
   {
+    path: ProcessName.path(ProcessName.CustomLunarDayProfection),
+    component: MedievalProfectionComponent,
+    data: { mode: ProfectionMode.CustomLunarDay },
+  },
+  {
     path: ProcessName.path(ProcessName.Firdaria),
     component: FirdariaComponent,
   },

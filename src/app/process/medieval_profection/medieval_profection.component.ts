@@ -41,6 +41,7 @@ import {
   DateRequest,
   GeoRequest,
   HoroRequest,
+  CustomLunarDayProfectionRequest,
   MedievalProfectionRequest,
   ProcessRequest,
   ReturnRequest,
@@ -66,6 +67,7 @@ import {
 import { PlanetName } from 'src/app/type/enum/planet';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { ProfectionMode } from 'src/app/process/enum/profection-mode';
+import { CustomLunarDayProfectionMethod } from 'src/app/process/enum/custom-lunar-day-profection-method';
 import { debounceTime, finalize, Subject, takeUntil } from 'rxjs';
 import { EW, NS } from 'src/app/horo-common/geo/enum';
 import { validateGeo } from 'src/app/utils/geo-validation/geo-validation';
@@ -74,7 +76,7 @@ import { StaticCanvas } from 'fabric';
 import { drawHorosco } from 'src/app/utils/image/compare';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { addIcons } from 'ionicons';
-import { list } from 'ionicons/icons';
+import { list, star } from 'ionicons/icons';
 import { ActivatedRoute } from '@angular/router';
 import {
   ALL_SIGNIFICATORS,
@@ -121,6 +123,7 @@ export class MedievalProfectionComponent
   get title(): string {
     if (this.mode === ProfectionMode.CustomDay) return '自定义日小限';
     if (this.mode === ProfectionMode.CustomMonth) return '自定义月小限';
+    if (this.mode === ProfectionMode.CustomLunarDay) return '自定义月返日小限';
     return '中世纪小限';
   }
 
@@ -224,6 +227,19 @@ export class MedievalProfectionComponent
   arcToDateMethod: ProfectionArcToDateMethod =
     this.processData.profection_arc_to_date_method;
 
+  // 月返日小限算法选择
+  customLunarDayProfectionMethod: CustomLunarDayProfectionMethod =
+    this.storage.processData.lunar_day_profection_method ??
+    CustomLunarDayProfectionMethod.Moon;
+
+  // 月返日小限算法选项
+  customLunarDayProfectionMethodOptions = Object.values(CustomLunarDayProfectionMethod)
+    .filter((v): v is CustomLunarDayProfectionMethod => typeof v === 'string')
+    .map((method) => ({
+      text: CustomLunarDayProfectionMethod.name(method),
+      value: method,
+    }));
+
   private canvas?: StaticCanvas;
   @ViewChild('canvasRef') private canvasRef?: ElementRef<HTMLCanvasElement>;
 
@@ -249,7 +265,7 @@ export class MedievalProfectionComponent
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
   ) {
-    addIcons({ list });
+    addIcons({ list, star });
   }
 
   ngOnInit() {
@@ -268,6 +284,9 @@ export class MedievalProfectionComponent
       this.processDate = structuredClone(this.processData.date);
       this.arcToDateMethod =
         this.inputProcessData.profection_arc_to_date_method;
+      this.customLunarDayProfectionMethod =
+        this.inputProcessData.lunar_day_profection_method ??
+        CustomLunarDayProfectionMethod.Moon;
       this.mode = this.inputMode;
     } else {
       this.mode = this.route.snapshot.data?.['mode'] || ProfectionMode.Medieval;
@@ -318,6 +337,9 @@ export class MedievalProfectionComponent
       this.processDate = structuredClone(this.processData.date);
       this.arcToDateMethod =
         this.inputProcessData.profection_arc_to_date_method;
+      this.customLunarDayProfectionMethod =
+        this.inputProcessData.lunar_day_profection_method ??
+        CustomLunarDayProfectionMethod.Moon;
       needRefetch = true;
     }
 
@@ -395,7 +417,35 @@ export class MedievalProfectionComponent
     this.isLoading = true;
     this.cdr.markForCheck();
 
-    if (
+    if (this.mode === ProfectionMode.CustomLunarDay) {
+      const requestData: CustomLunarDayProfectionRequest = {
+        native_date: this.nativeDate,
+        process_date: this.processDate,
+        geo: this.geo,
+        house: this.house,
+        method: this.customLunarDayProfectionMethod,
+      };
+      this.api
+        .lunarDayProfection(requestData)
+        .pipe(
+          finalize(() => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }),
+        )
+        .subscribe({
+          next: (response) => {
+            this.medievalProfectionData = response;
+            this.drawChart();
+            this.cdr.markForCheck();
+          },
+          error: (error) => {
+            this.message = getApiErrorMessage(error);
+            this.isAlertOpen = true;
+            this.cdr.markForCheck();
+          },
+        });
+    } else if (
       this.mode === ProfectionMode.CustomDay ||
       this.mode === ProfectionMode.CustomMonth
     ) {

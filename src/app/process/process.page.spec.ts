@@ -341,6 +341,7 @@ describe('ProcessPage', () => {
         ProcessName.MedievalProfection,
         ProcessName.CustomMonthProfection,
         ProcessName.CustomDayProfection,
+        ProcessName.CustomLunarDayProfection,
         ProcessName.Direction,
         ProcessName.DailyDirection,
         ProcessName.SolarArc,

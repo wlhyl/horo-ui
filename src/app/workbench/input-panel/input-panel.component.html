@@ -362,6 +362,23 @@
           </ion-select>
         </div>
       }
+
+      @if (processData.process_name === processNameEnum.CustomLunarDayProfection) {
+        <div class="form-row">
+          <label class="form-label">日小限算法</label>
+          <ion-select
+            label-placement="fixed"
+            okText="确定"
+            cancelText="取消"
+            [(ngModel)]="processData.lunar_day_profection_method"
+            (ionChange)="onProcessDataChange()"
+          >
+            @for (option of customLunarDayProfectionMethodOptions; track option.value) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      }
     </div>
     }
   </div>

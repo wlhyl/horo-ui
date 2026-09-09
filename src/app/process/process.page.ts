@@ -32,6 +32,7 @@ import { ArcToDateMethod } from './enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from './enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from './enum/daily-direction-method';
 import { SecondaryProgressionMethod } from './enum/secondary-progression-method';
+import { CustomLunarDayProfectionMethod } from './enum/custom-lunar-day-profection-method';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { Title } from '@angular/platform-browser';
@@ -109,6 +110,7 @@ export class ProcessPage implements OnInit {
     ProcessName.MedievalProfection,
     ProcessName.CustomMonthProfection,
     ProcessName.CustomDayProfection,
+    ProcessName.CustomLunarDayProfection,
     ProcessName.Direction,
     ProcessName.DailyDirection,
     ProcessName.SolarArc,
@@ -164,6 +166,13 @@ export class ProcessPage implements OnInit {
     .filter((v) => typeof v === 'string')
     .map((method) => ({
       text: ProfectionArcToDateMethod.name(method),
+      value: method,
+    }));
+
+  customLunarDayProfectionMethodOptions = Object.values(CustomLunarDayProfectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: CustomLunarDayProfectionMethod.name(method),
       value: method,
     }));
 

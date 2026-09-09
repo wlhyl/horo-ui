@@ -24,6 +24,7 @@ import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
 import { SecondaryProgressionMethod } from 'src/app/process/enum/secondary-progression-method';
+import { CustomLunarDayProfectionMethod } from 'src/app/process/enum/custom-lunar-day-profection-method';
 import { ChartType } from '../window-manager/window-state';
 import { isInChineseDST } from 'src/app/utils/dst/dst';
 
@@ -70,6 +71,7 @@ export class InputPanelComponent {
     ProcessName.MedievalProfection,
     ProcessName.CustomMonthProfection,
     ProcessName.CustomDayProfection,
+    ProcessName.CustomLunarDayProfection,
     ProcessName.Transit,
     ProcessName.Firdaria,
     ProcessName.SolarReturn,
@@ -124,6 +126,13 @@ export class InputPanelComponent {
       value: method,
     }));
 
+  readonly customLunarDayProfectionMethodOptions = Object.values(CustomLunarDayProfectionMethod)
+    .filter((v) => typeof v === 'string')
+    .map((method) => ({
+      text: CustomLunarDayProfectionMethod.name(method),
+      value: method,
+    }));
+
   readonly chartButtons: { type: ChartType; label: string; group: string }[] = [
     { type: ChartType.Native, label: '本命盘', group: '基础' },
     { type: ChartType.Event, label: '天象盘', group: '基础' },
@@ -134,6 +143,7 @@ export class InputPanelComponent {
     { type: ChartType.MedievalProfection, label: '中世纪小限', group: '推运' },
     { type: ChartType.CustomMonthProfection, label: '自定义月小限', group: '推运' },
     { type: ChartType.CustomDayProfection, label: '自定义日小限', group: '推运' },
+    { type: ChartType.CustomLunarDayProfection, label: '自定义月返日小限', group: '推运' },
     { type: ChartType.Transit, label: '行运', group: '推运' },
     { type: ChartType.Promittor, label: '承诺星盘', group: '推运' },
     { type: ChartType.QuadrantProcess, label: '象限推运', group: '推运' },

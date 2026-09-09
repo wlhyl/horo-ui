@@ -184,6 +184,16 @@
           (titleChange)="onWindowTitleChange($event)"
         ></app-medieval-profection>
       }
+      @case (chartType.CustomLunarDayProfection) {
+        <app-medieval-profection
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
+          [inputMode]="profectionModeEnum.CustomLunarDay"
+          [canvasId]="window().id"
+          [embedded]="true"
+          (titleChange)="onWindowTitleChange($event)"
+        ></app-medieval-profection>
+      }
       @case (chartType.Firdaria) {
         <app-firdaria
           [inputHoroData]="horoData()"

@@ -80,6 +80,17 @@
           </div>
           }
 
+          @if (mode === profectionMode.CustomLunarDay) {
+          <div class="filter-group">
+            <label>日小限算法:</label>
+            <ion-select [(ngModel)]="customLunarDayProfectionMethod" [disabled]="isLoading">
+              @for (option of customLunarDayProfectionMethodOptions; track option.value) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+          }
+
           <ion-button size="small" (click)="updateProcessDate()" [disabled]="isLoading">
             @if (isLoading) {
             <ion-spinner name="crescent"></ion-spinner>
@@ -183,6 +194,17 @@
             <label>换算:</label>
             <ion-select [(ngModel)]="arcToDateMethod" [disabled]="isLoading">
               @for (option of arcToDateMethodOptions; track option) {
+              <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
+              }
+            </ion-select>
+          </div>
+          }
+
+          @if (mode === profectionMode.CustomLunarDay) {
+          <div class="filter-group">
+            <label>日小限算法:</label>
+            <ion-select [(ngModel)]="customLunarDayProfectionMethod" [disabled]="isLoading">
+              @for (option of customLunarDayProfectionMethodOptions; track option.value) {
               <ion-select-option [value]="option.value">{{ option.text }}</ion-select-option>
               }
             </ion-select>

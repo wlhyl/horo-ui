@@ -3,6 +3,7 @@ export enum Path {
   MedievalProfection = 'medieval_profection',
   CustomMonthProfection = 'custom_month_profection',
   CustomDayProfection = 'custom_day_profection',
+  LunarDayProfection = 'lunar_day_profection',
   Transit = 'transit',
   Firdaria = 'firdaria',
   SolarReturn = 'return/solar',

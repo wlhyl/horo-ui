@@ -14,6 +14,7 @@ import {
   QuadrantProcessRequest,
   QuadrantProcessLongitudeRequest,
   MedievalProfectionRequest,
+  CustomLunarDayProfectionRequest,
   HistoricalHoroRequest,
   SecondaryProgressionRequest,
   DerivedHoroRequest,
@@ -125,6 +126,19 @@ export class ApiService {
   ): Observable<MedievalProfection> {
     return this.http.post<MedievalProfection>(
       `${this.url}/process/profection/custom/month`,
+      data,
+    );
+  }
+
+  /**
+   *
+   * @returns 获取月返日小限
+   */
+  public lunarDayProfection(
+    data: CustomLunarDayProfectionRequest,
+  ): Observable<MedievalProfection> {
+    return this.http.post<MedievalProfection>(
+      `${this.url}/process/profection/custom/lunar-day`,
       data,
     );
   }

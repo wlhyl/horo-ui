@@ -4,6 +4,7 @@ import { ArcToDateMethod } from '../../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../../process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from '../../process/enum/daily-direction-method';
 import { SecondaryProgressionMethod } from '../../process/enum/secondary-progression-method';
+import { CustomLunarDayProfectionMethod } from '../../process/enum/custom-lunar-day-profection-method';
 import { PlanetName } from '../enum/planet';
 import {
   HistoricalHouseCusp,
@@ -72,6 +73,7 @@ export interface ProcessRequest {
   profection_arc_to_date_method: ProfectionArcToDateMethod;
   daily_direction_method: DailyDirectionMethod;
   secondary_progression_method: SecondaryProgressionMethod;
+  lunar_day_profection_method: CustomLunarDayProfectionMethod;
 }
 
 export interface SecondaryProgressionRequest {
@@ -208,6 +210,22 @@ export interface MedievalProfectionRequest {
   geo: GeoRequest;
   house: string;
   arc_to_date_method: ProfectionArcToDateMethod;
+}
+
+/**
+ * 自定义月返日小限请求
+ */
+export interface CustomLunarDayProfectionRequest {
+  // 出生时间
+  native_date: DateRequest;
+  // 推运时间
+  process_date: DateRequest;
+  // 居住地大地经纬度
+  geo: GeoRequest;
+  // 宫位系统
+  house: string;
+  // 日小限行星推运度数算法
+  method: CustomLunarDayProfectionMethod;
 }
 
 /**

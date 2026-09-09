@@ -5,6 +5,7 @@ import { ArcToDateMethod } from 'src/app/process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from 'src/app/process/enum/daily-direction-method';
 import { SecondaryProgressionMethod } from 'src/app/process/enum/secondary-progression-method';
+import { CustomLunarDayProfectionMethod } from 'src/app/process/enum/custom-lunar-day-profection-method';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import {
   HoroRequest,
@@ -157,6 +158,7 @@ export class HoroStorageService {
         profection_arc_to_date_method: ProfectionArcToDateMethod.TrueSolarArc,
         daily_direction_method: DailyDirectionMethod.SemiArcZodiacal,
         secondary_progression_method: SecondaryProgressionMethod.DegreePerYear,
+        lunar_day_profection_method: CustomLunarDayProfectionMethod.Moon,
       });
     }
   }
