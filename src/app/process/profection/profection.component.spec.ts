@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -88,17 +89,17 @@ const mockProfectionData: Profection = {
 describe('ProfectionComponent', () => {
   let component: ProfectionComponent;
   let fixture: ComponentFixture<ProfectionComponent>;
-  let mockApiService: jasmine.SpyObj<ApiService>;
-  let mockHoroStorageService: jasmine.SpyObj<HoroStorageService>;
-  let mockTitleService: jasmine.SpyObj<Title>;
+  let mockApiService: SpyObj<ApiService>;
+  let mockHoroStorageService: SpyObj<HoroStorageService>;
+  let mockTitleService: SpyObj<Title>;
 
-  beforeEach(waitForAsync(() => {
-    mockApiService = jasmine.createSpyObj('ApiService', ['profection']);
-    mockHoroStorageService = jasmine.createSpyObj('HoroStorageService', [], {
+  beforeEach(async () => {
+    mockApiService = createSpyObj('ApiService', ['profection']);
+    mockHoroStorageService = createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
       processData: mockProcessData,
     });
-    mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
+    mockTitleService = createSpyObj('Title', ['setTitle']);
 
     TestBed.configureTestingModule({
       imports: [ProfectionComponent, ],
@@ -111,7 +112,7 @@ describe('ProfectionComponent', () => {
 
     fixture = TestBed.createComponent(ProfectionComponent);
     component = fixture.componentInstance;
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -120,14 +121,14 @@ describe('ProfectionComponent', () => {
   describe('ngOnInit', () => {
     it('should set the title on ngOnInit', () => {
       // Provide a default mock return value to prevent errors in other tests
-      mockApiService.profection.and.returnValue(of(mockProfectionData));
+      mockApiService.profection.mockReturnValue(of(mockProfectionData));
 
       component.ngOnInit();
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('小限');
     });
 
     it('should call api.profection with correct request data', () => {
-      mockApiService.profection.and.returnValue(of(mockProfectionData));
+      mockApiService.profection.mockReturnValue(of(mockProfectionData));
 
       component.ngOnInit();
 
@@ -145,7 +146,7 @@ describe('ProfectionComponent', () => {
         message: 'API Error',
         error: { message: 'Internal Server Error' },
       };
-      mockApiService.profection.and.returnValue(
+      mockApiService.profection.mockReturnValue(
         throwError(() => errorResponse)
       );
 

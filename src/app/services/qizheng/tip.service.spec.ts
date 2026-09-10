@@ -38,7 +38,7 @@ describe('TipService', () => {
 
     // 模拟第一次点击
     object.fire('mousedown');
-    expect(canvas._objects.some((o) => o.type === 'text')).toBeTrue();
+    expect(canvas._objects.some((o) => o.type === 'text')).toBe(true);
     const tip1 = canvas._objects.find((o) => o.type === 'text') as fabric.Text;
 
     // 再次点击同一个控件，又生成 tip，新 tip 替换旧 tip
@@ -58,7 +58,7 @@ describe('TipService', () => {
     const tip = canvas._objects.find((o) => o.type === 'text') as fabric.Text;
 
     tip.fire('mousedown');
-    expect(canvas._objects.some((o) => o === tip)).toBeFalse();
+    expect(canvas._objects.some((o) => o === tip)).toBe(false);
   });
 
   // tip一定不会溢出画布左侧，代码已经保证

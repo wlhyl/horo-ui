@@ -34,6 +34,7 @@ import { ArcToDateMethod } from '../process/enum/arc-to-date-method';
 import { ProfectionArcToDateMethod } from '../process/enum/profection-arc-to-date-method';
 import { DailyDirectionMethod } from '../process/enum/daily-direction-method';
 import { SecondaryProgressionMethod } from '../process/enum/secondary-progression-method';
+import { CustomLunarDayProfectionMethod } from '../process/enum/custom-lunar-day-profection-method';
 
 /**
  * 测试数据工厂类
@@ -120,6 +121,7 @@ export class TestDataFactory {
       profection_arc_to_date_method: ProfectionArcToDateMethod.TrueSolarArc,
       daily_direction_method: DailyDirectionMethod.SolarArc,
       secondary_progression_method: SecondaryProgressionMethod.DegreePerYear,
+      lunar_day_profection_method: CustomLunarDayProfectionMethod.Sun,
       ...overrides,
     };
   }

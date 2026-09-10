@@ -62,14 +62,14 @@ describe('temperament', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
       horo.planets = horo.planets.filter((p) => p.name !== PlanetName.Sun);
       const result = calculateTemperamentContributors(horo);
-      expect(result.ok).toBeFalse();
+      expect(result.ok).toBe(false);
     });
 
     it('缺少月亮时返回错误', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
       horo.planets = horo.planets.filter((p) => p.name !== PlanetName.Moon);
       const result = calculateTemperamentContributors(horo);
-      expect(result.ok).toBeFalse();
+      expect(result.ok).toBe(false);
     });
   });
 
@@ -78,34 +78,34 @@ describe('temperament', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const sun = findPlanet(value, PlanetName.Sun)!;
-      expect(sun.hot).toBeTrue();
-      expect(sun.wet).toBeTrue();
-      expect(sun.cold).toBeFalse();
-      expect(sun.dry).toBeFalse();
+      expect(sun.hot).toBe(true);
+      expect(sun.wet).toBe(true);
+      expect(sun.cold).toBe(false);
+      expect(sun.dry).toBe(false);
     });
 
     it('巨蟹(90°)/狮子/室女 = 热+干', () => {
       const horo = makeHoro({ sun: 90, moon: 180 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const sun = findPlanet(value, PlanetName.Sun)!;
-      expect(sun.hot).toBeTrue();
-      expect(sun.dry).toBeTrue();
+      expect(sun.hot).toBe(true);
+      expect(sun.dry).toBe(true);
     });
 
     it('天秤(180°)/天蝎/射手 = 冷+干', () => {
       const horo = makeHoro({ sun: 180, moon: 0 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const sun = findPlanet(value, PlanetName.Sun)!;
-      expect(sun.cold).toBeTrue();
-      expect(sun.dry).toBeTrue();
+      expect(sun.cold).toBe(true);
+      expect(sun.dry).toBe(true);
     });
 
     it('摩羯(270°)/水瓶/双鱼 = 冷+湿', () => {
       const horo = makeHoro({ sun: 270, moon: 0 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const sun = findPlanet(value, PlanetName.Sun)!;
-      expect(sun.cold).toBeTrue();
-      expect(sun.wet).toBeTrue();
+      expect(sun.cold).toBe(true);
+      expect(sun.wet).toBe(true);
     });
   });
 
@@ -114,32 +114,32 @@ describe('temperament', () => {
       const horo = makeHoro({ sun: 0, moon: 45 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const moon = findPlanet(value, PlanetName.Moon)!;
-      expect(moon.hot).toBeTrue();
-      expect(moon.wet).toBeTrue();
+      expect(moon.hot).toBe(true);
+      expect(moon.wet).toBe(true);
     });
 
     it('上弦(elongation 135°) = 热+干', () => {
       const horo = makeHoro({ sun: 0, moon: 135 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const moon = findPlanet(value, PlanetName.Moon)!;
-      expect(moon.hot).toBeTrue();
-      expect(moon.dry).toBeTrue();
+      expect(moon.hot).toBe(true);
+      expect(moon.dry).toBe(true);
     });
 
     it('满月(elongation 225°) = 冷+干', () => {
       const horo = makeHoro({ sun: 0, moon: 225 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const moon = findPlanet(value, PlanetName.Moon)!;
-      expect(moon.cold).toBeTrue();
-      expect(moon.dry).toBeTrue();
+      expect(moon.cold).toBe(true);
+      expect(moon.dry).toBe(true);
     });
 
     it('下弦(elongation 315°) = 冷+湿', () => {
       const horo = makeHoro({ sun: 0, moon: 315 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const moon = findPlanet(value, PlanetName.Moon)!;
-      expect(moon.cold).toBeTrue();
-      expect(moon.wet).toBeTrue();
+      expect(moon.cold).toBe(true);
+      expect(moon.wet).toBe(true);
     });
   });
 
@@ -153,10 +153,10 @@ describe('temperament', () => {
       });
       const value = expectOk(calculateTemperamentContributors(horo));
       const saturn = findPlanet(value, PlanetName.Saturn)!;
-      expect(saturn.cold).toBeTrue();
-      expect(saturn.dry).toBeTrue();
-      expect(saturn.hot).toBeFalse();
-      expect(saturn.wet).toBeFalse();
+      expect(saturn.cold).toBe(true);
+      expect(saturn.dry).toBe(true);
+      expect(saturn.hot).toBe(false);
+      expect(saturn.wet).toBe(false);
     });
 
     it('木星 = 热+湿', () => {
@@ -168,8 +168,8 @@ describe('temperament', () => {
       });
       const value = expectOk(calculateTemperamentContributors(horo));
       const jupiter = findPlanet(value, PlanetName.Jupiter)!;
-      expect(jupiter.hot).toBeTrue();
-      expect(jupiter.wet).toBeTrue();
+      expect(jupiter.hot).toBe(true);
+      expect(jupiter.wet).toBe(true);
     });
 
     it('南交点 = 热+干+冷', () => {
@@ -181,10 +181,10 @@ describe('temperament', () => {
       });
       const value = expectOk(calculateTemperamentContributors(horo));
       const south = findPlanet(value, PlanetName.SouthNode)!;
-      expect(south.hot).toBeTrue();
-      expect(south.dry).toBeTrue();
-      expect(south.cold).toBeTrue();
-      expect(south.wet).toBeFalse();
+      expect(south.hot).toBe(true);
+      expect(south.dry).toBe(true);
+      expect(south.cold).toBe(true);
+      expect(south.wet).toBe(false);
     });
   });
 
@@ -193,32 +193,32 @@ describe('temperament', () => {
       const horo = makeHoro({ asc: 0, sun: 0, moon: 180 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const aries = findSign(value, Zodiac.Aries)!;
-      expect(aries.hot).toBeTrue();
-      expect(aries.dry).toBeTrue();
+      expect(aries.hot).toBe(true);
+      expect(aries.dry).toBe(true);
     });
 
     it('ASC在金牛(土) → 冷+干', () => {
       const horo = makeHoro({ asc: 30, sun: 60, moon: 180 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const taurus = findSign(value, Zodiac.Taurus)!;
-      expect(taurus.cold).toBeTrue();
-      expect(taurus.dry).toBeTrue();
+      expect(taurus.cold).toBe(true);
+      expect(taurus.dry).toBe(true);
     });
 
     it('ASC在双子(风) → 热+湿', () => {
       const horo = makeHoro({ asc: 60, sun: 90, moon: 180 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const gemini = findSign(value, Zodiac.Gemini)!;
-      expect(gemini.hot).toBeTrue();
-      expect(gemini.wet).toBeTrue();
+      expect(gemini.hot).toBe(true);
+      expect(gemini.wet).toBe(true);
     });
 
     it('ASC在巨蟹(水) → 冷+湿', () => {
       const horo = makeHoro({ asc: 90, sun: 120, moon: 180 });
       const value = expectOk(calculateTemperamentContributors(horo));
       const cancer = findSign(value, Zodiac.Cancer)!;
-      expect(cancer.cold).toBeTrue();
-      expect(cancer.wet).toBeTrue();
+      expect(cancer.cold).toBe(true);
+      expect(cancer.wet).toBe(true);
     });
   });
 

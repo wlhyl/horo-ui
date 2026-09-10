@@ -1,4 +1,5 @@
-import { TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
+import { TestBed } from '@angular/core/testing';
 import { EditComponent } from './edit.component';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -8,9 +9,9 @@ import { ChartType, HoroscopeRecord } from 'src/app/type/interface/horo-admin/ho
 
 describe('EditComponent', () => {
   let component: EditComponent;
-  let titleService: jasmine.SpyObj<Title>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
+  let titleService: SpyObj<Title>;
+  let routerSpy: SpyObj<Router>;
+  let apiServiceSpy: SpyObj<ApiService>;
 
   const mockHoroscopeRecord: HoroscopeRecord = {
     id: 1,
@@ -45,9 +46,9 @@ describe('EditComponent', () => {
   };
 
   beforeEach(() => {
-    titleService = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
-    apiServiceSpy = jasmine.createSpyObj('ApiService', [
+    titleService = createSpyObj('Title', ['setTitle']);
+    routerSpy = createSpyObj('Router', ['currentNavigation']);
+    apiServiceSpy = createSpyObj('ApiService', [
       'addNative',
       'updateNative',
     ]);
@@ -104,17 +105,17 @@ describe('EditComponent', () => {
     };
 
     beforeEach(() => {
-      jasmine.clock().install();
-      jasmine.clock().mockDate(new Date('2023-06-15T10:30:45+08:00'));
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2023-06-15T10:30:45+08:00'));
     });
 
     afterEach(() => {
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should set title to "编辑" when native data is provided', () => {
       // Set up router spy to return mock data
-      routerSpy.currentNavigation.and.returnValue({
+      routerSpy.currentNavigation.mockReturnValue({
         extras: {
           state: mockHoroscopeRecord,
         },
@@ -137,7 +138,7 @@ describe('EditComponent', () => {
     describe('when no native data is provided', () => {
       beforeEach(() => {
         // Reset the router spy to return undefined state
-        routerSpy.currentNavigation.and.returnValue({
+        routerSpy.currentNavigation.mockReturnValue({
           extras: {
             state: undefined,
           },
@@ -162,7 +163,7 @@ describe('EditComponent', () => {
     describe('when router.currentNavigation() returns null', () => {
       beforeEach(() => {
         // Set up router spy to return null
-        routerSpy.currentNavigation.and.returnValue(null);
+        routerSpy.currentNavigation.mockReturnValue(null);
 
         // Re-create component with new router state
         const fixture = TestBed.createComponent(EditComponent);
@@ -196,33 +197,33 @@ describe('EditComponent', () => {
   describe('isLocked property', () => {
     it('should return false when oldNative.lock is false', () => {
       component.oldNative.lock = false;
-      expect(component.isLocked).toBeFalse();
+      expect(component.isLocked).toBe(false);
     });
 
     it('should return true when oldNative.lock is true', () => {
       component.oldNative.lock = true;
-      expect(component.isLocked).toBeTrue();
+      expect(component.isLocked).toBe(true);
     });
 
     it('should reflect changes to oldNative.lock', () => {
       component.oldNative.lock = false;
-      expect(component.isLocked).toBeFalse();
+      expect(component.isLocked).toBe(false);
 
       component.oldNative.lock = true;
-      expect(component.isLocked).toBeTrue();
+      expect(component.isLocked).toBe(true);
 
       component.oldNative.lock = false;
-      expect(component.isLocked).toBeFalse();
+      expect(component.isLocked).toBe(false);
     });
 
     it('should not be affected by changes to native.lock', () => {
       component.oldNative.lock = false;
       component.native.lock = true;
-      expect(component.isLocked).toBeFalse();
+      expect(component.isLocked).toBe(false);
 
       component.oldNative.lock = true;
       component.native.lock = false;
-      expect(component.isLocked).toBeTrue();
+      expect(component.isLocked).toBe(true);
     });
   });
 
@@ -372,14 +373,14 @@ describe('EditComponent', () => {
     it('should update longitude direction to false', () => {
       const event = { detail: { value: false } };
       component.onLongitudeDirectionChange(event as any);
-      expect(component.native.location.is_east).toBeFalse();
+      expect(component.native.location.is_east).toBe(false);
     });
 
     it('should update longitude direction to true', () => {
       component.native.location.is_east = false;
       const event = { detail: { value: true } };
       component.onLongitudeDirectionChange(event as any);
-      expect(component.native.location.is_east).toBeTrue();
+      expect(component.native.location.is_east).toBe(true);
     });
 
     it('should update longitude degree', () => {
@@ -403,14 +404,14 @@ describe('EditComponent', () => {
     it('should update latitude direction to false', () => {
       const event = { detail: { value: false } };
       component.onLatitudeDirectionChange(event as any);
-      expect(component.native.location.is_north).toBeFalse();
+      expect(component.native.location.is_north).toBe(false);
     });
 
     it('should update latitude direction to true', () => {
       component.native.location.is_north = false;
       const event = { detail: { value: true } };
       component.onLatitudeDirectionChange(event as any);
-      expect(component.native.location.is_north).toBeTrue();
+      expect(component.native.location.is_north).toBe(true);
     });
 
     it('should update latitude degree', () => {
@@ -516,7 +517,7 @@ describe('EditComponent', () => {
 
     it('should set longitude correctly', () => {
       component.long = 116.391389;
-      expect(component.native.location.is_east).toBeTrue();
+      expect(component.native.location.is_east).toBe(true);
       expect(component.native.location.longitude_degree).toBe(116);
       expect(component.native.location.longitude_minute).toBe(23);
       expect(component.native.location.longitude_second).toBe(29);
@@ -524,7 +525,7 @@ describe('EditComponent', () => {
 
     it('should set latitude correctly', () => {
       component.lat = 39.906389;
-      expect(component.native.location.is_north).toBeTrue();
+      expect(component.native.location.is_north).toBe(true);
       expect(component.native.location.latitude_degree).toBe(39);
       expect(component.native.location.latitude_minute).toBe(54);
       expect(component.native.location.latitude_second).toBe(23);
@@ -550,7 +551,7 @@ describe('EditComponent', () => {
 
     it('should set negative longitude correctly (west)', () => {
       component.long = -116.391389;
-      expect(component.native.location.is_east).toBeFalse();
+      expect(component.native.location.is_east).toBe(false);
       expect(component.native.location.longitude_degree).toBe(116);
       expect(component.native.location.longitude_minute).toBe(23);
       expect(component.native.location.longitude_second).toBe(29);
@@ -558,7 +559,7 @@ describe('EditComponent', () => {
 
     it('should set negative latitude correctly (south)', () => {
       component.lat = -39.906389;
-      expect(component.native.location.is_north).toBeFalse();
+      expect(component.native.location.is_north).toBe(false);
       expect(component.native.location.latitude_degree).toBe(39);
       expect(component.native.location.latitude_minute).toBe(54);
       expect(component.native.location.latitude_second).toBe(23);
@@ -698,8 +699,8 @@ describe('EditComponent', () => {
   describe('onSubmit', () => {
     beforeEach(() => {
       // Spy on the private methods add and update
-      spyOn(component as any, 'add').and.stub();
-      spyOn(component as any, 'update').and.stub();
+     vi.spyOn(component as any, 'add').mockReturnValue(undefined);
+     vi.spyOn(component as any, 'update').mockReturnValue(undefined);
     });
 
     it('should call add method when native.id is 0', () => {
@@ -739,9 +740,9 @@ describe('EditComponent', () => {
       (component as any).add();
 
       // Verify alert is shown
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
       expect(component.message).toBe('经度范围为-180~180');
-      expect(component.isSaving).toBeFalse();
+      expect(component.isSaving).toBe(false);
     });
 
     it('should show alert when latitude is out of range', () => {
@@ -755,9 +756,9 @@ describe('EditComponent', () => {
       (component as any).add();
 
       // Verify alert is shown
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
       expect(component.message).toBe('纬度范围为-90~90');
-      expect(component.isSaving).toBeFalse();
+      expect(component.isSaving).toBe(false);
     });
 
     it('should show alert when name is empty', () => {
@@ -769,9 +770,9 @@ describe('EditComponent', () => {
       (component as any).add();
 
       // Verify alert is shown
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
       expect(component.message).toBe('姓名长度为1-64个字符');
-      expect(component.isSaving).toBeFalse();
+      expect(component.isSaving).toBe(false);
     });
 
     it('should show alert when name is too long', () => {
@@ -783,35 +784,35 @@ describe('EditComponent', () => {
       (component as any).add();
 
       // Verify alert is shown
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
       expect(component.message).toBe('姓名长度为1-64个字符');
-      expect(component.isSaving).toBeFalse();
+      expect(component.isSaving).toBe(false);
     });
 
-    it('should call api.addNative and handle success response', fakeAsync(() => {
+    it('should call api.addNative and handle success response', fakeAsync(async () => {
       // Set up component with valid data
       component.native = { ...structuredClone(mockHoroscopeRecord), id: 0 };
 
       // Mock API response
       const mockResponse = { ...structuredClone(mockHoroscopeRecord), id: 1 };
-      apiServiceSpy.addNative.and.returnValue(of(mockResponse).pipe(delay(0)));
+      apiServiceSpy.addNative.mockReturnValue(of(mockResponse).pipe(delay(0)));
 
       // Trigger add functionality through onSubmit
       (component as any).add();
 
       // Verify API was called with correct data
       expect(apiServiceSpy.addNative).toHaveBeenCalledWith(component.native);
-      expect(component.isSaving).toBeTrue();
+      expect(component.isSaving).toBe(true);
 
-      tick();
+      await tick();
 
       // Simulate API success response
       // Verify component state after success
       expect(component.native.id).toBe(1);
       expect(component.oldNative).toEqual(mockResponse);
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
       expect(component.message).toBe('新增成功');
-      expect(component.isSaving).toBeFalse();
+      expect(component.isSaving).toBe(false);
     }));
 
     it('should call api.addNative and handle error response', () => {
@@ -819,7 +820,7 @@ describe('EditComponent', () => {
       component.native = { ...structuredClone(mockHoroscopeRecord), id: 0 };
       const errorResponse = { error: { error: 'API Error' } };
       // Mock API error response
-      apiServiceSpy.addNative.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.addNative.mockReturnValue(throwError(() => errorResponse));
 
       // Trigger add functionality through onSubmit
       (component as any).add();
@@ -829,9 +830,9 @@ describe('EditComponent', () => {
 
       // Simulate API error response
       // Verify component state after error
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.message).toBe('新增失败');
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.message).toBe('新增失败: API Error');
+      expect(component.isSaving).toBe(false);
     });
   });
 
@@ -842,7 +843,7 @@ describe('EditComponent', () => {
       component.oldNative = structuredClone(mockHoroscopeRecord);
     });
 
-    it('should only allow updating lock and description fields when record is locked', fakeAsync(() => {
+    it('should only allow updating lock and description fields when record is locked', fakeAsync(async () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
@@ -857,10 +858,10 @@ describe('EditComponent', () => {
       component.native.lock = false;
 
       // Mock API response
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       // Verify that only lock and description fields are included in the update
       expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
@@ -888,16 +889,16 @@ describe('EditComponent', () => {
     it('should show "no fields to update" message when no data has changed', () => {
       (component as any).update();
       expect(component.message).toBe('没需要更新的字段');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     });
 
-    it('should call updateNative with only changed fields when name is modified', fakeAsync(() => {
+    it('should call updateNative with only changed fields when name is modified', fakeAsync(async () => {
       component.native.name = 'New Name';
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
         component.native.id,
@@ -921,68 +922,68 @@ describe('EditComponent', () => {
       );
     }));
 
-    it('should handle successful update', fakeAsync(() => {
+    it('should handle successful update', fakeAsync(async () => {
       component.native.name = 'Updated Name';
       // const updatedRecord = structuredClone(component.native);
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       expect(component.oldNative).toEqual(component.native);
       expect(component.oldNative).not.toBe(component.native);
       expect(component.message).toBe('更新成功');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     }));
 
-    it('should handle update failure', fakeAsync(() => {
+    it('should handle update failure', fakeAsync(async () => {
       component.native.name = 'Updated Name';
-      apiServiceSpy.updateNative.and.returnValue(
+      apiServiceSpy.updateNative.mockReturnValue(
         throwError(() => new Error('Update failed')),
       );
 
       (component as any).update();
-      tick();
+      await tick();
 
-      expect(component.message).toBe('更新失败');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.message).toBe('更新失败: Update failed');
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     }));
 
     it('should show error for invalid longitude', () => {
       component.native.location.longitude_degree = 181;
       (component as any).update();
       expect(component.message).toBe('经度范围为-180~180');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     });
 
     it('should show error for invalid latitude', () => {
       component.native.location.latitude_degree = 91;
       (component as any).update();
       expect(component.message).toBe('纬度范围为-90~90');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     });
 
     it('should show error for invalid name length (too short)', () => {
       component.native.name = '';
       (component as any).update();
       expect(component.message).toBe('姓名长度为1-64个字符');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     });
 
     it('should show error for invalid name length (too long)', () => {
       component.native.name = 'a'.repeat(65);
       (component as any).update();
       expect(component.message).toBe('姓名长度为1-64个字符');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     });
 
-    it('should ignore name validation when record is locked', fakeAsync(() => {
+    it('should ignore name validation when record is locked', fakeAsync(async () => {
       // Set up locked record with invalid name
       component.native.lock = true;
       component.oldNative.lock = true;
@@ -992,10 +993,10 @@ describe('EditComponent', () => {
       component.native.description = 'Updated description';
 
       // Mock API response
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       // Should not show name validation error when locked
       expect(component.message).not.toBe('姓名长度为1-64个字符');
@@ -1003,7 +1004,7 @@ describe('EditComponent', () => {
       expect(apiServiceSpy.updateNative).toHaveBeenCalled();
     }));
 
-    it('should ignore location validation when record is locked', fakeAsync(() => {
+    it('should ignore location validation when record is locked', fakeAsync(async () => {
       // Set up locked record with invalid location
       component.native.lock = true;
       component.oldNative.lock = true;
@@ -1013,10 +1014,10 @@ describe('EditComponent', () => {
       component.native.description = 'Updated description';
 
       // Mock API response
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       // Should not show location validation error when locked
       expect(component.message).not.toBe('经度范围为-180~180');
@@ -1036,21 +1037,21 @@ describe('EditComponent', () => {
 
       // Should show "no fields to update" message
       expect(component.message).toBe('没需要更新的字段');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     });
 
-    it('should handle successful update when only description is changed in locked state', fakeAsync(() => {
+    it('should handle successful update when only description is changed in locked state', fakeAsync(async () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
 
       // Modify description (allowed in locked state)
       component.native.description = 'Updated description';
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
         component.native.id,
@@ -1075,21 +1076,21 @@ describe('EditComponent', () => {
 
       expect(component.oldNative).toEqual(component.native);
       expect(component.message).toBe('更新成功');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     }));
 
-    it('should handle successful update when only lock status is changed in locked state', fakeAsync(() => {
+    it('should handle successful update when only lock status is changed in locked state', fakeAsync(async () => {
       // Set up locked record
       component.native.lock = true;
       component.oldNative.lock = true;
 
       // Change lock status (allowed in locked state)
       component.native.lock = false;
-      apiServiceSpy.updateNative.and.returnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.updateNative.mockReturnValue(of(undefined).pipe(delay(0)));
 
       (component as any).update();
-      tick();
+      await tick();
 
       expect(apiServiceSpy.updateNative).toHaveBeenCalledWith(
         component.native.id,
@@ -1114,8 +1115,8 @@ describe('EditComponent', () => {
 
       expect(component.oldNative).toEqual(component.native);
       expect(component.message).toBe('更新成功');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isSaving).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.isSaving).toBe(false);
     }));
   });
 });

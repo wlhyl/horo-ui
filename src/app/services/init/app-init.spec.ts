@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { appInit } from './app-init';
 import { Horoconfig } from '../config/horo-config.service';
 import { ApiService } from '../api/api.service';
@@ -6,10 +7,10 @@ import FontFaceObserver from 'fontfaceobserver';
 
 describe('appInit', () => {
   let mockConfig: Horoconfig;
-  let mockApi: jasmine.SpyObj<ApiService>;
-  let fontFaceObserverSpy: jasmine.Spy;
-  let fontLoadSpy: jasmine.Spy;
-  let mockFontFaceObserverInstance: { load: jasmine.Spy };
+  let mockApi: SpyObj<ApiService>;
+  let fontFaceObserverSpy: Spy;
+  let fontLoadSpy: Spy;
+  let mockFontFaceObserverInstance: { load: Spy };
   let fontFaceObserverFactory: (font: string) => FontFaceObserver;
 
   beforeEach(() => {
@@ -34,15 +35,14 @@ describe('appInit', () => {
     };
 
     // 模拟 ApiService
-    mockApi = jasmine.createSpyObj('ApiService', ['getHouses']);
+    mockApi = createSpyObj('ApiService', ['getHouses']);
 
     mockFontFaceObserverInstance = {
-      load: jasmine.createSpy('load'),
+      load: createSpy('load'),
     };
 
-    fontFaceObserverSpy = jasmine
-      .createSpy('FontFaceObserver')
-      .and.returnValue(mockFontFaceObserverInstance);
+    fontFaceObserverSpy = createSpy('FontFaceObserver')
+      .mockReturnValue(mockFontFaceObserverInstance);
 
     fontFaceObserverFactory = (font: string) => {
       return fontFaceObserverSpy(font);
@@ -52,8 +52,8 @@ describe('appInit', () => {
   });
 
   it('应该成功加载字体并获取宫位列表', async () => {
-    mockApi.getHouses.and.returnValue(of(['Placidus', 'Koch']));
-    fontLoadSpy.and.returnValue(Promise.resolve());
+    mockApi.getHouses.mockReturnValue(of(['Placidus', 'Koch']));
+    fontLoadSpy.mockReturnValue(Promise.resolve());
 
     await appInit(mockConfig, mockApi, fontFaceObserverFactory)();
 
@@ -64,7 +64,7 @@ describe('appInit', () => {
   });
 
   it('应该在字体加载失败时抛出错误', async () => {
-    fontLoadSpy.and.returnValue(Promise.reject('字体加载失败'));
+    fontLoadSpy.mockReturnValue(Promise.reject('字体加载失败'));
 
     await expectAsync(
       appInit(mockConfig, mockApi, fontFaceObserverFactory)()
@@ -75,10 +75,10 @@ describe('appInit', () => {
   });
 
   it('应该在获取宫位列表失败时抛出错误', async () => {
-    mockApi.getHouses.and.returnValue(
+    mockApi.getHouses.mockReturnValue(
       throwError(() => new Error('API调用失败'))
     );
-    fontLoadSpy.and.returnValue(Promise.resolve());
+    fontLoadSpy.mockReturnValue(Promise.resolve());
 
     await expectAsync(
       appInit(mockConfig, mockApi, fontFaceObserverFactory)()

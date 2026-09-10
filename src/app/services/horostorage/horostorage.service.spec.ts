@@ -100,9 +100,9 @@ describe('HoroStorageService', () => {
   beforeEach(() => {
     storage = localStorage;
     // 监听 localStorage 交互来检查是否被调用
-    spyOn(storage, 'setItem').and.callThrough();
-    spyOn(storage, 'removeItem').and.callThrough();
-    spyOn(storage, 'getItem').and.callThrough();
+   vi.spyOn(storage, 'setItem');
+   vi.spyOn(storage, 'removeItem');
+   vi.spyOn(storage, 'getItem');
 
     TestBed.configureTestingModule({
       providers: [HoroStorageService],
@@ -181,22 +181,22 @@ describe('HoroStorageService', () => {
       };
 
       expect(service.horoData).toEqual(
-        jasmine.objectContaining({
+        expect.objectContaining({
           ...expectedHoroData,
-          date: jasmine.objectContaining({
+          date: expect.objectContaining({
             ...expectedHoroData.date,
-            tz: jasmine.any(Number),
+            tz: expect.any(Number),
           }),
         })
       );
 
       // 检查 synastryData 也重置到默认初始值
       expect(service.synastryData).toEqual(
-        jasmine.objectContaining({
+        expect.objectContaining({
           ...expectedHoroData,
-          date: jasmine.objectContaining({
+          date: expect.objectContaining({
             ...expectedHoroData.date,
-            tz: jasmine.any(Number),
+            tz: expect.any(Number),
           }),
         })
       );

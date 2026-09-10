@@ -152,7 +152,7 @@ describe('reception', () => {
       expect(receptions[0].received).toBe(PlanetName.ASC);
       expect(
         receptions.every((r) => r.receiver !== PlanetName.ASC),
-      ).toBeTrue();
+      ).toBe(true);
     });
   });
 
@@ -194,7 +194,7 @@ describe('reception', () => {
           (m.a === PlanetName.Sun && m.b === PlanetName.Moon) ||
           (m.a === PlanetName.Moon && m.b === PlanetName.Sun),
       );
-      expect(hasSunMoon).toBeFalse();
+      expect(hasSunMoon).toBe(false);
     });
 
     it('should skip missing planets', () => {

@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -14,8 +15,8 @@ import { FirdariaComponent } from './firdaria.component';
 describe('FirdariaComponent', () => {
   let component: FirdariaComponent;
   let fixture: ComponentFixture<FirdariaComponent>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
+  let apiServiceSpy: SpyObj<ApiService>;
+  let titleServiceSpy: SpyObj<Title>;
 
   const mockFirdariaData: FirdariaPeriod[] = [
     {
@@ -45,10 +46,10 @@ describe('FirdariaComponent', () => {
     geo: mockGeoRequest,
   };
 
-  beforeEach(waitForAsync(() => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['firdaria']);
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    const horoStorageSpy = jasmine.createSpyObj('HoroStorageService', [''], {
+  beforeEach(async () => {
+    apiServiceSpy = createSpyObj('ApiService', ['firdaria']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    const horoStorageSpy = createSpyObj('HoroStorageService', [''], {
       horoData: mockHoroData,
     });
 
@@ -64,7 +65,7 @@ describe('FirdariaComponent', () => {
 
     fixture = TestBed.createComponent(FirdariaComponent);
     component = fixture.componentInstance;
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -72,7 +73,7 @@ describe('FirdariaComponent', () => {
 
   describe('ngOnInit', () => {
     it('should set the title, call api.firdaria with correct data, and set firdariaData on success', () => {
-      apiServiceSpy.firdaria.and.returnValue(of(mockFirdariaData));
+      apiServiceSpy.firdaria.mockReturnValue(of(mockFirdariaData));
       fixture.detectChanges();
 
       expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('法达');
@@ -84,7 +85,7 @@ describe('FirdariaComponent', () => {
 
       expect(apiServiceSpy.firdaria).toHaveBeenCalledWith(expectedRequest);
       expect(component.firdariaData).toEqual(mockFirdariaData);
-      expect(component.isAlertOpen).toBeFalse();
+      expect(component.isAlertOpen).toBe(false);
     });
 
     it('should handle error from api.firdaria', () => {
@@ -92,12 +93,12 @@ describe('FirdariaComponent', () => {
         message: 'API Error',
         error: { message: 'Internal Server Error' },
       };
-      apiServiceSpy.firdaria.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.firdaria.mockReturnValue(throwError(() => errorResponse));
       fixture.detectChanges();
 
       expect(component.firdariaData).toEqual([]);
       expect(component.message).toBe('API Error Internal Server Error');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
     });
   });
 });

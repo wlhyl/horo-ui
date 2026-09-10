@@ -1,4 +1,5 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -10,11 +11,11 @@ import { Title } from '@angular/platform-browser';
 
 describe('ReturnComponent Lifecycle Hooks', () => {
   let component: ReturnComponent;
-  let mockTitleService: jasmine.SpyObj<Title>;
-  let drawHoroscopeSpy: jasmine.Spy;
+  let mockTitleService: SpyObj<Title>;
+  let drawHoroscopeSpy: Spy;
 
   beforeEach(() => {
-    mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
+    mockTitleService = createSpyObj('Title', ['setTitle']);
     const mockActivatedRoute = {
       snapshot: {
         data: {
@@ -40,13 +41,13 @@ describe('ReturnComponent Lifecycle Hooks', () => {
     const fixture = TestBed.createComponent(ReturnComponent);
     component = fixture.componentInstance;
 
-    drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+    drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
 
-    spyOn(component as any, 'createCanvas').and.returnValue({
-      dispose: jasmine.createSpy('dispose'),
-      toJSON: jasmine.createSpy('toJSON'),
-      loadFromJSON: jasmine.createSpy('loadFromJSON'),
-      renderAll: jasmine.createSpy('renderAll'),
+   vi.spyOn(component as any, 'createCanvas').mockReturnValue({
+      dispose: createSpy('dispose'),
+      toJSON: createSpy('toJSON'),
+      loadFromJSON: createSpy('loadFromJSON'),
+      renderAll: createSpy('renderAll'),
     });
   });
 
@@ -59,23 +60,23 @@ describe('ReturnComponent Lifecycle Hooks', () => {
     expect(mockTitleService.setTitle).toHaveBeenCalledWith('日返');
   });
 
-  it('should initialize canvas on ngAfterViewInit', fakeAsync(() => {
+  it('should initialize canvas on ngAfterViewInit', fakeAsync(async () => {
     component.ngAfterViewInit();
     // ngAfterViewInit 通过 setTimeout 调用 drawHoroscope，需 flush 定时器
-    tick();
+    await tick();
     expect((component as any).createCanvas).toHaveBeenCalled();
     expect(drawHoroscopeSpy).toHaveBeenCalledWith(ProcessName.SolarReturn);
   }));
 
-  it('should dispose canvas on ngOnDestroy', fakeAsync(() => {
+  it('should dispose canvas on ngOnDestroy', fakeAsync(async () => {
     component.ngAfterViewInit();
-    tick();
+    await tick();
     const canvas = (component as any).canvas;
     const disposeSpy = canvas.dispose;
-    const destroyCompleteSpy = spyOn(
+    const destroyCompleteSpy =vi.spyOn(
       (component as any).destroy$,
       'complete'
-    ).and.callThrough();
+    );
 
     component.ngOnDestroy();
 

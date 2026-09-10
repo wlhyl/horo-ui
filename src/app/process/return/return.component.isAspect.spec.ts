@@ -1,4 +1,5 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
+import { TestBed } from '@angular/core/testing';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
 import { ReturnComponent } from './return.component';
@@ -9,12 +10,12 @@ import { ProcessName } from 'src/app/process/enum/process';
 describe('isAspect property', () => {
   let component: ReturnComponent;
 
-  let drawSpy: jasmine.Spy;
+  let drawSpy: Spy;
   let canvas: {
-    dispose: jasmine.Spy;
-    toJSON: jasmine.Spy;
-    loadFromJSON: jasmine.Spy;
-    renderAll: jasmine.Spy;
+    dispose: Spy;
+    toJSON: Spy;
+    loadFromJSON: Spy;
+    renderAll: Spy;
   };
 
   beforeEach(() => {
@@ -38,14 +39,14 @@ describe('isAspect property', () => {
     component = fixture.componentInstance;
 
     canvas = (component as any).canvas = {
-      dispose: jasmine.createSpy('dispose'),
-      toJSON: jasmine.createSpy('toJSON'),
-      loadFromJSON: jasmine.createSpy('loadFromJSON'),
-      renderAll: jasmine.createSpy('renderAll'),
+      dispose: createSpy('dispose'),
+      toJSON: createSpy('toJSON'),
+      loadFromJSON: createSpy('loadFromJSON'),
+      renderAll: createSpy('renderAll'),
     };
-    canvas.loadFromJSON.and.returnValue(Promise.resolve(canvas));
+    canvas.loadFromJSON.mockReturnValue(Promise.resolve(canvas));
 
-    drawSpy = spyOn(component as any, 'draw').and.stub();
+    drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
   });
 
   it('should have an initial value of false', () => {
@@ -65,14 +66,15 @@ describe('isAspect property', () => {
     const returnHoroscopeData = {} as ReturnHoroscope;
     const canvasJson = { version: 'current', objects: [] };
     component['returnHoroscopeData'] = returnHoroscopeData;
-    canvas.toJSON.and.returnValue(canvasJson);
+    canvas.toJSON.mockReturnValue(canvasJson);
 
     component.isAspect = true;
 
     expect(component.isAspect).toBe(true);
     expect(canvas.toJSON).toHaveBeenCalledTimes(1);
     expect(component['canvasCache']).toEqual(canvasJson as any);
-    expect(drawSpy).toHaveBeenCalledOnceWith(returnHoroscopeData);
+    expect(drawSpy).toHaveBeenCalledTimes(1);
+    expect(drawSpy).toHaveBeenCalledWith(returnHoroscopeData);
     expect(canvas.loadFromJSON).not.toHaveBeenCalled();
   });
 
@@ -104,19 +106,20 @@ describe('isAspect property', () => {
     expect(drawSpy).not.toHaveBeenCalled();
   });
 
-  it('should swap canvas state with the cache when one is available', fakeAsync(() => {
+  it('should swap canvas state with the cache when one is available', fakeAsync(async () => {
     const cachedCanvasJson = { version: 'cached', objects: [] };
     const currentCanvasJson = { version: 'current', objects: [] };
     component['canvasCache'] = cachedCanvasJson;
-    canvas.toJSON.and.returnValue(currentCanvasJson);
+    canvas.toJSON.mockReturnValue(currentCanvasJson);
 
     component.isAspect = true;
-    tick();
+    await tick();
 
     expect(component.isAspect).toBe(true);
     expect(canvas.toJSON).toHaveBeenCalledTimes(1);
     expect(component['canvasCache']).toEqual(currentCanvasJson as any);
-    expect(canvas.loadFromJSON).toHaveBeenCalledOnceWith(cachedCanvasJson);
+    expect(canvas.loadFromJSON).toHaveBeenCalledTimes(1);
+    expect(canvas.loadFromJSON).toHaveBeenCalledWith(cachedCanvasJson);
     expect(canvas.renderAll).toHaveBeenCalledTimes(1);
     expect(drawSpy).not.toHaveBeenCalled();
   }));
@@ -128,7 +131,7 @@ describe('isAspect property', () => {
     component.isAspect = true;
 
     expect(component.isAspect).toBe(true);
-    expect(component.isAlertOpen).toBeTrue();
+    expect(component.isAlertOpen).toBe(true);
     expect(component.message).toBe('应用异常，返照盘数据丢失!');
     expect(canvas.toJSON).toHaveBeenCalledTimes(1);
     expect(canvas.loadFromJSON).not.toHaveBeenCalled();

@@ -1,4 +1,5 @@
-import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -33,21 +34,21 @@ describe('ReturnComponent', () => {
   });
 
   describe('changeStep', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
-    let changeStepSubjectNextSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
+    let changeStepSubjectNextSpy: Spy;
 
     beforeEach(() => {
       // 初始化 currentProcessData
       component.currentProcessData = structuredClone(mockProcessData);
 
       // Spy on drawHoroscope
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
 
       // Spy on changeStepSubject.next
-      changeStepSubjectNextSpy = spyOn(
+      changeStepSubjectNextSpy =vi.spyOn(
         (component as any).changeStepSubject,
         'next'
-      ).and.stub();
+      ).mockReturnValue(undefined);
     });
 
     it('should update year correctly', () => {
@@ -267,27 +268,27 @@ describe('ReturnComponent', () => {
   });
 
   describe('changeStep with debounce', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
 
     beforeEach(() => {
       component.currentProcessData = structuredClone(mockProcessData);
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
     });
 
-    it('should only call drawHoroscope once after rapid calls due to debounce', fakeAsync(() => {
+    it('should only call drawHoroscope once after rapid calls due to debounce', fakeAsync(async () => {
       const step = { year: 0, month: 0, day: 1, hour: 0, minute: 0, second: 0 };
 
       component.changeStep(step);
       component.changeStep(step);
       component.changeStep(step);
 
-      tick(499);
+      await tick(499);
       expect(drawHoroscopeSpy).not.toHaveBeenCalled();
 
-      tick(1);
+      await tick(1);
       expect(drawHoroscopeSpy).toHaveBeenCalledTimes(1);
 
-      flush();
+      await flush();
     }));
   });
 });

@@ -244,11 +244,7 @@ describe('Qizheng Horo Image Functions', () => {
           (o as fabric.FabricText).text.includes(houseInfo.tip)
       );
 
-      expect(tipObject)
-        .withContext(
-          `houseInfo.text: ${houseInfo.text}, houseInfo.tip: ${houseInfo.tip}`
-        )
-        .toBeTruthy();
+      expect(tipObject).toBeTruthy();
 
       // 清理提示对象，以便下一次迭代
       canvas.remove(tipObject!);
@@ -333,11 +329,7 @@ describe('Qizheng Horo Image Functions', () => {
           (o as fabric.FabricText).text.includes(starInfo.tip)
       );
 
-      expect(tipObject)
-        .withContext(
-          `starInfo.text: ${starInfo.text}, starInfo.tip: ${starInfo.tip}`
-        )
-        .toBeTruthy();
+      expect(tipObject).toBeTruthy();
 
       // 清理提示对象，以便下一次迭代
       canvas.remove(tipObject!);
@@ -396,11 +388,7 @@ describe('Qizheng Horo Image Functions', () => {
           (o as fabric.FabricText).text.includes(planetInfo.tip)
       );
 
-      expect(tipObject)
-        .withContext(
-          `planetInfo.text: ${planetInfo.text}, planetInfo.tip: ${planetInfo.tip}`
-        )
-        .toBeTruthy();
+      expect(tipObject).toBeTruthy();
 
       // 清理提示对象，以便下一次迭代
       canvas.remove(tipObject!);
@@ -459,11 +447,7 @@ describe('Qizheng Horo Image Functions', () => {
           (o as fabric.FabricText).text.includes(planetInfo.tip)
       );
 
-      expect(tipObject)
-        .withContext(
-          `planetInfo.text: ${planetInfo.text}, planetInfo.tip: ${planetInfo.tip}`
-        )
-        .toBeTruthy();
+      expect(tipObject).toBeTruthy();
 
       // 清理提示对象，以便下一次迭代
       canvas.remove(tipObject!);
@@ -486,7 +470,7 @@ describe('Qizheng Horo Image Functions', () => {
       const found = numberTextObjects.some(
         (o) => (o as fabric.FabricText).text === number
       );
-      expect(found).withContext(`数字 ${number} 不存在`).toBe(true);
+      expect(found).toBe(true);
     });
 
     // 检查推运时刻洞微

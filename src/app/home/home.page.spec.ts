@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import {
@@ -15,12 +16,12 @@ import { HomePage } from './home.page';
 describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let routerSpy: SpyObj<Router>;
+  let authServiceSpy: SpyObj<AuthService>;
 
   beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
-    authServiceSpy = jasmine.createSpyObj('AuthService', [], {
+    routerSpy = createSpyObj('Router', ['navigateByUrl']);
+    authServiceSpy = createSpyObj('AuthService', [], {
       isAuth: false,
     });
 
@@ -76,7 +77,7 @@ describe('HomePage', () => {
     it('should handle all path enum values', () => {
       const paths = Object.values(Path);
       paths.forEach((path) => {
-        routerSpy.navigateByUrl.calls.reset();
+        routerSpy.navigateByUrl.mockClear();
         component.navigate(path);
         expect(routerSpy.navigateByUrl).toHaveBeenCalledWith(path);
       });
@@ -111,7 +112,7 @@ describe('HomePage', () => {
       const compiled = fixture.nativeElement;
       const navItems = compiled.querySelectorAll('.item');
       navItems.forEach((navItem: any) => {
-        routerSpy.navigateByUrl.calls.reset();
+        routerSpy.navigateByUrl.mockClear();
         navItem.click();
         expect(routerSpy.navigateByUrl).toHaveBeenCalled();
       });
@@ -136,12 +137,12 @@ describe('HomePage', () => {
 describe('HomePage with authenticated user', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let routerSpy: SpyObj<Router>;
+  let authServiceSpy: SpyObj<AuthService>;
 
   beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
-    authServiceSpy = jasmine.createSpyObj('AuthService', [], {
+    routerSpy = createSpyObj('Router', ['navigateByUrl']);
+    authServiceSpy = createSpyObj('AuthService', [], {
       isAuth: true, // Set to true for this test suite
     });
 

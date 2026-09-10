@@ -1,9 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+    } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 import { NavController, Platform } from '@ionic/angular';
@@ -30,24 +29,24 @@ import {
 describe('CompareComponent', () => {
   let component: CompareComponent;
   let fixture: ComponentFixture<CompareComponent>;
-  let mockApiService: jasmine.SpyObj<ApiService>;
+  let mockApiService: SpyObj<ApiService>;
   let mockHoroStorageService: Partial<HoroStorageService>;
   let mockHoroConfigService: Partial<Horoconfig>;
-  let mockTitleService: jasmine.SpyObj<Title>;
+  let mockTitleService: SpyObj<Title>;
   let mockPlatform: Partial<Platform>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockRouter: SpyObj<Router>;
   let mockActivatedRoute: any;
-  let mockNavController: jasmine.SpyObj<NavController>;
+  let mockNavController: SpyObj<NavController>;
 
   beforeEach(async () => {
-    mockApiService = jasmine.createSpyObj('ApiService', [
+    mockApiService = createSpyObj('ApiService', [
       'compare',
       'solarReturn',
       'lunarReturn',
     ]);
-    mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
-    mockNavController = jasmine.createSpyObj('NavController', ['back']);
+    mockTitleService = createSpyObj('Title', ['setTitle']);
+    mockRouter = createSpyObj('Router', ['navigate', 'createUrlTree']);
+    mockNavController = createSpyObj('NavController', ['back']);
 
     mockHoroStorageService = {
       horoData: mockHoroData,
@@ -90,12 +89,12 @@ describe('CompareComponent', () => {
     fixture = TestBed.createComponent(CompareComponent);
     component = fixture.componentInstance;
 
-    spyOn(component as any, 'createCanvas').and.callFake(() => {
+   vi.spyOn(component as any, 'createCanvas').mockImplementation(() => {
       (component as any).canvas = {
-        dispose: jasmine.createSpy('dispose'),
+        dispose: createSpy('dispose'),
         toJSON: () => ({}),
         loadFromJSON: (data: any) =>
-          Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
+          Promise.resolve({ renderAll: createSpy('renderAll') }),
       };
       return (component as any).canvas;
     });
@@ -106,10 +105,10 @@ describe('CompareComponent', () => {
   });
 
   describe('Lifecycle Hooks', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
 
     beforeEach(() => {
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
     });
 
     it('should set the title on ngOnInit', () => {
@@ -117,16 +116,16 @@ describe('CompareComponent', () => {
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('行运');
     });
 
-    it('should initialize canvas on ngAfterViewInit', fakeAsync(() => {
+    it('should initialize canvas on ngAfterViewInit', fakeAsync(async () => {
       component.ngAfterViewInit();
-      tick();
+      await tick();
       expect((component as any).createCanvas).toHaveBeenCalled();
       expect(drawHoroscopeSpy).toHaveBeenCalledWith(ProcessName.Transit);
     }));
 
-    it('should dispose canvas on ngOnDestroy', fakeAsync(() => {
+    it('should dispose canvas on ngOnDestroy', fakeAsync(async () => {
       component.ngAfterViewInit();
-      tick();
+      await tick();
       const canvas = (component as any).canvas;
       const disposeSpy = canvas.dispose;
 
@@ -138,8 +137,8 @@ describe('CompareComponent', () => {
 
     it('should complete destroy$ subject on ngOnDestroy', () => {
       // 创建spy来监听unsubscribe和complete方法
-      const destroyNextSpy = spyOn((component as any).destroy$ as any, 'next');
-      const destroyCompleteSpy = spyOn(
+      const destroyNextSpy =vi.spyOn((component as any).destroy$ as any, 'next');
+      const destroyCompleteSpy =vi.spyOn(
         (component as any).destroy$ as any,
         'complete'
       );
@@ -160,8 +159,8 @@ describe('CompareComponent', () => {
   });
 
   describe('drawHoroscope', () => {
-    let drawSpy: jasmine.Spy;
-    let getHoroscopeComparisonDataSpy: jasmine.Spy;
+    let drawSpy: Spy;
+    let getHoroscopeComparisonDataSpy: Spy;
     const mockHoroscopeComparisonData: any = {
       original_horoscope: {},
       comparison_horoscope: {},
@@ -169,15 +168,15 @@ describe('CompareComponent', () => {
     };
 
     beforeEach(() => {
-      drawSpy = spyOn(component as any, 'draw').and.stub();
-      getHoroscopeComparisonDataSpy = spyOn(
+      drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
+      getHoroscopeComparisonDataSpy =vi.spyOn(
         component as any,
         'getHoroscopeComparisonData'
-      ).and.returnValue(of(mockHoroscopeComparisonData));
+      ).mockReturnValue(of(mockHoroscopeComparisonData));
       component.isDrawing = false;
       component.loading = false;
-      drawSpy.calls.reset();
-      getHoroscopeComparisonDataSpy.calls.reset();
+      drawSpy.mockClear();
+      getHoroscopeComparisonDataSpy.mockClear();
     });
 
     it('should call getHoroscopeComparisonData and draw on success', () => {
@@ -204,7 +203,7 @@ describe('CompareComponent', () => {
         message: 'API Error',
         error: { message: 'Internal Server Error' },
       };
-      getHoroscopeComparisonDataSpy.and.returnValue(
+      getHoroscopeComparisonDataSpy.mockReturnValue(
         throwError(() => errorResponse)
       );
       component.horoscopeComparisonData = null;
@@ -239,15 +238,15 @@ describe('CompareComponent', () => {
   });
 
   describe('getHoroscopeComparisonData', () => {
-    let getTransitDataSpy: jasmine.Spy;
-    let getReturnComparDataSpy: jasmine.Spy;
+    let getTransitDataSpy: Spy;
+    let getReturnComparDataSpy: Spy;
 
     beforeEach(() => {
-      getTransitDataSpy = spyOn(component as any, 'getTransitData').and.stub();
-      getReturnComparDataSpy = spyOn(
+      getTransitDataSpy =vi.spyOn(component as any, 'getTransitData').mockReturnValue(undefined);
+      getReturnComparDataSpy =vi.spyOn(
         component as any,
         'getReturnComparData'
-      ).and.stub();
+      ).mockReturnValue(undefined);
     });
 
     it('should call getTransitData for Transit process', () => {
@@ -305,7 +304,7 @@ describe('CompareComponent', () => {
 
     beforeEach(() => {
       component.currentProcessData = structuredClone(mockProcessData);
-      mockApiService.compare.and.returnValue(of(mockHoroscopeComparisonData));
+      mockApiService.compare.mockReturnValue(of(mockHoroscopeComparisonData));
     });
 
     it('should call api.compare with correct request data', () => {
@@ -334,18 +333,18 @@ describe('CompareComponent', () => {
   });
 
   describe('getReturnComparData', () => {
-    let getSolarReturnDataSpy: jasmine.Spy;
-    let getLunarReturnDataSpy: jasmine.Spy;
+    let getSolarReturnDataSpy: Spy;
+    let getLunarReturnDataSpy: Spy;
     beforeEach(() => {
       component.currentProcessData = structuredClone(mockProcessData);
 
-      getSolarReturnDataSpy = spyOn(component as any, 'getSolarReturnData');
-      getLunarReturnDataSpy = spyOn(component as any, 'getLunarReturnData');
+      getSolarReturnDataSpy =vi.spyOn(component as any, 'getSolarReturnData');
+      getLunarReturnDataSpy =vi.spyOn(component as any, 'getLunarReturnData');
     });
 
     it('should call getSolarReturnData and api.compare for SolarComparNative type', () => {
-      getSolarReturnDataSpy.and.returnValue(of(mockSolarReturnHoroscopeData));
-      mockApiService.compare.and.returnValue(of(mockSolarComparisonNativeData));
+      getSolarReturnDataSpy.mockReturnValue(of(mockSolarReturnHoroscopeData));
+      mockApiService.compare.mockReturnValue(of(mockSolarComparisonNativeData));
 
       const result = (component as any).getReturnComparData(0); // ComparisonType.SolarComparNative
 
@@ -375,8 +374,8 @@ describe('CompareComponent', () => {
     });
 
     it('should call getSolarReturnData and api.compare for NativeComparSolar type', () => {
-      getSolarReturnDataSpy.and.returnValue(of(mockSolarReturnHoroscopeData));
-      mockApiService.compare.and.returnValue(of(mockNativeComparisonSolarData));
+      getSolarReturnDataSpy.mockReturnValue(of(mockSolarReturnHoroscopeData));
+      mockApiService.compare.mockReturnValue(of(mockNativeComparisonSolarData));
 
       const result = (component as any).getReturnComparData(1); // ComparisonType.NativeComparSolar
 
@@ -406,8 +405,8 @@ describe('CompareComponent', () => {
     });
 
     it('should call getLunarReturnData and api.compare for LunarComparNative type', () => {
-      getLunarReturnDataSpy.and.returnValue(of(mockLunarReturnHoroscopeData));
-      mockApiService.compare.and.returnValue(of(mockLunarComparisonNativeData));
+      getLunarReturnDataSpy.mockReturnValue(of(mockLunarReturnHoroscopeData));
+      mockApiService.compare.mockReturnValue(of(mockLunarComparisonNativeData));
 
       const result = (component as any).getReturnComparData(2); // ComparisonType.LunarComparNative
 
@@ -437,8 +436,8 @@ describe('CompareComponent', () => {
     });
 
     it('should call getLunarReturnData and api.compare for NativeComparLunar type', () => {
-      getLunarReturnDataSpy.and.returnValue(of(mockLunarReturnHoroscopeData));
-      mockApiService.compare.and.returnValue(of(mockNativeComparisonLunarData));
+      getLunarReturnDataSpy.mockReturnValue(of(mockLunarReturnHoroscopeData));
+      mockApiService.compare.mockReturnValue(of(mockNativeComparisonLunarData));
 
       const result = (component as any).getReturnComparData(3); // ComparisonType.NativeComparLunar
 
@@ -474,7 +473,7 @@ describe('CompareComponent', () => {
     });
 
     it('should call api.solarReturn with correct request data', () => {
-      mockApiService.solarReturn.and.returnValue(
+      mockApiService.solarReturn.mockReturnValue(
         of(mockSolarReturnHoroscopeData)
       );
 
@@ -493,7 +492,7 @@ describe('CompareComponent', () => {
     });
 
     it('should use currentProcessData.date for process_date', () => {
-      mockApiService.solarReturn.and.returnValue(
+      mockApiService.solarReturn.mockReturnValue(
         of(mockSolarReturnHoroscopeData)
       );
 
@@ -540,7 +539,7 @@ describe('CompareComponent', () => {
     });
 
     it('should call api.lunarReturn with correct request data when isSolarReturn is false', () => {
-      mockApiService.lunarReturn.and.returnValue(
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData)
       );
 
@@ -559,7 +558,7 @@ describe('CompareComponent', () => {
     });
 
     it('should use currentProcessData.date for process_date', () => {
-      mockApiService.lunarReturn.and.returnValue(
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData)
       );
 
@@ -610,11 +609,11 @@ describe('CompareComponent', () => {
       };
 
       // 设置spy
-      const getSolarReturnDataSpy = spyOn(
+      const getSolarReturnDataSpy =vi.spyOn(
         component as any,
         'getSolarReturnData'
-      ).and.returnValue(of(mockSolarReturnHoroscopeData));
-      mockApiService.lunarReturn.and.returnValue(
+      ).mockReturnValue(of(mockSolarReturnHoroscopeData));
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData)
       );
 

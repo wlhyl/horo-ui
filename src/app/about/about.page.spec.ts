@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import {
@@ -17,14 +18,13 @@ import { AboutPage } from './about.page';
 describe('AboutPage', () => {
   let component: AboutPage;
   let fixture: ComponentFixture<AboutPage>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
+  let titleServiceSpy: SpyObj<Title>;
 
   beforeEach(async () => {
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
 
     await TestBed.configureTestingModule({
-      declarations: [AboutPage],
-      imports: [IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar],
+      imports: [IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonTitle, IonToolbar, AboutPage],
       providers: [{ provide: Title, useValue: titleServiceSpy }],
     }).compileComponents();
 
@@ -38,7 +38,7 @@ describe('AboutPage', () => {
   });
 
   it('should call titleService.setTitle with correct title', () => {
-    titleServiceSpy.setTitle.calls.reset();
+    titleServiceSpy.setTitle.mockClear();
     component.ngOnInit();
     expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('说明');
   });

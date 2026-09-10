@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   IonButton,
   IonCol,
@@ -77,7 +77,7 @@ describe('DateTimeChangeComponent', () => {
   describe('changeStep()', () => {
     beforeEach(() => {
       // 重置 spy
-      spyOn(component['changedStep'], 'emit');
+     vi.spyOn(component['changedStep'], 'emit');
     });
 
     it('should set year step and emit event', () => {

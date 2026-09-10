@@ -1,9 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+    } from '@angular/core/testing';
 import { QizhengSynastryComponent } from './qizheng-synastry.component';
 import { ApiService } from 'src/app/services/api/api.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
@@ -35,12 +34,12 @@ import { qizhengHoroscope } from '../../utils/image/qizheng-horoscope.spec';
 describe('QizhengSynastryComponent', () => {
   let component: QizhengSynastryComponent;
   let fixture: ComponentFixture<QizhengSynastryComponent>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
-  let horoStorageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let configServiceSpy: jasmine.SpyObj<QizhengConfigService>;
-  let tipServiceSpy: jasmine.SpyObj<TipService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  // let platformSpy: jasmine.SpyObj<Platform>;
+  let apiServiceSpy: SpyObj<ApiService>;
+  let horoStorageServiceSpy: SpyObj<HoroStorageService>;
+  let configServiceSpy: SpyObj<QizhengConfigService>;
+  let tipServiceSpy: SpyObj<TipService>;
+  let titleServiceSpy: SpyObj<Title>;
+  // let platformSpy: SpyObj<Platform>;
 
   const mockNativeHoroRequest: HoroRequest = createMockHoroRequest({
     id: 1,
@@ -58,19 +57,19 @@ describe('QizhengSynastryComponent', () => {
   const mockHoroscope = structuredClone(qizhengHoroscope);
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['qizheng']);
-    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [], {
+    apiServiceSpy = createSpyObj('ApiService', ['qizheng']);
+    horoStorageServiceSpy = createSpyObj('HoroStorageService', [], {
       horoData: mockNativeHoroRequest,
       synastryData: mockComparisonHoroRequest,
     });
 
-    configServiceSpy = jasmine.createSpyObj('QizhengConfigService', [], {
+    configServiceSpy = createSpyObj('QizhengConfigService', [], {
       HoroscoImage: { width: 800, height: 800 },
       fontSize: 12,
     });
 
-    tipServiceSpy = jasmine.createSpyObj('TipService', ['getTip']);
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
+    tipServiceSpy = createSpyObj('TipService', ['getTip']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
 
     await TestBed.configureTestingModule({
       declarations: [QizhengSynastryComponent],
@@ -88,11 +87,11 @@ describe('QizhengSynastryComponent', () => {
     component = fixture.componentInstance;
 
     // 监视 createCanvas 方法并返回一个模拟的 canvas 对象
-    spyOn(component as any, 'createCanvas').and.returnValue({
-      dispose: jasmine.createSpy('dispose'),
+   vi.spyOn(component as any, 'createCanvas').mockReturnValue({
+      dispose: createSpy('dispose'),
       toJSON: () => ({}),
       loadFromJSON: (data: any) =>
-        Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
+        Promise.resolve({ renderAll: createSpy('renderAll') }),
     });
   });
 
@@ -101,13 +100,13 @@ describe('QizhengSynastryComponent', () => {
   });
 
   describe('Lifecycle Hooks', () => {
-    let loadDataAndDrawSpy: jasmine.Spy;
+    let loadDataAndDrawSpy: Spy;
 
     beforeEach(() => {
-      loadDataAndDrawSpy = spyOn(
+      loadDataAndDrawSpy =vi.spyOn(
         component as any,
         'loadDataAndDraw',
-      ).and.stub();
+      ).mockReturnValue(undefined);
     });
 
     it('should set title on init', () => {
@@ -136,49 +135,49 @@ describe('QizhengSynastryComponent', () => {
   });
 
   describe('loadDataAndDraw', () => {
-    let drawSpy: jasmine.Spy;
-    let zoomImageSpy: jasmine.Spy;
+    let drawSpy: Spy;
+    let zoomImageSpy: Spy;
 
     beforeEach(() => {
       (component as any).canvas = (component as any).createCanvas();
-      apiServiceSpy.qizheng.and.returnValue(of(mockHoroscope).pipe(delay(0)));
-      drawSpy = spyOn(component as any, 'draw').and.stub();
-      zoomImageSpy = spyOn(component as any, 'zoomImage').and.stub();
+      apiServiceSpy.qizheng.mockReturnValue(of(mockHoroscope).pipe(delay(0)));
+      drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
+      zoomImageSpy =vi.spyOn(component as any, 'zoomImage').mockReturnValue(undefined);
     });
 
-    it('should successfully load data and call draw', fakeAsync(() => {
+    it('should successfully load data and call draw', fakeAsync(async () => {
       (component as any).loadDataAndDraw();
 
-      expect(component.loading).toBeTrue();
-      expect(component.isDrawing).toBeTrue();
+      expect(component.loading).toBe(true);
+      expect(component.isDrawing).toBe(true);
 
-      tick();
+      await tick();
 
       expect(apiServiceSpy.qizheng).toHaveBeenCalledTimes(2);
       expect(component['nativeHoro']).toEqual(mockHoroscope);
       expect(component['comparisonHoro']).toEqual(mockHoroscope);
       expect(drawSpy).toHaveBeenCalled();
       expect(zoomImageSpy).toHaveBeenCalled();
-      expect(component.loading).toBeFalse();
-      expect(component.isDrawing).toBeFalse();
+      expect(component.loading).toBe(false);
+      expect(component.isDrawing).toBe(false);
     }));
 
-    it('should successfully load data but not draw when canvas is undefined', fakeAsync(() => {
+    it('should successfully load data but not draw when canvas is undefined', fakeAsync(async () => {
       (component as any).canvas = undefined;
       (component as any).loadDataAndDraw();
 
-      expect(component.loading).toBeTrue();
-      expect(component.isDrawing).toBeTrue();
+      expect(component.loading).toBe(true);
+      expect(component.isDrawing).toBe(true);
 
-      tick();
+      await tick();
 
       expect(apiServiceSpy.qizheng).toHaveBeenCalledTimes(2);
       expect(component['nativeHoro']).toEqual(mockHoroscope);
       expect(component['comparisonHoro']).toEqual(mockHoroscope);
       expect(drawSpy).not.toHaveBeenCalled();
       expect(zoomImageSpy).not.toHaveBeenCalled();
-      expect(component.loading).toBeFalse();
-      expect(component.isDrawing).toBeFalse();
+      expect(component.loading).toBe(false);
+      expect(component.isDrawing).toBe(false);
     }));
 
     it('should not call API if already loading', () => {
@@ -196,13 +195,13 @@ describe('QizhengSynastryComponent', () => {
     it('should call API with correct parameters (process_date + 1 year)', () => {
       (component as any).loadDataAndDraw();
 
-      const nativeArg = apiServiceSpy.qizheng.calls.argsFor(0)[0];
+      const nativeArg = apiServiceSpy.qizheng.mock.calls[0][0];
       expect(nativeArg.native_date).toEqual(mockNativeHoroRequest.date);
       expect(nativeArg.process_date.year).toBe(
         mockNativeHoroRequest.date.year + 1,
       );
 
-      const comparisonArg = apiServiceSpy.qizheng.calls.argsFor(1)[0];
+      const comparisonArg = apiServiceSpy.qizheng.mock.calls[1][0];
       expect(comparisonArg.native_date).toEqual(mockComparisonHoroRequest.date);
       expect(comparisonArg.process_date.year).toBe(
         mockComparisonHoroRequest.date.year + 1,
@@ -214,21 +213,21 @@ describe('QizhengSynastryComponent', () => {
         message: 'Network Error',
         error: { error: 'Details' },
       };
-      apiServiceSpy.qizheng.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.qizheng.mockReturnValue(throwError(() => errorResponse));
 
       (component as any).loadDataAndDraw();
 
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.message).toContain('Network Error Details');
-      expect(component.loading).toBeFalse();
-      expect(component.isDrawing).toBeFalse();
+      expect(component.isAlertOpen).toBe(true);
+      expect(component.message).toContain('Details');
+      expect(component.loading).toBe(false);
+      expect(component.isDrawing).toBe(false);
     });
   });
 
   describe('swap', () => {
-    let drawSpy: jasmine.Spy;
+    let drawSpy: Spy;
     beforeEach(() => {
-      drawSpy = spyOn(component as any, 'draw').and.stub();
+      drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
     });
 
     it('should swap and redraw', () => {
@@ -237,11 +236,11 @@ describe('QizhengSynastryComponent', () => {
       component.isDrawing = false;
 
       component.swap();
-      expect(component.isSwapped).toBeTrue();
+      expect(component.isSwapped).toBe(true);
       expect(drawSpy).toHaveBeenCalledTimes(1);
 
       component.swap();
-      expect(component.isSwapped).toBeFalse();
+      expect(component.isSwapped).toBe(false);
       expect(drawSpy).toHaveBeenCalledTimes(2);
     });
 
@@ -252,7 +251,7 @@ describe('QizhengSynastryComponent', () => {
 
       component.swap();
 
-      expect(component.isSwapped).toBeFalse();
+      expect(component.isSwapped).toBe(false);
       expect(drawSpy).not.toHaveBeenCalled();
     });
 
@@ -263,7 +262,7 @@ describe('QizhengSynastryComponent', () => {
 
       component.swap();
 
-      expect(component.isSwapped).toBeFalse();
+      expect(component.isSwapped).toBe(false);
       expect(drawSpy).not.toHaveBeenCalled();
     });
   });

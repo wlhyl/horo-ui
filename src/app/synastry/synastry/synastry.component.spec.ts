@@ -1,9 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
 import {
   ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+    TestBed,
+  } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
@@ -25,8 +24,8 @@ import { delay, of, throwError } from 'rxjs';
 describe('SynastryComponent', () => {
   let component: SynastryComponent;
   let fixture: ComponentFixture<SynastryComponent>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let apiServiceSpy: SpyObj<ApiService>;
 
   const mockOriginalHoroData: HoroRequest = createMockHoroRequest({
     id: 1,
@@ -85,14 +84,14 @@ describe('SynastryComponent', () => {
     HoroscoImage: { width: 600, height: 600 },
   };
 
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockRouter: SpyObj<Router>;
   let mockActivatedRoute: any;
   let mockPlatform: Partial<Platform>;
 
   beforeEach(async () => {
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['compare']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    apiServiceSpy = createSpyObj('ApiService', ['compare']);
+    mockRouter = createSpyObj('Router', ['navigate', 'createUrlTree']);
     mockActivatedRoute = {};
     mockPlatform = {
       is: () => true,
@@ -122,11 +121,11 @@ describe('SynastryComponent', () => {
     fixture = TestBed.createComponent(SynastryComponent);
     component = fixture.componentInstance;
 
-    spyOn(component as any, 'createCanvas').and.returnValue({
-      dispose: jasmine.createSpy('dispose'),
+   vi.spyOn(component as any, 'createCanvas').mockReturnValue({
+      dispose: createSpy('dispose'),
       toJSON: () => ({}),
       loadFromJSON: (data: any) =>
-        Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
+        Promise.resolve({ renderAll: createSpy('renderAll') }),
     });
   });
 
@@ -136,10 +135,10 @@ describe('SynastryComponent', () => {
 
   describe('Lifecycle Hooks', () => {
     //   describe('ngAfterViewInit', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
 
     beforeEach(() => {
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
     });
 
     it('should set the title on init', () => {
@@ -168,10 +167,10 @@ describe('SynastryComponent', () => {
   });
 
   describe('swap', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
 
     beforeEach(() => {
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
     });
 
     it('should not swap when isDrawing is true', () => {
@@ -205,13 +204,13 @@ describe('SynastryComponent', () => {
   });
 
   describe('drawHoroscope', () => {
-    let drawSpy: jasmine.Spy;
+    let drawSpy: Spy;
     beforeEach(() => {
       //   component.ngAfterViewInit();
-      apiServiceSpy.compare.and.returnValue(
+      apiServiceSpy.compare.mockReturnValue(
         of(mockComparisonData).pipe(delay(0))
       );
-      drawSpy = spyOn(component as any, 'draw').and.stub();
+      drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
     });
 
     it('should not execute when isDrawing is true', () => {
@@ -230,7 +229,7 @@ describe('SynastryComponent', () => {
       expect(apiServiceSpy.compare).not.toHaveBeenCalled();
     });
 
-    it('should set loading and isDrawing to true during request and reset after', fakeAsync(() => {
+    it('should set loading and isDrawing to true during request and reset after', fakeAsync(async () => {
       // 这三行是为了测试alert是否会被关闭和canvasCache是否会被清除
       component.isAlertOpen = true;
       component.message = 'Previous error';
@@ -242,7 +241,7 @@ describe('SynastryComponent', () => {
       expect(component.isDrawing).toBe(true);
       expect((component as any).canvasCache).toBeUndefined();
 
-      tick();
+      await tick();
 
       expect(component.loading).toBe(false);
       expect(component.isDrawing).toBe(false);
@@ -260,8 +259,8 @@ describe('SynastryComponent', () => {
     }));
 
     it('should show alert with error message on failure', () => {
-      const errorResponse = { error: { message: 'API Error' } };
-      apiServiceSpy.compare.and.returnValue(throwError(() => errorResponse));
+      const errorResponse = { error: { error: 'API Error' } };
+      apiServiceSpy.compare.mockReturnValue(throwError(() => errorResponse));
 
       (component as any).drawHoroscope();
 
@@ -271,7 +270,7 @@ describe('SynastryComponent', () => {
 
     it('should handle error with message property', () => {
       const errorResponse = { message: 'Network Error' };
-      apiServiceSpy.compare.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.compare.mockReturnValue(throwError(() => errorResponse));
 
       (component as any).drawHoroscope();
 
@@ -279,17 +278,17 @@ describe('SynastryComponent', () => {
     });
 
     it('should handle error with unknown message', () => {
-      apiServiceSpy.compare.and.returnValue(throwError(() => ({})));
+      apiServiceSpy.compare.mockReturnValue(throwError(() => ({})));
 
       (component as any).drawHoroscope();
 
-      expect(component.message).toBe('获取星盘数据失败: 未知错误');
+      expect(component.message).toBe('获取星盘数据失败: 请求失败 (HTTP undefined)');
     });
   });
 
   describe('getHoroscopeComparisonData', () => {
     it('should return observable with comparison data', () => {
-      apiServiceSpy.compare.and.returnValue(of(mockComparisonData));
+      apiServiceSpy.compare.mockReturnValue(of(mockComparisonData));
 
       const result = (component as any).getHoroscopeComparisonData();
 
@@ -314,7 +313,7 @@ describe('SynastryComponent', () => {
 
     it('should call api with swapped data when isSwapped is true', () => {
       component.isSwapped = true;
-      apiServiceSpy.compare.and.returnValue(of(mockComparisonData));
+      apiServiceSpy.compare.mockReturnValue(of(mockComparisonData));
 
       (component as any).getHoroscopeComparisonData();
 

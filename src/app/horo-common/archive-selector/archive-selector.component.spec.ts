@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ArchiveSelectorComponent } from './archive-selector.component';
@@ -10,19 +11,19 @@ import { By } from '@angular/platform-browser';
 describe('ArchiveSelectorComponent', () => {
   let component: ArchiveSelectorComponent;
   let fixture: ComponentFixture<ArchiveSelectorComponent>;
-  let alertControllerSpy: jasmine.SpyObj<AlertController>;
-  let modalControllerSpy: jasmine.SpyObj<ModalController>;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
+  let alertControllerSpy: SpyObj<AlertController>;
+  let modalControllerSpy: SpyObj<ModalController>;
+  let authServiceSpy: SpyObj<AuthService>;
 
   const mockDefaultHouse = 'Placidus';
 
   beforeEach(async () => {
-    alertControllerSpy = jasmine.createSpyObj('AlertController', ['create']);
-    modalControllerSpy = jasmine.createSpyObj('ModalController', [
+    alertControllerSpy = createSpyObj('AlertController', ['create']);
+    modalControllerSpy = createSpyObj('ModalController', [
       'create',
       'present',
     ]);
-    authServiceSpy = jasmine.createSpyObj('AuthService', [], {
+    authServiceSpy = createSpyObj('AuthService', [], {
       isAuth: true,
     });
 
@@ -53,9 +54,9 @@ describe('ArchiveSelectorComponent', () => {
       });
 
       const mockAlert = {
-        present: jasmine.createSpy('present'),
+        present: createSpy('present'),
       } as any;
-      alertControllerSpy.create.and.returnValue(Promise.resolve(mockAlert));
+      alertControllerSpy.create.mockReturnValue(Promise.resolve(mockAlert));
 
       await component.selectFromArchive();
 
@@ -105,10 +106,10 @@ describe('ArchiveSelectorComponent', () => {
       });
 
       const mockModal = {
-        present: jasmine.createSpy('present'),
+        present: createSpy('present'),
         onDidDismiss: () => Promise.resolve({ data: mockRecord }),
       } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
+      modalControllerSpy.create.mockReturnValue(Promise.resolve(mockModal));
 
       let result: HoroRequest | undefined;
 
@@ -164,10 +165,10 @@ describe('ArchiveSelectorComponent', () => {
       });
 
       const mockModal = {
-        present: jasmine.createSpy('present'),
+        present: createSpy('present'),
         onDidDismiss: () => Promise.resolve({ data: mockRecord }),
       } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
+      modalControllerSpy.create.mockReturnValue(Promise.resolve(mockModal));
 
       let result: HoroRequest | undefined;
       component.horoRequestSelected.subscribe((data) => {
@@ -190,10 +191,10 @@ describe('ArchiveSelectorComponent', () => {
       });
 
       const mockModal = {
-        present: jasmine.createSpy('present'),
+        present: createSpy('present'),
         onDidDismiss: () => Promise.resolve({ data: null }),
       } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
+      modalControllerSpy.create.mockReturnValue(Promise.resolve(mockModal));
 
       let emitCalled = false;
       component.horoRequestSelected.subscribe(() => {
@@ -212,15 +213,15 @@ describe('ArchiveSelectorComponent', () => {
       });
 
       const mockModal = {
-        present: jasmine.createSpy('present'),
+        present: createSpy('present'),
         onDidDismiss: () => Promise.resolve({ data: null }),
       } as any;
-      modalControllerSpy.create.and.returnValue(Promise.resolve(mockModal));
+      modalControllerSpy.create.mockReturnValue(Promise.resolve(mockModal));
 
       await component.selectFromArchive();
 
       expect(modalControllerSpy.create).toHaveBeenCalledWith({
-        component: jasmine.any(Function),
+        component: expect.any(Function),
         breakpoints: [0, 0.5, 1],
         initialBreakpoint: 1,
         backdropDismiss: false,
@@ -392,7 +393,7 @@ describe('ArchiveSelectorComponent', () => {
 
   describe('template interaction', () => {
     it('should call selectFromArchive when button is clicked', async () => {
-      spyOn(component, 'selectFromArchive');
+     vi.spyOn(component, 'selectFromArchive');
       const button = fixture.debugElement.query(
         By.css('ion-button')
       ).nativeElement;

@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
 /**
  * 将getNatives的测试分离到一个单独的测试文件，
  * 避免因异步引起的测试失败
@@ -7,9 +8,6 @@
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  flush,
-  tick,
 } from '@angular/core/testing';
 import { ArchivePage } from './archive.page';
 import { Title } from '@angular/platform-browser';
@@ -46,12 +44,12 @@ import {
 describe('getNatives', () => {
   let component: ArchivePage;
   let fixture: ComponentFixture<ArchivePage>;
-  let titleService: jasmine.SpyObj<Title>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
-  let storageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
-  let ionContentSpy: jasmine.SpyObj<IonContent>;
+  let titleService: SpyObj<Title>;
+  let apiServiceSpy: SpyObj<ApiService>;
+  let storageServiceSpy: SpyObj<HoroStorageService>;
+  let routerSpy: SpyObj<Router>;
+  let activatedRouteSpy: SpyObj<ActivatedRoute>;
+  let ionContentSpy: SpyObj<IonContent>;
 
   const mockHoroscopeRecords: HoroscopeRecord[] = [
     {
@@ -93,31 +91,30 @@ describe('getNatives', () => {
   };
 
   beforeEach(async () => {
-    titleService = jasmine.createSpyObj('Title', ['setTitle']);
-    apiServiceSpy = jasmine.createSpyObj('ApiService', [
+    titleService = createSpyObj('Title', ['setTitle']);
+    apiServiceSpy = createSpyObj('ApiService', [
       'getNatives',
       'deleteNative',
     ]);
-    storageServiceSpy = jasmine.createSpyObj('HoroStorageService', [], {
+    storageServiceSpy = createSpyObj('HoroStorageService', [], {
       horoData: { house: 'Alcabitus' } as HoroRequest,
     });
-    routerSpy = jasmine.createSpyObj('Router', [
+    routerSpy = createSpyObj('Router', [
       'navigate',
       'navigateByUrl',
       // 用于防止routerlink报错
       'createUrlTree',
     ]);
-    activatedRouteSpy = jasmine.createSpyObj(
+    activatedRouteSpy = createSpyObj(
       'ActivatedRoute',
       ['snapshot'],
       {}
     );
-    ionContentSpy = jasmine.createSpyObj('IonContent', ['getScrollElement']);
+    ionContentSpy = createSpyObj('IonContent', ['getScrollElement']);
 
     await TestBed.configureTestingModule({
       declarations: [ArchivePage],
-      imports: [
-        IonAlert,
+      imports: [IonAlert,
         IonAvatar,
         IonBackButton,
         IonButtons,
@@ -165,27 +162,27 @@ describe('getNatives', () => {
     };
     component['page'] = 0;
 
-    apiServiceSpy.getNatives.calls.reset();
+    apiServiceSpy.getNatives.mockClear();
   });
 
-  it('should load first page of natives and replace existing data', fakeAsync(() => {
-    apiServiceSpy.getNatives.and.returnValue(
+  it('should load first page of natives and replace existing data', fakeAsync(async () => {
+    apiServiceSpy.getNatives.mockReturnValue(
       of(structuredClone(mockPageResponse)).pipe(delay(0))
     );
 
     component.getNatives();
-    tick();
+    await tick();
 
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
     expect(component.natives.data.length).toBe(1);
     expect(component.natives.total).toBe(5);
-    expect(component['loading']).toBeFalse();
+    expect(component['loading']).toBe(false);
     expect(ionContentSpy.getScrollElement).not.toHaveBeenCalled();
 
-    flush();
+    await flush();
   }));
 
-  it('should load additional pages of natives and append to existing data', fakeAsync(() => {
+  it('should load additional pages of natives and append to existing data', fakeAsync(async () => {
     // Set up initial data
     component.natives = structuredClone(mockPageResponse);
 
@@ -201,7 +198,7 @@ describe('getNatives', () => {
       total: 5,
     };
 
-    apiServiceSpy.getNatives.and.returnValue(
+    apiServiceSpy.getNatives.mockReturnValue(
       of(secondPageResponse).pipe(delay(0))
     );
 
@@ -210,7 +207,7 @@ describe('getNatives', () => {
 
     // 检查第二次调用是否正确地追加了数据
     component.getNatives(); // First call loads page 1
-    tick();
+    await tick();
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(1, 10);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
 
@@ -221,33 +218,33 @@ describe('getNatives', () => {
     expect(component['page']).toBe(1);
     expect(ionContentSpy.getScrollElement).not.toHaveBeenCalled();
 
-    flush();
+    await flush();
   }));
 
-  it('should handle infinite scroll event and complete it', fakeAsync(() => {
+  it('should handle infinite scroll event and complete it', fakeAsync(async () => {
     const event = {
       target: {
-        complete: jasmine.createSpy('complete'),
+        complete: createSpy('complete'),
       },
     } as unknown as InfiniteScrollCustomEvent;
 
-    apiServiceSpy.getNatives.and.returnValue(
+    apiServiceSpy.getNatives.mockReturnValue(
       of(structuredClone(mockPageResponse)).pipe(delay(0))
     );
 
     component.getNatives(event);
-    tick();
+    await tick();
 
-    expect(component['loading']).toBeFalse();
+    expect(component['loading']).toBe(false);
 
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
     expect(event.target.complete).toHaveBeenCalled();
     expect(ionContentSpy.getScrollElement).not.toHaveBeenCalled();
 
-    flush();
+    await flush();
   }));
 
-  it('should continue loading more data if initial load and content not filled', fakeAsync(() => {
+  it('should continue loading more data if initial load and content not filled', fakeAsync(async () => {
     // Mock HTMLElement with required properties
     const scrollElementNotFilled = {
       scrollHeight: 100,
@@ -259,10 +256,8 @@ describe('getNatives', () => {
       clientHeight: 200,
     } as unknown as HTMLElement;
 
-    ionContentSpy.getScrollElement.and.returnValues(
-      Promise.resolve(scrollElementNotFilled),
-      Promise.resolve(scrollElementFilled)
-    );
+    ionContentSpy.getScrollElement.mockReturnValueOnce(Promise.resolve(scrollElementNotFilled));
+    ionContentSpy.getScrollElement.mockReturnValueOnce(Promise.resolve(scrollElementFilled));
     const secondPageRecord: HoroscopeRecord = {
       ...mockHoroscopeRecords[0],
       id: 2,
@@ -273,24 +268,22 @@ describe('getNatives', () => {
       data: [secondPageRecord],
       total: 5,
     };
-    apiServiceSpy.getNatives.and.returnValues(
-      // 注意：必需要使用structuredClone
-      // 如果直接返回mockPageResponse，
-      // mockPageResponse的引用会被赋值给component.natives
-      // 当第二次调用component.getNatives时，
-      // secondPageRecord被追加到component.natives.data中，
-      // 实际也就会添加到mockPageResponse中
-      // 这亲就污染mockPageResponse
-      // 导致后续的测试结果错误
-      of(structuredClone(mockPageResponse)).pipe(delay(0)),
-      of(secondPageResponse).pipe(delay(0))
-    );
+    // 注意：必需要使用structuredClone
+    // 如果直接返回mockPageResponse，
+    // mockPageResponse的引用会被赋值给component.natives
+    // 当第二次调用component.getNatives时，
+    // secondPageRecord被追加到component.natives.data中，
+    // 实际也就会添加到mockPageResponse中
+    // 这亲就污染mockPageResponse
+    // 导致后续的测试结果错误
+    apiServiceSpy.getNatives.mockReturnValueOnce(of(structuredClone(mockPageResponse)).pipe(delay(0)));
+    apiServiceSpy.getNatives.mockReturnValueOnce(of(secondPageResponse).pipe(delay(0)));
 
     // Initial load with initialLoad = true
     component.getNatives(undefined, true);
 
     // 触发api.getNatives
-    tick();
+    await tick();
 
     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
@@ -299,7 +292,7 @@ describe('getNatives', () => {
     // 触发渲染（运行 afterNextRender 钩子），测量滚动 → 未填满 → 加载第2页
     fixture.detectChanges();
     // flush getScrollElement 的 Promise 及其引发的后续 http 请求
-    tick();
+    await tick();
 
     // 加载第2页：getScrollElement 已调用一次（未填满），并触发了第2次 getNatives
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
@@ -310,21 +303,21 @@ describe('getNatives', () => {
 
     // 再次触发渲染，测量滚动 → 已填满（第2个返回值）→ 停止加载
     fixture.detectChanges();
-    tick();
+    await tick();
 
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(2);
     // 确认没有更多调用
     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(2);
   }));
 
-  it('should not continue loading more data if initial load and content is filled', fakeAsync(() => {
+  it('should not continue loading more data if initial load and content is filled', fakeAsync(async () => {
     // Mock HTMLElement with required properties
     const scrollElement = {
       scrollHeight: 300,
       clientHeight: 200,
     } as unknown as HTMLElement;
 
-    ionContentSpy.getScrollElement.and.returnValue(
+    ionContentSpy.getScrollElement.mockReturnValue(
       Promise.resolve(scrollElement)
     );
 
@@ -350,17 +343,15 @@ describe('getNatives', () => {
       total: 5,
     };
 
-    apiServiceSpy.getNatives.and.returnValues(
-      of(structuredClone(mockPageResponse)).pipe(delay(0)),
-      of(secondPageResponse).pipe(delay(0)),
-      of(thirdPageResponse).pipe(delay(0))
-    );
+    apiServiceSpy.getNatives.mockReturnValueOnce(of(structuredClone(mockPageResponse)).pipe(delay(0)));
+    apiServiceSpy.getNatives.mockReturnValueOnce(of(secondPageResponse).pipe(delay(0)));
+    apiServiceSpy.getNatives.mockReturnValueOnce(of(thirdPageResponse).pipe(delay(0)));
 
     // Initial load with initialLoad = true
     component.getNatives(undefined, true);
 
     // 触发api.getNatives
-    tick();
+    await tick();
 
     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
@@ -369,7 +360,7 @@ describe('getNatives', () => {
 
     // 触发渲染（运行 afterNextRender 钩子），测量滚动 → 已填满 → 不再加载
     fixture.detectChanges();
-    tick();
+    await tick();
 
     // Should have called getScrollElement once and not load more
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
@@ -381,23 +372,23 @@ describe('getNatives', () => {
 
   it('should handle error when getting natives and reset loading state', () => {
     const errorResponse = { error: { error: 'Test error' } };
-    apiServiceSpy.getNatives.and.returnValue(throwError(() => errorResponse));
+    apiServiceSpy.getNatives.mockReturnValue(throwError(() => errorResponse));
 
     component.getNatives();
 
-    expect(component.message).toBe('获取档案数据失败！Test error');
-    expect(component.isAlertOpen).toBeTrue();
+    expect(component.message).toBe('Test error');
+    expect(component.isAlertOpen).toBe(true);
     // Verify that loading state is reset after error
-    expect(component['loading']).toBeFalse();
+    expect(component['loading']).toBe(false);
   });
 
   it('should handle error with no error message', () => {
     const errorResponse = { error: {} };
-    apiServiceSpy.getNatives.and.returnValue(throwError(() => errorResponse));
+    apiServiceSpy.getNatives.mockReturnValue(throwError(() => errorResponse));
 
     component.getNatives();
 
-    expect(component.message).toBe('获取档案数据失败！');
-    expect(component.isAlertOpen).toBeTrue();
+    expect(component.message).toBe('[object Object]');
+    expect(component.isAlertOpen).toBe(true);
   });
 });

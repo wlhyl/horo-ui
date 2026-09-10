@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -42,11 +43,11 @@ import { RouterModule } from '@angular/router';
 describe('SynastryInputComponent', () => {
   let component: SynastryInputComponent;
   let fixture: ComponentFixture<SynastryInputComponent>;
-  let horoStorageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let configServiceSpy: jasmine.SpyObj<Horoconfig>;
-  let navControllerSpy: jasmine.SpyObj<NavController>;
+  let horoStorageServiceSpy: SpyObj<HoroStorageService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let routerSpy: SpyObj<Router>;
+  let configServiceSpy: SpyObj<Horoconfig>;
+  let navControllerSpy: SpyObj<NavController>;
 
   const mockOriginalHoroData: HoroRequest = createMockHoroRequest({
     id: 1,
@@ -111,28 +112,28 @@ describe('SynastryInputComponent', () => {
   };
 
   beforeEach(async () => {
-    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [''], {
+    horoStorageServiceSpy = createSpyObj('HoroStorageService', [''], {
       horoData: mockOriginalHoroData,
       synastryData: mockComparisonHoroData,
     });
 
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj('Router', [
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    routerSpy = createSpyObj('Router', [
       'navigate',
       'createUrlTree',
       'serializeUrl',
     ]);
-    configServiceSpy = jasmine.createSpyObj('Horoconfig', [''], {
+    configServiceSpy = createSpyObj('Horoconfig', [''], {
       houses: mockHouses,
     });
-    navControllerSpy = jasmine.createSpyObj('NavController', ['navigateBack']);
+    navControllerSpy = createSpyObj('NavController', ['navigateBack']);
 
-    routerSpy.createUrlTree.and.returnValue({} as any);
-    routerSpy.serializeUrl.and.returnValue('url');
+    routerSpy.createUrlTree.mockReturnValue({} as any);
+    routerSpy.serializeUrl.mockReturnValue('url');
 
     await TestBed.configureTestingModule({
-      imports: [
-        IonBackButton,
+      declarations: [SynastryInputComponent],
+      imports: [IonBackButton,
         IonButton,
         IonButtons,
         IonCheckbox,
@@ -154,7 +155,6 @@ describe('SynastryInputComponent', () => {
         HoroCommonModule,
         RouterModule.forRoot([]),
       ],
-      declarations: [SynastryInputComponent],
       providers: [
         provideIonicAngular(),
         provideHttpClient(withXhr()),
@@ -190,8 +190,8 @@ describe('SynastryInputComponent', () => {
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )!.get as jasmine.Spy;
-    horoDataGetterSpy.and.returnValue(horoData);
+    )!.get as Spy;
+    horoDataGetterSpy.mockReturnValue(horoData);
 
     fixture = TestBed.createComponent(SynastryInputComponent);
     component = fixture.componentInstance;
@@ -210,8 +210,8 @@ describe('SynastryInputComponent', () => {
     const synastryDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'synastryData'
-    )!.get as jasmine.Spy;
-    synastryDataGetterSpy.and.returnValue(saveynastryData);
+    )!.get as Spy;
+    synastryDataGetterSpy.mockReturnValue(saveynastryData);
 
     fixture = TestBed.createComponent(SynastryInputComponent);
     component = fixture.componentInstance;
@@ -257,9 +257,9 @@ describe('SynastryInputComponent', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )!.set as jasmine.Spy;
+    )!.set as Spy;
     expect(horoDataSetterSpy).toHaveBeenCalled();
-    const savedData = horoDataSetterSpy.calls.mostRecent().args[0];
+    const savedData = horoDataSetterSpy.mock.calls.at(-1)[0];
     expect(savedData).toEqual(originalDataBefore);
   });
 
@@ -272,9 +272,9 @@ describe('SynastryInputComponent', () => {
     const synastryDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'synastryData'
-    )!.set as jasmine.Spy;
+    )!.set as Spy;
     expect(synastryDataSetterSpy).toHaveBeenCalled();
-    const savedData = synastryDataSetterSpy.calls.mostRecent().args[0];
+    const savedData = synastryDataSetterSpy.mock.calls.at(-1)[0];
     expect(savedData).toEqual({
       ...comparisonDataBefore,
       house: originalHouse,
@@ -320,17 +320,17 @@ describe('SynastryInputComponent', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )!.set as jasmine.Spy;
+    )!.set as Spy;
     const synastryDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'synastryData'
-    )!.set as jasmine.Spy;
+    )!.set as Spy;
 
-    const storedOriginal = horoDataSetterSpy.calls.mostRecent().args[0];
+    const storedOriginal = horoDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedOriginal).not.toBe(component.originalHoroData);
     expect(storedOriginal.name).toBe('Test Original');
 
-    const storedComparison = synastryDataSetterSpy.calls.mostRecent().args[0];
+    const storedComparison = synastryDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedComparison).not.toBe(component.comparisonHoroData);
     expect(storedComparison.name).toBe('Test Comparison');
   });

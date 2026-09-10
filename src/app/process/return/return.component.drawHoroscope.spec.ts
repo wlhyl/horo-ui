@@ -1,4 +1,5 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -18,19 +19,19 @@ import {
 
 describe('ReturnComponent', () => {
   let component: ReturnComponent;
-  let mockApiService: jasmine.SpyObj<ApiService>;
-  let mockHoroStorageService: jasmine.SpyObj<HoroStorageService>;
+  let mockApiService: SpyObj<ApiService>;
+  let mockHoroStorageService: SpyObj<HoroStorageService>;
   const mockReturnHoroscopeData: ReturnHoroscope = mockSolarReturnHoroscopeData;
 
   beforeEach(() => {
     const mockActivatedRoute = {
       snapshot: { data: { process_name: ProcessName.SolarReturn } },
     };
-    mockApiService = jasmine.createSpyObj('ApiService', [
+    mockApiService = createSpyObj('ApiService', [
       'solarReturn',
       'lunarReturn',
     ]);
-    mockHoroStorageService = jasmine.createSpyObj('HoroStorageService', [], {
+    mockHoroStorageService = createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
       processData: mockProcessData,
     });
@@ -52,13 +53,13 @@ describe('ReturnComponent', () => {
     component = fixture.componentInstance;
   });
   describe('ReturnComponent drawHoroscope', () => {
-    let getReturnDataSpy: jasmine.Spy;
-    let drawSpy: jasmine.Spy;
+    let getReturnDataSpy: Spy;
+    let drawSpy: Spy;
 
     beforeEach(() => {
       // Spy on private methods before each test
-      getReturnDataSpy = spyOn(component as any, 'getReturnData');
-      drawSpy = spyOn(component as any, 'draw').and.stub();
+      getReturnDataSpy =vi.spyOn(component as any, 'getReturnData');
+      drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
     });
     it('should not call getReturnData if isDrawing is true', () => {
       (component as any).isDrawing = true;
@@ -72,35 +73,35 @@ describe('ReturnComponent', () => {
       expect(getReturnDataSpy).not.toHaveBeenCalled();
     });
 
-    it('should set loading flags and call getReturnData', fakeAsync(() => {
+    it('should set loading flags and call getReturnData', fakeAsync(async () => {
       //因为of是同步的，使用delay创建一个异步的 observable
-      getReturnDataSpy.and.returnValue(
+      getReturnDataSpy.mockReturnValue(
         of(mockReturnHoroscopeData).pipe(delay(0))
       );
       (component as any).drawHoroscope(ProcessName.SolarReturn);
 
       // 在调用后立即检查标志
-      expect(component.loading).toBeTrue();
-      expect((component as any).isDrawing).toBeTrue();
+      expect(component.loading).toBe(true);
+      expect((component as any).isDrawing).toBe(true);
       expect(getReturnDataSpy).toHaveBeenCalledWith(ProcessName.SolarReturn);
 
-      // tick() 来完成异步操作
-      tick();
+      // await tick() 来完成异步操作
+      await flush();
 
       // 异步操作完成后，标志应该被重置
-      expect(component.loading).toBeFalse();
-      expect((component as any).isDrawing).toBeFalse();
+      expect(component.loading).toBe(false);
+      expect((component as any).isDrawing).toBe(false);
     }));
 
-    it('should update component properties and call draw', fakeAsync(() => {
-      getReturnDataSpy.and.returnValue(
+    it('should update component properties and call draw', fakeAsync(async () => {
+      getReturnDataSpy.mockReturnValue(
         of(mockReturnHoroscopeData).pipe(delay(0))
       );
       (component as any).drawHoroscope(ProcessName.SolarReturn);
-      tick(); // Process the observable
+      await flush(); // Process the observable
 
       expect(component.returnHoroscopeData).toEqual(mockReturnHoroscopeData);
-      expect(component.isAlertOpen).toBeFalse();
+      expect(component.isAlertOpen).toBe(false);
       expect(drawSpy).toHaveBeenCalledWith(mockReturnHoroscopeData);
     }));
 
@@ -111,41 +112,41 @@ describe('ReturnComponent', () => {
       };
 
       beforeEach(() => {
-        getReturnDataSpy.and.returnValue(throwError(() => errorResponse));
+        getReturnDataSpy.mockReturnValue(throwError(() => errorResponse));
       });
 
       it('should set error message and open alert', () => {
         (component as any).drawHoroscope(ProcessName.SolarReturn);
-        // tick(); // Process the observable
+        // await flush(); // Process the observable
 
         expect(component.message).toBe('API Error Internal Server Error');
-        expect(component.isAlertOpen).toBeTrue();
+        expect(component.isAlertOpen).toBe(true);
         expect(drawSpy).not.toHaveBeenCalled();
       });
 
       it('should reset loading flags in finalize even on error', () => {
         (component as any).drawHoroscope(ProcessName.SolarReturn);
-        // tick(); // Process the observable
+        // await flush(); // Process the observable
 
-        expect(component.loading).toBeFalse();
-        expect((component as any).isDrawing).toBeFalse();
+        expect(component.loading).toBe(false);
+        expect((component as any).isDrawing).toBe(false);
       });
     });
   });
 
   describe('getReturnData', () => {
-    let getSolarReturnDataSpy: jasmine.Spy;
-    let getLunarReturnDataSpy: jasmine.Spy;
+    let getSolarReturnDataSpy: Spy;
+    let getLunarReturnDataSpy: Spy;
 
     beforeEach(() => {
-      getSolarReturnDataSpy = spyOn(
+      getSolarReturnDataSpy =vi.spyOn(
         component as any,
         'getSolarReturnData'
-      ).and.stub();
-      getLunarReturnDataSpy = spyOn(
+      ).mockReturnValue(undefined);
+      getLunarReturnDataSpy =vi.spyOn(
         component as any,
         'getLunarReturnData'
-      ).and.stub();
+      ).mockReturnValue(undefined);
     });
 
     it('should call getSolarReturnData for SolarReturn process', () => {
@@ -166,8 +167,8 @@ describe('ReturnComponent', () => {
       component.currentProcessData = structuredClone(mockProcessData);
     });
 
-    it('should call api.solarReturn with correct request data', fakeAsync(() => {
-      mockApiService.solarReturn.and.returnValue(
+    it('should call api.solarReturn with correct request data', fakeAsync(async () => {
+      mockApiService.solarReturn.mockReturnValue(
         of(mockSolarReturnHoroscopeData).pipe(delay(0))
       );
 
@@ -178,7 +179,7 @@ describe('ReturnComponent', () => {
           result = data;
         });
 
-      tick(); // 处理异步操作
+      await flush(); // 处理异步操作
 
       expect(result).toEqual(mockSolarReturnHoroscopeData);
 
@@ -190,8 +191,8 @@ describe('ReturnComponent', () => {
       });
     }));
 
-    it('should use currentProcessData.date for process_date', fakeAsync(() => {
-      mockApiService.solarReturn.and.returnValue(
+    it('should use currentProcessData.date for process_date', fakeAsync(async () => {
+      mockApiService.solarReturn.mockReturnValue(
         of(mockSolarReturnHoroscopeData).pipe(delay(0))
       );
 
@@ -214,7 +215,7 @@ describe('ReturnComponent', () => {
           result = data;
         });
 
-      tick(); // 处理异步操作
+      await flush(); // 处理异步操作
 
       expect(result).toEqual(mockSolarReturnHoroscopeData);
 
@@ -233,8 +234,8 @@ describe('ReturnComponent', () => {
       component.currentProcessData.isSolarReturn = false;
     });
 
-    it('should call api.lunarReturn with correct request data when isSolarReturn is false', fakeAsync(() => {
-      mockApiService.lunarReturn.and.returnValue(
+    it('should call api.lunarReturn with correct request data when isSolarReturn is false', fakeAsync(async () => {
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData).pipe(delay(0))
       );
 
@@ -245,7 +246,7 @@ describe('ReturnComponent', () => {
           result = data;
         });
 
-      tick(); // 处理异步操作
+      await flush(); // 处理异步操作
 
       expect(result).toEqual(mockLunarReturnHoroscopeData);
 
@@ -257,8 +258,8 @@ describe('ReturnComponent', () => {
       });
     }));
 
-    it('should use currentProcessData.date for process_date', fakeAsync(() => {
-      mockApiService.lunarReturn.and.returnValue(
+    it('should use currentProcessData.date for process_date', fakeAsync(async () => {
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData).pipe(delay(0))
       );
 
@@ -281,7 +282,7 @@ describe('ReturnComponent', () => {
           result = data;
         });
 
-      tick(); // 处理异步操作
+      await flush(); // 处理异步操作
 
       expect(result).toEqual(mockLunarReturnHoroscopeData);
 
@@ -293,16 +294,16 @@ describe('ReturnComponent', () => {
       });
     }));
 
-    it('should calculate lunar return based on solar return data when isSolarReturn is true', fakeAsync(() => {
+    it('should calculate lunar return based on solar return data when isSolarReturn is true', fakeAsync(async () => {
       // 设置isSolarReturn为true
       component.currentProcessData.isSolarReturn = true;
 
       // 设置spy
-      const getSolarReturnDataSpy = spyOn(
+      const getSolarReturnDataSpy =vi.spyOn(
         component as any,
         'getSolarReturnData'
-      ).and.returnValue(of(mockSolarReturnHoroscopeData).pipe(delay(0)));
-      mockApiService.lunarReturn.and.returnValue(
+      ).mockReturnValue(of(mockSolarReturnHoroscopeData).pipe(delay(0)));
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData).pipe(delay(0))
       );
 
@@ -313,7 +314,7 @@ describe('ReturnComponent', () => {
           result = data;
         });
 
-      tick(); // 处理异步操作
+      await flush(); // 处理异步操作
 
       expect(result).toEqual(mockLunarReturnHoroscopeData);
 
@@ -338,7 +339,7 @@ describe('ReturnComponent', () => {
       });
     }));
 
-    it('should use currentProcessData.date for process_date when isSolarReturn is true', fakeAsync(() => {
+    it('should use currentProcessData.date for process_date when isSolarReturn is true', fakeAsync(async () => {
       // 设置isSolarReturn为true
       component.currentProcessData.isSolarReturn = true;
 
@@ -355,11 +356,11 @@ describe('ReturnComponent', () => {
       };
 
       // 设置spy
-      const getSolarReturnDataSpy = spyOn(
+      const getSolarReturnDataSpy =vi.spyOn(
         component as any,
         'getSolarReturnData'
-      ).and.returnValue(of(mockSolarReturnHoroscopeData).pipe(delay(0)));
-      mockApiService.lunarReturn.and.returnValue(
+      ).mockReturnValue(of(mockSolarReturnHoroscopeData).pipe(delay(0)));
+      mockApiService.lunarReturn.mockReturnValue(
         of(mockLunarReturnHoroscopeData).pipe(delay(0))
       );
 
@@ -370,7 +371,7 @@ describe('ReturnComponent', () => {
           result = data;
         });
 
-      tick(); // 处理异步操作
+      await flush(); // 处理异步操作
 
       expect(result).toEqual(mockLunarReturnHoroscopeData);
 

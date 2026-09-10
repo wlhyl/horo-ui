@@ -4,7 +4,7 @@ describe('deepFreeze', () => {
   it('应该冻结一个简单对象', () => {
     const obj = { a: 1, b: 'hello' };
     const frozenObj = deepFreeze(obj);
-    expect(Object.isFrozen(frozenObj)).toBeTrue();
+    expect(Object.isFrozen(frozenObj)).toBe(true);
     expect(() => {
       frozenObj.a = 2;
     }).toThrowError();
@@ -13,8 +13,8 @@ describe('deepFreeze', () => {
   it('应该冻结一个包含嵌套对象的对象', () => {
     const obj = { a: 1, b: { c: 2, d: 'world' } };
     const frozenObj = deepFreeze(obj);
-    expect(Object.isFrozen(frozenObj)).toBeTrue();
-    expect(Object.isFrozen(frozenObj.b)).toBeTrue();
+    expect(Object.isFrozen(frozenObj)).toBe(true);
+    expect(Object.isFrozen(frozenObj.b)).toBe(true);
     expect(() => {
       frozenObj.b.c = 3;
     }).toThrowError();
@@ -23,9 +23,9 @@ describe('deepFreeze', () => {
   it('应该冻结一个包含数组的对象', () => {
     const obj = { a: 1, arr: [1, { x: 10 }] };
     const frozenObj = deepFreeze(obj);
-    expect(Object.isFrozen(frozenObj)).toBeTrue();
-    expect(Object.isFrozen(frozenObj.arr)).toBeTrue();
-    expect(Object.isFrozen(frozenObj.arr[1])).toBeTrue();
+    expect(Object.isFrozen(frozenObj)).toBe(true);
+    expect(Object.isFrozen(frozenObj.arr)).toBe(true);
+    expect(Object.isFrozen(frozenObj.arr[1])).toBe(true);
     expect(() => {
       frozenObj.arr[0] = 2;
     }).toThrowError();
@@ -45,7 +45,7 @@ describe('deepFreeze', () => {
     const obj = { a: 1 };
     Object.freeze(obj);
     const frozenObj = deepFreeze(obj);
-    expect(Object.isFrozen(frozenObj)).toBeTrue();
+    expect(Object.isFrozen(frozenObj)).toBe(true);
     expect(frozenObj).toBe(obj); // 应该返回同一个引用
   });
 
@@ -53,8 +53,8 @@ describe('deepFreeze', () => {
     const obj: any = {};
     obj.a = obj;
     const frozenObj = deepFreeze(obj);
-    expect(Object.isFrozen(frozenObj)).toBeTrue();
-    expect(Object.isFrozen(frozenObj.a)).toBeTrue();
+    expect(Object.isFrozen(frozenObj)).toBe(true);
+    expect(Object.isFrozen(frozenObj.a)).toBe(true);
     expect(() => {
       frozenObj.a = 1;
     }).toThrowError();

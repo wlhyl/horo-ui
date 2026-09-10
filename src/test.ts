@@ -1,15 +1,20 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
-
-// fakeAsync()/tick()/flush() 需要 zone.js/testing（应用本身已使用 zoneless 变更检测）
-import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
-import {
-  BrowserTestingModule,
-  platformBrowserTesting,
-} from '@angular/platform-browser/testing';
-
-// First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-  BrowserTestingModule,
-  platformBrowserTesting()
-);
+// Test setup file for vitest.
+// The app uses zoneless change detection (Angular 22 defaults), so neither
+// zone.js nor zone.js/testing is imported.
+//
+// Polyfills for running unit tests under jsdom (the default vitest environment).
+// Ionic components such as ion-menu and ion-split-pane query `window.matchMedia`,
+// which jsdom does not implement.
+if (!window.matchMedia) {
+  window.matchMedia = (query: string): MediaQueryList =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false,
+    }) as MediaQueryList;
+}

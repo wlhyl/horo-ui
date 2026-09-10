@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import {
@@ -146,12 +147,12 @@ const mockHoroscopeData: Horoscope = {
 describe('QizhengHoroDetailComponent', () => {
   let component: QizhengHoroDetailComponent;
   let fixture: ComponentFixture<QizhengHoroDetailComponent>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
+  let routerSpy: SpyObj<Router>;
+  let titleServiceSpy: SpyObj<Title>;
 
   beforeEach(async () => {
-    routerSpy = jasmine.createSpyObj('Router', ['currentNavigation']);
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
+    routerSpy = createSpyObj('Router', ['currentNavigation']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
 
     await await TestBed.configureTestingModule({
       imports: [QizhengHoroDetailComponent, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonRow, IonTitle, IonToolbar],
@@ -165,7 +166,7 @@ describe('QizhengHoroDetailComponent', () => {
 
   describe('Component Creation and Initialization', () => {
     it('should create the component', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
+      routerSpy.currentNavigation.mockReturnValue(null);
       fixture = TestBed.createComponent(QizhengHoroDetailComponent);
       component = fixture.componentInstance;
 
@@ -174,7 +175,7 @@ describe('QizhengHoroDetailComponent', () => {
     });
 
     it('should set the title on ngOnInit', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
+      routerSpy.currentNavigation.mockReturnValue(null);
       fixture = TestBed.createComponent(QizhengHoroDetailComponent);
       component = fixture.componentInstance;
 
@@ -183,7 +184,7 @@ describe('QizhengHoroDetailComponent', () => {
     });
 
     it('should initialize collapse states correctly', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
+      routerSpy.currentNavigation.mockReturnValue(null);
       fixture = TestBed.createComponent(QizhengHoroDetailComponent);
       component = fixture.componentInstance;
 
@@ -195,7 +196,7 @@ describe('QizhengHoroDetailComponent', () => {
 
   describe('Router State Handling', () => {
     it('should set horoscopeData from router state', () => {
-      routerSpy.currentNavigation.and.returnValue({
+      routerSpy.currentNavigation.mockReturnValue({
         extras: {
           state: {
             data: mockHoroscopeData,
@@ -215,7 +216,7 @@ describe('QizhengHoroDetailComponent', () => {
     });
 
     it('should have null horoscopeData if router state is missing', () => {
-      routerSpy.currentNavigation.and.returnValue({
+      routerSpy.currentNavigation.mockReturnValue({
         extras: {},
       } as any);
 
@@ -227,7 +228,7 @@ describe('QizhengHoroDetailComponent', () => {
     });
 
     it('should have null horoscopeData if navigation is null', () => {
-      routerSpy.currentNavigation.and.returnValue(null);
+      routerSpy.currentNavigation.mockReturnValue(null);
 
       fixture = TestBed.createComponent(QizhengHoroDetailComponent);
       component = fixture.componentInstance;
@@ -239,7 +240,7 @@ describe('QizhengHoroDetailComponent', () => {
 
   describe('天厨 Method Tests', () => {
     beforeEach(() => {
-      routerSpy.currentNavigation.and.returnValue(null);
+      routerSpy.currentNavigation.mockReturnValue(null);
       fixture = TestBed.createComponent(QizhengHoroDetailComponent);
       component = fixture.componentInstance;
     });
@@ -289,7 +290,7 @@ describe('QizhengHoroDetailComponent', () => {
 
   describe('ShenSha Initialization', () => {
     it('should initialize ShenSha arrays correctly with horoscopeData', () => {
-      routerSpy.currentNavigation.and.returnValue({
+      routerSpy.currentNavigation.mockReturnValue({
         extras: {
           state: {
             data: mockHoroscopeData,
@@ -320,7 +321,7 @@ describe('QizhengHoroDetailComponent', () => {
 
   describe('Component Properties', () => {
     beforeEach(() => {
-      routerSpy.currentNavigation.and.returnValue(null);
+      routerSpy.currentNavigation.mockReturnValue(null);
       fixture = TestBed.createComponent(QizhengHoroDetailComponent);
       component = fixture.componentInstance;
     });

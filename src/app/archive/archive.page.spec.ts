@@ -1,9 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
+    } from '@angular/core/testing';
 import { ArchivePage } from './archive.page';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from '../services/api/api.service';
@@ -42,12 +41,12 @@ import { createMockHoroRequest } from '../test-utils/test-data-factory.spec';
 describe('ArchivePage', () => {
   let component: ArchivePage;
   let fixture: ComponentFixture<ArchivePage>;
-  let titleService: jasmine.SpyObj<Title>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
-  let storageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
-  let ionContentSpy: jasmine.SpyObj<IonContent>;
+  let titleService: SpyObj<Title>;
+  let apiServiceSpy: SpyObj<ApiService>;
+  let storageServiceSpy: SpyObj<HoroStorageService>;
+  let routerSpy: SpyObj<Router>;
+  let activatedRouteSpy: SpyObj<ActivatedRoute>;
+  let ionContentSpy: SpyObj<IonContent>;
 
   const mockHoroscopeRecords: HoroscopeRecord[] = [
     {
@@ -89,28 +88,28 @@ describe('ArchivePage', () => {
   };
 
   beforeEach(async () => {
-    titleService = jasmine.createSpyObj('Title', ['setTitle']);
-    apiServiceSpy = jasmine.createSpyObj('ApiService', [
+    titleService = createSpyObj('Title', ['setTitle']);
+    apiServiceSpy = createSpyObj('ApiService', [
       'getNatives',
       'deleteNative',
     ]);
-    storageServiceSpy = jasmine.createSpyObj('HoroStorageService', [], {
+    storageServiceSpy = createSpyObj('HoroStorageService', [], {
       horoData: { house: 'Alcabitus' } as HoroRequest,
     });
-    routerSpy = jasmine.createSpyObj('Router', [
+    routerSpy = createSpyObj('Router', [
       'navigate',
       'navigateByUrl',
       // 用于防止routerlink报错
       'createUrlTree',
     ]);
-    activatedRouteSpy = jasmine.createSpyObj(
+    activatedRouteSpy = createSpyObj(
       'ActivatedRoute',
       ['snapshot'],
       {}
     );
-    ionContentSpy = jasmine.createSpyObj('IonContent', ['getScrollElement']);
+    ionContentSpy = createSpyObj('IonContent', ['getScrollElement']);
     // 内容已填满（scrollHeight > clientHeight），避免initialLoad自动加载链在测试中被触发
-    ionContentSpy.getScrollElement.and.returnValue(
+    ionContentSpy.getScrollElement.mockReturnValue(
       Promise.resolve({
         scrollHeight: 500,
         clientHeight: 200,
@@ -119,8 +118,7 @@ describe('ArchivePage', () => {
 
     await TestBed.configureTestingModule({
       declarations: [ArchivePage],
-      imports: [
-        IonAlert,
+      imports: [IonAlert,
         IonAvatar,
         IonBackButton,
         IonButtons,
@@ -167,7 +165,7 @@ describe('ArchivePage', () => {
   });
 
   it('should set title on init', () => {
-    titleService.setTitle.calls.reset();
+    titleService.setTitle.mockClear();
     component.ngOnInit();
     expect(titleService.setTitle).toHaveBeenCalledWith('档案库');
   });
@@ -175,7 +173,7 @@ describe('ArchivePage', () => {
   it('should initialize with correct default values', () => {
     expect(component.title).toBe('档案库');
     expect(component.path).toBe(Path);
-    expect(component.isAlertOpen).toBeFalse();
+    expect(component.isAlertOpen).toBe(false);
     expect(component.alertButtons).toEqual(['OK']);
     expect(component.message).toBe('');
     expect(component.natives).toEqual({
@@ -185,7 +183,7 @@ describe('ArchivePage', () => {
   });
 
   it('should load natives on view will enter', () => {
-    component.getNatives = jasmine.createSpy().and.stub();
+    component.getNatives = createSpy().mockReturnValue(undefined);
     component['page'] = 2;
     component.natives.data = [mockPageResponse.data[0]];
     component.natives.total = 10;
@@ -203,12 +201,12 @@ describe('ArchivePage', () => {
     beforeEach(() => {
       event = {
         target: {
-          complete: jasmine.createSpy('complete'),
+          complete: createSpy('complete'),
         },
       } as unknown as InfiniteScrollCustomEvent;
 
       // Spy on getNatives to verify it's called
-      component.getNatives = jasmine.createSpy().and.stub();
+      component.getNatives = createSpy().mockReturnValue(undefined);
 
       // Set up initial state
       component.natives = {
@@ -264,17 +262,17 @@ describe('ArchivePage', () => {
   });
 
   describe('delete', () => {
-    it('should delete native and reload natives', fakeAsync(() => {
-      apiServiceSpy.deleteNative.and.returnValue(of(undefined).pipe(delay(0)));
-      apiServiceSpy.getNatives.and.returnValue(
+    it('should delete native and reload natives', fakeAsync(async () => {
+      apiServiceSpy.deleteNative.mockReturnValue(of(undefined).pipe(delay(0)));
+      apiServiceSpy.getNatives.mockReturnValue(
         of(mockPageResponse).pipe(delay(0))
       );
 
       // Spy on component's getNatives method to verify it's called with correct parameters
-      spyOn(component, 'getNatives').and.callThrough();
+     vi.spyOn(component, 'getNatives');
 
       component.delete(1);
-      tick();
+      await tick();
 
       expect(component['page']).toBe(0);
       expect(apiServiceSpy.deleteNative).toHaveBeenCalledWith(1);
@@ -287,15 +285,15 @@ describe('ArchivePage', () => {
 
     it('should handle error when deleting native', () => {
       const errorResponse = { error: { error: 'Delete error' } };
-      apiServiceSpy.deleteNative.and.returnValue(
+      apiServiceSpy.deleteNative.mockReturnValue(
         throwError(() => errorResponse)
       );
-      apiServiceSpy.getNatives.and.returnValue(of(mockPageResponse));
+      apiServiceSpy.getNatives.mockReturnValue(of(mockPageResponse));
 
       component.delete(1);
 
-      expect(component.message).toBe('删除档案失败！Delete error');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.message).toBe('Delete error');
+      expect(component.isAlertOpen).toBe(true);
     });
   });
 
@@ -339,7 +337,7 @@ describe('ArchivePage', () => {
       const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
         storageServiceSpy,
         'horoData'
-      )?.set as jasmine.Spy;
+      )?.set as Spy;
 
       component.toHoro(native, '/test-path');
 
@@ -383,7 +381,7 @@ describe('ArchivePage', () => {
       const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
         storageServiceSpy,
         'horoData'
-      )?.set as jasmine.Spy;
+      )?.set as Spy;
 
       component.toHoro(native, '/test-path');
 
@@ -422,7 +420,7 @@ describe('ArchivePage', () => {
       const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
         storageServiceSpy,
         'horoData'
-      )?.set as jasmine.Spy;
+      )?.set as Spy;
 
       component.toHoro(native, '/test-path');
 
@@ -441,21 +439,21 @@ describe('ArchivePage', () => {
   //     component['page'] = 0;
   //   });
 
-  //   it('should load first page of natives and replace existing data', fakeAsync(() => {
-  //     apiServiceSpy.getNatives.and.returnValue(
+  //   it('should load first page of natives and replace existing data', fakeAsync(async () => {
+  //     apiServiceSpy.getNatives.mockReturnValue(
   //       of(mockPageResponse).pipe(delay(0))
   //     );
 
   //     component.getNatives();
-  //     tick();
+  //     await tick();
 
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
   //     expect(component.natives.data.length).toBe(1);
   //     expect(component.natives.total).toBe(5);
-  //     expect(component['loading']).toBeFalse();
+  //     expect(component['loading']).toBe(false);
   //   }));
 
-  //   it('should load additional pages of natives and append to existing data', fakeAsync(() => {
+  //   it('should load additional pages of natives and append to existing data', fakeAsync(async () => {
   //     // Set up initial data
   //     component.natives = {
   //       data: [...mockHoroscopeRecords],
@@ -474,7 +472,7 @@ describe('ArchivePage', () => {
   //       total: 5,
   //     };
 
-  //     apiServiceSpy.getNatives.and.returnValue(
+  //     apiServiceSpy.getNatives.mockReturnValue(
   //       of(secondPageResponse).pipe(delay(0))
   //     );
 
@@ -483,7 +481,7 @@ describe('ArchivePage', () => {
 
   //     // 检查第二次调用是否正确地追加了数据
   //     component.getNatives(); // First call loads page 1
-  //     tick();
+  //     await tick();
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(1, 10);
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
 
@@ -494,50 +492,50 @@ describe('ArchivePage', () => {
   //     expect(component['page']).toBe(1);
   //   }));
 
-  //   it('should handle infinite scroll event and complete it', fakeAsync(() => {
+  //   it('should handle infinite scroll event and complete it', fakeAsync(async () => {
   //     const event = {
   //       target: {
-  //         complete: jasmine.createSpy('complete'),
+  //         complete: createSpy('complete'),
   //       },
   //     } as unknown as InfiniteScrollCustomEvent;
 
-  //     apiServiceSpy.getNatives.and.returnValue(
+  //     apiServiceSpy.getNatives.mockReturnValue(
   //       of(mockPageResponse).pipe(delay(0))
   //     );
 
   //     component.getNatives(event);
-  //     tick();
+  //     await tick();
 
-  //     expect(component['loading']).toBeFalse();
+  //     expect(component['loading']).toBe(false);
 
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
   //     expect(event.target.complete).toHaveBeenCalled();
   //     expect(ionContentSpy.getScrollElement).not.toHaveBeenCalled();
   //   }));
 
-  //   it('should continue loading more data if initial load and content not filled', fakeAsync(() => {
+  //   it('should continue loading more data if initial load and content not filled', fakeAsync(async () => {
   //     // Mock HTMLElement with required properties
   //     const scrollElement = {
   //       scrollHeight: 100,
   //       clientHeight: 200,
   //     } as unknown as HTMLElement;
 
-  //     ionContentSpy.getScrollElement.and.returnValue(
+  //     ionContentSpy.getScrollElement.mockReturnValue(
   //       Promise.resolve(scrollElement)
   //     );
-  //     apiServiceSpy.getNatives.and.returnValue(
+  //     apiServiceSpy.getNatives.mockReturnValue(
   //       of(mockPageResponse).pipe(delay(0))
   //     );
 
   //     // Initial load with initialLoad = true
   //     component.getNatives(undefined, true);
-  //     tick();
+  //     await tick();
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
   //     expect(ionContentSpy.getScrollElement).not.toHaveBeenCalled();
 
   //     // Wait for the setTimeout in getNatives
-  //     tick(101);
+  //     await tick(101);
   //     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
 
   //     // Should have called getNatives twice (initial + additional)
@@ -547,26 +545,26 @@ describe('ArchivePage', () => {
   //     expect(component.natives.data.length).toBe(2);
   //   }));
 
-  //   it('should not continue loading more data if initial load and content is filled', fakeAsync(() => {
+  //   it('should not continue loading more data if initial load and content is filled', fakeAsync(async () => {
   //     // Mock HTMLElement with required properties
   //     const scrollElement = {
   //       scrollHeight: 300,
   //       clientHeight: 200,
   //     } as unknown as HTMLElement;
 
-  //     ionContentSpy.getScrollElement.and.returnValue(
+  //     ionContentSpy.getScrollElement.mockReturnValue(
   //       Promise.resolve(scrollElement)
   //     );
-  //     apiServiceSpy.getNatives.and.returnValue(
+  //     apiServiceSpy.getNatives.mockReturnValue(
   //       of(mockPageResponse).pipe(delay(0))
   //     );
 
   //     // Initial load with initialLoad = true
   //     component.getNatives(undefined, true);
-  //     tick();
+  //     await tick();
 
   //     // Wait for the setTimeout in getNatives
-  //     tick(101);
+  //     await tick(101);
 
   //     // Should have only called getNatives once (initial)
   //     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
@@ -576,24 +574,24 @@ describe('ArchivePage', () => {
 
   //   it('should handle error when getting natives and reset loading state', () => {
   //     const errorResponse = { error: { error: 'Test error' } };
-  //     apiServiceSpy.getNatives.and.returnValue(throwError(() => errorResponse));
+  //     apiServiceSpy.getNatives.mockReturnValue(throwError(() => errorResponse));
 
   //     component.getNatives();
 
   //     expect(component.message).toBe('获取档案数据失败！Test error');
-  //     expect(component.isAlertOpen).toBeTrue();
+  //     expect(component.isAlertOpen).toBe(true);
   //     // Verify that loading state is reset after error
-  //     expect(component['loading']).toBeFalse();
+  //     expect(component['loading']).toBe(false);
   //   });
 
   //   it('should handle error with no error message', () => {
   //     const errorResponse = { error: {} };
-  //     apiServiceSpy.getNatives.and.returnValue(throwError(() => errorResponse));
+  //     apiServiceSpy.getNatives.mockReturnValue(throwError(() => errorResponse));
 
   //     component.getNatives();
 
   //     expect(component.message).toBe('获取档案数据失败！');
-  //     expect(component.isAlertOpen).toBeTrue();
+  //     expect(component.isAlertOpen).toBe(true);
   //   });
   // });
 });

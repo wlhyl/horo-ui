@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -49,27 +50,27 @@ import {
 describe('QizhengPage', () => {
   let component: QizhengPage;
   let fixture: ComponentFixture<QizhengPage>;
-  let horoStorageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
+  let horoStorageServiceSpy: SpyObj<HoroStorageService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let routerSpy: SpyObj<Router>;
+  let mockActivatedRoute: SpyObj<ActivatedRoute>;
 
   const mockHoroData: HoroRequest = createMockHoroRequest();
 
   const mockProcessData: ProcessRequest = createMockProcessRequest();
 
-  mockActivatedRoute = jasmine.createSpyObj('ActivatedRoute', [], {
+  mockActivatedRoute = createSpyObj('ActivatedRoute', [], {
     snapshot: { dat: 'test' },
   });
 
   beforeEach(async () => {
-    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [], {
+    horoStorageServiceSpy = createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
       processData: mockProcessData,
     });
 
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj(
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    routerSpy = createSpyObj(
       'Router',
       ['navigate', 'createUrlTree', 'serializeUrl'],
       // 以下属性是为了模拟 RouterLink
@@ -159,11 +160,11 @@ describe('QizhengPage', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData',
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
     const processDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'processData',
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     expect(horoDataSetterSpy).toHaveBeenCalledWith(originalHoroData);
     expect(processDataSetterSpy).toHaveBeenCalledWith(originalProcessData);
@@ -223,19 +224,19 @@ describe('QizhengPage', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData',
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
     const processDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'processData',
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     // 验证storage.horoData与component.horoData是不同的对象
-    const storedHoroData = horoDataSetterSpy.calls.mostRecent().args[0];
+    const storedHoroData = horoDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedHoroData).toEqual(component.horoData);
     expect(storedHoroData).not.toBe(component.horoData);
 
     // 验证storage.processData与component.processData是不同的对象
-    const storedProcessData = processDataSetterSpy.calls.mostRecent().args[0];
+    const storedProcessData = processDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedProcessData).toEqual(component.processData);
     expect(storedProcessData).not.toBe(component.processData);
   });
@@ -533,7 +534,7 @@ describe('QizhengPage', () => {
     });
 
     it('should call getProcess when submit button is clicked', () => {
-      spyOn(component, 'getProcess');
+     vi.spyOn(component, 'getProcess');
 
       // 模拟点击提交按钮
       submitButton.nativeElement.click();

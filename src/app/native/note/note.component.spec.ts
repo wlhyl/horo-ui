@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { Title } from '@angular/platform-browser';
@@ -18,9 +19,9 @@ import { createMockHoroRequest } from 'src/app/test-utils/test-data-factory.spec
 describe('NoteComponent', () => {
   let component: NoteComponent;
   let fixture: ComponentFixture<NoteComponent>;
-  let mockApiService: jasmine.SpyObj<ApiService>;
+  let mockApiService: SpyObj<ApiService>;
   let mockHoroStorageService: { horoData: any; eventData: any };
-  let mockTitleService: jasmine.SpyObj<Title>;
+  let mockTitleService: SpyObj<Title>;
   let mockRouter: Pick<Router, 'url'>;
 
   const initialHoroData: HoroRequest = createMockHoroRequest({
@@ -46,12 +47,12 @@ describe('NoteComponent', () => {
   });
 
   beforeEach(async () => {
-    mockApiService = jasmine.createSpyObj('ApiService', [
+    mockApiService = createSpyObj('ApiService', [
       'getNativeById',
       'addNative',
       'updateNative',
     ]);
-    mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
+    mockTitleService = createSpyObj('Title', ['setTitle']);
 
     mockHoroStorageService = {
       horoData: structuredClone(initialHoroData),
@@ -83,9 +84,8 @@ describe('NoteComponent', () => {
 
   describe('ngOnInit', () => {
     it('should set the title and call loadNativeData', () => {
-      component['loadNativeData'] = jasmine
-        .createSpy('loadNativeData')
-        .and.stub();
+      component['loadNativeData'] = createSpy('loadNativeData')
+        .mockReturnValue(undefined);
       component.ngOnInit();
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('笔记');
       expect(component['loadNativeData']).toHaveBeenCalled();
@@ -97,7 +97,7 @@ describe('NoteComponent', () => {
       component.horoData = { ...component.horoData, id: 0 };
       component['loadNativeData']();
       expect(mockApiService.getNativeById).not.toHaveBeenCalled();
-      expect(component.isLoading).toBeFalse();
+      expect(component.isLoading()).toBe(false);
     });
 
     it('should call api and set data on success', () => {
@@ -105,33 +105,33 @@ describe('NoteComponent', () => {
         description: 'Test Description',
       };
       component.horoData = { ...component.horoData, id: 1 };
-      mockApiService.getNativeById.and.returnValue(
+      mockApiService.getNativeById.mockReturnValue(
         of(response as HoroscopeRecord)
       );
       component['loadNativeData']();
       expect(mockApiService.getNativeById).toHaveBeenCalledWith(1);
-      expect(component.describe).toBe('Test Description');
-      expect(component.initialDescribe).toBe('Test Description');
-      expect(component.isLoading).toBeFalse();
+      expect(component.describe()).toBe('Test Description');
+      expect(component.initialDescribe()).toBe('Test Description');
+      expect(component.isLoading()).toBe(false);
     });
 
     it('should handle error on api failure', () => {
       const error = { message: 'Error' };
       component.horoData = { ...component.horoData, id: 1 };
-      mockApiService.getNativeById.and.returnValue(throwError(() => error));
+      mockApiService.getNativeById.mockReturnValue(throwError(() => error));
       component['loadNativeData']();
-      expect(component.message).toBe('加载数据时出错: Error');
-      expect(component.isAlertOpen).toBeTrue();
-      expect(component.isLoading).toBeFalse();
+      expect(component.message()).toBe('加载数据时出错: Error');
+      expect(component.isAlertOpen()).toBe(true);
+      expect(component.isLoading()).toBe(false);
     });
   });
 
   describe('onSubmit', () => {
     it('should add a new native record if id is 0', () => {
       const response: Partial<HoroscopeRecord> = { id: 123 };
-      mockApiService.addNative.and.returnValue(of(response as HoroscopeRecord));
+      mockApiService.addNative.mockReturnValue(of(response as HoroscopeRecord));
       component.horoData = { ...component.horoData, id: 0 };
-      component.describe = 'New note';
+      component.describe.set('New note');
       component.onSubmit();
 
       const expectedRequest: HoroscopeRecordRequest = {
@@ -164,24 +164,24 @@ describe('NoteComponent', () => {
 
       expect(mockApiService.addNative).toHaveBeenCalledWith(expectedRequest);
       expect(component.horoData.id).toBe(123);
-      expect(component.initialDescribe).toBe('New note');
-      expect(component.message).toBe('已新增记录');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.initialDescribe()).toBe('New note');
+      expect(component.message()).toBe('已新增记录');
+      expect(component.isAlertOpen()).toBe(true);
     });
 
     it('should handle error when adding a new native record', () => {
       const error = { message: 'Add Error' };
-      mockApiService.addNative.and.returnValue(throwError(() => error));
+      mockApiService.addNative.mockReturnValue(throwError(() => error));
       component.horoData = { ...component.horoData, id: 0 };
       component.onSubmit();
-      expect(component.message).toBe('保存数据时出错: Add Error');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.message()).toBe('保存数据时出错: Add Error');
+      expect(component.isAlertOpen()).toBe(true);
     });
 
     it('should update an existing native record if id is not 0', () => {
-      mockApiService.updateNative.and.returnValue(of(void 0));
+      mockApiService.updateNative.mockReturnValue(of(void 0));
       component.horoData = { ...component.horoData, id: 1 };
-      component.describe = 'Updated note';
+      component.describe.set('Updated note');
       component.onSubmit();
 
       const expectedRequest: UpdateHoroscopeRecordRequest = {
@@ -206,32 +206,32 @@ describe('NoteComponent', () => {
         1,
         expectedRequest
       );
-      expect(component.initialDescribe).toBe('Updated note');
-      expect(component.message).toBe('已更新记录');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.initialDescribe()).toBe('Updated note');
+      expect(component.message()).toBe('已更新记录');
+      expect(component.isAlertOpen()).toBe(true);
     });
 
     it('should handle error when updating an existing native record', () => {
       const error = { message: 'Update Error' };
-      mockApiService.updateNative.and.returnValue(throwError(() => error));
+      mockApiService.updateNative.mockReturnValue(throwError(() => error));
       component.horoData = { ...component.horoData, id: 1 };
       component.onSubmit();
-      expect(component.message).toBe('保存数据时出错: Update Error');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.message()).toBe('保存数据时出错: Update Error');
+      expect(component.isAlertOpen()).toBe(true);
     });
   });
 
   describe('isDescribeChanged', () => {
     it('should return false if describe has not changed', () => {
-      component.describe = 'Same';
-      component.initialDescribe = 'Same';
-      expect(component.isDescribeChanged()).toBeFalse();
+      component.describe.set('Same');
+      component.initialDescribe.set('Same');
+      expect(component.isDescribeChanged()).toBe(false);
     });
 
     it('should return true if describe has changed', () => {
-      component.describe = 'Changed';
-      component.initialDescribe = 'Original';
-      expect(component.isDescribeChanged()).toBeTrue();
+      component.describe.set('Changed');
+      component.initialDescribe.set('Original');
+      expect(component.isDescribeChanged()).toBe(true);
     });
   });
 });

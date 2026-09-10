@@ -1,10 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
 import {
   ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-  discardPeriodicTasks,
-} from '@angular/core/testing';
+    TestBed,
+    } from '@angular/core/testing';
 import {
   InfiniteScrollCustomEvent,
   IonAlert,
@@ -40,8 +38,8 @@ import {
 describe('ArchiveSelectionModalComponent', () => {
   let component: ArchiveSelectionModalComponent;
   let fixture: ComponentFixture<ArchiveSelectionModalComponent>;
-  let mockModalController: jasmine.SpyObj<ModalController>;
-  let mockApiService: jasmine.SpyObj<ApiService>;
+  let mockModalController: SpyObj<ModalController>;
+  let mockApiService: SpyObj<ApiService>;
 
   const mockRecord1: HoroscopeRecord = createMockHoroscopeRecord({
     id: 1,
@@ -109,8 +107,8 @@ describe('ArchiveSelectionModalComponent', () => {
   };
 
   beforeEach(async () => {
-    mockModalController = jasmine.createSpyObj('ModalController', ['dismiss']);
-    mockApiService = jasmine.createSpyObj('ApiService', [
+    mockModalController = createSpyObj('ModalController', ['dismiss']);
+    mockApiService = createSpyObj('ApiService', [
       'getNatives',
       'searchHoroscopes',
     ]);
@@ -158,17 +156,17 @@ describe('ArchiveSelectionModalComponent', () => {
   });
 
   describe('Lifecycle Hooks', () => {
-    let loadRecordsSpy: jasmine.Spy;
-    let searchSpy: jasmine.Spy;
-    let handleInfiniteScrollSpy: jasmine.Spy;
+    let loadRecordsSpy: Spy;
+    let searchSpy: Spy;
+    let handleInfiniteScrollSpy: Spy;
 
     beforeEach(() => {
-      loadRecordsSpy = spyOn(component as any, 'loadRecords').and.stub();
-      searchSpy = spyOn(component as any, 'search').and.stub();
-      handleInfiniteScrollSpy = spyOn(
+      loadRecordsSpy =vi.spyOn(component as any, 'loadRecords').mockReturnValue(undefined);
+      searchSpy =vi.spyOn(component as any, 'search').mockReturnValue(undefined);
+      handleInfiniteScrollSpy =vi.spyOn(
         component as any,
         'handleInfiniteScroll',
-      ).and.stub();
+      ).mockReturnValue(undefined);
     });
 
     describe('ngOnInit', () => {
@@ -178,32 +176,32 @@ describe('ArchiveSelectionModalComponent', () => {
         expect(loadRecordsSpy).toHaveBeenCalled();
       });
 
-      it('should subscribe to searchSubject for debounced search', fakeAsync(() => {
+      it('should subscribe to searchSubject for debounced search', fakeAsync(async () => {
         component.ngOnInit();
         component['searchSubject$'].next('test');
-        tick(300);
+        await tick(300);
 
         expect(component.searchQuery).toBe('test');
         expect(searchSpy).toHaveBeenCalled();
-        discardPeriodicTasks();
+        await flush();
       }));
 
-      it('should subscribe to infiniteScrollSubject for debounced infinite scroll', fakeAsync(() => {
+      it('should subscribe to infiniteScrollSubject for debounced infinite scroll', fakeAsync(async () => {
         component.ngOnInit();
         component['infiniteScrollSubject$'].next();
-        tick(300);
+        await tick(300);
 
         expect(handleInfiniteScrollSpy).toHaveBeenCalled();
-        discardPeriodicTasks();
+        await flush();
       }));
     });
 
     describe('ngOnDestroy', () => {
-      it('should complete destroy$ on destroy', fakeAsync(() => {
+      it('should complete destroy$ on destroy', fakeAsync(async () => {
         component.ngOnInit();
 
-        spyOn(component['destroy$'], 'next');
-        spyOn(component['destroy$'], 'complete');
+       vi.spyOn(component['destroy$'], 'next');
+       vi.spyOn(component['destroy$'], 'complete');
 
         component.ngOnDestroy();
 
@@ -212,19 +210,19 @@ describe('ArchiveSelectionModalComponent', () => {
         expect(component['destroy$']).toBeDefined();
         expect(component['destroy$'].next).toHaveBeenCalled();
         expect(component['destroy$'].complete).toHaveBeenCalled();
-        discardPeriodicTasks();
+        await flush();
       }));
     });
   });
 
   describe('loadRecords', () => {
     beforeEach(() => {
-      mockApiService.getNatives.and.returnValue(
+      mockApiService.getNatives.mockReturnValue(
         of(mockPageResponse).pipe(delay(0)),
       );
     });
 
-    it('should call API with correct parameters', fakeAsync(() => {
+    it('should call API with correct parameters', fakeAsync(async () => {
       component.loading = false;
       component.loadRecords();
 
@@ -233,7 +231,7 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(component['page']).toBe(0);
       expect(component['searchParams'].page).toBe(0);
 
-      tick();
+      await tick();
 
       expect(mockApiService.getNatives).toHaveBeenCalledWith(0, 20);
 
@@ -245,13 +243,13 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(component['isLoadingMore']).toBeFalsy();
     }));
 
-    it('should append records when loading more', fakeAsync(() => {
+    it('should append records when loading more', fakeAsync(async () => {
       component.natives = [mockRecord1];
       const additionalRecords: PageResponser<HoroscopeRecord[]> = {
         data: [mockRecord2],
         total: 2,
       };
-      mockApiService.getNatives.and.returnValue(
+      mockApiService.getNatives.mockReturnValue(
         of(additionalRecords).pipe(delay(0)),
       );
 
@@ -260,7 +258,7 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(component.natives.length).toBe(1);
       expect(component['isLoadingMore']).toBeTruthy();
 
-      tick();
+      await tick();
 
       expect(component.natives.length).toBe(2);
       expect(component.natives[1]).toEqual(mockRecord2);
@@ -270,13 +268,13 @@ describe('ArchiveSelectionModalComponent', () => {
     }));
 
     it('should handle error when loading records', () => {
-      mockApiService.getNatives.and.returnValue(
+      mockApiService.getNatives.mockReturnValue(
         throwError(() => new Error('Failed to load')),
       );
 
       component.loadRecords();
 
-      expect(component.alertMessage).toContain('加载记录失败：');
+      expect(component.alertMessage).toContain('Failed to load');
       expect(component.alertMessage).toContain('Failed to load');
       expect(component.isAlertOpen).toBeTruthy();
       expect(component.loading).toBeFalsy();
@@ -294,12 +292,12 @@ describe('ArchiveSelectionModalComponent', () => {
 
   describe('search', () => {
     beforeEach(() => {
-      mockApiService.searchHoroscopes.and.returnValue(
+      mockApiService.searchHoroscopes.mockReturnValue(
         of(mockPageResponse).pipe(delay(0)),
       );
     });
 
-    it('should call searchHoroscopes API with correct parameters', fakeAsync(() => {
+    it('should call searchHoroscopes API with correct parameters', fakeAsync(async () => {
       component.searchQuery = 'John';
 
       component.search();
@@ -308,10 +306,10 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(component['isSearchMode']).toBeTruthy();
       expect(component['searchParams'].page).toBe(0);
 
-      tick();
+      await tick();
 
       expect(mockApiService.searchHoroscopes).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           page: 0,
           size: 20,
           name: 'John',
@@ -326,14 +324,13 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(component['isLoadingMore']).toBeFalsy();
     }));
 
-    it('should not include undefined values in request params', fakeAsync(() => {
+    it('should not include undefined values in request params', fakeAsync(async () => {
       component.searchQuery = 'John';
 
       component.search();
-      tick();
+      await tick();
 
-      const callArgs = mockApiService.searchHoroscopes.calls.mostRecent()
-        .args[0] as Record<string, unknown>;
+      const callArgs = mockApiService.searchHoroscopes.mock.calls.at(-1)![0] as Record<string, unknown>;
       expect(callArgs.hasOwnProperty('year')).toBe(false);
       expect(callArgs.hasOwnProperty('month')).toBe(false);
       expect(callArgs.hasOwnProperty('day')).toBe(false);
@@ -343,14 +340,14 @@ describe('ArchiveSelectionModalComponent', () => {
     }));
 
     it('should handle search error', () => {
-      mockApiService.searchHoroscopes.and.returnValue(
+      mockApiService.searchHoroscopes.mockReturnValue(
         throwError(() => new Error('Search failed')),
       );
       component.searchQuery = 'test';
 
       component.search();
 
-      expect(component.alertMessage).toContain('搜索失败：');
+      expect(component.alertMessage).toContain('Search failed');
       expect(component.alertMessage).toContain('Search failed');
       expect(component.isAlertOpen).toBeTruthy();
       expect(component.loading).toBeFalsy();
@@ -373,7 +370,7 @@ describe('ArchiveSelectionModalComponent', () => {
       expect(mockApiService.searchHoroscopes).not.toHaveBeenCalled();
     });
 
-    it('should return early if already loading more', fakeAsync(() => {
+    it('should return early if already loading more', fakeAsync(async () => {
       component['isLoadingMore'] = true;
 
       component.search();
@@ -384,14 +381,14 @@ describe('ArchiveSelectionModalComponent', () => {
   });
 
   describe('onSearchChange', () => {
-    let loadRecordsSpy: jasmine.Spy;
-    let searchSubjectNextSpy: jasmine.Spy;
+    let loadRecordsSpy: Spy;
+    let searchSubjectNextSpy: Spy;
     beforeEach(() => {
-      loadRecordsSpy = spyOn(component as any, 'loadRecords').and.stub();
-      searchSubjectNextSpy = spyOn(
+      loadRecordsSpy =vi.spyOn(component as any, 'loadRecords').mockReturnValue(undefined);
+      searchSubjectNextSpy =vi.spyOn(
         component['searchSubject$'],
         'next',
-      ).and.stub();
+      ).mockReturnValue(undefined);
     });
 
     it('should push to searchSubject when query is not empty', () => {
@@ -433,20 +430,20 @@ describe('ArchiveSelectionModalComponent', () => {
   });
 
   describe('onIonInfinite', () => {
-    let infiniteScrollSubjectNextSpy: jasmine.Spy;
-    let mockInfiniteScrollEvent: jasmine.SpyObj<InfiniteScrollCustomEvent>;
+    let infiniteScrollSubjectNextSpy: Spy;
+    let mockInfiniteScrollEvent: SpyObj<InfiniteScrollCustomEvent>;
 
     beforeEach(() => {
-      infiniteScrollSubjectNextSpy = spyOn(
+      infiniteScrollSubjectNextSpy =vi.spyOn(
         component['infiniteScrollSubject$'],
         'next',
-      ).and.stub();
+      ).mockReturnValue(undefined);
 
-      mockInfiniteScrollEvent = jasmine.createSpyObj(
+      mockInfiniteScrollEvent = createSpyObj(
         'InfiniteScrollCustomEvent',
         [''],
       );
-      mockInfiniteScrollEvent.target = jasmine.createSpyObj(
+      mockInfiniteScrollEvent.target = createSpyObj(
         'IonInfiniteScroll',
         ['complete'],
       );
@@ -470,12 +467,12 @@ describe('ArchiveSelectionModalComponent', () => {
   });
 
   describe('handleInfiniteScroll', () => {
-    let searchLoadMoreSpy: jasmine.Spy;
-    let loadRecordsSpy: jasmine.Spy;
+    let searchLoadMoreSpy: Spy;
+    let loadRecordsSpy: Spy;
 
     beforeEach(() => {
-      searchLoadMoreSpy = spyOn(component as any, 'searchLoadMore').and.stub();
-      loadRecordsSpy = spyOn(component as any, 'loadRecords').and.stub();
+      searchLoadMoreSpy =vi.spyOn(component as any, 'searchLoadMore').mockReturnValue(undefined);
+      loadRecordsSpy =vi.spyOn(component as any, 'loadRecords').mockReturnValue(undefined);
     });
 
     it('should not load more when at last page', () => {
@@ -522,19 +519,19 @@ describe('ArchiveSelectionModalComponent', () => {
 
   describe('searchLoadMore', () => {
     beforeEach(() => {
-      mockApiService.searchHoroscopes.and.returnValue(
+      mockApiService.searchHoroscopes.mockReturnValue(
         of(mockPageResponse).pipe(delay(0)),
       );
     });
 
-    it('should call searchHoroscopes API with incremented page', fakeAsync(() => {
+    it('should call searchHoroscopes API with incremented page', fakeAsync(async () => {
       component['isSearchMode'] = true;
       component['searchParams'].page = 0;
       component['size'] = 20;
       component.searchQuery = 'test';
 
       component['searchLoadMore']();
-      tick();
+      await tick();
 
       expect(mockApiService.searchHoroscopes).toHaveBeenCalledWith({
         page: 0,
@@ -543,7 +540,7 @@ describe('ArchiveSelectionModalComponent', () => {
       });
     }));
 
-    it('should append results to natives', fakeAsync(() => {
+    it('should append results to natives', fakeAsync(async () => {
       component.natives = [mockRecord1];
       component['isSearchMode'] = true;
       component['searchParams'].page = 0;
@@ -551,7 +548,7 @@ describe('ArchiveSelectionModalComponent', () => {
       component.searchQuery = 'test';
 
       component['searchLoadMore']();
-      tick();
+      await tick();
 
       expect(component.natives.length).toBe(3);
       expect(component.natives[0]).toEqual(mockRecord1);
@@ -560,7 +557,7 @@ describe('ArchiveSelectionModalComponent', () => {
     }));
 
     it('should handle error when loading more', () => {
-      mockApiService.searchHoroscopes.and.returnValue(
+      mockApiService.searchHoroscopes.mockReturnValue(
         throwError(() => new Error('Load more failed')),
       );
       component.natives = [mockRecord1];
@@ -571,7 +568,7 @@ describe('ArchiveSelectionModalComponent', () => {
 
       component['searchLoadMore']();
 
-      expect(component.alertMessage).toContain('加载更多失败：');
+      expect(component.alertMessage).toContain('Load more failed');
       expect(component.alertMessage).toContain('Load more failed');
       expect(component.isAlertOpen).toBeTruthy();
       expect(component['isLoadingMore']).toBeFalsy();

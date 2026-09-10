@@ -1,10 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  flush,
-  tick,
-} from '@angular/core/testing';
+      } from '@angular/core/testing';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
 import { ApiService } from 'src/app/services/api/api.service';
 import { CompareComponent } from './compare.component';
@@ -16,10 +14,10 @@ import { mockProcessData } from './compare.component.const.spec';
 describe('changeStep', () => {
   let component: CompareComponent;
   let fixture: ComponentFixture<CompareComponent>;
-  let drawHoroscopeSpy: jasmine.Spy;
+  let drawHoroscopeSpy: Spy;
 
   beforeEach(async () => {
-    const mockApiService = jasmine.createSpyObj('ApiService', ['compare']);
+    const mockApiService = createSpyObj('ApiService', ['compare']);
     const mockActivatedRoute = {
       snapshot: {
         data: {
@@ -43,15 +41,15 @@ describe('changeStep', () => {
     fixture = TestBed.createComponent(CompareComponent);
     component = fixture.componentInstance;
 
-    drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+    drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
 
     const canvas = ((component as any).canvas = {
-      dispose: jasmine.createSpy('dispose'),
-      toJSON: jasmine.createSpy('toJSON'),
-      loadFromJSON: jasmine.createSpy('loadFromJSON'),
-      renderAll: jasmine.createSpy('renderAll'),
+      dispose: createSpy('dispose'),
+      toJSON: createSpy('toJSON'),
+      loadFromJSON: createSpy('loadFromJSON'),
+      renderAll: createSpy('renderAll'),
     });
-    canvas.loadFromJSON.and.returnValue(Promise.resolve(canvas));
+    canvas.loadFromJSON.mockReturnValue(Promise.resolve(canvas));
   });
 
   it('should create', () => {
@@ -59,17 +57,17 @@ describe('changeStep', () => {
   });
 
   describe('changeStep with debounce', () => {
-    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(() => {
-      //   spyOn(component as any, 'drawHoroscope').and.stub();
-      const applyStepChangeSpy = spyOn(
+    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(async () => {
+      //  vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
+      const applyStepChangeSpy =vi.spyOn(
         component as any,
         'applyStepChange'
-      ).and.stub();
+      ).mockReturnValue(undefined);
 
       // 触发 ngOnInit 以设置订阅, 同时会触发 ngAfterViewInit
       fixture.detectChanges(); // ngOnInit
 
-      applyStepChangeSpy.calls.reset();
+      applyStepChangeSpy.mockClear();
 
       const step = { year: 0, month: 0, day: 1, hour: 0, minute: 0, second: 0 };
 
@@ -77,13 +75,13 @@ describe('changeStep', () => {
       component.changeStep(step);
       component.changeStep(step);
 
-      tick(299);
+      await tick(299);
       expect(applyStepChangeSpy).not.toHaveBeenCalled();
 
-      tick(1);
+      await tick(1);
       expect(applyStepChangeSpy).toHaveBeenCalledTimes(1);
 
-      flush();
+      await flush();
     }));
   });
 

@@ -101,13 +101,13 @@ describe('planet-power', () => {
         const d = calculatePlanetDignity(sun);
         expect(d.zodiac).toBe(Zodiac.Aries);
         expect(d.zodiacDegree).toBeCloseTo(0, 5);
-        expect(d.rulership).toBeFalse();
-        expect(d.exaltation).toBeTrue();
-        expect(d.triplicity).toBeTrue();
-        expect(d.term).toBeFalse();
-        expect(d.face).toBeFalse();
-        expect(d.fall).toBeFalse();
-        expect(d.detriment).toBeFalse();
+        expect(d.rulership).toBe(false);
+        expect(d.exaltation).toBe(true);
+        expect(d.triplicity).toBe(true);
+        expect(d.term).toBe(false);
+        expect(d.face).toBe(false);
+        expect(d.fall).toBe(false);
+        expect(d.detriment).toBe(false);
         expect(d.score).toBe(7);
       });
 
@@ -115,9 +115,9 @@ describe('planet-power', () => {
         const moon = makePlanet(PlanetName.Moon, 90);
         const d = calculatePlanetDignity(moon);
         expect(d.zodiac).toBe(Zodiac.Cancer);
-        expect(d.rulership).toBeTrue();
-        expect(d.exaltation).toBeFalse();
-        expect(d.triplicity).toBeFalse();
+        expect(d.rulership).toBe(true);
+        expect(d.exaltation).toBe(false);
+        expect(d.triplicity).toBe(false);
         expect(d.score).toBe(5);
       });
 
@@ -125,28 +125,28 @@ describe('planet-power', () => {
         const mercury = makePlanet(PlanetName.Mercury, 150);
         const d = calculatePlanetDignity(mercury);
         expect(d.zodiac).toBe(Zodiac.Virgo);
-        expect(d.rulership).toBeTrue();
-        expect(d.exaltation).toBeTrue();
-        expect(d.term).toBeTrue();
-        expect(d.face).toBeFalse();
-        expect(d.fall).toBeFalse();
-        expect(d.detriment).toBeFalse();
+        expect(d.rulership).toBe(true);
+        expect(d.exaltation).toBe(true);
+        expect(d.term).toBe(true);
+        expect(d.face).toBe(false);
+        expect(d.fall).toBe(false);
+        expect(d.detriment).toBe(false);
         expect(d.score).toBe(5 + 4 + 2);
       });
 
       it('土星在白羊座0°：陷(Fall)，分数=-4', () => {
         const saturn = makePlanet(PlanetName.Saturn, 0);
         const d = calculatePlanetDignity(saturn);
-        expect(d.fall).toBeTrue();
-        expect(d.detriment).toBeFalse();
+        expect(d.fall).toBe(true);
+        expect(d.detriment).toBe(false);
         expect(d.score).toBe(-4);
       });
 
       it('金星在白羊座0°：弱(Detriment)，分数=-5', () => {
         const venus = makePlanet(PlanetName.Venus, 0);
         const d = calculatePlanetDignity(venus);
-        expect(d.fall).toBeFalse();
-        expect(d.detriment).toBeTrue();
+        expect(d.fall).toBe(false);
+        expect(d.detriment).toBe(true);
         expect(d.score).toBe(-5);
       });
     });
@@ -155,20 +155,20 @@ describe('planet-power', () => {
       it('白羊座0°-6°属于木星界', () => {
         const jupiter = makePlanet(PlanetName.Jupiter, 0);
         const d = calculatePlanetDignity(jupiter);
-        expect(d.term).toBeTrue();
+        expect(d.term).toBe(true);
       });
 
       it('白羊座6°-14°属于金星界', () => {
         const venus = makePlanet(PlanetName.Venus, 10);
         const d = calculatePlanetDignity(venus);
-        expect(d.term).toBeTrue();
+        expect(d.term).toBe(true);
       });
 
       it('白羊座30°(金牛座0°)不属于白羊座任何界', () => {
         const jupiter = makePlanet(PlanetName.Jupiter, 30);
         const d = calculatePlanetDignity(jupiter);
         expect(d.zodiac).toBe(Zodiac.Taurus);
-        expect(d.term).toBeFalse();
+        expect(d.term).toBe(false);
       });
     });
 
@@ -176,19 +176,19 @@ describe('planet-power', () => {
       it('白羊座0°-10°属于火星面', () => {
         const mars = makePlanet(PlanetName.Mars, 5);
         const d = calculatePlanetDignity(mars);
-        expect(d.face).toBeTrue();
+        expect(d.face).toBe(true);
       });
 
       it('白羊座10°-20°属于太阳面', () => {
         const sun = makePlanet(PlanetName.Sun, 15);
         const d = calculatePlanetDignity(sun);
-        expect(d.face).toBeTrue();
+        expect(d.face).toBe(true);
       });
 
       it('白羊座20°-30°属于金星面', () => {
         const venus = makePlanet(PlanetName.Venus, 25);
         const d = calculatePlanetDignity(venus);
-        expect(d.face).toBeTrue();
+        expect(d.face).toBe(true);
       });
     });
 
@@ -208,7 +208,7 @@ describe('planet-power', () => {
         makePlanet(PlanetName.SouthNode, 240),
       ];
       const result = calculateAllPlanetDignities(planets);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.length).toBe(7);
         expect(result.value.map((d) => d.planet.name)).toEqual([
@@ -234,7 +234,7 @@ describe('planet-power', () => {
         makePlanet(PlanetName.Sun, 180),
       ];
       const result = calculateAllPlanetDignities(planets);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.map((d) => d.planet.name)).toEqual([
           PlanetName.Saturn,
@@ -253,14 +253,14 @@ describe('planet-power', () => {
       const result = calculateAllPlanetPowers(horo);
       if (result.ok) {
         const mercury = findPower(result.value, PlanetName.Mercury)!;
-        expect(mercury.accidental.combust).toBeTrue();
+        expect(mercury.accidental.combust).toBe(true);
       }
     });
 
     it('太阳不存在时应返回 Err', () => {
       const planets = [makePlanet(PlanetName.Mercury, 0.1)];
       const result = calculateAllPlanetDignities(planets);
-      expect(result.ok).toBeFalse();
+      expect(result.ok).toBe(false);
       if (!result.ok) {
         expect(result.error).toMatch(/缺少太阳/);
       }
@@ -272,7 +272,7 @@ describe('planet-power', () => {
         makePlanet(PlanetName.Moon, 30),
       ];
       const result = calculateAllPlanetDignities(planets);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.length).toBe(2);
       }
@@ -290,7 +290,7 @@ describe('planet-power', () => {
         makePlanet(PlanetName.Moon, 90),
         makePlanet(PlanetName.Mercury, 150),
       ]);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const almuten = findChartAlmuten(result.value);
       expect(almuten).not.toBeNull();
@@ -304,7 +304,7 @@ describe('planet-power', () => {
         makePlanet(PlanetName.Moon, 30),
         makePlanet(PlanetName.Sun, 0),
       ]);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const sunScore = result.value.find((d) => d.planet.name === PlanetName.Sun)!.score;
       const moonScore = result.value.find((d) => d.planet.name === PlanetName.Moon)!.score;
@@ -320,14 +320,14 @@ describe('planet-power', () => {
       // 水星在天蝎座0°(210°)：无庙/旺/三分/界/面/陷/弱
       const mercury = makePlanet(PlanetName.Mercury, 210);
       const d = calculatePlanetDignity(mercury);
-      expect(d.rulership).toBeFalse();
-      expect(d.exaltation).toBeFalse();
-      expect(d.triplicity).toBeFalse();
-      expect(d.term).toBeFalse();
-      expect(d.face).toBeFalse();
-      expect(d.fall).toBeFalse();
-      expect(d.detriment).toBeFalse();
-      expect(d.peregrine).toBeTrue();
+      expect(d.rulership).toBe(false);
+      expect(d.exaltation).toBe(false);
+      expect(d.triplicity).toBe(false);
+      expect(d.term).toBe(false);
+      expect(d.face).toBe(false);
+      expect(d.fall).toBe(false);
+      expect(d.detriment).toBe(false);
+      expect(d.peregrine).toBe(true);
       expect(d.score).toBe(-5);
     });
 
@@ -335,8 +335,8 @@ describe('planet-power', () => {
       // 土星在白羊座0°(0°)：陷(Fall)，不应同时为游离星
       const saturn = makePlanet(PlanetName.Saturn, 0);
       const d = calculatePlanetDignity(saturn);
-      expect(d.fall).toBeTrue();
-      expect(d.peregrine).toBeFalse();
+      expect(d.fall).toBe(true);
+      expect(d.peregrine).toBe(false);
       expect(d.score).toBe(-4);
     });
 
@@ -344,8 +344,8 @@ describe('planet-power', () => {
       // 金星在白羊座0°(0°)：弱(Detriment)，不应同时为游离星
       const venus = makePlanet(PlanetName.Venus, 0);
       const d = calculatePlanetDignity(venus);
-      expect(d.detriment).toBeTrue();
-      expect(d.peregrine).toBeFalse();
+      expect(d.detriment).toBe(true);
+      expect(d.peregrine).toBe(false);
       expect(d.score).toBe(-5);
     });
   });
@@ -390,12 +390,12 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mars = findPower(result.value, PlanetName.Mars)!;
       const venus = findPower(result.value, PlanetName.Venus)!;
-      expect(mars.essential.mutualReceptionRulership).toBeTrue();
-      expect(venus.essential.mutualReceptionRulership).toBeTrue();
+      expect(mars.essential.mutualReceptionRulership).toBe(true);
+      expect(venus.essential.mutualReceptionRulership).toBe(true);
       // 弱(-5) + 互容(+5) = 0
       expect(mars.essential.score).toBe(0);
       expect(venus.essential.score).toBe(0);
@@ -410,12 +410,12 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Saturn, 0)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const sun = findPower(result.value, PlanetName.Sun)!;
       const saturn = findPower(result.value, PlanetName.Saturn)!;
-      expect(sun.essential.mutualReceptionExaltation).toBeTrue();
-      expect(saturn.essential.mutualReceptionExaltation).toBeTrue();
+      expect(sun.essential.mutualReceptionExaltation).toBe(true);
+      expect(saturn.essential.mutualReceptionExaltation).toBe(true);
       // 陷(-4) + 互容(+4) = 0
       expect(sun.essential.score).toBe(0);
       expect(saturn.essential.score).toBe(0);
@@ -434,14 +434,14 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mars = findPower(result.value, PlanetName.Mars)!;
       const saturn = findPower(result.value, PlanetName.Saturn)!;
-      expect(mars.essential.mutualReceptionRulership).toBeFalse();
-      expect(mars.essential.mutualReceptionExaltation).toBeFalse();
-      expect(saturn.essential.mutualReceptionRulership).toBeFalse();
-      expect(saturn.essential.mutualReceptionExaltation).toBeFalse();
+      expect(mars.essential.mutualReceptionRulership).toBe(false);
+      expect(mars.essential.mutualReceptionExaltation).toBe(false);
+      expect(saturn.essential.mutualReceptionRulership).toBe(false);
+      expect(saturn.essential.mutualReceptionExaltation).toBe(false);
       // 仅弱/陷分，无互容分
       expect(mars.essential.score).toBe(-5);
       expect(saturn.essential.score).toBe(-4);
@@ -456,11 +456,11 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 210, { speed: 1 })],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.direct).toBeTrue();
-      expect(mercury.accidental.retrograde).toBeFalse();
+      expect(mercury.accidental.direct).toBe(true);
+      expect(mercury.accidental.retrograde).toBe(false);
     });
 
     it('行星逆行(speed<0)：retrograde=true', () => {
@@ -470,11 +470,11 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 210, { speed: -1 })],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.direct).toBeFalse();
-      expect(mercury.accidental.retrograde).toBeTrue();
+      expect(mercury.accidental.direct).toBe(false);
+      expect(mercury.accidental.retrograde).toBe(true);
     });
 
     it('日月不计顺逆行分', () => {
@@ -483,14 +483,14 @@ describe('planet-power', () => {
         moon: 180,
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const sun = findPower(result.value, PlanetName.Sun)!;
       const moon = findPower(result.value, PlanetName.Moon)!;
-      expect(sun.accidental.direct).toBeFalse();
-      expect(sun.accidental.retrograde).toBeFalse();
-      expect(moon.accidental.direct).toBeFalse();
-      expect(moon.accidental.retrograde).toBeFalse();
+      expect(sun.accidental.direct).toBe(false);
+      expect(sun.accidental.retrograde).toBe(false);
+      expect(moon.accidental.direct).toBe(false);
+      expect(moon.accidental.retrograde).toBe(false);
     });
   });
 
@@ -506,11 +506,11 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.fast).toBeTrue();
-      expect(mercury.accidental.slow).toBeFalse();
+      expect(mercury.accidental.fast).toBe(true);
+      expect(mercury.accidental.slow).toBe(false);
     });
 
     it('慢速(speed_state=慢)：slow=true', () => {
@@ -524,11 +524,11 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.fast).toBeFalse();
-      expect(mercury.accidental.slow).toBeTrue();
+      expect(mercury.accidental.fast).toBe(false);
+      expect(mercury.accidental.slow).toBe(true);
     });
   });
 
@@ -541,11 +541,11 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mars, 200)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mars = findPower(result.value, PlanetName.Mars)!;
-      expect(mars.accidental.oriental).toBeTrue();
-      expect(mars.accidental.occidental).toBeFalse();
+      expect(mars.accidental.oriental).toBe(true);
+      expect(mars.accidental.occidental).toBe(false);
     });
 
     it('土木火在太阳西方(elongation<180)：occidental=true', () => {
@@ -556,11 +556,11 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mars, 100)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mars = findPower(result.value, PlanetName.Mars)!;
-      expect(mars.accidental.oriental).toBeFalse();
-      expect(mars.accidental.occidental).toBeTrue();
+      expect(mars.accidental.oriental).toBe(false);
+      expect(mars.accidental.occidental).toBe(true);
     });
 
     it('金水在太阳西方(elongation<180)：occidental=true', () => {
@@ -571,11 +571,11 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 100)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.occidental).toBeTrue();
-      expect(mercury.accidental.oriental).toBeFalse();
+      expect(mercury.accidental.occidental).toBe(true);
+      expect(mercury.accidental.oriental).toBe(false);
     });
 
     it('金水在太阳东方(elongation>180)：oriental=true', () => {
@@ -586,24 +586,24 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 200)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.occidental).toBeFalse();
-      expect(mercury.accidental.oriental).toBeTrue();
+      expect(mercury.accidental.occidental).toBe(false);
+      expect(mercury.accidental.oriental).toBe(true);
     });
 
     it('日月不计东西方', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const sun = findPower(result.value, PlanetName.Sun)!;
       const moon = findPower(result.value, PlanetName.Moon)!;
-      expect(sun.accidental.oriental).toBeFalse();
-      expect(sun.accidental.occidental).toBeFalse();
-      expect(moon.accidental.oriental).toBeFalse();
-      expect(moon.accidental.occidental).toBeFalse();
+      expect(sun.accidental.oriental).toBe(false);
+      expect(sun.accidental.occidental).toBe(false);
+      expect(moon.accidental.oriental).toBe(false);
+      expect(moon.accidental.occidental).toBe(false);
     });
   });
 
@@ -612,22 +612,22 @@ describe('planet-power', () => {
       // 月亮90°，太阳0°，elongation=90°
       const horo = makeHoro({ sun: 0, moon: 90 });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const moon = findPower(result.value, PlanetName.Moon)!;
-      expect(moon.accidental.waxing).toBeTrue();
-      expect(moon.accidental.waning).toBeFalse();
+      expect(moon.accidental.waxing).toBe(true);
+      expect(moon.accidental.waning).toBe(false);
     });
 
     it('月亮渐亏(elongation>180)：waning=true', () => {
       // 月亮270°，太阳0°，elongation=270°
       const horo = makeHoro({ sun: 0, moon: 270 });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const moon = findPower(result.value, PlanetName.Moon)!;
-      expect(moon.accidental.waxing).toBeFalse();
-      expect(moon.accidental.waning).toBeTrue();
+      expect(moon.accidental.waxing).toBe(false);
+      expect(moon.accidental.waning).toBe(true);
     });
 
     it('非月亮不计月相分', () => {
@@ -637,11 +637,11 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 210)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.waxing).toBeFalse();
-      expect(mercury.accidental.waning).toBeFalse();
+      expect(mercury.accidental.waxing).toBe(false);
+      expect(mercury.accidental.waning).toBe(false);
     });
   });
 
@@ -653,13 +653,13 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 0.1)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.cazimi).toBeTrue();
-      expect(mercury.accidental.combust).toBeFalse();
-      expect(mercury.accidental.underSunbeams).toBeFalse();
-      expect(mercury.accidental.freeFromSun).toBeFalse();
+      expect(mercury.accidental.cazimi).toBe(true);
+      expect(mercury.accidental.combust).toBe(false);
+      expect(mercury.accidental.underSunbeams).toBe(false);
+      expect(mercury.accidental.freeFromSun).toBe(false);
     });
 
     it('燃烧(combust)：角距17分~8.5度', () => {
@@ -669,13 +669,13 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 5)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.cazimi).toBeFalse();
-      expect(mercury.accidental.combust).toBeTrue();
-      expect(mercury.accidental.underSunbeams).toBeFalse();
-      expect(mercury.accidental.freeFromSun).toBeFalse();
+      expect(mercury.accidental.cazimi).toBe(false);
+      expect(mercury.accidental.combust).toBe(true);
+      expect(mercury.accidental.underSunbeams).toBe(false);
+      expect(mercury.accidental.freeFromSun).toBe(false);
     });
 
     it('太阳光束下(underSunbeams)：角距8.5~17度', () => {
@@ -685,13 +685,13 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 12)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.cazimi).toBeFalse();
-      expect(mercury.accidental.combust).toBeFalse();
-      expect(mercury.accidental.underSunbeams).toBeTrue();
-      expect(mercury.accidental.freeFromSun).toBeFalse();
+      expect(mercury.accidental.cazimi).toBe(false);
+      expect(mercury.accidental.combust).toBe(false);
+      expect(mercury.accidental.underSunbeams).toBe(true);
+      expect(mercury.accidental.freeFromSun).toBe(false);
     });
 
     it('离日(freeFromSun)：角距>=17度', () => {
@@ -701,25 +701,25 @@ describe('planet-power', () => {
         planets: [makePlanet(PlanetName.Mercury, 210)],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.cazimi).toBeFalse();
-      expect(mercury.accidental.combust).toBeFalse();
-      expect(mercury.accidental.underSunbeams).toBeFalse();
-      expect(mercury.accidental.freeFromSun).toBeTrue();
+      expect(mercury.accidental.cazimi).toBe(false);
+      expect(mercury.accidental.combust).toBe(false);
+      expect(mercury.accidental.underSunbeams).toBe(false);
+      expect(mercury.accidental.freeFromSun).toBe(true);
     });
 
     it('太阳自身不计日光条件', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const sun = findPower(result.value, PlanetName.Sun)!;
-      expect(sun.accidental.cazimi).toBeFalse();
-      expect(sun.accidental.combust).toBeFalse();
-      expect(sun.accidental.underSunbeams).toBeFalse();
-      expect(sun.accidental.freeFromSun).toBeFalse();
+      expect(sun.accidental.cazimi).toBe(false);
+      expect(sun.accidental.combust).toBe(false);
+      expect(sun.accidental.underSunbeams).toBe(false);
+      expect(sun.accidental.freeFromSun).toBe(false);
     });
   });
 
@@ -738,10 +738,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.conjunctBenefic).toBeTrue();
+      expect(mercury.accidental.conjunctBenefic).toBe(true);
     });
 
     it('合相北交点：conjunctNorthNode=true', () => {
@@ -758,10 +758,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.conjunctNorthNode).toBeTrue();
+      expect(mercury.accidental.conjunctNorthNode).toBe(true);
     });
 
     it('三合吉星(120°)：trineBenefic=true', () => {
@@ -778,10 +778,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.trineBenefic).toBeTrue();
+      expect(mercury.accidental.trineBenefic).toBe(true);
     });
 
     it('六合吉星(60°)：sextileBenefic=true', () => {
@@ -798,10 +798,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.sextileBenefic).toBeTrue();
+      expect(mercury.accidental.sextileBenefic).toBe(true);
     });
 
     it('合相凶星(火土)：conjunctMalefic=true', () => {
@@ -818,10 +818,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.conjunctMalefic).toBeTrue();
+      expect(mercury.accidental.conjunctMalefic).toBe(true);
     });
 
     it('合相南交点：conjunctSouthNode=true', () => {
@@ -838,10 +838,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.conjunctSouthNode).toBeTrue();
+      expect(mercury.accidental.conjunctSouthNode).toBe(true);
     });
 
     it('冲相凶星(180°)：oppositionMalefic=true', () => {
@@ -858,10 +858,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.oppositionMalefic).toBeTrue();
+      expect(mercury.accidental.oppositionMalefic).toBe(true);
     });
 
     it('刑相凶星(90°)：squareMalefic=true', () => {
@@ -878,10 +878,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.squareMalefic).toBeTrue();
+      expect(mercury.accidental.squareMalefic).toBe(true);
     });
   });
 
@@ -910,10 +910,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.besieged).toBeTrue();
+      expect(mercury.accidental.besieged).toBe(true);
     });
 
     it('行星与火土均合相但不在火土之间：不计包围', () => {
@@ -940,10 +940,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.besieged).toBeFalse();
+      expect(mercury.accidental.besieged).toBe(false);
     });
 
     it('行星仅与火土之一合相：不计包围', () => {
@@ -965,10 +965,10 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mercury = findPower(result.value, PlanetName.Mercury)!;
-      expect(mercury.accidental.besieged).toBeFalse();
+      expect(mercury.accidental.besieged).toBe(false);
     });
 
     it('火星/土星自身不计包围分', () => {
@@ -989,12 +989,12 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       const mars = findPower(result.value, PlanetName.Mars)!;
       const saturn = findPower(result.value, PlanetName.Saturn)!;
-      expect(mars.accidental.besieged).toBeFalse();
-      expect(saturn.accidental.besieged).toBeFalse();
+      expect(mars.accidental.besieged).toBe(false);
+      expect(saturn.accidental.besieged).toBe(false);
     });
   });
 
@@ -1019,7 +1019,7 @@ describe('planet-power', () => {
         ],
       });
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeTrue();
+      expect(result.ok).toBe(true);
       if (!result.ok) return;
       for (const p of result.value) {
         expect(p.totalScore).toBe(p.essential.score + p.accidental.score);
@@ -1030,7 +1030,7 @@ describe('planet-power', () => {
       const horo = makeHoro({ sun: 0, moon: 180 });
       horo.planets = horo.planets.filter((p) => p.name !== PlanetName.Sun);
       const result = calculateAllPlanetPowers(horo);
-      expect(result.ok).toBeFalse();
+      expect(result.ok).toBe(false);
     });
   });
 });

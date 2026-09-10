@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   IonButton,
   IonButtons,
@@ -69,49 +69,49 @@ describe('DateTimeComponent', () => {
 
   describe('output event emitters', () => {
     it('should emit yearChange event with correct value', () => {
-      spyOn(component.yearChange, 'emit');
+     vi.spyOn(component.yearChange, 'emit');
       component.year = 2023;
       component['emit']();
       expect(component.yearChange.emit).toHaveBeenCalledWith(2023);
     });
 
     it('should emit monthChange event with correct value', () => {
-      spyOn(component.monthChange, 'emit');
+     vi.spyOn(component.monthChange, 'emit');
       component.month = 5;
       component['emit']();
       expect(component.monthChange.emit).toHaveBeenCalledWith(5);
     });
 
     it('should emit dayChange event with correct value', () => {
-      spyOn(component.dayChange, 'emit');
+     vi.spyOn(component.dayChange, 'emit');
       component.day = 15;
       component['emit']();
       expect(component.dayChange.emit).toHaveBeenCalledWith(15);
     });
 
     it('should emit hourChange event with correct value', () => {
-      spyOn(component.hourChange, 'emit');
+     vi.spyOn(component.hourChange, 'emit');
       component.hour = 10;
       component['emit']();
       expect(component.hourChange.emit).toHaveBeenCalledWith(10);
     });
 
     it('should emit minuteChange event with correct value', () => {
-      spyOn(component.minuteChange, 'emit');
+     vi.spyOn(component.minuteChange, 'emit');
       component.minute = 30;
       component['emit']();
       expect(component.minuteChange.emit).toHaveBeenCalledWith(30);
     });
 
     it('should emit secondChange event with correct value', () => {
-      spyOn(component.secondChange, 'emit');
+     vi.spyOn(component.secondChange, 'emit');
       component.second = 45;
       component['emit']();
       expect(component.secondChange.emit).toHaveBeenCalledWith(45);
     });
 
     it('should emit dateChange event with complete date-time value', () => {
-      spyOn(component.dateChange, 'emit');
+     vi.spyOn(component.dateChange, 'emit');
       component.year = 1986;
       component.month = 5;
       component.day = 4;
@@ -301,12 +301,12 @@ describe('DateTimeComponent', () => {
     });
 
     it('should update component values and emit events when data is provided', () => {
-      spyOn(component.yearChange, 'emit');
-      spyOn(component.monthChange, 'emit');
-      spyOn(component.dayChange, 'emit');
-      spyOn(component.hourChange, 'emit');
-      spyOn(component.minuteChange, 'emit');
-      spyOn(component.secondChange, 'emit');
+     vi.spyOn(component.yearChange, 'emit');
+     vi.spyOn(component.monthChange, 'emit');
+     vi.spyOn(component.dayChange, 'emit');
+     vi.spyOn(component.hourChange, 'emit');
+     vi.spyOn(component.minuteChange, 'emit');
+     vi.spyOn(component.secondChange, 'emit');
 
       const event = {
         detail: {
@@ -342,15 +342,15 @@ describe('DateTimeComponent', () => {
   describe('nowDate method', () => {
     it('should set current date and time and emit events', () => {
       const mockDate = new Date(2023, 4, 15, 10, 30, 45); // May 15, 2023 10:30:45
-      jasmine.clock().install();
-      jasmine.clock().mockDate(mockDate);
+      vi.useFakeTimers();
+      vi.setSystemTime(mockDate);
 
-      spyOn(component.yearChange, 'emit');
-      spyOn(component.monthChange, 'emit');
-      spyOn(component.dayChange, 'emit');
-      spyOn(component.hourChange, 'emit');
-      spyOn(component.minuteChange, 'emit');
-      spyOn(component.secondChange, 'emit');
+     vi.spyOn(component.yearChange, 'emit');
+     vi.spyOn(component.monthChange, 'emit');
+     vi.spyOn(component.dayChange, 'emit');
+     vi.spyOn(component.hourChange, 'emit');
+     vi.spyOn(component.minuteChange, 'emit');
+     vi.spyOn(component.secondChange, 'emit');
 
       component.nowDate();
 
@@ -368,7 +368,7 @@ describe('DateTimeComponent', () => {
       expect(component.minuteChange.emit).toHaveBeenCalledWith(30);
       expect(component.secondChange.emit).toHaveBeenCalledWith(45);
 
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
   });
 
@@ -436,17 +436,17 @@ describe('DateTimeComponent', () => {
       component.disabled = true;
       fixture.detectChanges();
 
-      spyOn(component.yearChange, 'emit');
+     vi.spyOn(component.yearChange, 'emit');
       const mockDate = new Date(2023, 4, 15, 10, 30, 45);
-      jasmine.clock().install();
-      jasmine.clock().mockDate(mockDate);
+      vi.useFakeTimers();
+      vi.setSystemTime(mockDate);
 
       const iconEl = fixture.nativeElement.querySelector('ion-icon');
       iconEl.click();
 
       expect(component.yearChange.emit).not.toHaveBeenCalled();
 
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
 
     it('should open modal when disabled is false and label is clicked', () => {
@@ -464,17 +464,17 @@ describe('DateTimeComponent', () => {
       component.disabled = false;
       fixture.detectChanges();
 
-      spyOn(component.yearChange, 'emit');
+     vi.spyOn(component.yearChange, 'emit');
       const mockDate = new Date(2023, 4, 15, 10, 30, 45);
-      jasmine.clock().install();
-      jasmine.clock().mockDate(mockDate);
+      vi.useFakeTimers();
+      vi.setSystemTime(mockDate);
 
       const iconEl = fixture.nativeElement.querySelector('ion-icon');
       iconEl.click();
 
       expect(component.yearChange.emit).toHaveBeenCalledWith(2023);
 
-      jasmine.clock().uninstall();
+      vi.useRealTimers();
     });
   });
 });

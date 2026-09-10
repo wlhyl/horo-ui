@@ -73,9 +73,9 @@ describe('GeoComponent', () => {
       component.geoLong = 45.505555;
       expect(component.geoLongD).toBe(45);
       expect(component.geoLongM).toBe(30);
-      expect(component.geoLongS - 20 < 1).toBeTrue();
+      expect(component.geoLongS - 20 < 1).toBe(true);
       expect(component.geoEW).toBe(EW.E);
-      expect((component.geoLong - 45.505555) * 3600 < 1).toBeTrue();
+      expect((component.geoLong - 45.505555) * 3600 < 1).toBe(true);
     });
   });
 
@@ -104,7 +104,7 @@ describe('GeoComponent', () => {
       expect(component.geoLatM).toBe(15);
       expect(component.geoLatS).toBeCloseTo(9.09, 0);
       expect(component.geoNS).toBe(NS.S);
-      expect((component.geoLat - -(-12.252525)) * 3600 < 1).toBeTrue();
+      expect((component.geoLat - -(-12.252525)) * 3600 < 1).toBe(true);
     });
   });
 
@@ -129,14 +129,14 @@ describe('GeoComponent', () => {
 
   describe('event emissions', () => {
     it('should emit geoLocalNameChange event on ok', () => {
-      spyOn(component.geoLocalNameChange, 'emit');
+     vi.spyOn(component.geoLocalNameChange, 'emit');
       component.geoLocalName = 'Beijing';
       component.ok();
       expect(component.geoLocalNameChange.emit).toHaveBeenCalledWith('Beijing');
     });
 
     it('should emit geoLongChange event on ok', () => {
-      spyOn(component.geoLongChange, 'emit');
+     vi.spyOn(component.geoLongChange, 'emit');
       component.geoLong = 116.4074;
       component.ok();
       expect(component.geoLongChange.emit).toHaveBeenCalledWith(
@@ -145,7 +145,7 @@ describe('GeoComponent', () => {
     });
 
     it('should emit geoLatChange event on ok', () => {
-      spyOn(component.geoLatChange, 'emit');
+     vi.spyOn(component.geoLatChange, 'emit');
       component.geoLat = 39.9042;
       component.ok();
       expect(component.geoLatChange.emit).toHaveBeenCalledWith(
@@ -154,9 +154,9 @@ describe('GeoComponent', () => {
     });
 
     it('should emit all events simultaneously on ok', () => {
-      spyOn(component.geoLocalNameChange, 'emit');
-      spyOn(component.geoLongChange, 'emit');
-      spyOn(component.geoLatChange, 'emit');
+     vi.spyOn(component.geoLocalNameChange, 'emit');
+     vi.spyOn(component.geoLongChange, 'emit');
+     vi.spyOn(component.geoLatChange, 'emit');
 
       component.geoLocalName = 'Shanghai';
       component.geoLong = 121.4737;
@@ -178,9 +178,9 @@ describe('GeoComponent', () => {
 
   describe('error handling', () => {
     beforeEach(() => {
-      spyOn(component.geoLocalNameChange, 'emit');
-      spyOn(component.geoLongChange, 'emit');
-      spyOn(component.geoLatChange, 'emit');
+     vi.spyOn(component.geoLocalNameChange, 'emit');
+     vi.spyOn(component.geoLongChange, 'emit');
+     vi.spyOn(component.geoLatChange, 'emit');
     });
     it('should show alert when longitude exceeds 180', () => {
       component.geoLong = 181;
@@ -229,9 +229,9 @@ describe('GeoComponent', () => {
 
   describe('cancel functionality', () => {
     it('should close modal without emitting events on cancel', () => {
-      spyOn(component.geoLocalNameChange, 'emit');
-      spyOn(component.geoLongChange, 'emit');
-      spyOn(component.geoLatChange, 'emit');
+     vi.spyOn(component.geoLocalNameChange, 'emit');
+     vi.spyOn(component.geoLongChange, 'emit');
+     vi.spyOn(component.geoLatChange, 'emit');
 
       component.isModalOpen = true;
       component.geoLocalName = 'Test';

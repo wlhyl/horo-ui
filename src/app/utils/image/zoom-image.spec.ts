@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { Platform } from '@ionic/angular';
 import * as fabric from 'fabric';
 import { zoomImage } from './zoom-image';
@@ -10,11 +11,11 @@ const mockPlatform = (width: number) =>
   } as unknown as Platform);
 
 describe('zoomImage', () => {
-  let mockCanvas: jasmine.SpyObj<fabric.StaticCanvas>;
+  let mockCanvas: SpyObj<fabric.StaticCanvas>;
 
   beforeEach(() => {
     // Mock StaticCanvas
-    mockCanvas = jasmine.createSpyObj('StaticCanvas', [
+    mockCanvas = createSpyObj('StaticCanvas', [
       'getWidth',
       'getHeight',
       'setDimensions',
@@ -30,22 +31,24 @@ describe('zoomImage', () => {
     const zoom = targetWidth / canvasWidth;
     const targetHeight = canvasHeight * zoom;
 
-    mockCanvas.getWidth.and.returnValue(canvasWidth);
-    mockCanvas.getHeight.and.returnValue(canvasHeight);
+    mockCanvas.getWidth.mockReturnValue(canvasWidth);
+    mockCanvas.getHeight.mockReturnValue(canvasHeight);
 
     await zoomImage(mockCanvas, platform);
 
-    expect(mockCanvas.setDimensions).toHaveBeenCalledOnceWith({
+    expect(mockCanvas.setDimensions).toHaveBeenCalledTimes(1);
+    expect(mockCanvas.setDimensions).toHaveBeenCalledWith({
       width: targetWidth,
       height: targetHeight,
     });
-    expect(mockCanvas.setZoom).toHaveBeenCalledOnceWith(zoom);
+    expect(mockCanvas.setZoom).toHaveBeenCalledTimes(1);
+    expect(mockCanvas.setZoom).toHaveBeenCalledWith(zoom);
   });
 
   it('should not zoom image if canvas is narrower than screen', async () => {
     const platform = mockPlatform(300);
-    mockCanvas.getWidth.and.returnValue(200);
-    mockCanvas.getHeight.and.returnValue(150);
+    mockCanvas.getWidth.mockReturnValue(200);
+    mockCanvas.getHeight.mockReturnValue(150);
 
     await zoomImage(mockCanvas, platform);
 
@@ -55,8 +58,8 @@ describe('zoomImage', () => {
 
   it('should do nothing if canvas width is 0', async () => {
     const platform = mockPlatform(300);
-    mockCanvas.getWidth.and.returnValue(0);
-    mockCanvas.getHeight.and.returnValue(300);
+    mockCanvas.getWidth.mockReturnValue(0);
+    mockCanvas.getHeight.mockReturnValue(300);
 
     await zoomImage(mockCanvas, platform);
 
@@ -73,23 +76,25 @@ describe('zoomImage', () => {
     const zoom = targetWidth / canvasWidth;
     const targetHeight = canvasHeight * zoom;
 
-    mockCanvas.getWidth.and.returnValue(canvasWidth);
-    mockCanvas.getHeight.and.returnValue(canvasHeight);
+    mockCanvas.getWidth.mockReturnValue(canvasWidth);
+    mockCanvas.getHeight.mockReturnValue(canvasHeight);
 
     await zoomImage(mockCanvas, platform, maxWidth);
 
-    expect(mockCanvas.setDimensions).toHaveBeenCalledOnceWith({
+    expect(mockCanvas.setDimensions).toHaveBeenCalledTimes(1);
+    expect(mockCanvas.setDimensions).toHaveBeenCalledWith({
       width: targetWidth,
       height: targetHeight,
     });
-    expect(mockCanvas.setZoom).toHaveBeenCalledOnceWith(zoom);
+    expect(mockCanvas.setZoom).toHaveBeenCalledTimes(1);
+    expect(mockCanvas.setZoom).toHaveBeenCalledWith(zoom);
   });
 
   it('should not zoom image when maxWidth is wider than canvas', async () => {
     const platform = mockPlatform(300);
     const maxWidth = 800; // 比默认 700 大
-    mockCanvas.getWidth.and.returnValue(700);
-    mockCanvas.getHeight.and.returnValue(700);
+    mockCanvas.getWidth.mockReturnValue(700);
+    mockCanvas.getHeight.mockReturnValue(700);
 
     await zoomImage(mockCanvas, platform, maxWidth);
 

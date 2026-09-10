@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailComponent } from './detail.component';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
@@ -11,12 +12,12 @@ import { degNorm } from 'src/app/utils/horo-math/horo-math';
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
-  let horoConfigSpy: jasmine.SpyObj<Horoconfig>;
+  let horoConfigSpy: SpyObj<Horoconfig>;
 
   const mockHoroscopeData = createMockHoroscope();
 
   beforeEach(async () => {
-    horoConfigSpy = jasmine.createSpyObj('Horoconfig', [
+    horoConfigSpy = createSpyObj('Horoconfig', [
       'planetFontFamily',
       'planetFontString',
       'zodiacFontFamily',
@@ -24,12 +25,12 @@ describe('DetailComponent', () => {
       'aspectFontFamily',
       'aspectFontString',
     ]);
-    horoConfigSpy.planetFontFamily.and.returnValue('Arial');
-    horoConfigSpy.planetFontString.and.returnValue('☀️');
-    horoConfigSpy.zodiacFontFamily.and.returnValue('Arial');
-    horoConfigSpy.zodiacFontString.and.returnValue('♈');
-    horoConfigSpy.aspectFontFamily.and.returnValue('Arial');
-    horoConfigSpy.aspectFontString.and.returnValue('☐');
+    horoConfigSpy.planetFontFamily.mockReturnValue('Arial');
+    horoConfigSpy.planetFontString.mockReturnValue('☀️');
+    horoConfigSpy.zodiacFontFamily.mockReturnValue('Arial');
+    horoConfigSpy.zodiacFontString.mockReturnValue('♈');
+    horoConfigSpy.aspectFontFamily.mockReturnValue('Arial');
+    horoConfigSpy.aspectFontString.mockReturnValue('☐');
 
     await TestBed.configureTestingModule({
       imports: [DetailComponent, ],

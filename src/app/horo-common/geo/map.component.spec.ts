@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   IonButton,
@@ -25,7 +26,7 @@ import { MapComponent } from './map.component';
 describe('MapComponent', () => {
   let component: MapComponent;
   let fixture: ComponentFixture<MapComponent>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
+  let apiServiceSpy: SpyObj<ApiService>;
 
   const mockLocations: LongLatResponse[] = [
     { name: 'Shanghai', longitude: '121.47', latitude: '31.23' },
@@ -33,7 +34,7 @@ describe('MapComponent', () => {
   ];
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['getLongLat']);
+    apiServiceSpy = createSpyObj('ApiService', ['getLongLat']);
 
     await TestBed.configureTestingModule({
       declarations: [MapComponent],
@@ -52,29 +53,29 @@ describe('MapComponent', () => {
 
   it('open() should open modal and reset state', () => {
     component.isModalOpen = false;
-    component.locations = mockLocations;
+    component.locations.set(mockLocations);
     component.selectedLocation = mockLocations[0];
-    component.query.errorMessage = 'error';
+    component.queryErrorMessage.set('error');
 
     component.open();
 
-    expect(component.isModalOpen).toBeTrue();
-    expect(component.locations.length).toBe(0);
+    expect(component.isModalOpen).toBe(true);
+    expect(component.locations().length).toBe(0);
     expect(component.selectedLocation).toBeNull();
-    expect(component.query.errorMessage).toBe('');
+    expect(component.queryErrorMessage()).toBe('');
   });
 
   it('cancel() should close modal', () => {
     component.isModalOpen = true;
     component.cancel();
-    expect(component.isModalOpen).toBeFalse();
+    expect(component.isModalOpen).toBe(false);
   });
 
   describe('ok()', () => {
     beforeEach(() => {
-      spyOn(component.localNameChange, 'emit');
-      spyOn(component.longChange, 'emit');
-      spyOn(component.latChange, 'emit');
+     vi.spyOn(component.localNameChange, 'emit');
+     vi.spyOn(component.longChange, 'emit');
+     vi.spyOn(component.latChange, 'emit');
       component.isModalOpen = true;
     });
 
@@ -93,7 +94,7 @@ describe('MapComponent', () => {
       expect(component.latChange.emit).toHaveBeenCalledWith(
         Number(selected.latitude)
       );
-      expect(component.isModalOpen).toBeFalse();
+      expect(component.isModalOpen).toBe(false);
     });
 
     it('should not emit and just close modal if no location is selected', () => {
@@ -104,15 +105,17 @@ describe('MapComponent', () => {
       expect(component.localNameChange.emit).not.toHaveBeenCalled();
       expect(component.longChange.emit).not.toHaveBeenCalled();
       expect(component.latChange.emit).not.toHaveBeenCalled();
-      expect(component.isModalOpen).toBeFalse();
+      expect(component.isModalOpen).toBe(false);
     });
   });
 
   describe('queryGeo()', () => {
     beforeEach(() => {
-      component.locations = [];
+      component.locations.set([]);
       component.selectedLocation = null;
-      component.query = { error: false, errorMessage: '', loading: false };
+      component.queryError.set(false);
+      component.queryErrorMessage.set('');
+      component.queryLoading.set(false);
     });
 
     it('should not call api if localName is empty', () => {
@@ -122,55 +125,55 @@ describe('MapComponent', () => {
     });
 
     it('should call api and handle successful response', () => {
-      apiServiceSpy.getLongLat.and.returnValue(of(mockLocations));
+      apiServiceSpy.getLongLat.mockReturnValue(of(mockLocations));
       component.localName = 'test';
 
       component.queryGeo();
 
       expect(apiServiceSpy.getLongLat).toHaveBeenCalledWith('test');
 
-      expect(component.query.loading).toBeFalse();
-      expect(component.locations).toEqual(mockLocations);
-      expect(component.query.error).toBeFalse();
+      expect(component.queryLoading()).toBe(false);
+      expect(component.locations()).toEqual(mockLocations);
+      expect(component.queryError()).toBe(false);
     });
 
     it('should handle successful response with empty result', () => {
-      apiServiceSpy.getLongLat.and.returnValue(of([]));
+      apiServiceSpy.getLongLat.mockReturnValue(of([]));
       component.localName = 'unknown';
 
       component.queryGeo();
       fixture.detectChanges();
 
-      expect(component.query.loading).toBeFalse();
-      expect(component.locations.length).toBe(0);
-      expect(component.query.error).toBeTrue();
-      expect(component.query.errorMessage).toBe('未查询到任何结果');
+      expect(component.queryLoading()).toBe(false);
+      expect(component.locations().length).toBe(0);
+      expect(component.queryError()).toBe(true);
+      expect(component.queryErrorMessage()).toBe('未查询到任何结果');
     });
 
     it('should handle api error with a specific error message', () => {
       const errorResponse = { error: { error: 'Backend Error' } };
-      apiServiceSpy.getLongLat.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.getLongLat.mockReturnValue(throwError(() => errorResponse));
       component.localName = 'test';
 
       component.queryGeo();
       fixture.detectChanges();
 
-      expect(component.query.loading).toBeFalse();
-      expect(component.query.error).toBeTrue();
-      expect(component.query.errorMessage).toBe('Backend Error');
+      expect(component.queryLoading()).toBe(false);
+      expect(component.queryError()).toBe(true);
+      expect(component.queryErrorMessage()).toBe('Backend Error');
     });
 
     it('should handle api error with an unknown error message', () => {
       const errorResponse = { status: 500 };
-      apiServiceSpy.getLongLat.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.getLongLat.mockReturnValue(throwError(() => errorResponse));
       component.localName = 'test';
 
       component.queryGeo();
       fixture.detectChanges();
 
-      expect(component.query.loading).toBeFalse();
-      expect(component.query.error).toBeTrue();
-      expect(component.query.errorMessage).toBe('未知错误');
+      expect(component.queryLoading()).toBe(false);
+      expect(component.queryError()).toBe(true);
+      expect(component.queryErrorMessage()).toBe('未知错误');
     });
   });
 });

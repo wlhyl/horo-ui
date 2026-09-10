@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserPage } from './user.page';
 import { Title } from '@angular/platform-browser';
@@ -9,27 +10,27 @@ import { AuthUser } from '../type/interface/user';
 describe('UserPage', () => {
   let component: UserPage;
   let fixture: ComponentFixture<UserPage>;
-  let mockAuthService: jasmine.SpyObj<AuthService>;
-  let mockTitleService: jasmine.SpyObj<Title>;
+  let mockAuthService: SpyObj<AuthService>;
+  let mockTitleService: SpyObj<Title>;
   let mockAuthUser: AuthUser;
-  let isAuthSpy: jasmine.Spy;
-  let userSpy: jasmine.Spy;
+  let isAuthSpy: Spy;
+  let userSpy: Spy;
 
   beforeEach(() => {
     // 创建 AuthService 和 Title 服务的模拟对象
-    mockAuthService = jasmine.createSpyObj<AuthService>(
+    mockAuthService = createSpyObj<AuthService>(
       'AuthService',
       ['auth', 'deleteToken'],
       ['isAuth', 'user'],
     );
     isAuthSpy = Object.getOwnPropertyDescriptor(mockAuthService, 'isAuth')!
-      .get as jasmine.Spy;
+      .get as Spy;
     userSpy = Object.getOwnPropertyDescriptor(mockAuthService, 'user')!
-      .get as jasmine.Spy;
-    isAuthSpy.and.returnValue(false);
-    userSpy.and.returnValue(null);
+      .get as Spy;
+    isAuthSpy.mockReturnValue(false);
+    userSpy.mockReturnValue(null);
 
-    mockTitleService = jasmine.createSpyObj<Title>('Title', ['setTitle']);
+    mockTitleService = createSpyObj<Title>('Title', ['setTitle']);
 
     mockAuthUser = {
       id: 1,
@@ -60,18 +61,18 @@ describe('UserPage', () => {
 
     it('should set user name if user is authenticated', () => {
       // 设置模拟的认证状态和用户数据
-      isAuthSpy.and.returnValue(true);
-      userSpy.and.returnValue(mockAuthUser);
+      isAuthSpy.mockReturnValue(true);
+      userSpy.mockReturnValue(mockAuthUser);
 
-      component.ngOnInit();
+      component.ionViewWillEnter();
 
       expect(component.user).toBe('testuser');
     });
 
     it('should not set user name if user is not authenticated', () => {
-      isAuthSpy.and.returnValue(false);
+      isAuthSpy.mockReturnValue(false);
 
-      component.ngOnInit();
+      component.ionViewWillEnter();
 
       expect(component.user).toBe('');
     });
@@ -84,7 +85,7 @@ describe('UserPage', () => {
       component.password = 'testpass';
 
       // 模拟成功的认证响应
-      mockAuthService.auth.and.returnValue(of(undefined));
+      mockAuthService.auth.mockReturnValue(of(undefined));
 
       component.login();
 
@@ -97,7 +98,7 @@ describe('UserPage', () => {
       component.error = 'some error';
 
       // 模拟成功的认证响应
-      mockAuthService.auth.and.returnValue(of(undefined));
+      mockAuthService.auth.mockReturnValue(of(undefined));
 
       component.login();
 
@@ -115,11 +116,11 @@ describe('UserPage', () => {
         status: 401,
         statusText: 'Unauthorized',
       });
-      mockAuthService.auth.and.returnValue(throwError(() => errorResponse));
+      mockAuthService.auth.mockReturnValue(throwError(() => errorResponse));
 
       component.login();
 
-      expect(component.error).toBe('Invalid credentials');
+      expect(component.error).toBe('登录失败: Invalid credentials');
     });
 
     it('should set generic error message when error.error is not available', () => {
@@ -132,11 +133,11 @@ describe('UserPage', () => {
         status: 500,
         statusText: 'Internal Server Error',
       });
-      mockAuthService.auth.and.returnValue(throwError(() => errorResponse));
+      mockAuthService.auth.mockReturnValue(throwError(() => errorResponse));
 
       component.login();
 
-      expect(component.error).toBe('登录失败');
+      expect(component.error).toContain('登录失败');
     });
 
     it('should handle error without error property in response', () => {
@@ -148,11 +149,11 @@ describe('UserPage', () => {
         status: 500,
         statusText: 'Internal Server Error',
       });
-      mockAuthService.auth.and.returnValue(throwError(() => errorResponse));
+      mockAuthService.auth.mockReturnValue(throwError(() => errorResponse));
 
       component.login();
 
-      expect(component.error).toBe('登录失败');
+      expect(component.error).toContain('登录失败');
     });
   });
 

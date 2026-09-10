@@ -42,7 +42,7 @@ describe('AuthService', () => {
 
     it('should decode and return token if valid', () => {
       localStorage.setItem('token', mockToken);
-      spyOn(service as any, 'jwtDecodeFn').and.returnValue(mockUser);
+     vi.spyOn(service as any, 'jwtDecodeFn').mockReturnValue(mockUser);
       expect(service.token).toBe(mockToken);
       expect((service as any)._user).toEqual(mockUser);
     });
@@ -54,7 +54,7 @@ describe('AuthService', () => {
         name: 'user',
       };
       localStorage.setItem('token', mockToken);
-      spyOn(service as any, 'jwtDecodeFn').and.returnValue(expiredUser);
+     vi.spyOn(service as any, 'jwtDecodeFn').mockReturnValue(expiredUser);
       expect(service.token).toBe('');
       expect(localStorage.getItem('token')).toBeNull();
       expect((service as any)._user).toBeNull();
@@ -62,7 +62,7 @@ describe('AuthService', () => {
 
     it('should handle decode error', () => {
       localStorage.setItem('token', mockToken);
-      spyOn(service as any, 'jwtDecodeFn').and.throwError('decode error');
+     vi.spyOn(service as any, 'jwtDecodeFn').mockImplementation(() => { throw new Error('decode error'); });
       expect(service.token).toBe('');
       expect(localStorage.getItem('token')).toBeNull();
       expect((service as any)._user).toBeNull();
@@ -76,7 +76,7 @@ describe('AuthService', () => {
     });
 
     it('should trigger token getter if _user is null', () => {
-      spyOn(service as any, 'jwtDecodeFn').and.returnValue(mockUser);
+     vi.spyOn(service as any, 'jwtDecodeFn').mockReturnValue(mockUser);
       localStorage.setItem('token', mockToken);
       (service as any)._user = null;
       expect(service.user).toEqual(mockUser);
@@ -85,14 +85,14 @@ describe('AuthService', () => {
 
   it('isAuth should reflect token presence', () => {
     expect(service.isAuth).toBe(false);
-    spyOn(service as any, 'jwtDecodeFn').and.returnValue(mockUser);
+   vi.spyOn(service as any, 'jwtDecodeFn').mockReturnValue(mockUser);
     localStorage.setItem('token', mockToken);
     expect(service.isAuth).toBe(true);
   });
 
   describe('auth', () => {
     it('should post login and set token/_user', () => {
-      spyOn(service as any, 'jwtDecodeFn').and.returnValue(mockUser);
+     vi.spyOn(service as any, 'jwtDecodeFn').mockReturnValue(mockUser);
       service.auth('user', 'pass').subscribe(() => {
         expect(localStorage.getItem('token')).toBe(mockToken);
         expect((service as any)._user).toEqual(mockUser);

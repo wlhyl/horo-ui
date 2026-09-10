@@ -1,10 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  flush,
-  tick,
-} from '@angular/core/testing';
+      } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { delay, of, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -32,9 +30,9 @@ import { ProfectionArcToDateMethod } from 'src/app/process/enum/profection-arc-t
 describe('DirectionComponent', () => {
   let component: DirectionComponent;
   let fixture: ComponentFixture<DirectionComponent>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let horoconfigSpy: jasmine.SpyObj<Horoconfig>;
+  let apiServiceSpy: SpyObj<ApiService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let horoconfigSpy: SpyObj<Horoconfig>;
 
   const mockDateRequest: DateRequest = createMockDateRequest({
     year: 2000,
@@ -90,9 +88,9 @@ describe('DirectionComponent', () => {
   ];
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['direction']);
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    horoconfigSpy = jasmine.createSpyObj('Horoconfig', [
+    apiServiceSpy = createSpyObj('ApiService', ['direction']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    horoconfigSpy = createSpyObj('Horoconfig', [
       'planetFontFamily',
       'planetFontString',
       'aspectFontFamily',
@@ -103,7 +101,7 @@ describe('DirectionComponent', () => {
       houses: ['Alcabitus', 'Placidus'],
     });
 
-    const horoStorageSpy = jasmine.createSpyObj('HoroStorageService', [], {
+    const horoStorageSpy = createSpyObj('HoroStorageService', [], {
       horoData: mockHoroData,
       processData: {
         date: mockDateRequest,
@@ -139,14 +137,14 @@ describe('DirectionComponent', () => {
 
   describe('ngOnInit', () => {
     it('should set the title to "主向推运"', () => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
 
       expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('主向推运');
     });
 
     it('should initialize nativeDate, startDate, and endDate correctly', () => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
       expect(component.nativeDate).toEqual(mockDateRequest);
       expect(component.startDate).toEqual(
@@ -164,7 +162,7 @@ describe('DirectionComponent', () => {
     });
 
     it('should call api.direction with correct request data', () => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
       fixture.detectChanges();
 
       const expectedRequest = {
@@ -179,11 +177,11 @@ describe('DirectionComponent', () => {
     });
 
     it('should set directionData on API success', () => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
       fixture.detectChanges();
 
       expect(component.directionData).toEqual(mockDirectionData);
-      expect(component.isAlertOpen).toBeFalse();
+      expect(component.isAlertOpen).toBe(false);
     });
 
     it('should handle API error and show alert', () => {
@@ -191,12 +189,12 @@ describe('DirectionComponent', () => {
         status: 500,
         error: 'Internal Server Error',
       };
-      apiServiceSpy.direction.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.direction.mockReturnValue(throwError(() => errorResponse));
       fixture.detectChanges();
 
       expect(component.directionData).toEqual([]);
       expect(component.message).toBe('Internal Server Error');
-      expect(component.isAlertOpen).toBeTrue();
+      expect(component.isAlertOpen).toBe(true);
     });
   });
 
@@ -355,7 +353,7 @@ describe('DirectionComponent', () => {
 
   describe('getTermInfo', () => {
     beforeEach(() => {
-      horoconfigSpy.zodiacFontString.and.returnValue('♈');
+      horoconfigSpy.zodiacFontString.mockReturnValue('♈');
     });
     it('should return zodiac and dms info for term promittor', () => {
       const promittor: Promittor = { term: [PlanetName.Jupiter, 15.5] };
@@ -435,7 +433,7 @@ describe('DirectionComponent', () => {
 
   describe('filteredDirectionData', () => {
     beforeEach(() => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
     });
     it('should return all data when no filters applied', () => {
       fixture.detectChanges();
@@ -503,7 +501,7 @@ describe('DirectionComponent', () => {
 
   describe('checkSignificator', () => {
     beforeEach(() => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
     });
 
@@ -539,7 +537,7 @@ describe('DirectionComponent', () => {
 
   describe('updateNativeDate', () => {
     beforeEach(() => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
       fixture.detectChanges();
     });
 
@@ -582,11 +580,11 @@ describe('DirectionComponent', () => {
       expect(component.selectedSignificatorPlanets).toEqual([PlanetName.MC]);
     });
 
-    it('should call fetchDirectionData after debounce', fakeAsync(() => {
-      apiServiceSpy.direction.calls.reset();
+    it('should call fetchDirectionData after debounce', fakeAsync(async () => {
+      apiServiceSpy.direction.mockClear();
 
       component.updateNativeDate();
-      tick(300);
+      await tick(300);
 
       expect(apiServiceSpy.direction).toHaveBeenCalled();
     }));
@@ -594,7 +592,7 @@ describe('DirectionComponent', () => {
 
   describe('resetFilters', () => {
     beforeEach(() => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
     });
 
@@ -747,8 +745,8 @@ describe('DirectionComponent', () => {
   });
 
   describe('isLoading state', () => {
-    it('should set isLoading to true when fetchDirectionData is called', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(
+    it('should set isLoading to true when fetchDirectionData is called', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(
         of(mockDirectionData).pipe(delay(0)),
       );
 
@@ -756,12 +754,12 @@ describe('DirectionComponent', () => {
 
       expect(component.isLoading).toBe(true);
 
-      tick(0);
-      flush();
+      await tick(0);
+      await flush();
     }));
 
     it('should set isLoading to false after API success', () => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
 
       component.fetchDirectionData();
 
@@ -773,7 +771,7 @@ describe('DirectionComponent', () => {
         message: 'API Error',
         error: { message: 'Internal Server Error' },
       };
-      apiServiceSpy.direction.and.returnValue(throwError(() => errorResponse));
+      apiServiceSpy.direction.mockReturnValue(throwError(() => errorResponse));
 
       component.fetchDirectionData();
 
@@ -781,7 +779,7 @@ describe('DirectionComponent', () => {
     });
 
     it('should not call API if isLoading is already true', () => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
       component.isLoading = true;
 
       component.fetchDirectionData();
@@ -790,7 +788,7 @@ describe('DirectionComponent', () => {
     });
 
     it('should set isLoading to true immediately when resetFilters is called', () => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
 
       component.resetFilters();
@@ -798,19 +796,19 @@ describe('DirectionComponent', () => {
       expect(component.isLoading).toBe(true);
     });
 
-    it('should set isLoading to false after debounce and timeout when resetFilters is called', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+    it('should set isLoading to false after debounce and timeout when resetFilters is called', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
 
       component.resetFilters();
-      tick(300);
-      tick(100);
+      await tick(300);
+      await tick(100);
 
       expect(component.isLoading).toBe(false);
     }));
 
-    it('should reset startDate and endDate when resetFilters is called', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+    it('should reset startDate and endDate when resetFilters is called', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
 
       component.startDate = {
@@ -823,45 +821,45 @@ describe('DirectionComponent', () => {
         tz: 8,
       };
       component.resetFilters();
-      tick(300);
+      await tick(300);
 
       expect(component.startDate).toEqual(component.nativeDate);
       expect(component.endDate.year).toBe(component.nativeDate.year + 120);
-      flush();
+      await flush();
     }));
 
-    it('should not reset filters if isLoading is already true', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(of([]));
+    it('should not reset filters if isLoading is already true', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(of([]));
       fixture.detectChanges();
       component.isLoading = true;
       const originalStartDate = { ...component.startDate };
 
       component.resetFilters();
-      tick(300);
+      await tick(300);
 
       expect(component.startDate).toEqual(originalStartDate);
     }));
 
-    it('should call fetchDirectionData after 300ms debounce when updateNativeDate is called', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(
+    it('should call fetchDirectionData after 300ms debounce when updateNativeDate is called', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(
         of(mockDirectionData).pipe(delay(0)),
       );
       fixture.detectChanges();
-      tick(0);
-      flush();
-      apiServiceSpy.direction.calls.reset();
+      await tick(0);
+      await flush();
+      apiServiceSpy.direction.mockClear();
 
       component.updateNativeDate();
-      tick(300);
+      await tick(300);
 
       expect(apiServiceSpy.direction).toHaveBeenCalled();
 
-      tick(0);
-      flush();
+      await tick(0);
+      await flush();
     }));
 
-    it('should preserve filter settings when updateNativeDate is called', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+    it('should preserve filter settings when updateNativeDate is called', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
       fixture.detectChanges();
 
       const originalStartDate = { ...component.startDate };
@@ -879,15 +877,15 @@ describe('DirectionComponent', () => {
         st: false,
       };
       component.updateNativeDate();
-      tick(300);
+      await tick(300);
 
       expect(component.startDate).toEqual(originalStartDate);
       expect(component.endDate).toEqual(originalEndDate);
       expect(component.selectedSignificatorPlanets).toEqual([PlanetName.MC]);
     }));
 
-    it('should not update data if isLoading is already true', fakeAsync(() => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+    it('should not update data if isLoading is already true', fakeAsync(async () => {
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
       fixture.detectChanges();
       component.isLoading = true;
       const originalStartDate = { ...component.startDate };
@@ -903,7 +901,7 @@ describe('DirectionComponent', () => {
       };
 
       component.updateNativeDate();
-      tick(300);
+      await tick(300);
 
       expect(component.startDate).toEqual(originalStartDate);
     }));
@@ -911,8 +909,8 @@ describe('DirectionComponent', () => {
 
   describe('ngOnDestroy', () => {
     it('should complete destroy$ subject', () => {
-      const destroySpy = spyOn(component['destroy$'], 'next');
-      const completeSpy = spyOn(component['destroy$'], 'complete');
+      const destroySpy =vi.spyOn(component['destroy$'], 'next');
+      const completeSpy =vi.spyOn(component['destroy$'], 'complete');
 
       component.ngOnDestroy();
 
@@ -923,7 +921,7 @@ describe('DirectionComponent', () => {
 
   describe('geo properties', () => {
     beforeEach(() => {
-      apiServiceSpy.direction.and.returnValue(of(mockDirectionData));
+      apiServiceSpy.direction.mockReturnValue(of(mockDirectionData));
     });
 
     it('should initialize geo from horoData on ngOnInit', () => {
@@ -998,11 +996,11 @@ describe('DirectionComponent', () => {
       component.geoLongD = 100;
       component.geoLongM = 0;
       component.geoLongS = 0;
-      apiServiceSpy.direction.calls.reset();
+      apiServiceSpy.direction.mockClear();
 
       component.fetchDirectionData();
 
-      const requestArg = apiServiceSpy.direction.calls.mostRecent().args[0];
+      const requestArg = apiServiceSpy.direction.mock.calls.at(-1)[0];
       expect(requestArg.geo.long).toBeCloseTo(100, 5);
     });
   });

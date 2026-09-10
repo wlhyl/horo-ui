@@ -130,7 +130,7 @@ describe('Horo Image Calculation Functions', () => {
       // 4 planets drawn twice (row and column), and no aspects are passed in,
       // so the total number of elements should be 8.
       expect(elements.length).toBe(8);
-      expect(elements.some((e: TextObject) => e.text === 'Q')).toBeTrue(); // Sun
+      expect(elements.some((e: TextObject) => e.text === 'Q')).toBe(true); // Sun
     });
 
     it('should generate aspect symbols and values', () => {
@@ -141,10 +141,10 @@ describe('Horo Image Calculation Functions', () => {
         280,
         280
       );
-      expect(elements.some((e: TextObject) => e.text === 't')).toBeTrue(); // 60 deg
-      expect(elements.some((e: TextObject) => e.text === 'r')).toBeTrue(); // 90 deg
-      expect(elements.some((e: TextObject) => e.text === '1 A 12')).toBeTrue();
-      expect(elements.some((e: TextObject) => e.text === '0 S 30')).toBeTrue();
+      expect(elements.some((e: TextObject) => e.text === 't')).toBe(true); // 60 deg
+      expect(elements.some((e: TextObject) => e.text === 'r')).toBe(true); // 90 deg
+      expect(elements.some((e: TextObject) => e.text === '1 A 12')).toBe(true);
+      expect(elements.some((e: TextObject) => e.text === '0 S 30')).toBe(true);
     });
   });
 
@@ -287,7 +287,7 @@ describe('Horo Image Calculation Functions', () => {
           nocturnalHoroscope,
           mockHoroConfig
         );
-        expect(elements.some((e) => e.text === '夜间盘')).toBeTrue();
+        expect(elements.some((e) => e.text === '夜间盘')).toBe(true);
       });
     });
   });

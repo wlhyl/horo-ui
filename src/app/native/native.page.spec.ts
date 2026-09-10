@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -23,12 +24,12 @@ import { createMockHoroRequest } from '../test-utils/test-data-factory.spec';
 describe('NativePage', () => {
   let component: NativePage;
   let fixture: ComponentFixture<NativePage>;
-  let horoStorageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let configServiceSpy: jasmine.SpyObj<Horoconfig>;
-  let navControllerSpy: jasmine.SpyObj<NavController>;
-  let alertControllerSpy: jasmine.SpyObj<AlertController>;
+  let horoStorageServiceSpy: SpyObj<HoroStorageService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let routerSpy: SpyObj<Router>;
+  let configServiceSpy: SpyObj<Horoconfig>;
+  let navControllerSpy: SpyObj<NavController>;
+  let alertControllerSpy: SpyObj<AlertController>;
 
   const mockHoroData: HoroRequest = createMockHoroRequest();
 
@@ -45,29 +46,29 @@ describe('NativePage', () => {
   };
 
   beforeEach(() => {
-    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [''], {
+    horoStorageServiceSpy = createSpyObj('HoroStorageService', [''], {
       horoData: mockHoroData,
     });
 
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj(
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    routerSpy = createSpyObj(
       'Router',
       ['navigate', 'createUrlTree', 'serializeUrl'],
       { events: of() } // 用于防止routerlink报错
     );
-    configServiceSpy = jasmine.createSpyObj('Horoconfig', [''], {
+    configServiceSpy = createSpyObj('Horoconfig', [''], {
       houses: mockHouses,
     });
-    navControllerSpy = jasmine.createSpyObj('NavController', ['navigateBack']);
+    navControllerSpy = createSpyObj('NavController', ['navigateBack']);
 
-    alertControllerSpy = jasmine.createSpyObj('AlertController', ['create']);
-    alertControllerSpy.create.and.returnValue(
-      Promise.resolve({ present: jasmine.createSpy('present') } as any)
+    alertControllerSpy = createSpyObj('AlertController', ['create']);
+    alertControllerSpy.create.mockReturnValue(
+      Promise.resolve({ present: createSpy('present') } as any)
     );
 
     // 为Router方法提供spy实现
-    routerSpy.createUrlTree.and.returnValue(new UrlTree());
-    routerSpy.serializeUrl.and.returnValue('url');
+    routerSpy.createUrlTree.mockReturnValue(new UrlTree());
+    routerSpy.serializeUrl.mockReturnValue('url');
 
     TestBed.configureTestingModule({
       imports: [
@@ -132,8 +133,8 @@ describe('NativePage', () => {
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )!.get as jasmine.Spy;
-    horoDataGetterSpy.and.returnValue(updatedHoroData);
+    )!.get as Spy;
+    horoDataGetterSpy.mockReturnValue(updatedHoroData);
 
     // Act: 调用触发数据获取的生命周期钩子。
     component.ionViewWillEnter();
@@ -155,7 +156,7 @@ describe('NativePage', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     expect(horoDataSetterSpy).toHaveBeenCalledWith(originalHoroData);
 
@@ -204,10 +205,10 @@ describe('NativePage', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     // 验证storage.horoData与component.horoData是不同的对象
-    const storedHoroData = horoDataSetterSpy.calls.mostRecent().args[0];
+    const storedHoroData = horoDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedHoroData).toEqual(component.horoData);
     expect(storedHoroData).not.toBe(component.horoData);
   });
@@ -426,7 +427,7 @@ describe('NativePage', () => {
     });
 
     it('should call getHoro when submit button is clicked', () => {
-      spyOn(component, 'getHoro');
+     vi.spyOn(component, 'getHoro');
 
       // 模拟点击提交按钮
       submitButton.nativeElement.click();
@@ -442,7 +443,7 @@ describe('NativePage', () => {
         year: 1986, month: 5, day: 4, hour: 3, minute: 0, second: 0,
         tz: 9, st: false,
       };
-      alertControllerSpy.create.calls.reset();
+      alertControllerSpy.create.mockClear();
 
       await component.onDateChange();
 
@@ -454,12 +455,12 @@ describe('NativePage', () => {
         year: 1986, month: 5, day: 4, hour: 3, minute: 0, second: 0,
         tz: 8, st: false,
       };
-      alertControllerSpy.create.calls.reset();
+      alertControllerSpy.create.mockClear();
 
       await component.onDateChange();
 
       expect(alertControllerSpy.create).toHaveBeenCalled();
-      const args = alertControllerSpy.create.calls.mostRecent()!.args[0]!;
+      const args = alertControllerSpy.create.mock.calls.at(-1)![0]!;
       expect(args.header).toBe('夏令时提示');
       expect(args.message).toContain('夏令时');
       expect(args.message).toContain('1986');
@@ -470,7 +471,7 @@ describe('NativePage', () => {
         year: 2000, month: 1, day: 1, hour: 12, minute: 0, second: 0,
         tz: 8, st: false,
       };
-      alertControllerSpy.create.calls.reset();
+      alertControllerSpy.create.mockClear();
 
       await component.onDateChange();
 

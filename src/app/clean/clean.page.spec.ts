@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import {
@@ -15,16 +16,15 @@ import { HoroStorageService } from '../services/horostorage/horostorage.service'
 describe('CleanPage', () => {
   let component: CleanPage;
   let fixture: ComponentFixture<CleanPage>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let storageServiceSpy: jasmine.SpyObj<HoroStorageService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let storageServiceSpy: SpyObj<HoroStorageService>;
 
   beforeEach(async () => {
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    storageServiceSpy = jasmine.createSpyObj('HoroStorageService', ['clean']);
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    storageServiceSpy = createSpyObj('HoroStorageService', ['clean']);
 
     await TestBed.configureTestingModule({
-      declarations: [CleanPage],
-      imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar],
+      imports: [IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonTitle, IonToolbar, CleanPage],
       providers: [
         { provide: Title, useValue: titleServiceSpy },
         { provide: HoroStorageService, useValue: storageServiceSpy }
@@ -41,7 +41,7 @@ describe('CleanPage', () => {
   });
 
   it('should call titleService.setTitle with correct title', () => {
-    titleServiceSpy.setTitle.calls.reset();
+    titleServiceSpy.setTitle.mockClear();
     component.ngOnInit();
     expect(titleServiceSpy.setTitle).toHaveBeenCalledWith('清除缓存');
   });

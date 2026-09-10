@@ -110,7 +110,7 @@ describe('TimeZoneComponent', () => {
     });
 
     it('should update zone and emit event when data is provided', () => {
-      spyOn(component.zoneChange, 'emit');
+     vi.spyOn(component.zoneChange, 'emit');
       
       const event = {
         detail: {

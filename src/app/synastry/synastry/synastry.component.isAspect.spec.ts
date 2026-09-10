@@ -1,9 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick } from 'src/test-utils/spy';
 import {
   ComponentFixture,
-  fakeAsync,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+    TestBed,
+  } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
 import { SynastryComponent } from './synastry.component';
@@ -12,14 +11,14 @@ import { HoroscopeComparison } from 'src/app/type/interface/response-data';
 describe('isAspect property', () => {
   let component: SynastryComponent;
   let fixture: ComponentFixture<SynastryComponent>;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
-  let drawSpy: jasmine.Spy;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let apiServiceSpy: SpyObj<ApiService>;
+  let drawSpy: Spy;
+  let mockRouter: SpyObj<Router>;
   let mockActivatedRoute: any;
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj('ApiService', ['compare']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
+    apiServiceSpy = createSpyObj('ApiService', ['compare']);
+    mockRouter = createSpyObj('Router', ['navigate', 'createUrlTree']);
     mockActivatedRoute = {};
 
     await TestBed.configureTestingModule({
@@ -35,14 +34,14 @@ describe('isAspect property', () => {
     component = fixture.componentInstance;
 
     const canvas = ((component as any).canvas = {
-      dispose: jasmine.createSpy('dispose'),
-      toJSON: jasmine.createSpy('toJSON'),
-      loadFromJSON: jasmine.createSpy('loadFromJSON'),
-      renderAll: jasmine.createSpy('renderAll'),
+      dispose: createSpy('dispose'),
+      toJSON: createSpy('toJSON'),
+      loadFromJSON: createSpy('loadFromJSON'),
+      renderAll: createSpy('renderAll'),
     });
-    canvas.loadFromJSON.and.returnValue(Promise.resolve(canvas));
+    canvas.loadFromJSON.mockReturnValue(Promise.resolve(canvas));
 
-    drawSpy = spyOn(component as any, 'draw').and.stub();
+    drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
   });
 
   it('should create', () => {
@@ -64,7 +63,7 @@ describe('isAspect property', () => {
 
   it('should not redraw when the same value is set', () => {
     component.isAspect = true;
-    drawSpy.calls.reset(); // 重置 spy
+    drawSpy.mockClear(); // 重置 spy
 
     // 再次设置为 true
     component.isAspect = true;
@@ -81,7 +80,7 @@ describe('isAspect property', () => {
     expect(component.isAspect).toBe(true);
     expect(drawSpy).toHaveBeenCalled();
 
-    drawSpy.calls.reset();
+    drawSpy.mockClear();
     component['canvasCache'] = undefined;
 
     component.isAspect = false;
@@ -109,7 +108,7 @@ describe('isAspect property', () => {
     expect(drawSpy).not.toHaveBeenCalled();
   });
 
-  it('should use canvas cache when available', fakeAsync(() => {
+  it('should use canvas cache when available', fakeAsync(async () => {
     // 设置初始状态
     component.isDrawing = false;
     component.loading = false;
@@ -121,11 +120,11 @@ describe('isAspect property', () => {
     const loadFromJSONSpy = canvas.loadFromJSON;
     const renderAllSpy = canvas.renderAll;
 
-    drawSpy.calls.reset();
+    drawSpy.mockClear();
 
     // 改变 isAspect 值
     component.isAspect = true;
-    tick(); // 等待异步操作完成
+    await tick(); // 等待异步操作完成
 
     // 验证使用了缓存而不是重新绘制
     expect(loadFromJSONSpy).toHaveBeenCalledWith(expectedCanvasCache);
@@ -141,8 +140,8 @@ describe('isAspect property', () => {
 
     const expectedCanvasJson = { version: 'test', objects: [] };
     const canvas = (component as any).canvas;
-    const toJSONSpy = canvas.toJSON.and.returnValue(expectedCanvasJson);
-    drawSpy.calls.reset();
+    const toJSONSpy = canvas.toJSON.mockReturnValue(expectedCanvasJson);
+    drawSpy.mockClear();
 
     // 改变 isAspect 值
     component.isAspect = true;

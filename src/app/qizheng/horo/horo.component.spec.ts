@@ -1,4 +1,5 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -44,7 +45,6 @@ import {
   PlanetName,
   PlanetSpeedState,
 } from 'src/app/type/enum/qizheng';
-import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { createMockDateRequest, createMockGeoRequest, createMockHoroRequest, createMockProcessRequest } from 'src/app/test-utils/test-data-factory.spec';
 
 describe('HoroComponent', () => {
@@ -52,15 +52,15 @@ describe('HoroComponent', () => {
   let fixture: ComponentFixture<HoroComponent>;
 
   // Mock Services
-  let mockApiService: jasmine.SpyObj<ApiService>;
+  let mockApiService: SpyObj<ApiService>;
   let mockHoroStorageService: Partial<HoroStorageService>;
   let mockQizhengConfigService: Partial<QizhengConfigService>;
-  let mockTipService: jasmine.SpyObj<TipService>;
-  let mockTitleService: jasmine.SpyObj<Title>;
+  let mockTipService: SpyObj<TipService>;
+  let mockTitleService: SpyObj<Title>;
   let mockPlatform: Partial<Platform>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockRouter: SpyObj<Router>;
   let mockActivatedRoute: any;
-  let mockNavController: jasmine.SpyObj<NavController>;
+  let mockNavController: SpyObj<NavController>;
 
   // Mock Data
   const mockDate: DateRequest = createMockDateRequest({
@@ -226,13 +226,13 @@ describe('HoroComponent', () => {
     ],
   };
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     // Create spies for the services
-    mockApiService = jasmine.createSpyObj('ApiService', ['qizheng']);
-    mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
-    mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
-    mockTipService = jasmine.createSpyObj('TipService', ['show']);
-    mockNavController = jasmine.createSpyObj('NavController', ['back']);
+    mockApiService = createSpyObj('ApiService', ['qizheng']);
+    mockTitleService = createSpyObj('Title', ['setTitle']);
+    mockRouter = createSpyObj('Router', ['navigate', 'createUrlTree']);
+    mockTipService = createSpyObj('TipService', ['show']);
+    mockNavController = createSpyObj('NavController', ['back']);
 
     // Mock service implementations
     mockHoroStorageService = {
@@ -285,13 +285,13 @@ describe('HoroComponent', () => {
     component = fixture.componentInstance;
 
     // 监视 createCanvas 方法并返回一个模拟的 canvas 对象
-    spyOn(component as any, 'createCanvas').and.returnValue({
-      dispose: jasmine.createSpy('dispose'),
+   vi.spyOn(component as any, 'createCanvas').mockReturnValue({
+      dispose: createSpy('dispose'),
     });
 
     // 监视 draw 方法以避免实际执行
-    spyOn(component as any, 'draw').and.callFake(() => {});
-  }));
+   vi.spyOn(component as any, 'draw').mockImplementation(() => {});
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -304,11 +304,11 @@ describe('HoroComponent', () => {
     });
 
     it('should initialize canvas and draw horoscope on ngAfterViewInit', () => {
-      const drawSpy = spyOn(
+      const drawSpy =vi.spyOn(
         component as any,
         'drawHoroscope'
-      ).and.callThrough();
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+      );
+      mockApiService.qizheng.mockReturnValue(of(mockHoroscopeData));
 
       component.ngAfterViewInit();
 
@@ -318,7 +318,7 @@ describe('HoroComponent', () => {
 
     it('should dispose canvas and complete subscriptions on ngOnDestroy', () => {
       // 确保canvas已创建
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+      mockApiService.qizheng.mockReturnValue(of(mockHoroscopeData));
       component.ngAfterViewInit();
       const canvas = (component as any).canvas;
 
@@ -334,16 +334,16 @@ describe('HoroComponent', () => {
 
   describe('drawHoroscope', () => {
     beforeEach(() => {
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+      mockApiService.qizheng.mockReturnValue(of(mockHoroscopeData));
       // 由于 createCanvas 已被监视，ngAfterViewInit 不会创建新的 canvas
       // 我们需要手动触发它以进行测试
       component.ngAfterViewInit();
-      ((component as any).draw as jasmine.Spy).calls.reset();
-      mockApiService.qizheng.calls.reset();
+      ((component as any).draw as Spy).mockClear();
+      mockApiService.qizheng.mockClear();
     });
 
     it('should call api.qizheng and draw on success', () => {
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+      mockApiService.qizheng.mockReturnValue(of(mockHoroscopeData));
       const drawSpy = (component as any).draw;
       component.horoscopeData = null;
       // 重置状态标志以确保drawHoroscope能够正常执行
@@ -366,7 +366,7 @@ describe('HoroComponent', () => {
         message: 'API Error',
         error: { message: 'Internal Server Error' },
       };
-      mockApiService.qizheng.and.returnValue(throwError(() => errorResponse));
+      mockApiService.qizheng.mockReturnValue(throwError(() => errorResponse));
       const drawSpy = (component as any).draw;
       component.horoscopeData = null;
       // 重置状态标志以确保drawHoroscope能够正常执行
@@ -400,14 +400,14 @@ describe('HoroComponent', () => {
 
   describe('applyStepChange', () => {
     beforeEach(() => {
-      mockApiService.qizheng.and.returnValue(of(mockHoroscopeData));
+      mockApiService.qizheng.mockReturnValue(of(mockHoroscopeData));
     });
 
     it('should update currentProcessData date correctly', () => {
-      const drawHoroscopeSpy = spyOn(
+      const drawHoroscopeSpy =vi.spyOn(
         component as any,
         'drawHoroscope'
-      ).and.callThrough();
+      );
 
       component.currentProcessData.date = {
         year: 2023,
@@ -465,21 +465,21 @@ describe('HoroComponent', () => {
   });
 
   describe('changeStep with debounce', () => {
-    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(() => {
+    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(async () => {
       // 确保由 detectChanges 触发的 ngAfterViewInit 中的 drawHoroscope 不调用实际的方法
-      spyOn(component as any, 'drawHoroscope').and.stub();
+     vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
 
       // 在 ngOnInit 触发前设置 spy，确保订阅捕获的是 spy
-      const applyStepChangeSpy = spyOn(
+      const applyStepChangeSpy =vi.spyOn(
         component as any,
         'applyStepChange'
-      ).and.stub();
+      ).mockReturnValue(undefined);
 
       // 触发 ngOnInit 以设置订阅, 同时会触发 ngAfterViewInit
       fixture.detectChanges();
 
       // 重置 spy，因为 detectChanges 可能会通过 applyStepChange 间接触发 drawHoroscope
-      applyStepChangeSpy.calls.reset();
+      applyStepChangeSpy.mockClear();
 
       const step = { year: 0, month: 0, day: 1, hour: 0, minute: 0, second: 0 };
 
@@ -489,15 +489,15 @@ describe('HoroComponent', () => {
       component.changeStep(step);
 
       // 验证在防抖时间内没有被调用
-      tick(299); // 在防抖时间到达前
+      await tick(299); // 在防抖时间到达前
       expect(applyStepChangeSpy).not.toHaveBeenCalled();
 
       // 等待防抖时间结束
-      tick(1); // 到达 300ms
+      await tick(1); // 到达 300ms
       expect(applyStepChangeSpy).toHaveBeenCalledTimes(1);
 
       // 清理所有待处理的 timers
-      flush();
+      await flush();
     }));
   });
 

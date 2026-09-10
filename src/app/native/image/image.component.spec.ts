@@ -1,10 +1,8 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj, fakeAsync, tick, flush } from 'src/test-utils/spy';
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  tick,
-  flush,
-} from '@angular/core/testing';
+      } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, NavController, Platform } from '@ionic/angular';
@@ -30,34 +28,34 @@ describe('ImageComponent', () => {
   let fixture: ComponentFixture<ImageComponent>;
 
   // Mock Services
-  let mockApiService: jasmine.SpyObj<ApiService>;
+  let mockApiService: SpyObj<ApiService>;
   let mockHoroStorageService: Partial<HoroStorageService>;
   let mockHoroConfigService: Partial<Horoconfig>;
-  let mockTitleService: jasmine.SpyObj<Title>;
+  let mockTitleService: SpyObj<Title>;
   let mockPlatform: Partial<Platform>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockRouter: SpyObj<Router>;
   let mockActivatedRoute: any;
-  let mockAuthService: jasmine.SpyObj<AuthService>;
-  let mockAlertController: jasmine.SpyObj<AlertController>;
-  let mockNavController: jasmine.SpyObj<NavController>;
+  let mockAuthService: SpyObj<AuthService>;
+  let mockAlertController: SpyObj<AlertController>;
+  let mockNavController: SpyObj<NavController>;
 
   beforeEach(async () => {
     // Create spies for the services
-    mockApiService = jasmine.createSpyObj('ApiService', [
+    mockApiService = createSpyObj('ApiService', [
       'getNativeHoroscope',
       'addNative',
       'getNativeById',
       'updateNative',
     ]);
-    mockTitleService = jasmine.createSpyObj('Title', ['setTitle']);
-    mockRouter = jasmine.createSpyObj(
+    mockTitleService = createSpyObj('Title', ['setTitle']);
+    mockRouter = createSpyObj(
       'Router',
       ['navigate', 'createUrlTree'],
       { url: '/native' },
     );
-    mockAuthService = jasmine.createSpyObj('AuthService', ['isAuth']);
-    mockAlertController = jasmine.createSpyObj('AlertController', ['create']);
-    mockNavController = jasmine.createSpyObj('NavController', ['back']);
+    mockAuthService = createSpyObj('AuthService', ['isAuth']);
+    mockAlertController = createSpyObj('AlertController', ['create']);
+    mockNavController = createSpyObj('NavController', ['back']);
 
     // Mock service implementations
     mockHoroStorageService = {
@@ -104,11 +102,11 @@ describe('ImageComponent', () => {
     component.currentHoroData = structuredClone(mockHoroData);
 
     // 监视 createCanvas 方法并返回一个模拟的 canvas 对象
-    spyOn(component as any, 'createCanvas').and.returnValue({
-      dispose: jasmine.createSpy('dispose'),
+   vi.spyOn(component as any, 'createCanvas').mockReturnValue({
+      dispose: createSpy('dispose'),
       toJSON: () => ({}),
       loadFromJSON: (data: any) =>
-        Promise.resolve({ renderAll: jasmine.createSpy('renderAll') }),
+        Promise.resolve({ renderAll: createSpy('renderAll') }),
     });
   });
 
@@ -117,10 +115,10 @@ describe('ImageComponent', () => {
   });
 
   describe('Lifecycle Hooks', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
 
     beforeEach(() => {
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
     });
 
     it('should set the title on ngOnInit', () => {
@@ -128,19 +126,19 @@ describe('ImageComponent', () => {
       expect(mockTitleService.setTitle).toHaveBeenCalledWith('本命星盘');
     });
 
-    it('should initialize canvas on ngAfterViewInit', fakeAsync(() => {
+    it('should initialize canvas on ngAfterViewInit', fakeAsync(async () => {
       component.ngAfterViewInit();
-      tick();
+      await tick();
       expect(component['canvas']).toBeDefined();
       expect(drawHoroscopeSpy).toHaveBeenCalledWith(mockCurrentHoroData);
     }));
 
-    it('should dispose canvas and complete subscriptions on ngOnDestroy', fakeAsync(() => {
+    it('should dispose canvas and complete subscriptions on ngOnDestroy', fakeAsync(async () => {
       component.ngAfterViewInit();
-      tick();
+      await tick();
       const canvas = (component as any).canvas;
       const disposeSpy = canvas.dispose;
-      const destroySpy = spyOn(component['destroy$'], 'complete');
+      const destroySpy =vi.spyOn(component['destroy$'], 'complete');
 
       component.ngOnDestroy();
 
@@ -151,17 +149,17 @@ describe('ImageComponent', () => {
   });
 
   describe('drawHoroscope', () => {
-    let drawSpy: jasmine.Spy;
+    let drawSpy: Spy;
 
     beforeEach(() => {
-      mockApiService.getNativeHoroscope.and.returnValue(of(mockHoroscopeData));
+      mockApiService.getNativeHoroscope.mockReturnValue(of(mockHoroscopeData));
       component.currentHoroData = mockCurrentHoroData;
-      drawSpy = spyOn(component as any, 'draw').and.stub();
-      mockApiService.getNativeHoroscope.calls.reset();
+      drawSpy =vi.spyOn(component as any, 'draw').mockReturnValue(undefined);
+      mockApiService.getNativeHoroscope.mockClear();
     });
 
     it('should call api.getNativeHoroscope and draw on success', async () => {
-      // mockApiService.getNativeHoroscope.and.returnValue(of(mockHoroscopeData));
+      // mockApiService.getNativeHoroscope.mockReturnValue(of(mockHoroscopeData));
       component.horoscoData = null;
       component.isDrawing = false;
       component.loading = false;
@@ -184,7 +182,7 @@ describe('ImageComponent', () => {
         message: 'API Error',
         error: { message: 'Internal Server Error' },
       };
-      mockApiService.getNativeHoroscope.and.returnValue(
+      mockApiService.getNativeHoroscope.mockReturnValue(
         throwError(() => errorResponse),
       );
       component.horoscoData = null;
@@ -206,7 +204,7 @@ describe('ImageComponent', () => {
     });
 
     it('should not draw if already drawing or loading', () => {
-      // mockApiService.getNativeHoroscope.calls.reset();
+      // mockApiService.getNativeHoroscope.mockClear();
 
       // 设置初始状态
       component.isDrawing = true;
@@ -223,11 +221,11 @@ describe('ImageComponent', () => {
   });
 
   describe('applyStepChange', () => {
-    let drawHoroscopeSpy: jasmine.Spy;
+    let drawHoroscopeSpy: Spy;
 
     beforeEach(() => {
       component.currentHoroData = structuredClone(mockCurrentHoroData);
-      drawHoroscopeSpy = spyOn(component as any, 'drawHoroscope').and.stub();
+      drawHoroscopeSpy =vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
     });
 
     it('should update currentHoroData date correctly and redraw', () => {
@@ -255,17 +253,17 @@ describe('ImageComponent', () => {
   });
 
   describe('changeStep with debounce', () => {
-    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(() => {
-      spyOn(component as any, 'drawHoroscope').and.stub();
-      const applyStepChangeSpy = spyOn(
+    it('should only call applyStepChange once after rapid calls due to debounce', fakeAsync(async () => {
+     vi.spyOn(component as any, 'drawHoroscope').mockReturnValue(undefined);
+      const applyStepChangeSpy =vi.spyOn(
         component as any,
         'applyStepChange',
-      ).and.stub();
+      ).mockReturnValue(undefined);
 
       // 触发 ngOnInit 以设置订阅, 同时会触发 ngAfterViewInit
       fixture.detectChanges(); // ngOnInit
 
-      applyStepChangeSpy.calls.reset();
+      applyStepChangeSpy.mockClear();
 
       const step = { year: 0, month: 0, day: 1, hour: 0, minute: 0, second: 0 };
 
@@ -273,20 +271,22 @@ describe('ImageComponent', () => {
       component.changeStep(step);
       component.changeStep(step);
 
-      tick(299);
+      await tick(299);
       expect(applyStepChangeSpy).not.toHaveBeenCalled();
 
-      tick(1);
+      await tick(1);
       expect(applyStepChangeSpy).toHaveBeenCalledTimes(1);
 
-      flush();
+      await flush();
     }));
   });
 
   describe('onArchive', () => {
     it('should call addRecord when horoData.id is 0', async () => {
       component.currentHoroData = { ...mockHoroData, id: 0 };
-      const addRecordSpy = spyOn<any>(component, 'addRecord');
+      const addRecordSpy = vi
+        .spyOn(component as any, 'addRecord')
+        .mockImplementation(() => undefined);
 
       await component.onArchive();
 
@@ -295,13 +295,13 @@ describe('ImageComponent', () => {
 
     it('should show alert when horoData.id is not 0', async () => {
       component.currentHoroData = { ...mockHoroData, id: 1 };
-      const alert = jasmine.createSpyObj('HTMLIonAlertElement', ['present']);
-      mockAlertController.create.and.returnValue(Promise.resolve(alert));
+      const alert = createSpyObj('HTMLIonAlertElement', ['present']);
+      mockAlertController.create.mockReturnValue(Promise.resolve(alert));
 
       await component.onArchive();
 
       expect(mockAlertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
+      expect(alert['present']).toHaveBeenCalled();
     });
   });
 
@@ -349,19 +349,19 @@ describe('ImageComponent', () => {
 
     beforeEach(() => {
       // 重置所有调用和参数
-      mockApiService.addNative.calls.reset();
+      mockApiService.addNative.mockClear();
       mockHoroStorageService.horoData = { ...mockHoroData };
       component.currentHoroData = { ...mockCurrentHoroData };
     });
 
     it('should call api.addNative with correct parameters', () => {
-      mockApiService.addNative.and.returnValue(of(mockNativeResponse));
+      mockApiService.addNative.mockReturnValue(of(mockNativeResponse));
 
       (component as any).addRecord();
 
       expect(mockApiService.addNative).toHaveBeenCalled();
 
-      const callArgs = mockApiService.addNative.calls.mostRecent().args[0];
+      const callArgs = mockApiService.addNative.mock.calls.at(-1)[0];
       expect(callArgs.name).toBe(mockHoroData.name);
       expect(callArgs.gender).toBe(mockHoroData.sex);
       expect(callArgs.birth_year).toBe(mockHoroData.date.year);
@@ -382,7 +382,7 @@ describe('ImageComponent', () => {
     });
 
     it('should update storage on successful API call', () => {
-      mockApiService.addNative.and.returnValue(of(mockNativeResponse));
+      mockApiService.addNative.mockReturnValue(of(mockNativeResponse));
 
       component.addRecord();
 
@@ -392,7 +392,7 @@ describe('ImageComponent', () => {
 
     it('should call handleError on API error', () => {
       const error = new Error('API Error');
-      mockApiService.addNative.and.returnValue(throwError(() => error));
+      mockApiService.addNative.mockReturnValue(throwError(() => error));
       (component as any).addRecord();
 
       expect(component.message).toContain('新增档案错误');
@@ -409,11 +409,11 @@ describe('ImageComponent', () => {
 
       mockHoroStorageService.horoData = testHoroData;
       component.currentHoroData = structuredClone(testHoroData);
-      mockApiService.addNative.and.returnValue(of(mockNativeResponse));
+      mockApiService.addNative.mockReturnValue(of(mockNativeResponse));
 
       (component as any).addRecord();
 
-      const callArgs = mockApiService.addNative.calls.mostRecent().args[0];
+      const callArgs = mockApiService.addNative.mock.calls.at(-1)[0];
 
       // 验证经度转换
       expect(callArgs.location.is_east).toBe(true);
@@ -436,11 +436,11 @@ describe('ImageComponent', () => {
 
       mockHoroStorageService.horoData = testHoroData;
       component.currentHoroData = structuredClone(testHoroData);
-      mockApiService.addNative.and.returnValue(of(mockNativeResponse));
+      mockApiService.addNative.mockReturnValue(of(mockNativeResponse));
 
       (component as any).addRecord();
 
-      const callArgs = mockApiService.addNative.calls.mostRecent().args[0];
+      const callArgs = mockApiService.addNative.mock.calls.at(-1)[0];
 
       // 验证经度转换
       expect(callArgs.location.is_east).toBe(false);
@@ -492,10 +492,10 @@ describe('ImageComponent', () => {
     beforeEach(() => {
       // 重置 horoData，使用 structuredClone 进行深拷贝以隔离测试
       component.currentHoroData = structuredClone(mockHoroData);
-      mockApiService.getNativeById.and.returnValue(
+      mockApiService.getNativeById.mockReturnValue(
         of(structuredClone(mockNativeRecord)),
       );
-      mockApiService.updateNative.and.returnValue(of(undefined));
+      mockApiService.updateNative.mockReturnValue(of(undefined));
       component.isSaveOpen = false;
     });
 
@@ -538,14 +538,14 @@ describe('ImageComponent', () => {
 
       expect(mockApiService.updateNative).toHaveBeenCalledWith(
         1,
-        jasmine.objectContaining(expectedUpdateRequest),
+        expect.objectContaining(expectedUpdateRequest),
       );
       expect(component.isSaveOpen).toBe(true);
     });
 
     it('should handle error from getNativeById', () => {
       const error = { error: { error: 'Get Error' } };
-      mockApiService.getNativeById.and.returnValue(throwError(() => error));
+      mockApiService.getNativeById.mockReturnValue(throwError(() => error));
       component.updateRecord();
 
       expect(mockApiService.getNativeById).toHaveBeenCalledWith(1);
@@ -557,7 +557,7 @@ describe('ImageComponent', () => {
 
     it('should handle error from updateNative', () => {
       const error = { error: { error: 'Update Error' } };
-      mockApiService.updateNative.and.returnValue(throwError(() => error));
+      mockApiService.updateNative.mockReturnValue(throwError(() => error));
       const changedHoroData = { ...mockHoroData, id: 1, name: 'New Name' };
       component.currentHoroData = changedHoroData;
 
@@ -577,7 +577,7 @@ describe('ImageComponent', () => {
         ...mockNativeRecord,
         lock: true,
       };
-      mockApiService.getNativeById.and.returnValue(
+      mockApiService.getNativeById.mockReturnValue(
         of(structuredClone(lockedNativeRecord)),
       );
 

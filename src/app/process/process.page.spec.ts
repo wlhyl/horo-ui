@@ -1,3 +1,4 @@
+import { createSpy, createSpyObj, expectAsync, type Spy, type SpyObj } from 'src/test-utils/spy';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -18,11 +19,11 @@ import { createMockHoroRequest, createMockProcessRequest } from '../test-utils/t
 describe('ProcessPage', () => {
   let component: ProcessPage;
   let fixture: ComponentFixture<ProcessPage>;
-  let horoStorageServiceSpy: jasmine.SpyObj<HoroStorageService>;
-  let titleServiceSpy: jasmine.SpyObj<Title>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let configServiceSpy: jasmine.SpyObj<Horoconfig>;
-  let navControllerSpy: jasmine.SpyObj<NavController>;
+  let horoStorageServiceSpy: SpyObj<HoroStorageService>;
+  let titleServiceSpy: SpyObj<Title>;
+  let routerSpy: SpyObj<Router>;
+  let configServiceSpy: SpyObj<Horoconfig>;
+  let navControllerSpy: SpyObj<NavController>;
 
   const mockHoroData: HoroRequest = createMockHoroRequest({
     id: 1,
@@ -79,25 +80,25 @@ describe('ProcessPage', () => {
   };
 
   beforeEach(async () => {
-    horoStorageServiceSpy = jasmine.createSpyObj('HoroStorageService', [''], {
+    horoStorageServiceSpy = createSpyObj('HoroStorageService', [''], {
       horoData: mockHoroData,
       processData: mockProcessData,
     });
 
-    titleServiceSpy = jasmine.createSpyObj('Title', ['setTitle']);
-    routerSpy = jasmine.createSpyObj('Router', [
+    titleServiceSpy = createSpyObj('Title', ['setTitle']);
+    routerSpy = createSpyObj('Router', [
       'navigate',
       'createUrlTree',
       'serializeUrl',
     ]);
-    configServiceSpy = jasmine.createSpyObj('Horoconfig', [''], {
+    configServiceSpy = createSpyObj('Horoconfig', [''], {
       houses: mockHouses,
     });
-    navControllerSpy = jasmine.createSpyObj('NavController', ['navigateBack']);
+    navControllerSpy = createSpyObj('NavController', ['navigateBack']);
 
     // 为Router方法提供spy实现
-    routerSpy.createUrlTree.and.returnValue(new UrlTree());
-    routerSpy.serializeUrl.and.returnValue('url');
+    routerSpy.createUrlTree.mockReturnValue(new UrlTree());
+    routerSpy.serializeUrl.mockReturnValue('url');
 
     TestBed.configureTestingModule({
       imports: [
@@ -163,8 +164,8 @@ describe('ProcessPage', () => {
     const horoDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )!.get as jasmine.Spy;
-    horoDataGetterSpy.and.returnValue(updatedHoroData);
+    )!.get as Spy;
+    horoDataGetterSpy.mockReturnValue(updatedHoroData);
 
     // 重新创建组件以使用更新的数据
     fixture = TestBed.createComponent(ProcessPage);
@@ -204,8 +205,8 @@ describe('ProcessPage', () => {
     const processDataGetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'processData'
-    )!.get as jasmine.Spy;
-    processDataGetterSpy.and.returnValue(updatedProcessData);
+    )!.get as Spy;
+    processDataGetterSpy.mockReturnValue(updatedProcessData);
 
     // 重新创建组件以使用更新的数据
     fixture = TestBed.createComponent(ProcessPage);
@@ -228,12 +229,12 @@ describe('ProcessPage', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     const processDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'processData'
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     component.getProcess();
 
@@ -303,20 +304,20 @@ describe('ProcessPage', () => {
     const horoDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'horoData'
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     const processDataSetterSpy = Object.getOwnPropertyDescriptor(
       horoStorageServiceSpy,
       'processData'
-    )?.set as jasmine.Spy;
+    )?.set as Spy;
 
     // 验证storage.horoData与component.horaData是不同的对象
-    const storedHoroData = horoDataSetterSpy.calls.mostRecent().args[0];
+    const storedHoroData = horoDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedHoroData).toEqual(component.horaData);
     expect(storedHoroData).not.toBe(component.horaData);
 
     // 验证storage.processData与component.processData是不同的对象
-    const storedProcessData = processDataSetterSpy.calls.mostRecent().args[0];
+    const storedProcessData = processDataSetterSpy.mock.calls.at(-1)[0];
     expect(storedProcessData).toEqual(component.processData);
     expect(storedProcessData).not.toBe(component.processData);
   });
