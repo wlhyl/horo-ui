@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api/api.service';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import {
   ChartType,
   HoroscopeRecord,
@@ -63,7 +64,8 @@ export class EditComponent implements OnInit {
   constructor(
     private router: Router,
     private titleService: Title,
-    private api: ApiService
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
   ) {
     const now = new Date();
     this.native = {
@@ -316,11 +318,13 @@ export class EditComponent implements OnInit {
         this.isAlertOpen = true;
         this.message = '新增成功';
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
-        this.message = '新增失败';
+        this.message = `新增失败: ${getApiErrorMessage(err)}`;
         this.isAlertOpen = true;
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
     });
   }
@@ -453,11 +457,13 @@ export class EditComponent implements OnInit {
         this.message = '更新成功';
         this.isAlertOpen = true;
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
-        this.message = '更新失败';
+        this.message = `更新失败: ${getApiErrorMessage(err)}`;
         this.isAlertOpen = true;
         this.isSaving = false;
+        this.cdr.markForCheck();
       },
     });
   }

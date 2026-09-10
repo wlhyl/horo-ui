@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+
+- 移除 zone.js，应用切换为 Angular zoneless 变更检测（zoneless change detection）
+  - `main.ts`：改用 `provideZonelessChangeDetection()`，并用 `platformBrowser`（`@angular/platform-browser`）替换已弃用的 `platformBrowserDynamic`（`@angular/platform-browser-dynamic`）
+  - 删除 `src/polyfills.ts` 中的 zone.js 引用与 `src/zone-flags.ts`
+  - `package.json`：zone.js 由 `dependencies` 移至 `devDependencies`（仅供 `fakeAsync`/`tick` 测试使用）；依赖 `@angular/platform-browser-dynamic` 已移除（测试环境改用 `@angular/platform-browser/testing` 的 `platformBrowserTesting`）
+  - zoneless 模式下异步回调（`subscribe`/`then`）中更新模板绑定字段不再自动触发变更检测，相关组件改为显式调用 `ChangeDetectorRef.markForCheck()` 刷新视图，涉及 `archive.page`、`archive/edit`、`synastry`、`qizheng-synastry`、`archive-selection-modal`、`historical-archive-selection-modal`、`user` 等组件
+  - `archive.page` 初始加载后"检查内容是否填满视口并自动加载下一页"的逻辑由 `NgZone.onStable` 改为 `afterNextRender`，确保渲染完成后再测量滚动条
+
+- 统一 HTTP 错误处理：各组件错误回调改用 `getApiErrorMessage()`（`src/app/utils/api-error/api-error`）提取用户友好的错误提示，并保留原有中文操作前缀（如"获取档案数据失败：""新增失败："等），涉及 `archive.page`、`archive-selection-modal`、`synastry`、`qizheng-synastry`、`archive/edit` 等组件
+
+### Tests
+
+- 更新 `archive.page.getNatives.spec.ts`：移除 `ApplicationRef`/`isStable` mock，改用 `fixture.detectChanges()` 驱动 `afterNextRender` 钩子
+
 ## [0.39.0] - 2026-09-10
 
 ### Added

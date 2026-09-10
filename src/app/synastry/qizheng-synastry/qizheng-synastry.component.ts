@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { QizhengConfigService } from 'src/app/services/config/qizheng-config.service';
 import { TipService } from 'src/app/services/qizheng/tip.service';
@@ -43,6 +44,7 @@ export class QizhengSynastryComponent
     private tip: TipService,
     private titleService: Title,
     private platform: Platform,
+    private cdr: ChangeDetectorRef,
   ) {
     addIcons({ swapHorizontalOutline });
   }
@@ -104,6 +106,7 @@ export class QizhengSynastryComponent
         finalize(() => {
           this.loading = false;
           this.isDrawing = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
@@ -120,9 +123,9 @@ export class QizhengSynastryComponent
           }
         },
         error: (err) => {
-          this.message =
-            (err.message ?? '未知错误') + ' ' + (err.error?.error ?? '');
+          this.message = getApiErrorMessage(err);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }

@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import {
   ModalController,
   IonContent,
   InfiniteScrollCustomEvent,
 } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import {
   ChartType,
   HoroscopeRecord,
@@ -51,6 +52,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
   constructor(
     private modalController: ModalController,
     private api: ApiService,
+    private cdr: ChangeDetectorRef,
   ) {
     addIcons({ closeOutline });
   }
@@ -97,6 +99,7 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
         finalize(() => {
           this.loading = false;
           this.isLoadingMore = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
@@ -107,14 +110,12 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
             this.natives = res.data;
           }
           this.totalPages = res.total;
+          this.cdr.markForCheck();
         },
         error: (error) => {
-          this.alertMessage =
-            '加载记录失败：' +
-            (error.message || '未知错误') +
-            ' ' +
-            (error.error?.message || error.error || '');
+          this.alertMessage = getApiErrorMessage(error);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -140,20 +141,19 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.loading = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (res) => {
           this.natives = res.data;
           this.totalPages = res.total;
+          this.cdr.markForCheck();
         },
         error: (error) => {
-          this.alertMessage =
-            '搜索失败：' +
-            (error.message || '未知错误') +
-            ' ' +
-            (error.error?.message || error.error || '');
+          this.alertMessage = getApiErrorMessage(error);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -235,20 +235,19 @@ export class ArchiveSelectionModalComponent implements OnInit, OnDestroy {
       .pipe(
         finalize(() => {
           this.isLoadingMore = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (res) => {
           this.natives.push(...res.data);
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.isLoadingMore = false;
-          this.alertMessage =
-            '加载更多失败：' +
-            (error.message || '未知错误') +
-            ' ' +
-            (error.error?.message || error.error || '');
+          this.alertMessage = getApiErrorMessage(error);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }

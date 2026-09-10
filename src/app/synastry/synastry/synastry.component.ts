@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 import { Title } from '@angular/platform-browser';
 import { ApiService } from 'src/app/services/api/api.service';
+import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { HoroscopeComparison } from 'src/app/type/interface/response-data';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import * as fabric from 'fabric';
@@ -82,7 +83,8 @@ export class SynastryComponent implements OnInit, AfterViewInit, OnDestroy {
     private config: Horoconfig,
     private storage: HoroStorageService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     addIcons({ peopleOutline, swapHorizontalOutline });
   }
@@ -128,19 +130,20 @@ export class SynastryComponent implements OnInit, AfterViewInit, OnDestroy {
         finalize(() => {
           this.isDrawing = false;
           this.loading = false;
+          this.cdr.markForCheck();
         })
       )
       .subscribe({
         next: (data) => {
           this.horoscopeComparisonData = data;
           this.isAlertOpen = false;
+          this.cdr.markForCheck();
           this.draw(this.horoscopeComparisonData!);
         },
         error: (error: any) => {
-          const errorMessage =
-            error.error?.message || error.message || '未知错误';
-          this.message = `获取星盘数据失败: ${errorMessage}`;
+          this.message = `获取星盘数据失败: ${getApiErrorMessage(error)}`;
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }

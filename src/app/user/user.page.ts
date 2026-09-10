@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, signal, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import {
@@ -51,6 +51,7 @@ export class UserPage implements OnInit, ViewWillEnter {
   constructor(
     private titleService: Title,
     public authService: AuthService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -72,9 +73,11 @@ export class UserPage implements OnInit, ViewWillEnter {
         this.password = '';
         this.error = '';
         this.isAuth.set(true);
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = '登录失败: ' + getApiErrorMessage(err);
+        this.cdr.markForCheck();
       },
     });
   }

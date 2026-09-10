@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import {
   ModalController,
   IonContent,
@@ -52,6 +52,7 @@ export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestr
   constructor(
     private modalController: ModalController,
     private api: ApiService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -96,6 +97,7 @@ export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestr
         finalize(() => {
           this.loading = false;
           this.isLoadingMore = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
@@ -106,10 +108,12 @@ export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestr
             this.records = res.data;
           }
           this.totalPages = res.total;
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.alertMessage = '加载记录失败：' + getApiErrorMessage(error);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -135,16 +139,19 @@ export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestr
       .pipe(
         finalize(() => {
           this.loading = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (res) => {
           this.records = res.data;
           this.totalPages = res.total;
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.alertMessage = '搜索失败：' + getApiErrorMessage(error);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }
@@ -226,16 +233,19 @@ export class HistoricalArchiveSelectionModalComponent implements OnInit, OnDestr
       .pipe(
         finalize(() => {
           this.isLoadingMore = false;
+          this.cdr.markForCheck();
         }),
       )
       .subscribe({
         next: (res) => {
           this.records.push(...res.data);
+          this.cdr.markForCheck();
         },
         error: (error) => {
           this.isLoadingMore = false;
           this.alertMessage = '加载更多失败：' + getApiErrorMessage(error);
           this.isAlertOpen = true;
+          this.cdr.markForCheck();
         },
       });
   }

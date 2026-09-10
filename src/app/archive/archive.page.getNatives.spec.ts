@@ -4,7 +4,6 @@
  * 在异步测试中，setTimeout容易污染异步
  */
 
-import { EventEmitter } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -53,7 +52,6 @@ describe('getNatives', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
   let ionContentSpy: jasmine.SpyObj<IonContent>;
-  let ngZoneOnStable: EventEmitter<void>;
 
   const mockHoroscopeRecords: HoroscopeRecord[] = [
     {
@@ -115,7 +113,6 @@ describe('getNatives', () => {
       {}
     );
     ionContentSpy = jasmine.createSpyObj('IonContent', ['getScrollElement']);
-    ngZoneOnStable = new EventEmitter<void>();
 
     await TestBed.configureTestingModule({
       declarations: [ArchivePage],
@@ -153,9 +150,6 @@ describe('getNatives', () => {
 
     fixture = TestBed.createComponent(ArchivePage);
     component = fixture.componentInstance;
-    Object.defineProperty(component['ngZone'], 'onStable', {
-      value: ngZoneOnStable,
-    });
 
     // 第一次调用会触发angular的部分生命周期函数，如OnInit
     fixture.detectChanges();
@@ -302,31 +296,20 @@ describe('getNatives', () => {
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
     expect(component.natives.data.length).toBe(1);
 
-    // trigger ngZone.onStable
-    ngZoneOnStable.next();
-
-    // Should have called getNatives twice (initial + additional)
-    expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
-
+    // 触发渲染（运行 afterNextRender 钩子），测量滚动 → 未填满 → 加载第2页
+    fixture.detectChanges();
+    // flush getScrollElement 的 Promise 及其引发的后续 http 请求
     tick();
 
+    // 加载第2页：getScrollElement 已调用一次（未填满），并触发了第2次 getNatives
+    expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(2);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(1, 10);
     expect(component['page']).toBe(1);
     expect(component.natives.data.length).toBe(2);
 
-    // scrollElement.scrollHeight < scrollElement.clientHeight
-    // 由于上述条件仍然成立，apiServiceSpy.getNatives()还会被调用，
-    // 因此异步中仍然还有剩余任务。
-    // 这会污染后续的测试。
-    // 因此应当确保所有异步任务已经完成。
-    // 但简单的使用tick()无法解决
-    // 因为上述条件仍然成立，apiServiceSpy.getNatives()还会被调用，
-    // 使用apiServiceSpy.getNatives()会无限调用。
-
-    // 再次触发onStable，由于ionContentSpy.getScrollElement会返回scrollElementFilled，
-    // scrollHeight > clientHeight，因此不会再调用getNatives
-    ngZoneOnStable.next();
+    // 再次触发渲染，测量滚动 → 已填满（第2个返回值）→ 停止加载
+    fixture.detectChanges();
     tick();
 
     expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(2);
@@ -384,15 +367,12 @@ describe('getNatives', () => {
     expect(component['page']).toBe(0);
     expect(component.natives.data.length).toBe(1);
 
-    // trigger ngZone.onStable
-    ngZoneOnStable.next();
-
-    // Should not have called getScrollElement (ngZone.onStable might not be triggered in tests)
-    expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
-
+    // 触发渲染（运行 afterNextRender 钩子），测量滚动 → 已填满 → 不再加载
+    fixture.detectChanges();
     tick();
 
-    // And should not have called getNatives again (no additional loading)
+    // Should have called getScrollElement once and not load more
+    expect(ionContentSpy.getScrollElement).toHaveBeenCalledTimes(1);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledTimes(1);
     expect(apiServiceSpy.getNatives).toHaveBeenCalledWith(0, 10);
     expect(component['page']).toBe(0);

@@ -1,12 +1,21 @@
-import { Component, NgZone, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Injector,
+  afterNextRender,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import {
   InfiniteScrollCustomEvent,
   IonContent,
   ViewWillEnter,
 } from '@ionic/angular';
-import { finalize, take } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { ApiService } from '../services/api/api.service';
+import { getApiErrorMessage } from '../utils/api-error/api-error';
 import { PageResponser } from '../type/interface/page';
 import { HoroscopeRecord, ChartType } from '../type/interface/horo-admin/horoscope-record';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,7 +60,8 @@ export class ArchivePage implements OnInit, ViewWillEnter {
     private titleService: Title,
     private api: ApiService,
     private storage: HoroStorageService,
-    private ngZone: NgZone
+    private cdr: ChangeDetectorRef,
+    private injector: Injector
   ) {
     addIcons({ addOutline, reloadOutline, listOutline, trash });
   }
@@ -92,45 +102,56 @@ export class ArchivePage implements OnInit, ViewWillEnter {
             this.natives.data.push(...res.data);
             this.natives.total = res.total;
           }
+          // zoneless 模式下显式触发变更检测以刷新视图
+          this.cdr.markForCheck();
 
           // 如果是初始加载，检查是否需要继续加载更多数据
           if (initialLoad && this.page < this.natives.total - 1) {
-            // 检查当前数据是否足够填满页面
-            this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-              if (this.content) {
-                this.content
-                  .getScrollElement()
-                  .then((scrollElement) => {
-                    // 检查是否有滚动条
-                    if (
-                      scrollElement.scrollHeight <= scrollElement.clientHeight
-                    ) {
-                      // 没有滚动条，说明数据不够填满页面
-                      this.page++;
-                      this.getNatives(undefined, true);
-                    }
-                  })
-                  .catch((error) => {
-                    // 处理 getScrollElement 错误
-                    console.error('Failed to get scroll element:', error);
-                    this.message = '获取页面滚动信息失败！';
-                    if (error && error.message) {
-                      this.message += ' ' + error.message;
-                    }
-                    this.isAlertOpen = true;
-                  });
-              }
-            });
+            // 等待本次渲染完成后再测量滚动条，避免在数据未渲染前误判
+            afterNextRender(
+              () => {
+                this.checkScrollAndLoadMore();
+              },
+              { injector: this.injector },
+            );
           }
         },
         error: (error) => {
-          const msg = error.error.error;
-          let message = '获取档案数据失败！';
-          if (msg) message += msg;
-          this.message = message;
+          this.message = getApiErrorMessage(error);
           this.isAlertOpen = true;
-          // this.message = error.error + ' ' + error.error.message;
+          // zoneless 模式下显式触发变更检测
+          this.cdr.markForCheck();
         },
+      });
+  }
+
+  /**
+   * 初始加载后检查内容是否填满视口，未填满则继续加载下一页。
+   * 仅在 zoneless 渲染完成后调用（通过 afterNextRender）。
+   */
+  private checkScrollAndLoadMore() {
+    if (!this.content) {
+      return;
+    }
+    this.content
+      .getScrollElement()
+      .then((scrollElement) => {
+        // 检查是否有滚动条
+        if (scrollElement.scrollHeight <= scrollElement.clientHeight) {
+          // 没有滚动条，说明数据不够填满页面
+          this.page++;
+          this.getNatives(undefined, true);
+        }
+      })
+      .catch((error) => {
+        // 处理 getScrollElement 错误
+        console.error('Failed to get scroll element:', error);
+        this.message = '获取页面滚动信息失败！';
+        if (error && error.message) {
+          this.message += ' ' + error.message;
+        }
+        this.isAlertOpen = true;
+        this.cdr.markForCheck();
       });
   }
 
@@ -164,11 +185,9 @@ export class ArchivePage implements OnInit, ViewWillEnter {
         this.getNatives(undefined, true); // 刷新数据
       },
       error: (error) => {
-        const msg = error.error.error;
-        let message = '删除档案失败！';
-        if (msg) message += msg;
-        this.message = message;
+        this.message = getApiErrorMessage(error);
         this.isAlertOpen = true;
+        this.cdr.markForCheck();
       },
     });
   }
