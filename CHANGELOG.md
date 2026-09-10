@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.40.0] - 2026-09-11
+
 ### Changed
 
 - 移除 zone.js，应用切换为 Angular zoneless 变更检测（zoneless change detection）
