@@ -387,7 +387,7 @@ function calculatePlanetAccidentalPower(
   for (const a of horoscope.aspects) {
     const other =
       a.p0 === planet.name ? a.p1 : a.p1 === planet.name ? a.p0 : null;
-    if (other === null || other === planet.name) continue;
+    if (other === null) continue;
 
     if (a.aspect_value === 0) {
       if (PlanetName.isBenefic(other)) isConjunctBenefic = true;

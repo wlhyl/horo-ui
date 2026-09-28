@@ -291,7 +291,7 @@ export class HoroStorageService {
     if (historicalData) {
       this._historicalData = deepFreeze(historicalData);
     } else {
-      // 默认等宫制宫头（白羊座0度开始，每30度一宫）
+      // 默认整宫制宫头（白羊座0度开始，每30度一宫）
       const defaultCusps: HistoricalHouseCusp[] = Array.from(
         { length: 12 },
         (_, i) => ({
