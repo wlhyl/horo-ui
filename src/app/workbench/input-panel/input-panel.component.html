@@ -291,9 +291,11 @@
         processData.process_name === processNameEnum.LunarcomparNative ||
         processData.process_name === processNameEnum.NativecomparLunar ||
         processData.process_name === processNameEnum.DailyReturn ||
+        processData.process_name === processNameEnum.DailycomparNative ||
+        processData.process_name === processNameEnum.NativecomparDaily ||
         processData.process_name === processNameEnum.DailyDirection) {
         <div class="form-row">
-          <label class="form-label">{{ processData.process_name === processNameEnum.DailyReturn ? '日返月返' : '日返月亮' }}</label>
+          <label class="form-label">{{ processData.process_name === processNameEnum.DailyReturn || processData.process_name === processNameEnum.DailycomparNative || processData.process_name === processNameEnum.NativecomparDaily ? '日返月返' : '日返月亮' }}</label>
           <ion-checkbox [(ngModel)]="processData.isSolarReturn" (ionChange)="onProcessDataChange()"></ion-checkbox>
         </div>
       }

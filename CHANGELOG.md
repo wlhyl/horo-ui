@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.41.0] - 2026-10-13
+
+### Added
+
+- 每日回归比较盘（每日回归比本命/本命比每日回归）新增「日返月返」复选框：未勾选时每日回归基于本命计算（原有行为），勾选后基于日返的月返计算每日回归（先取日返 return_date 作为月返 native_date，再取月返 return_date 作为每日回归 native_date），复用 v0.28.0 每日回归盘的实现模式
+
 ## [0.40.0] - 2026-09-11
 
 ### Changed
