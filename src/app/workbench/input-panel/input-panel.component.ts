@@ -86,6 +86,7 @@ export class InputPanelComponent {
     ProcessName.Direction,
     ProcessName.DailyDirection,
     ProcessName.SolarArc,
+    ProcessName.SolarArcComparNative,
     ProcessName.QuadrantProcess,
     ProcessName.SecondaryProgression,
     ProcessName.SecondaryProgressionComparNative,
@@ -160,6 +161,7 @@ export class InputPanelComponent {
     { type: ChartType.NativecomparDaily, label: '本命比每日回归', group: '比较' },
     { type: ChartType.SecondaryProgression, label: '次限推运', group: '推运' },
     { type: ChartType.SecondaryProgressionComparNative, label: '次限比本命', group: '比较' },
+    { type: ChartType.SolarArcComparNative, label: '太阳弧比本命', group: '比较' },
   ];
 
   readonly chartGroups: string[] = ['基础', '推运', '返照', '比较'];

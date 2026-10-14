@@ -34,8 +34,14 @@
       <h2>返照时间：{{ returnData.return_date.year }}年{{ returnData.return_date.month.toString().padStart(2, '0') }}月{{
         returnData.return_date.day.toString().padStart(2, '0') }}日 {{ returnData.return_date.hour.toString().padStart(2,
         '0') }}:{{
-        returnData.return_date.minute.toString().padStart(2, '0') }}:{{
+      returnData.return_date.minute.toString().padStart(2, '0') }}:{{
       returnData.return_date.second.toString().padStart(2, '0') }}</h2>
+    </div>
+  }
+
+  @if (solarArc !== null) {
+    <div class="ion-text-center">
+      <h2>太阳弧：{{ formatArcFn(solarArc) }}</h2>
     </div>
   }
 

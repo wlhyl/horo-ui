@@ -201,6 +201,41 @@ export interface HoroscopeComparison {
 }
 
 /**
+ * 太阳弧比较盘返回数据
+ * 本命盘为内圈，太阳弧推进为外圈（太阳弧盘无独立宫位）
+ */
+export interface SolarArcComparison {
+  native_date: HoroDateTime;
+  process_date: HoroDateTime;
+  geo: GeoPosition;
+  house_name: string;
+  // 太阳弧弧长（度）
+  solar_arc: number;
+  // 本命盘12宫头黄经度数（内圈）
+  cusps: Array<number>;
+  // 本命侧
+  asc: Planet;
+  mc: Planet;
+  dsc: Planet;
+  ic: Planet;
+  part_of_fortune: Planet;
+  planets: Array<Planet>;
+  // 太阳弧侧（外圈，黄经 = 本命黄经 + 弧）
+  solar_arc_asc: Planet;
+  solar_arc_mc: Planet;
+  solar_arc_dsc: Planet;
+  solar_arc_ic: Planet;
+  solar_arc_part_of_fortune: Planet;
+  solar_arc_planets: Array<Planet>;
+  // 跨盘相位（本命侧p0与太阳弧侧p1）
+  aspects: Array<Aspect>;
+  // 映点
+  antiscoins: Array<Aspect>;
+  // 反映点
+  contraantiscias: Array<Aspect>;
+}
+
+/**
  * 返照盘返回数据
  */
 export interface ReturnHoroscope {

@@ -157,6 +157,23 @@ export interface SolarArcRequest {
 }
 
 /**
+ * 太阳弧比较盘请求数据
+ */
+export interface SolarArcComparisonRequest {
+  // 出生时间
+  native_date: DateRequest;
+
+  // 推运时间
+  process_date: DateRequest;
+
+  // 出生地大地经纬度
+  geo: GeoRequest;
+
+  // 宫位系统
+  house: string;
+}
+
+/**
  * 每日回归方向弧
  */
 export interface DailyDirectionRequest {

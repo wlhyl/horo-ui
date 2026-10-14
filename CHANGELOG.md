@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.42.0] - 2026-10-14
+
+### Added
+
+- 新增太阳弧比较盘功能：对接后端 `/api/process/solar_arc/comparison` 接口（本命盘为内圈、太阳弧推进为外圈，外圈行星/四轴/福点黄经按太阳弧弧长推进，无独立宫位），复用 `CompareComponent` 渲染双盘星盘与相位网格，页面显示太阳弧弧长
+- 推运页面与工作台新增"太阳弧比本命"入口：`ProcessName`/`Path`/`ChartType` 枚举扩展，新增 `solar_arc_native` 路由与工作台窗口嵌入分支
 
 ## [0.41.0] - 2026-10-13
 

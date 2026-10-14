@@ -9,6 +9,7 @@ import {
   FirdariaRequest,
   DirectionRequest,
   SolarArcRequest,
+  SolarArcComparisonRequest,
   DailyDirectionRequest,
   QiZhengRequst,
   QuadrantProcessRequest,
@@ -31,6 +32,7 @@ import {
   HistoricalHoroResponse,
   SecondaryProgression,
   DerivedHoroscope,
+  SolarArcComparison,
 } from 'src/app/type/interface/response-data';
 import { Horoscope as QiZhengHoroscope } from 'src/app/type/interface/response-qizheng';
 import { environment } from 'src/environments/environment';
@@ -164,6 +166,18 @@ export class ApiService {
   public solarArc(data: SolarArcRequest): Observable<Array<Direction>> {
     return this.http.post<Array<Direction>>(
       `${this.url}/process/solar_arc`,
+      data,
+    );
+  }
+
+  /**
+   * 获取太阳弧比较盘
+   */
+  public solarArcComparison(
+    data: SolarArcComparisonRequest,
+  ): Observable<SolarArcComparison> {
+    return this.http.post<SolarArcComparison>(
+      `${this.url}/process/solar_arc/comparison`,
       data,
     );
   }

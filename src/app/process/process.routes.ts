@@ -63,6 +63,11 @@ export const routes: Routes = [
     data: { mode: DirectionMode.SolarArc },
   },
   {
+    path: ProcessName.path(ProcessName.SolarArcComparNative),
+    component: CompareComponent,
+    data: { process_name: ProcessName.SolarArcComparNative },
+  },
+  {
     path: ProcessName.path(ProcessName.QuadrantProcess),
     component: QuadrantProcessComponent,
   },

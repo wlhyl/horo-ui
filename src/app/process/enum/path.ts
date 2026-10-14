@@ -19,6 +19,7 @@ export enum Path {
   Direction = 'direction',
   DailyDirection = 'daily_direction',
   SolarArc = 'solar_arc',
+  SolarArcComparNative = 'solar_arc_native',
   QuadrantProcess = 'quadrant_process',
   SecondaryProgression = 'secondary_progression',
   SecondaryProgressionComparNative = 'secondary_progression_native',

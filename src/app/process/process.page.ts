@@ -114,6 +114,7 @@ export class ProcessPage implements OnInit {
     ProcessName.Direction,
     ProcessName.DailyDirection,
     ProcessName.SolarArc,
+    ProcessName.SolarArcComparNative,
     ProcessName.QuadrantProcess,
     ProcessName.Transit,
     ProcessName.SolarReturn,

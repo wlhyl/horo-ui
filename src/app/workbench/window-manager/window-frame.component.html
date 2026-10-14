@@ -216,6 +216,15 @@
           [embedded]="true"
         ></app-direction>
       }
+      @case (chartType.SolarArcComparNative) {
+        <app-compare
+          [inputHoroData]="horoData()"
+          [inputProcessData]="processData()"
+          [inputProcessName]="processNameEnum.SolarArcComparNative"
+          [canvasId]="window().id"
+          [embedded]="true"
+        ></app-compare>
+      }
       @case (chartType.DailyDirection) {
         <app-direction
           [inputHoroData]="horoData()"

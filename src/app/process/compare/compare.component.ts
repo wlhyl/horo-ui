@@ -9,7 +9,7 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -47,6 +47,7 @@ import {
   ProcessRequest,
   ReturnRequest,
   SecondaryProgressionRequest,
+  SolarArcComparisonRequest,
 } from 'src/app/type/interface/request-data';
 import {
   finalize,
@@ -56,9 +57,11 @@ import {
   Subject,
   debounceTime,
   takeUntil,
+  tap,
 } from 'rxjs';
 import { drawAspect, drawHorosco } from 'src/app/utils/image/compare';
 import { degreeToDMS } from 'src/app/utils/horo-math/horo-math';
+import { formatArc } from 'src/app/utils/direction-utils/direction-utils';
 import { DeepReadonly } from 'src/app/type/interface/deep-readonly';
 import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { DetailComponent } from './detail/detail.component';
@@ -80,7 +83,25 @@ enum ComparisonType {
   styleUrls: ['./compare.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [IonAlert, IonBackButton, IonButtons, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonLabel, IonRow, IonSpinner, IonTitle, IonToggle, IonToolbar, FormsModule, HoroCommonModule, DetailComponent],
+  imports: [
+    IonAlert,
+    IonBackButton,
+    IonButtons,
+    IonCol,
+    IonContent,
+    IonFooter,
+    IonGrid,
+    IonHeader,
+    IonLabel,
+    IonRow,
+    IonSpinner,
+    IonTitle,
+    IonToggle,
+    IonToolbar,
+    FormsModule,
+    HoroCommonModule,
+    DetailComponent,
+  ],
 })
 export class CompareComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy
@@ -100,6 +121,9 @@ export class CompareComponent
 
   horoscopeComparisonData: HoroscopeComparison | null = null;
   returnData: ReturnHoroscope | null = null;
+
+  // 太阳弧比较盘的弧长（度），仅太阳弧比本命流程使用
+  solarArc: number | null = null;
 
   private _isAspect = false; // 默认绘制星盘
   selectedTab: 'horoscope' | 'detail' = 'horoscope';
@@ -144,6 +168,7 @@ export class CompareComponent
   }
 
   degreeToDMSFn = degreeToDMS;
+  formatArcFn = formatArc;
 
   constructor(
     private platform: Platform,
@@ -187,6 +212,7 @@ export class CompareComponent
         case ProcessName.DailycomparNative:
         case ProcessName.NativecomparDaily:
         case ProcessName.SecondaryProgressionComparNative:
+        case ProcessName.SolarArcComparNative:
           this.process_name = process_name;
           break;
         default:
@@ -405,6 +431,8 @@ export class CompareComponent
         return this.getTransitData();
       case ProcessName.SecondaryProgressionComparNative:
         return this.getSecondaryProgressionComparData();
+      case ProcessName.SolarArcComparNative:
+        return this.getSolarArcComparData();
       case ProcessName.SolarcomparNative:
       case ProcessName.NativecomparSolar:
       case ProcessName.LunarcomparNative:
@@ -428,12 +456,54 @@ export class CompareComponent
       house: this.horoData.house,
     };
     return this.api.secondaryProgression(request).pipe(
-      switchMap((data: SecondaryProgression) => this.api.compare({
-        original_date: this.horoData.date,
-        comparison_date: { ...data.progression_date, st: false },
-        original_geo: this.horoData.geo,      // 本命出生地
-        comparison_geo: this.processData.geo, // 次限推运所在地
-        house: this.horoData.house,
+      switchMap((data: SecondaryProgression) =>
+        this.api.compare({
+          original_date: this.horoData.date,
+          comparison_date: { ...data.progression_date, st: false },
+          original_geo: this.horoData.geo, // 本命出生地
+          comparison_geo: this.processData.geo, // 次限推运所在地
+          house: this.horoData.house,
+        }),
+      ),
+    );
+  }
+
+  // 太阳弧比较盘：本命盘为内圈，太阳弧推进为外圈（无独立宫位，复用本命宫位）
+  private getSolarArcComparData(): Observable<HoroscopeComparison> {
+    this.returnData = null;
+
+    const request: SolarArcComparisonRequest = {
+      native_date: this.horoData.date,
+      process_date: this.currentProcessData.date,
+      geo: this.horoData.geo, // 出生地，用于计算本命盘
+      house: this.horoData.house,
+    };
+
+    return this.api.solarArcComparison(request).pipe(
+      tap((data) => (this.solarArc = data.solar_arc)),
+      map((data) => ({
+        original_date: data.native_date,
+        comparison_date: data.process_date,
+        original_geo: data.geo,
+        comparison_geo: data.geo,
+        house_name: data.house_name,
+        houses_cusps: data.cusps,
+        comparison_cusps: data.cusps, // 太阳弧盘无独立宫位
+        original_asc: data.asc,
+        comparison_asc: data.solar_arc_asc,
+        original_mc: data.mc,
+        comparison_mc: data.solar_arc_mc,
+        original_dsc: data.dsc,
+        comparison_dsc: data.solar_arc_dsc,
+        original_ic: data.ic,
+        comparison_ic: data.solar_arc_ic,
+        original_part_of_fortune: data.part_of_fortune,
+        comparison_part_of_fortune: data.solar_arc_part_of_fortune,
+        original_planets: data.planets,
+        comparison_planets: data.solar_arc_planets,
+        aspects: data.aspects,
+        antiscoins: data.antiscoins,
+        contraantiscias: data.contraantiscias,
       })),
     );
   }
