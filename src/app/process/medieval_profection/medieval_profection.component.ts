@@ -20,6 +20,7 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFooter,
   IonHeader,
   IonIcon,
   IonInput,
@@ -37,6 +38,7 @@ import { getApiErrorMessage } from 'src/app/utils/api-error/api-error';
 import { Horoconfig } from 'src/app/services/config/horo-config.service';
 import { HoroStorageService } from 'src/app/services/horostorage/horostorage.service';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
+import { StepUnit } from 'src/app/horo-common/date-time-change/date-time-change.component';
 import {
   DateRequest,
   GeoRequest,
@@ -98,7 +100,7 @@ type ViewMode = 'chart' | 'table';
   templateUrl: './medieval_profection.component.html',
   styleUrls: ['./medieval_profection.component.scss'],
   standalone: true,
-  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
+  imports: [IonAlert, IonBackButton, IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonLabel, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar, FormsModule, HoroCommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MedievalProfectionComponent
@@ -578,6 +580,53 @@ export class MedievalProfectionComponent
     this.isLoading = false;
     this.cdr.markForCheck();
     this.fetchMedievalProfectionData();
+  }
+
+  // 步进默认单位随小限类型：年小限为年，月小限为月，日小限为日
+  get defaultStepUnit(): StepUnit {
+    if (this.mode === ProfectionMode.CustomMonth) return StepUnit.Month;
+    if (
+      this.mode === ProfectionMode.CustomDay ||
+      this.mode === ProfectionMode.CustomLunarDay
+    ) {
+      return StepUnit.Day;
+    }
+    return StepUnit.Year;
+  }
+
+  changeStep(step: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  }) {
+    let date = new Date(
+      this.processDate.year,
+      this.processDate.month - 1,
+      this.processDate.day,
+      this.processDate.hour,
+      this.processDate.minute,
+      this.processDate.second,
+    );
+
+    date.setFullYear(date.getFullYear() + step.year);
+    date.setMonth(date.getMonth() + step.month);
+    date.setDate(date.getDate() + step.day);
+    date.setHours(date.getHours() + step.hour);
+    date.setMinutes(date.getMinutes() + step.minute);
+    date.setSeconds(date.getSeconds() + step.second);
+
+    this.processDate.year = date.getFullYear();
+    this.processDate.month = date.getMonth() + 1;
+    this.processDate.day = date.getDate();
+    this.processDate.hour = date.getHours();
+    this.processDate.minute = date.getMinutes();
+    this.processDate.second = date.getSeconds();
+    this.cdr.markForCheck();
+
+    this.updateProcessDate();
   }
 
   formatDate = formatDateUtil;

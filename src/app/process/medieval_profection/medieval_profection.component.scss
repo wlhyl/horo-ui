@@ -3,6 +3,12 @@
   min-height: 100%;
 }
 
+.embedded-footer {
+  padding: 4px 8px;
+  border-top: 1px solid var(--ion-color-light-shade, #d7d8da);
+  background: var(--ion-color-light, #f4f5f8);
+}
+
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }

@@ -388,7 +388,20 @@
     </div>
   }
 </div>
+  @if (embedded) {
+  <div class="embedded-footer">
+    <horo-date-time-change [stepUnit]="defaultStepUnit" (changedStep)="changeStep($event)"></horo-date-time-change>
+  </div>
+  }
 </ion-content>
+
+@if (!embedded) {
+<ion-footer>
+  <ion-toolbar>
+    <horo-date-time-change [stepUnit]="defaultStepUnit" (changedStep)="changeStep($event)"></horo-date-time-change>
+  </ion-toolbar>
+</ion-footer>
+}
 } @else {
   <div class="ion-text-center ion-padding">
     <ion-label color="medium">中世纪小限数据未初始化</ion-label>
