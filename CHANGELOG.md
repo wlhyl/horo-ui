@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.44.0] - 2026-10-21
+
+### Added
+
+- 新增占星骰子功能：新增 `/dice` 独立工具页，点击"掷骰"随机生成 行星 + 星座 + 宫位 三项结果，以 HamburgSymbols 占星符号与中文对照展示；行星使用传统七行星与南北交点（不含三王星），宫位为 1-12
+- 首页宫格新增"占星骰子"入口（位于"行星力量表"之后，dice-outline 图标）：`Path` 枚举新增 `Dice`，注册懒加载路由
+- 掷骰过程附带轻微抖动动画，结果淡入显示，掷骰期间按钮禁用防连点
+
 ## [0.43.0] - 2026-10-21
 
 ### Added

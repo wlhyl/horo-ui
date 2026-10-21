@@ -76,6 +76,12 @@
         </div>
         <ion-label>行星力量表</ion-label>
       </div>
+      <div class="item" (click)="navigate(path.Dice)">
+        <div class="icon">
+          <ion-icon name="dice-outline"></ion-icon>
+        </div>
+        <ion-label>占星骰子</ion-label>
+      </div>
       @if (authService.isAuth) {
       <div class="item" (click)="navigate(path.Archive)">
         <div class="icon">

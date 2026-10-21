@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{title}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="dice-container">
+    @if (result(); as r) {
+      <div class="dice-row" [class.rolling]="rolling()">
+        <div class="dice-card fade-in">
+          <div
+            class="glyph"
+            [ngStyle]="{'font-family': config.planetFontFamily(r.planet)}"
+          >{{ config.planetFontString(r.planet) }}</div>
+          <div class="label">{{ planetTitle(r.planet) }}</div>
+        </div>
+        <div class="dice-card fade-in">
+          <div
+            class="glyph"
+            [ngStyle]="{'font-family': config.zodiacFontFamily()}"
+          >{{ config.zodiacFontString(r.zodiac) }}</div>
+          <div class="label">{{ zodiacTitle(r.zodiac) }}</div>
+        </div>
+        <div class="dice-card fade-in">
+          <div class="glyph house-number">{{ r.house }}</div>
+          <div class="label">第{{ r.house }}宫</div>
+        </div>
+      </div>
+    } @else {
+      <div class="placeholder">点击下方按钮掷骰</div>
+    }
+
+    <ion-button expand="block" class="roll-button" [disabled]="rolling()" (click)="roll()">
+      {{ rolling() ? '掷骰中…' : '掷骰' }}
+    </ion-button>
+  </div>
+</ion-content>

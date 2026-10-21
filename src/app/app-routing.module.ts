@@ -90,6 +90,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./promittor/promittor.routes').then((m) => m.routes),
   },
+  {
+    path: Path.Dice,
+    loadComponent: () =>
+      import('./dice/dice.page').then((m) => m.DicePage),
+  },
 ];
 
 @NgModule({

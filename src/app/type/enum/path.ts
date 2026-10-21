@@ -14,4 +14,5 @@ export enum Path {
   Workbench = 'workbench',
   Promittor = 'promittor',
   Derived = 'derived',
+  Dice = 'dice',
 }
