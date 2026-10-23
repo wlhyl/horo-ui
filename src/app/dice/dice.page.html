@@ -15,32 +15,62 @@
   </ion-header>
 
   <div class="dice-container">
-    @if (result(); as r) {
-      <div class="dice-row" [class.rolling]="rolling()">
-        <div class="dice-card fade-in">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="5" class="ion-text-right">
+          <ion-label>事项：</ion-label>
+        </ion-col>
+        <ion-col size="7">
+          <ion-input
+            placeholder="简短说明（可选）"
+            [value]="note()"
+            (ionInput)="note.set($event.detail.value ?? '')"
+          ></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="dice-row" [class.rolling]="rolling()">
+      <div class="dice-card">
+        @if (result(); as r) {
           <div
-            class="glyph"
+            class="glyph fade-in"
             [ngStyle]="{'font-family': config.planetFontFamily(r.planet)}"
           >{{ config.planetFontString(r.planet) }}</div>
-          <div class="label">{{ planetTitle(r.planet) }}</div>
-        </div>
-        <div class="dice-card fade-in">
+          <div class="label fade-in">{{ planetTitle(r.planet) }}</div>
+        } @else {
+          <div class="glyph pending">?</div>
+          <div class="label">行星</div>
+        }
+      </div>
+      <div class="dice-card">
+        @if (result(); as r) {
           <div
-            class="glyph"
+            class="glyph fade-in"
             [ngStyle]="{'font-family': config.zodiacFontFamily()}"
           >{{ config.zodiacFontString(r.zodiac) }}</div>
-          <div class="label">{{ zodiacTitle(r.zodiac) }}</div>
-        </div>
-        <div class="dice-card fade-in">
-          <div class="glyph house-number">{{ r.house }}</div>
-          <div class="label">第{{ r.house }}宫</div>
-        </div>
+          <div class="label fade-in">{{ zodiacTitle(r.zodiac) }}</div>
+        } @else {
+          <div class="glyph pending">?</div>
+          <div class="label">星座</div>
+        }
       </div>
-    } @else {
-      <div class="placeholder">点击下方按钮掷骰</div>
+      <div class="dice-card">
+        @if (result(); as r) {
+          <div class="glyph house-number fade-in">{{ r.house }}</div>
+          <div class="label fade-in">第{{ r.house }}宫</div>
+        } @else {
+          <div class="glyph pending">?</div>
+          <div class="label">宫位</div>
+        }
+      </div>
+    </div>
+
+    @if (result(); as r) {
+      <div class="roll-time">{{ formatDateTime(r.time) }}</div>
     }
 
-    <ion-button expand="block" class="roll-button" [disabled]="rolling()" (click)="roll()">
+    <ion-button expand="block" fill="clear" class="roll-button" [disabled]="rolling()" (click)="roll()">
       {{ rolling() ? '掷骰中…' : '掷骰' }}
     </ion-button>
   </div>

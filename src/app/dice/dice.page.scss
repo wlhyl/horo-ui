@@ -2,6 +2,16 @@
   padding: 1.5rem;
 }
 
+ion-row {
+  align-items: center;
+}
+
+ion-input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  min-height: inherit;
+}
+
 .dice-row {
   display: flex;
   gap: 0.75rem;
@@ -19,10 +29,6 @@
 
   &.rolling {
     animation: dice-shake 0.3s linear infinite;
-  }
-
-  &.fade-in {
-    animation: dice-fade-in 0.4s ease;
   }
 }
 
@@ -45,9 +51,14 @@
   color: var(--ion-color-medium, #999);
 }
 
-.placeholder {
-  margin-top: 3rem;
+.glyph.pending {
+  color: var(--ion-color-light-shade, #aaa);
+}
+
+.roll-time {
+  margin-top: 1rem;
   text-align: center;
+  font-size: 0.85rem;
   color: var(--ion-color-medium, #999);
 }
 

@@ -5,8 +5,13 @@ import {
   IonBackButton,
   IonButtons,
   IonButton,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
+  IonInput,
+  IonLabel,
+  IonRow,
   IonTitle,
   IonToolbar,
 } from '@ionic/angular';
@@ -60,6 +65,7 @@ interface DiceResult {
   planet: PlanetName
   zodiac: Zodiac
   house: number
+  time: Date
 }
 
 @Component({
@@ -73,8 +79,13 @@ interface DiceResult {
     IonBackButton,
     IonButtons,
     IonButton,
+    IonCol,
     IonContent,
+    IonGrid,
     IonHeader,
+    IonInput,
+    IonLabel,
+    IonRow,
     IonTitle,
     IonToolbar,
   ],
@@ -83,6 +94,7 @@ export class DicePage implements OnInit {
   title = '占星骰子'
   result = signal<DiceResult | null>(null)
   rolling = signal(false)
+  note = signal('')
 
   PlanetName = PlanetName
   Zodiac = Zodiac
@@ -106,6 +118,13 @@ export class DicePage implements OnInit {
     return ZODIAC_TITLES[zodiac]
   }
 
+  /** 投掷时间，格式：yyyy-MM-dd HH:mm:ss */
+  formatDateTime(d: Date): string {
+    const pad = (n: number) => n.toString().padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+      + ` ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  }
+
   roll() {
     if (this.rolling()) return
     this.rolling.set(true)
@@ -115,6 +134,7 @@ export class DicePage implements OnInit {
         planet: DICE_PLANETS[Math.floor(Math.random() * DICE_PLANETS.length)],
         zodiac: Math.floor(Math.random() * 12) as Zodiac,
         house: Math.floor(Math.random() * 12) + 1,
+        time: new Date(),
       })
       this.rolling.set(false)
       this.rollTimer = null
