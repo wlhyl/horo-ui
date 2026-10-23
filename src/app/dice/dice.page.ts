@@ -1,14 +1,19 @@
 import { Component, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Title } from '@angular/platform-browser';
+import { CheckboxChangeEventDetail } from '@ionic/core';
+import { addIcons } from 'ionicons';
+import { cloudOutline } from 'ionicons/icons';
 import {
   IonBackButton,
   IonButtons,
   IonButton,
+  IonCheckbox,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
   IonInput,
   IonLabel,
   IonRow,
@@ -17,6 +22,7 @@ import {
 } from '@ionic/angular';
 import { Horoconfig } from '../services/config/horo-config.service';
 import { PlanetName } from '../type/enum/planet';
+import { PlanetName as QizhengPlanetName } from '../type/enum/qizheng';
 import { Zodiac } from '../type/enum/zodiac';
 
 /** 骰子可用的传统七行星与南北交点 */
@@ -45,6 +51,50 @@ const PLANET_TITLES: { [key in PlanetName]?: string } = {
   [PlanetName.SouthNode]: '南交点',
 };
 
+/** 七政四余骰子可用的十一曜 */
+const QIZHENG_PLANETS: readonly QizhengPlanetName[] = [
+  QizhengPlanetName.日,
+  QizhengPlanetName.月,
+  QizhengPlanetName.水,
+  QizhengPlanetName.金,
+  QizhengPlanetName.火,
+  QizhengPlanetName.木,
+  QizhengPlanetName.土,
+  QizhengPlanetName.计,
+  QizhengPlanetName.罗,
+  QizhengPlanetName.孛,
+  QizhengPlanetName.气,
+]
+
+/** 七政四余行星符号（紫气由模板以空心云朵图标显示；孛不在 HamburgSymbols 字体内，靠系统字体回退） */
+const QIZHENG_GLYPHS: { [key in Exclude<QizhengPlanetName, QizhengPlanetName.气>]: string } = {
+  [QizhengPlanetName.日]: 'Q',
+  [QizhengPlanetName.月]: 'W',
+  [QizhengPlanetName.水]: 'E',
+  [QizhengPlanetName.金]: 'R',
+  [QizhengPlanetName.火]: 'T',
+  [QizhengPlanetName.木]: 'Y',
+  [QizhengPlanetName.土]: 'U',
+  [QizhengPlanetName.计]: '{',
+  [QizhengPlanetName.罗]: '}',
+  [QizhengPlanetName.孛]: '⚸',
+}
+
+/** 七政四余行星中文名 */
+const QIZHENG_TITLES: { [key in QizhengPlanetName]: string } = {
+  [QizhengPlanetName.日]: '太阳',
+  [QizhengPlanetName.月]: '月亮',
+  [QizhengPlanetName.水]: '水星',
+  [QizhengPlanetName.金]: '金星',
+  [QizhengPlanetName.火]: '火星',
+  [QizhengPlanetName.木]: '木星',
+  [QizhengPlanetName.土]: '土星',
+  [QizhengPlanetName.计]: '计都',
+  [QizhengPlanetName.罗]: '罗喉',
+  [QizhengPlanetName.孛]: '月孛',
+  [QizhengPlanetName.气]: '紫气',
+}
+
 /** 星座中文名 */
 const ZODIAC_TITLES: { [key in Zodiac]: string } = {
   [Zodiac.Aries]: '白羊座',
@@ -62,7 +112,7 @@ const ZODIAC_TITLES: { [key in Zodiac]: string } = {
 };
 
 interface DiceResult {
-  planet: PlanetName
+  planet: PlanetName | QizhengPlanetName
   zodiac: Zodiac
   house: number
   time: Date
@@ -79,10 +129,12 @@ interface DiceResult {
     IonBackButton,
     IonButtons,
     IonButton,
+    IonCheckbox,
     IonCol,
     IonContent,
     IonGrid,
     IonHeader,
+    IonIcon,
     IonInput,
     IonLabel,
     IonRow,
@@ -95,8 +147,10 @@ export class DicePage implements OnInit {
   result = signal<DiceResult | null>(null)
   rolling = signal(false)
   note = signal('')
+  useQizheng = signal(false)
 
   PlanetName = PlanetName
+  QizhengPlanetName = QizhengPlanetName
   Zodiac = Zodiac
 
   private rollTimer: ReturnType<typeof setTimeout> | null = null
@@ -104,14 +158,36 @@ export class DicePage implements OnInit {
   constructor(
     public config: Horoconfig,
     private titleService: Title,
-  ) {}
+  ) {
+    addIcons({ cloudOutline })
+  }
 
   ngOnInit() {
     this.titleService.setTitle(this.title)
   }
 
-  planetTitle(planet: PlanetName): string {
-    return PLANET_TITLES[planet] ?? planet
+  onQizhengToggle(ev: CustomEvent<CheckboxChangeEventDetail>) {
+    this.useQizheng.set(ev.detail.checked ?? false)
+    this.result.set(null)
+  }
+
+  isQi(planet: PlanetName | QizhengPlanetName): boolean {
+    return planet === QizhengPlanetName.气
+  }
+
+  planetGlyph(planet: PlanetName | QizhengPlanetName): string {
+    if (this.useQizheng()) return QIZHENG_GLYPHS[planet as Exclude<QizhengPlanetName, QizhengPlanetName.气>] ?? ''
+    return this.config.planetFontString(planet as PlanetName)
+  }
+
+  planetFont(planet: PlanetName | QizhengPlanetName): string {
+    if (this.useQizheng()) return 'HamburgSymbols, sans-serif'
+    return this.config.planetFontFamily(planet as PlanetName)
+  }
+
+  planetTitle(planet: PlanetName | QizhengPlanetName): string {
+    if (this.useQizheng()) return QIZHENG_TITLES[planet as QizhengPlanetName]
+    return PLANET_TITLES[planet as PlanetName] ?? (planet as PlanetName)
   }
 
   zodiacTitle(zodiac: Zodiac): string {
@@ -130,8 +206,9 @@ export class DicePage implements OnInit {
     this.rolling.set(true)
     if (this.rollTimer !== null) clearTimeout(this.rollTimer)
     this.rollTimer = setTimeout(() => {
+      const planets = this.useQizheng() ? QIZHENG_PLANETS : DICE_PLANETS
       this.result.set({
-        planet: DICE_PLANETS[Math.floor(Math.random() * DICE_PLANETS.length)],
+        planet: planets[Math.floor(Math.random() * planets.length)],
         zodiac: Math.floor(Math.random() * 12) as Zodiac,
         house: Math.floor(Math.random() * 12) + 1,
         time: new Date(),
