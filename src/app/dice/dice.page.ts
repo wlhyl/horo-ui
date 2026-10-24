@@ -5,6 +5,7 @@ import { CheckboxChangeEventDetail } from '@ionic/core';
 import { addIcons } from 'ionicons';
 import { cloudOutline } from 'ionicons/icons';
 import {
+  IonAlert,
   IonBackButton,
   IonButtons,
   IonButton,
@@ -21,9 +22,16 @@ import {
   IonToolbar,
 } from '@ionic/angular';
 import { Horoconfig } from '../services/config/horo-config.service';
+import { ApiService } from '../services/api/api.service';
+import { AuthService } from '../services/auth/auth.service';
 import { PlanetName } from '../type/enum/planet';
 import { PlanetName as QizhengPlanetName } from '../type/enum/qizheng';
 import { Zodiac } from '../type/enum/zodiac';
+import {
+  DiceRequest,
+  UpdateDiceRequest,
+} from '../type/interface/horo-admin/dice';
+import { getApiErrorMessage } from '../utils/api-error/api-error';
 
 /** 骰子可用的传统七行星与南北交点 */
 const DICE_PLANETS: readonly PlanetName[] = [
@@ -126,6 +134,7 @@ interface DiceResult {
   standalone: true,
   imports: [
     CommonModule,
+    IonAlert,
     IonBackButton,
     IonButtons,
     IonButton,
@@ -148,6 +157,11 @@ export class DicePage implements OnInit {
   rolling = signal(false)
   note = signal('')
   useQizheng = signal(false)
+  saving = signal(false)
+  savedId = signal(0) // 0 表示尚未保存（数据库 ID 从 1 起）
+  isAlertOpen = signal(false)
+  alertButtons = ['OK']
+  message = signal('')
 
   PlanetName = PlanetName
   QizhengPlanetName = QizhengPlanetName
@@ -157,6 +171,8 @@ export class DicePage implements OnInit {
 
   constructor(
     public config: Horoconfig,
+    private api: ApiService,
+    private authService: AuthService,
     private titleService: Title,
   ) {
     addIcons({ cloudOutline })
@@ -213,8 +229,79 @@ export class DicePage implements OnInit {
         house: Math.floor(Math.random() * 12) + 1,
         time: new Date(),
       })
+      // 新掷骰结果视为未保存的新记录
+      this.savedId.set(0)
       this.rolling.set(false)
       this.rollTimer = null
     }, 500)
+  }
+
+  save() {
+    const r = this.result()
+    if (this.rolling() || !r || this.saving()) return
+
+    if (!this.authService.isAuth) {
+      this.showMessage('请先登录后再保存记录')
+      return
+    }
+
+    const matter = this.note().trim()
+    if (!matter) {
+      this.showMessage('请输入事项')
+      return
+    }
+    if (matter.length > 255) {
+      this.showMessage('事项长度不能超过255个字符')
+      return
+    }
+
+    const request: DiceRequest = {
+      year: r.time.getFullYear(),
+      month: r.time.getMonth() + 1,
+      day: r.time.getDate(),
+      hour: r.time.getHours(),
+      minute: r.time.getMinutes(),
+      second: r.time.getSeconds(),
+      time_zone_offset: r.time.getTimezoneOffset() / -60,
+      planet: r.planet,
+      zodiac: r.zodiac,
+      house: r.house,
+      is_qizheng: this.useQizheng(),
+      matter,
+      description: '',
+      lock: false,
+    }
+
+    this.saving.set(true)
+    if (this.savedId() === 0) {
+      this.api.addDice(request).subscribe({
+        next: (data) => {
+          this.savedId.set(data.id)
+          this.saving.set(false)
+          this.showMessage('已新增记录')
+        },
+        error: (error) => {
+          this.saving.set(false)
+          this.showMessage('保存失败！' + getApiErrorMessage(error))
+        },
+      })
+    } else {
+      const update: UpdateDiceRequest = { ...request }
+      this.api.updateDice(this.savedId(), update).subscribe({
+        next: () => {
+          this.saving.set(false)
+          this.showMessage('已更新记录')
+        },
+        error: (error) => {
+          this.saving.set(false)
+          this.showMessage('更新失败！' + getApiErrorMessage(error))
+        },
+      })
+    }
+  }
+
+  private showMessage(msg: string) {
+    this.message.set(msg)
+    this.isAlertOpen.set(true)
   }
 }

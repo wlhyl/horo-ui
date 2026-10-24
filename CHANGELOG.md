@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.47.0] - 2026-10-25
+
+### Added
+
+- 占星骰子新增保存/更新功能：掷骰结果可保存为骰子记录（调用 horo-storage `POST /dice`），保存成功后按钮变为"更新"，修改事项后再次点击即更新该记录（`PUT /dice/{id}`）；重新掷骰或切换体系清空结果后视为新记录，再次保存为新增
+- 保存前校验登录状态，未登录提示"请先登录后再保存记录"；保存/更新结果与失败原因通过 IonAlert 提示，错误信息经 getApiErrorMessage 统一提取
+- ApiService 新增 `addDice`/`updateDice` 方法，新增骰子记录接口定义（`type/interface/horo-admin/dice.ts`）
+
+### Changed
+
+- 占星骰子"事项"改为必填：保存时校验事项非空且不超过 255 字符，输入框提示文案由"简短说明（可选）"改为"简短说明（必填）"
+
 ## [0.46.0] - 2026-10-24
 
 ### Added

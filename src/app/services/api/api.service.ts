@@ -46,6 +46,11 @@ import {
 } from '../../type/interface/horo-admin/horoscope-record';
 import { LongLatResponse } from 'src/app/type/interface/horo-admin/longLat-response';
 import { HistoricalHoroscopeRecord } from 'src/app/type/interface/horo-admin/historical-horoscope';
+import {
+  Dice,
+  DiceRequest,
+  UpdateDiceRequest,
+} from 'src/app/type/interface/horo-admin/dice';
 
 @Injectable({
   providedIn: 'root',
@@ -368,5 +373,15 @@ export class ApiService {
       `${this.admin_url}/historical-horoscopes/search`,
       { params },
     );
+  }
+
+  // 新增骰子记录
+  addDice(dice: DiceRequest): Observable<Dice> {
+    return this.http.post<Dice>(`${this.admin_url}/dice`, dice)
+  }
+
+  // 更新骰子记录
+  updateDice(id: number, dice: UpdateDiceRequest): Observable<void> {
+    return this.http.put<void>(`${this.admin_url}/dice/${id}`, dice)
   }
 }

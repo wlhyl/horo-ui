@@ -30,7 +30,7 @@
         </ion-col>
         <ion-col size="7">
           <ion-input
-            placeholder="简短说明（可选）"
+            placeholder="简短说明（必填）"
             [value]="note()"
             (ionInput)="note.set($event.detail.value ?? '')"
           ></ion-input>
@@ -87,5 +87,22 @@
     <ion-button expand="block" fill="clear" class="roll-button" [disabled]="rolling()" (click)="roll()">
       {{ rolling() ? '掷骰中…' : '掷骰' }}
     </ion-button>
+
+    <ion-button expand="block" fill="clear" class="roll-button" [disabled]="rolling() || saving() || !result()" (click)="save()">
+      @if (saving()) {
+        保存中…
+      } @else if (savedId() !== 0) {
+        更新
+      } @else {
+        保存
+      }
+    </ion-button>
+
+    <ion-alert
+      [isOpen]="isAlertOpen()"
+      [message]="message()"
+      [buttons]="alertButtons"
+      (didDismiss)="isAlertOpen.set(false)"
+    ></ion-alert>
   </div>
 </ion-content>
