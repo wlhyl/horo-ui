@@ -38,6 +38,7 @@ import { CanvasResizeHelper } from 'src/app/utils/image/canvas-resize-helper';
 import { DetailComponent } from 'src/app/native/detail/detail.component';
 import { FormsModule } from '@angular/forms';
 import { HoroCommonModule } from 'src/app/horo-common/horo-common.module';
+import { StepUnit } from 'src/app/horo-common/date-time-change/date-time-change.component';
 
 @Component({
   selector: 'app-return',
@@ -124,6 +125,13 @@ export class ReturnComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
 
   get title(): string {
     return ProcessName.name(this.process_name);
+  }
+
+  // 步进默认单位随返照类型：日返为年，月返为月，每日回归为日
+  get defaultStepUnit(): StepUnit {
+    if (this.process_name === ProcessName.LunarReturn) return StepUnit.Month;
+    if (this.process_name === ProcessName.DailyReturn) return StepUnit.Day;
+    return StepUnit.Year;
   }
 
   degreeToDMSFn = degreeToDMS;

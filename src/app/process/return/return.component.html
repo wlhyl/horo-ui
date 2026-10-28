@@ -76,7 +76,7 @@
 
   @if (embedded) {
   <div class="embedded-footer">
-    <horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change>
+    <horo-date-time-change [stepUnit]="defaultStepUnit" (changedStep)="changeStep($event)"></horo-date-time-change>
   </div>
   }
 </ion-content>
@@ -87,7 +87,7 @@
     <ion-grid fixed>
       <ion-row>
         <ion-col size="9">
-          <horo-date-time-change (changedStep)="changeStep($event)"></horo-date-time-change>
+          <horo-date-time-change [stepUnit]="defaultStepUnit" (changedStep)="changeStep($event)"></horo-date-time-change>
         </ion-col>
       </ion-row>
     </ion-grid>

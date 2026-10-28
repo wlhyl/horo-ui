@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.48.0] - 2026-10-29
+
+### Changed
+
+- 返照盘步进默认单位随返照类型自动设定：日返默认步进"年"，月返默认"月"，每日回归默认"日"（沿用中世纪小限的 `defaultStepUnit` getter 模式），点击单位标签仍可循环切换；独立页面与工作台嵌入模式行为一致
+
 ## [0.47.0] - 2026-10-25
 
 ### Added
