@@ -23,10 +23,14 @@ import {
   degreeToDMS,
   zodiacLong,
 } from 'src/app/utils/horo-math/horo-math';
-import { PlanetName } from 'src/app/type/enum/planet';
 import { ReceptionComponent } from './reception/reception.component';
 import { TemperamentComponent } from './temperament/temperament.component';
 import { PlanetPowerComponent } from './planet-power/planet-power.component';
+import {
+  Lot,
+  LotAspectRow,
+  calcLots,
+} from 'src/app/utils/lots/lots';
 
 @Component({
   selector: 'app-native-detail',
@@ -56,56 +60,49 @@ export class DetailComponent {
 
   degreeToDMSFn = degreeToDMS;
   zodiacLong = zodiacLong;
-  planetName = PlanetName;
 
   constructor(
     public config: Horoconfig,
   ) {}
 
-  // 计算太阳视力点：ASC + 太阳黄道经度 - 火星黄道经度
-  get partOfSolarVision(): number | null {
-    if (!this.horoscopeData) return null;
-
-    const sun = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Sun,
-    );
-    if (!sun) return null;
-    const sunLong = sun.long;
-
-    const mars = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Mars,
-    );
-    if (!mars) return null;
-    const marsLong = mars.long;
-
-    const ascLong = this.horoscopeData.asc.long;
-
-    // 计算视力点，确保结果在0-360度范围内
-    const visionPoint = ascLong + sunLong - marsLong;
-    return degNorm(visionPoint);
+  // 计算所有 Lot（视力点、子女点），含相位、映点、反映点
+  get lots(): Lot[] {
+    return this.horoscopeData ? calcLots(this.horoscopeData) : [];
   }
 
-  // 计算月亮视力点：ASC + 月亮黄道经度 - 土星黄道经度
-  get partOfLunarVision(): number | null {
-    if (!this.horoscopeData) return null;
-
-    const moon = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Moon,
-    );
-    if (!moon) return null;
-    const moonLong = moon.long;
-
-    const saturn = this.horoscopeData.planets.find(
-      (p) => p.name === PlanetName.Saturn,
-    );
-    if (!saturn) return null;
-    const saturnLong = saturn.long;
-
-    const ascLong = this.horoscopeData.asc.long;
-
-    // 计算视力点，确保结果在0-360度范围内
-    const visionPoint = ascLong + moonLong - saturnLong;
-    return degNorm(visionPoint);
+  // Lot 的相位、映点、反映点合并平铺为表格行
+  get lotAspectRows(): LotAspectRow[] {
+    const rows: LotAspectRow[] = [];
+    for (const lot of this.lots) {
+      for (const a of lot.aspects) {
+        rows.push({
+          key: `${lot.key}-aspect-${a.aspect_value}-${a.p0}-${a.d}`,
+          partLabel: lot.label,
+          typeLabel: '相位',
+          body: a.p0,
+          item: a,
+        });
+      }
+      for (const a of lot.antiscoins) {
+        rows.push({
+          key: `${lot.key}-antiscia-${a.p1}-${a.d}`,
+          partLabel: lot.label,
+          typeLabel: '映点',
+          body: a.p1,
+          item: a,
+        });
+      }
+      for (const a of lot.contraantiscias) {
+        rows.push({
+          key: `${lot.key}-contraantiscia-${a.p1}-${a.d}`,
+          partLabel: lot.label,
+          typeLabel: '反映点',
+          body: a.p1,
+          item: a,
+        });
+      }
+    }
+    return rows;
   }
 
   // 计算行星与恒星的黄道经度差

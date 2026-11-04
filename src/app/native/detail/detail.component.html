@@ -68,59 +68,85 @@
       <ion-col>
         <ion-card>
           <ion-card-header>
-            <ion-card-title>视力点</ion-card-title>
+            <ion-card-title>阿拉伯点</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-list>
-              <ion-item>
-                <ion-label>
-                  视力点( <span [ngStyle]="{'font-family': config.planetFontFamily(planetName.Sun)}">
-                    {{ config.planetFontString(planetName.Sun) }}
-                  </span>)：
-                  @if (partOfSolarVision) {
-                  @let signLong = zodiacLong(partOfSolarVision);
-                  @let d = degreeToDMSFn(signLong.long);
-                  <span>
-                    {{ d.d }}°
-                  </span>
-                  <span [ngStyle]="{'font-family': config.zodiacFontFamily()}">
-                    {{ config.zodiacFontString(signLong.zodiac) }}
-                  </span>
-                  <span>
-                    {{ d.m }}'{{d.s}}
-                  </span>
-                  } @else {
-                  <span style="color: #ff6b6b;">计算错误：缺少必要行星数据</span>
-                  }
-                  <br>
-                  <small>计算公式：ASC + 太阳黄道经度 - 火星黄道经度</small>
-                </ion-label>
-              </ion-item>
-              <ion-item>
-                <ion-label>
-                  视力点( <span [ngStyle]="{'font-family': config.planetFontFamily(planetName.Moon)}">
-                    {{ config.planetFontString(planetName.Moon) }}
-                  </span>)：
-                  @if (partOfLunarVision) {
-                  @let signLong = zodiacLong(partOfLunarVision);
-                  @let d = degreeToDMSFn(signLong.long);
-                  <span>
-                    {{ d.d }}°
-                  </span>
-                  <span [ngStyle]="{'font-family': config.zodiacFontFamily()}">
-                    {{ config.zodiacFontString(signLong.zodiac) }}
-                  </span>
-                  <span>
-                    {{ d.m }}'{{d.s}}
-                  </span>
-                  } @else {
-                  <span style="color: #ff6b6b;">计算错误：缺少必要行星数据</span>
-                  }
-                  <br>
-                  <small>计算公式：ASC + 月亮黄道经度 - 土星黄道经度</small>
-                </ion-label>
-              </ion-item>
-            </ion-list>
+            <table class="lots-table">
+              <thead>
+                <tr>
+                  <th>阿拉伯点</th>
+                  <th>黄道位置</th>
+                  <th>计算公式</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (lot of lots; track lot.key) {
+                <tr>
+                  <td>{{ lot.label }}</td>
+                  <td>
+                    @let signLong = zodiacLong(lot.long);
+                    @let d = degreeToDMSFn(signLong.long);
+                    <span>{{ d.d }}°</span>
+                    <span [ngStyle]="{'font-family': config.zodiacFontFamily()}">
+                      {{ config.zodiacFontString(signLong.zodiac) }}
+                    </span>
+                    <span>{{ d.m }}'{{ d.s }}</span>
+                  </td>
+                  <td><small>{{ lot.formula }}</small></td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>阿拉伯点相位</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (lotAspectRows.length > 0) {
+            <table class="lots-table">
+              <thead>
+                <tr>
+                  <th>阿拉伯点</th>
+                  <th>类型</th>
+                  <th>相位</th>
+                  <th>星体</th>
+                  <th>状态</th>
+                  <th>偏移</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of lotAspectRows; track row.key) {
+                <tr>
+                  <td>{{ row.partLabel }}</td>
+                  <td>{{ row.typeLabel }}</td>
+                  <td>
+                    <span [ngStyle]="{'font-family': config.aspectFontFamily()}">
+                      {{ config.aspectFontString(row.item.aspect_value) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [ngStyle]="{'font-family': config.planetFontFamily(row.body)}">
+                      {{ config.planetFontString(row.body) }}
+                    </span>
+                  </td>
+                  <td>{{ row.typeLabel === '相位' ? (row.item.apply ? '入' : '出') : '—' }}</td>
+                  <td>
+                    @let d = degreeToDMSFn(row.item.d);
+                    <span>{{ d.d }}°{{ d.m }}'{{ d.s }}"</span>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+            } @else {
+            <ion-label color="medium">无相位数据</ion-label>
+            }
           </ion-card-content>
         </ion-card>
       </ion-col>

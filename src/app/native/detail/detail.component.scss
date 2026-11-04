@@ -1,3 +1,27 @@
 .detail-content {
   padding: 8px;
 }
+
+// Lot（阿拉伯点）表格
+.lots-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th,
+  td {
+    border: 1px solid var(--ion-color-light-shade, #d7d8da);
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 600;
+    background: var(--ion-color-light, #f4f5f8);
+  }
+
+  small {
+    color: var(--ion-color-medium, #92949c);
+  }
+}
