@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.50.0] - 2026-11-05
+
+### Added
+
+- 详情页新增阿拉伯点「财富点」（PartofWealth）：黄道经度 = ASC + 2宫头黄道度数 - 2宫主黄道度数（依据《明译天文书》，不区分昼夜），2宫主取2宫头所落星座的入庙守护星；本命盘、返照盘、次限盘详情页共用生效
+
 ## [0.49.0] - 2026-11-05
 
 ### Added

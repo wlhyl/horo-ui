@@ -328,7 +328,23 @@ export function calcLotOfChildren(horo: LotHoro): number | null {
 }
 
 /**
- * 计算所有 Lot（视力点、子女点），含与星体的相位、映点、反映点
+ * 财富点（《明译天文书》，不区分昼夜）：
+ * 黄道经度 = ASC + 2宫头的黄道度数 - 2宫主的黄道度数
+ * 2宫主为2宫头所落星座的入庙守护星
+ */
+export function calcPartofWealth(horo: LotHoro): number | null {
+  const cusp2 = horo.cusps?.[1];
+  if (cusp2 == null) return null;
+
+  const rulerName = rulership(zodiacLong(cusp2).zodiac);
+  const ruler = horo.planets.find((p) => p.name === rulerName);
+  if (!ruler) return null;
+
+  return degNorm(horo.asc.long + cusp2 - ruler.long);
+}
+
+/**
+ * 计算所有 Lot（视力点、子女点、财富点），含与星体的相位、映点、反映点
  */
 export function calcLots(horo: LotHoro): Lot[] {
   const lots: Lot[] = [];
@@ -363,6 +379,17 @@ export function calcLots(horo: LotHoro): Lot[] {
       long: children,
       formula: 'ASC + 5宫头黄道度数 - 5宫主黄道度数（《明译天文书》，不区分昼夜）',
       ...calcLotAspects(children, horo),
+    });
+  }
+
+  const wealth = calcPartofWealth(horo);
+  if (wealth !== null) {
+    lots.push({
+      key: 'PartofWealth',
+      label: '财富点',
+      long: wealth,
+      formula: 'ASC + 2宫头黄道度数 - 2宫主黄道度数（《明译天文书》，不区分昼夜）',
+      ...calcLotAspects(wealth, horo),
     });
   }
 
