@@ -1,27 +1,57 @@
 .detail-content {
   padding: 8px;
+  font-size: 17px;
+
+  ion-card-title {
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  ion-card-content {
+    color: var(--ion-color-dark, #222428);
+  }
+
+  ion-label {
+    font-size: 17px;
+    color: var(--ion-color-dark, #222428);
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 16px;
+      color: var(--ion-color-dark-shade, #3d3e42);
+    }
+  }
 }
 
 // Lot（阿拉伯点）表格
 .lots-table {
-  width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 16px;
 
   th,
   td {
-    border: 1px solid var(--ion-color-light-shade, #d7d8da);
+    border: 1px solid var(--ion-color-medium-shade, #7d7f86);
     padding: 6px 8px;
     text-align: left;
     vertical-align: middle;
   }
 
   th {
-    font-weight: 600;
+    font-weight: 700;
     background: var(--ion-color-light, #f4f5f8);
+    color: var(--ion-color-dark, #222428);
+  }
+
+  td {
+    color: var(--ion-color-dark, #222428);
   }
 
   small {
-    color: var(--ion-color-medium, #92949c);
+    color: var(--ion-color-dark-shade, #3d3e42);
+    font-size: 15px;
   }
 }

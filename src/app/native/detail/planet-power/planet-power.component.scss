@@ -1,27 +1,38 @@
+ion-card-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+ion-label {
+  font-size: 17px;
+  color: var(--ion-color-dark, #222428);
+}
+
 .almuten-summary {
-  font-size: 1.1rem;
+  font-size: 18px;
   margin-bottom: 0.8rem;
   font-weight: bold;
+  color: var(--ion-color-dark, #222428);
 }
 
 .score-section {
   margin-left: 12px;
   margin-top: 4px;
   padding-left: 8px;
-  border-left: 2px solid #e0e0e0;
+  border-left: 2px solid #c5c6ca;
 }
 
 .section-label {
-  font-size: 0.8rem;
-  color: #757575;
+  font-size: 16px;
+  color: var(--ion-color-dark-shade, #3d3e42);
   margin-right: 4px;
 }
 
 .dignity-tag {
   display: inline-block;
   margin-left: 6px;
-  padding: 1px 6px;
-  font-size: 0.75rem;
+  padding: 2px 8px;
+  font-size: 14px;
   color: #1b5e20;
   background-color: #e8f5e9;
   border: 1px solid #1b5e20;
@@ -31,8 +42,8 @@
 .accidental-tag {
   display: inline-block;
   margin-left: 6px;
-  padding: 1px 6px;
-  font-size: 0.75rem;
+  padding: 2px 8px;
+  font-size: 14px;
   color: #0d47a1;
   background-color: #e3f2fd;
   border: 1px solid #0d47a1;
@@ -48,8 +59,8 @@
 .solar-tag {
   display: inline-block;
   margin-left: 6px;
-  padding: 1px 6px;
-  font-size: 0.75rem;
+  padding: 2px 8px;
+  font-size: 14px;
   color: #e65100;
   background-color: #fff3e0;
   border: 1px solid #e65100;

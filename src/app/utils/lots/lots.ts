@@ -344,10 +344,32 @@ export function calcPartofWealth(horo: LotHoro): number | null {
 }
 
 /**
- * 计算所有 Lot（视力点、子女点、财富点），含与星体的相位、映点、反映点
+ * 计算所有 Lot（财富点、子女点、视力点），含与星体的相位、映点、反映点
  */
 export function calcLots(horo: LotHoro): Lot[] {
   const lots: Lot[] = [];
+
+  const wealth = calcPartofWealth(horo);
+  if (wealth !== null) {
+    lots.push({
+      key: 'PartofWealth',
+      label: '财富点',
+      long: wealth,
+      formula: 'ASC + 2宫头黄道度数 - 2宫主黄道度数（《明译天文书》，不区分昼夜）',
+      ...calcLotAspects(wealth, horo),
+    });
+  }
+
+  const children = calcLotOfChildren(horo);
+  if (children !== null) {
+    lots.push({
+      key: 'PartofChildren',
+      label: '子女点',
+      long: children,
+      formula: 'ASC + 5宫头黄道度数 - 5宫主黄道度数（《明译天文书》，不区分昼夜）',
+      ...calcLotAspects(children, horo),
+    });
+  }
 
   const solar = calcSolarVision(horo);
   if (solar !== null) {
@@ -368,28 +390,6 @@ export function calcLots(horo: LotHoro): Lot[] {
       long: lunar,
       formula: 'ASC + 月亮黄道经度 - 土星黄道经度',
       ...calcLotAspects(lunar, horo),
-    });
-  }
-
-  const children = calcLotOfChildren(horo);
-  if (children !== null) {
-    lots.push({
-      key: 'PartofChildren',
-      label: '子女点',
-      long: children,
-      formula: 'ASC + 5宫头黄道度数 - 5宫主黄道度数（《明译天文书》，不区分昼夜）',
-      ...calcLotAspects(children, horo),
-    });
-  }
-
-  const wealth = calcPartofWealth(horo);
-  if (wealth !== null) {
-    lots.push({
-      key: 'PartofWealth',
-      label: '财富点',
-      long: wealth,
-      formula: 'ASC + 2宫头黄道度数 - 2宫主黄道度数（《明译天文书》，不区分昼夜）',
-      ...calcLotAspects(wealth, horo),
     });
   }
 

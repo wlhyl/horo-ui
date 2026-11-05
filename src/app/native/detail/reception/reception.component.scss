@@ -1,8 +1,18 @@
+ion-card-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+ion-label {
+  font-size: 17px;
+  color: var(--ion-color-dark, #222428);
+}
+
 .dignity-tag {
   display: inline-block;
   margin-left: 6px;
-  padding: 1px 6px;
-  font-size: 0.75rem;
+  padding: 2px 8px;
+  font-size: 14px;
   color: #1b5e20;
   background-color: #e8f5e9;
   border: 1px solid #1b5e20;
@@ -11,16 +21,16 @@
 
 .aspect-glyph {
   margin-left: 8px;
-  font-size: 1.1rem;
+  font-size: 20px;
 }
 
 .orb {
   margin-left: 4px;
-  font-size: 0.8rem;
-  color: #666;
+  font-size: 16px;
+  color: var(--ion-color-dark-shade, #3d3e42);
 }
 
 .mutual-arrow {
   margin: 0 8px;
-  color: #666;
+  color: var(--ion-color-dark-shade, #3d3e42);
 }

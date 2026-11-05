@@ -1,21 +1,33 @@
+ion-card-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+ion-label {
+  font-size: 17px;
+  color: var(--ion-color-dark, #222428);
+}
+
 .temperament-error {
   color: #ff6b6b;
+  font-size: 16px;
 }
 
 .temperament-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 16px;
 
   th, td {
-    padding: 2px 4px;
+    padding: 4px 6px;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #d7d8da;
+    color: var(--ion-color-dark, #222428);
   }
 
   th {
     font-weight: bold;
-    color: #666;
+    color: var(--ion-color-dark-shade, #3d3e42);
   }
 
   .name-cell {
@@ -24,22 +36,22 @@
   }
 
   .sources-cell {
-    font-size: 0.7rem;
-    color: #666;
-    max-width: 120px;
+    font-size: 14px;
+    color: var(--ion-color-dark-shade, #3d3e42);
+    max-width: 160px;
     word-break: break-all;
   }
 
   .quality-cell ion-checkbox {
-    --size: 18px;
+    --size: 20px;
   }
 
   .action-cell ion-button {
     --padding-start: 4px;
     --padding-end: 4px;
     min-height: 24px;
-    font-size: 1.1rem;
-    color: #999;
+    font-size: 20px;
+    color: var(--ion-color-dark-shade, #3d3e42);
   }
 }
 
@@ -52,7 +64,7 @@
 
   ion-select {
     min-width: 100px;
-    font-size: 0.8rem;
+    font-size: 16px;
     font-family: HamburgSymbols, sans-serif;
   }
 }
@@ -72,6 +84,7 @@
 .humor-label {
   width: 60px;
   font-weight: bold;
+  color: var(--ion-color-dark, #222428);
 }
 
 .humor-bar-track {
@@ -95,13 +108,14 @@
 
 .humor-score {
   width: 110px;
-  font-size: 0.8rem;
+  font-size: 15px;
   text-align: right;
+  color: var(--ion-color-dark, #222428);
 }
 
 .humor-desc {
   width: 100%;
-  font-size: 0.75rem;
-  color: #666;
+  font-size: 14px;
+  color: var(--ion-color-dark-shade, #3d3e42);
   margin-top: 2px;
 }
