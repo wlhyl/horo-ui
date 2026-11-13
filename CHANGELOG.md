@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.52.0] - 2026-11-13
+
+### Changed
+
+- 适配 horo-api 1.20.0：映点与反映点加入入相/出相展示，三处详情页（本命、古代星盘、比较盘）映点/反映点列表追加「入相/出相」状态
+- 阿拉伯点相位表格状态列不再区分类型：映点/反映点行也显示入/出（原来显示 —）
+- 同步 `utils/lots/lots.ts` 本地算法：新增公共函数 `isApply`，映点/反映点的 apply 由硬编码 false 改为按虚拟星体运动判定（黄经反射、速度取反，四轴优先否则快速方为移动方）
+
 ## [0.51.0] - 2026-11-06
 
 ### Changed

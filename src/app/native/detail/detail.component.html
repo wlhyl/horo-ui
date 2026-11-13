@@ -26,6 +26,7 @@
                   <span>
                     {{ d.d }}度{{ d.m }}分{{ d.s }}秒
                   </span>
+                  <span>{{ item.apply ? '，入相' : '，出相' }}</span>
                 </ion-label>
               </ion-item>
               }
@@ -56,6 +57,7 @@
                   <span>
                     {{ d.d }}度{{ d.m }}分{{ d.s }}秒
                   </span>
+                  <span>{{ item.apply ? '，入相' : '，出相' }}</span>
                 </ion-label>
               </ion-item>
               }
@@ -135,7 +137,7 @@
                       {{ config.planetFontString(row.body) }}
                     </span>
                   </td>
-                  <td>{{ row.typeLabel === '相位' ? (row.item.apply ? '入' : '出') : '—' }}</td>
+                  <td>{{ row.item.apply ? '入' : '出' }}</td>
                   <td>
                     @let d = degreeToDMSFn(row.item.d);
                     <span>{{ d.d }}°{{ d.m }}'{{ d.s }}"</span>

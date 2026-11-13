@@ -132,23 +132,31 @@ function noCompareHasAspect0(p0: Planet, p1: Planet): Aspect | null {
     p_1 = p0;
   }
 
-  // 二星度数相等，为出相位
-  if (aspectDiff === 0) {
-    return { aspect_value: 0, apply: false, d: 0, p0: p0.name, p1: p1.name };
-  }
-
-  // 假定慢星体不动，给快速星体一个增量，需要考虑顺逆
-  // aspectDiff1 > 0 为出相位，否则为入相位
-  const delta = p_0.speed < 0 ? -aspectDiff : aspectDiff;
-  const aspectDiff1 = angularDistance(p_0.long + delta, p_1.long);
-
   return {
     aspect_value: 0,
-    apply: !(aspectDiff1 > 0),
+    apply: isApply(p_0.long, p_0.speed, p_1.long, aspectDiff),
     d: aspectDiff,
     p0: p0.name,
     p1: p1.name,
   };
+}
+
+/**
+ * 判定入相/出相（移植自后台 planet/mod.rs 的 is_apply）
+ * p_0: 移动方（四轴或快速星体/虚点），p_1: 固定方
+ * aspectDiff: 当前二者角距（0..=180）
+ * 返回 true: 入相位, false: 出相位；精确重合归为出相
+ */
+function isApply(p0Long: number, p0Speed: number, p1Long: number, aspectDiff: number): boolean {
+  // 二星度数相等，为出相位
+  if (aspectDiff === 0) {
+    return false;
+  }
+
+  // 假定慢星体不动，给移动方一个增量，需要考虑顺逆
+  // aspectDiff1 === 0 为入相位，否则为出相位
+  const delta = p0Speed < 0 ? -aspectDiff : aspectDiff;
+  return angularDistance(p0Long + delta, p1Long) === 0;
 }
 
 /**
@@ -216,7 +224,37 @@ export function hasAntiscia(self: Planet, p: Planet): Aspect | null {
     return null;
   }
 
-  return { aspect_value: 0, apply: false, d, p0: self.name, p1: p.name };
+  // 映点虚拟星体：黄经为映点黄经；黄经反射方向反转，速度取 -self.speed
+  const vLong = antiscoinLong;
+  const vSpeed = -self.speed;
+
+  // 参考相位计算排序：四轴优先为移动方，否则快速方为移动方
+  let p0Long: number, p0Speed: number, p1Long: number;
+  if (ASCMC.includes(p.name)) {
+    p0Long = p.long;
+    p0Speed = p.speed;
+    p1Long = vLong;
+  } else if (ASCMC.includes(self.name)) {
+    p0Long = vLong;
+    p0Speed = vSpeed;
+    p1Long = p.long;
+  } else if (Math.abs(p.speed) > Math.abs(vSpeed)) {
+    p0Long = p.long;
+    p0Speed = p.speed;
+    p1Long = vLong;
+  } else {
+    p0Long = vLong;
+    p0Speed = vSpeed;
+    p1Long = p.long;
+  }
+
+  return {
+    aspect_value: 0,
+    apply: isApply(p0Long, p0Speed, p1Long, d),
+    d,
+    p0: self.name,
+    p1: p.name,
+  };
 }
 
 /**
@@ -245,7 +283,37 @@ export function hasContraantiscia(self: Planet, p: Planet): Aspect | null {
     return null;
   }
 
-  return { aspect_value: 0, apply: false, d, p0: self.name, p1: p.name };
+  // 反映点虚拟星体：黄经为反映点黄经；黄经反射方向反转，速度取 -self.speed
+  const vLong = contraantisciaLong;
+  const vSpeed = -self.speed;
+
+  // 参考相位计算排序：四轴优先为移动方，否则快速方为移动方
+  let p0Long: number, p0Speed: number, p1Long: number;
+  if (ASCMC.includes(p.name)) {
+    p0Long = p.long;
+    p0Speed = p.speed;
+    p1Long = vLong;
+  } else if (ASCMC.includes(self.name)) {
+    p0Long = vLong;
+    p0Speed = vSpeed;
+    p1Long = p.long;
+  } else if (Math.abs(p.speed) > Math.abs(vSpeed)) {
+    p0Long = p.long;
+    p0Speed = p.speed;
+    p1Long = vLong;
+  } else {
+    p0Long = vLong;
+    p0Speed = vSpeed;
+    p1Long = p.long;
+  }
+
+  return {
+    aspect_value: 0,
+    apply: isApply(p0Long, p0Speed, p1Long, d),
+    d,
+    p0: self.name,
+    p1: p.name,
+  };
 }
 
 /**
